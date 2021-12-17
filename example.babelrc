@@ -1,0 +1,16 @@
+{
+  "plugins": ["@babel/plugin-transform-runtime", "react-refresh/babel"],
+  "presets": [
+    ["@babel/preset-react"],
+    ["@babel/preset-typescript"],
+    [
+      "@babel/preset-env",
+      {
+        "modules": false,
+        "targets": {
+          "browsers": ["last 2 versions", ">= 5% in KR"]
+        }
+      }
+    ]
+  ]
+}
