@@ -18,9 +18,14 @@
     "baseUrl": ".",
     "paths": {
       "src/*": ["src/*"],
-      "utils/*": ["src/utils/*"],
+      "api":["src/api/*"],
+      "assets":["src/assets/*"],
+      "components/*": ["src/components/*"],
+      "hooks/*": ["src/hooks/*"],
+      "modules/*": ["src/modules/*"],
+      "pages/*": ["src/pages/*"],
       "style/*": ["src/style/*"],
-      "components/*": ["src/components/*"]
+      "utils/*": ["src/utils/*"],
     }
   },
   "include": ["src"]
