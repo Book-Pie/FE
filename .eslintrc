@@ -1,0 +1,128 @@
+ // 우선순위
+ // 1. .eslintrc > 2. package.json > 3. vscode 설정 플러그인
+{
+  // js 진영에서는 babel-parser
+  // ts 진영에서는 @typescript-eslint/parser 
+  "parser": "@typescript-eslint/parser", // eslint가 구문을 분석을 위해 이용할 모듈
+  // eslint는 서드파티 플러그인 사용을 지원합니다. 린트가 사용 할 플러그인을 등록한다.
+  // 플러그인을 추가할 때, eslint-plugin- 접두사는 생략이 가능합니다.
+  "plugins": [
+    "@typescript-eslint",
+    "import",
+    "jsx-a11y",
+    "prettier",
+    "react",
+    "react-hooks"
+    ],
+  // 전역 변수에 접근 유무를 선택한다.
+  // 브라우저에 접근을 비허용하면 전역메소드 console.log를 못쓰게된다.
+  // 노드 접근을 비허용하면 require 등등 전역 메소드를 못쓰게된다.
+  "env": {
+    "browser": true,
+    "node": true
+  },
+  // 추가한 플러그인에서 사용할 규칙을 설정합니다.
+  // 플러그인을 추가를 하여도 자동으로 규칙이 활성화가 안된다.
+  // 규칙을 적용하기 위해서는 추가한 플러그인 중, 사용할 규칙을 추가해주어야 적용이 됩니다.
+  // 여기서 eslint-plugin- 접두사를 생략하고 plugin:를 사용하여 사용할 플러그인을 지정할 수 있습니다.
+  "extends": [
+    "airbnb",
+    "airbnb/hooks",
+    "eslint:recommended",
+    "plugin:import/recommended",
+    "plugin:prettier/recommended",
+    "plugin:react/recommended",
+    "plugin:react/jsx-runtime",
+    "plugin:react-hooks/recommended",
+    "plugin:jsx-a11y/recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  // Javascript 언어 옵션을 지정할 수 있습니다.
+  "parserOptions": {
+    "ecmaFeatures": {
+      // 전역 스코프의 사용 여부
+      // (node, commonjs 환경에서는 최상 스코프는 module)
+      "modules": true,
+      "jsx": true // ECMScript 규격의 JSX 사용 여부
+    },
+    "sourceType": "module",
+    "ecmaVersion": 2015, //사용할 ECMAScript 버전을 설정(현재 es6)
+    "requireConfigFile": false
+  },
+  // ignorePatterns는 .eslintignore 파일로 따로 빼서 관리해도된다. 
+  "ignorePatterns": ["node_modules/"],
+  // off 또는 0 
+  // warn 또는 1
+  // error 또는 2
+
+  // 룰 정리된 순서 off > warn > error
+  "rules": {
+    "@typescript-eslint/no-var-requires": "off",
+    "@typescript-eslint/no-empty-interface": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+    "react/forbid-prop-types": "off",
+    "linebreak-style": "off",
+    "import/no-dynamic-require": "off",
+    "global-require": "off",
+    "import/no-extraneous-dependencies": "off",
+    "no-empty-pattern": "off",
+    "no-alert": "off",
+    "prettier/prettier": "off",
+    // onclick 이벤트를 쓰는 요소에는 키보드 이벤트가 있어야된다는 규칙
+    "jsx-a11y/click-events-have-key-events": "off",
+    // 삼항연산자 규칙
+    "no-unneeded-ternary": "off",
+    //비대화형 HTML 요소에 이벤트 허용 x
+    "jsx-a11y/no-noninteractive-element-interactions": "off",
+    // key 배열 idx 못쓰는 규칙 해제
+    "react/no-array-index-key": "off",
+    "no-undef": "off",
+    "jsx-a11y/no-autofocus": "off",
+    "jsx-a11y/accessible-emoji": "off",
+    // 확장자로 js와 jsx 둘다 허용하도록 수정
+    "react/prop-types": "off",
+    "react/jsx-props-no-spreading": "off",
+    // console 룰
+    "no-console": "off",
+    // hooks의 의존성배열이 충분하지 않을때 강제로 의존성을 추가하는 규칙을 완화
+    // export const 문을 쓸때 에러를 내는 규칙 해제
+    "import/prefer-default-export": "off",
+    "import/no-unresolved": "off",
+    "import/extensions": "off",
+    // 다른 함수 안에서 호출은 가능하도록 해제
+    // 함수 평가전에 호출 금지 규칙
+    "no-shadow": "off",
+    "jsx-a11y/no-static-element-interactions": "off",
+    "no-param-reassign": "off",
+    "react/function-component-definition":["off","arrow-function"],
+
+    // useEeffect 안에 state 변수를 쓴다면 dependency array에 넣어줘야되는 룰
+    "react-hooks/exhaustive-deps": "warn",
+
+    // 사용하지 않는 변수가 있을때 빌드에러
+    "no-unused-vars": "error",
+    "jsx-quotes": ["error", "prefer-single"],
+    "spaced-comment": ["error", "always"],
+    "no-use-before-define": ["error", { "variables": false }],
+    "jsx-a11y/label-has-associated-control": [
+      "error",
+      {
+        "required": {
+          "some": ["nesting", "id"]
+        }
+      }
+    ],
+
+    "react/jsx-filename-extension": [2, { "extensions": [".js", ".jsx", ".ts", ".tsx"] }]
+  }
+}
+
+
+// "eslint" ESLint 코어
+// "eslint-config-airbnb" airbnb사의 코딩규칙을 사용
+// "eslint-plugin-import"  ES2015+의 import/export 구문을 지원
+// "eslint-plugin-jsx-a11y" JSX 내의 접근성 문제에 대해 즉각적인 AST린팅 피드백을 제공
+// "eslint-config-prettier" prettier와 eslint의 충돌을 일으키는 ESLint 규칙들을 비활성화시켜주는 config
+// "eslint-plugin-prettier" prettier에서 인식하는 오류를 ESLint가 출력
+// "eslint-plugin-react" React 관련 린트 설정을 지원
+// "eslint-plugin-react-hooks" React Hooks의 규칙을 강제해주는 플러그인
