@@ -36,7 +36,7 @@ module.exports = (_, argv) => {
       alias: {
         src: getAbsolutePath("src"),
         api: getAbsolutePath("src/api"),
-        assets: getAbsolutePath("src/api"),
+        assets: getAbsolutePath("src/assets"),
         components: getAbsolutePath("src/components"),
         hooks: getAbsolutePath("src/hooks"),
         modules: getAbsolutePath("src/modules"),
@@ -97,27 +97,28 @@ module.exports = (_, argv) => {
               // babel-plugin-styled-components dev시 styled-components 디버그를 편하게 해준다.
               // example App__test.icasd012 이런 형태로 class이름이 정해진다. App컴포넌트 하위에 Test 컴포넌트
               mode === PRODUCTION
-                ? [
-                    "@babel/plugin-transform-runtime",
-                    [
-                      "transform-remove-console",
-                      { exclude: ["error", "warn"] },
-                    ],
-                  ]
-                : [
-                    "@babel/plugin-transform-runtime",
-                    "babel-plugin-styled-components",
-                    "react-refresh/babel",
-                  ],
+                ? ["@babel/plugin-transform-runtime", ["transform-remove-console", { exclude: ["error", "warn"] }]]
+                : ["@babel/plugin-transform-runtime", "babel-plugin-styled-components", "react-refresh/babel"],
           },
+        },
+        {
+          // url-loader는 제한된 용량을 초과 시 file-loader 기능을 제공해준다.
+          // 그래서 url-loader와 file-loader 둘 다 의존성 추가해줘야된다.
+          test: /\.(png|jpg|gif|svg)$/i,
+          use: [
+            {
+              loader: "url-loader",
+              options: {
+                limit: 8192,
+                name: "[name].[ext]",
+              },
+            },
+          ],
         },
       ],
     },
 
-    plugins: [
-      new CleanWebpackPlugin(),
-      new HtmlWebpackPlugin({ template: "./public/index.html" }),
-    ],
+    plugins: [new CleanWebpackPlugin(), new HtmlWebpackPlugin({ template: "./public/index.html" })],
 
     output: {
       path: getAbsolutePath("dist"),
@@ -151,9 +152,7 @@ module.exports = (_, argv) => {
   if (mode !== PRODUCTION && config.plugins) {
     // webpack v4 이상 부턴 hmr이 기본으로 들어가있다.
     // config.plugins.push(new webpack.HotModuleReplacementPlugin());
-    config.plugins.push(
-      new BundleAnalyzerPlugin({ analyzerMode: "server", openAnalyzer: true }),
-    );
+    config.plugins.push(new BundleAnalyzerPlugin({ analyzerMode: "server", openAnalyzer: true }));
     config.plugins.push(new ReactRefreshWebpackPlugin());
   }
 
