@@ -96,12 +96,18 @@
     "no-param-reassign": "off",
     "react/function-component-definition":["off","arrow-function"],
 
+    // prettier는 더블 쿼테이션을 원하는데 eslint는 jsx props로 넘기는 값을 싱글 쿼테이션을 원한다.
+    // prettier와 eslint가 충돌이 일어나는거 같으니 jsx-quotes옵션을 일단 껏다.
+    "jsx-quotes": ["off"],
+   
     // useEeffect 안에 state 변수를 쓴다면 dependency array에 넣어줘야되는 룰
     "react-hooks/exhaustive-deps": "warn",
+    "react/no-unused-prop-types":"warn",
+    
 
     // 사용하지 않는 변수가 있을때 빌드에러
-    "no-unused-vars": "error",
-    "jsx-quotes": ["error", "prefer-single"],
+    "no-unused-vars": "warn",
+    
     "spaced-comment": ["error", "always"],
     "no-use-before-define": ["error", { "variables": false }],
     "jsx-a11y/label-has-associated-control": [
