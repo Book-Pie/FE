@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
+import { Expander } from "./Expander";
 
 interface Props {
   text: string;
@@ -16,59 +17,62 @@ interface Props {
   }) => any;
 }
 
-interface State {
-  isExpanded: boolean;
-  isTruncated: boolean;
-}
+export const TextTruncate: React.FC<Props> = props => {
+  const wrapperRef = useRef<HTMLParagraphElement>();
 
-export class TextTruncate extends React.Component<Props, State> {
-  private wrapper: HTMLParagraphElement | null | undefined;
+  console.log(props);
+  console.log(wrapperRef.current);
+  console.log(wrapperRef.current?.clientHeight);
+  console.log(props.lines);
 
-  public state = {
-    isExpanded: false,
-    isTruncated: false,
+  const [isExpanded, setExpand] = useState(false);
+  const [isTruncated, setTruncate] = useState(false);
+
+  const expand = () => {
+    setExpand(true);
   };
 
-  private expand = () => {
-    this.setState({ isExpanded: true });
-  };
-
-  public componentDidMount() {
-    if (this.wrapper) {
-      if (this.wrapper.offsetHeight > this.props.lineHeight * this.props.lines) {
-        this.setState({ isTruncated: true });
+  useEffect(() => {
+    if (wrapperRef.current) {
+      if (wrapperRef.current.clientHeight > lineHeight * lines) {
+        setTruncate(true);
       }
     }
-  }
+  }, []);
 
-  public render() {
-    const { expand, props } = this;
-    const { lines, text, lineHeight, renderExpander } = props;
-    const { isExpanded, isTruncated } = this.state;
+  const { lines, text, lineHeight, renderExpander } = props;
 
-    const style = {
-      WebkitLineClamp: isTruncated && !isExpanded ? lines : "unset",
-      maxHeight: isTruncated && !isExpanded ? lines * lineHeight : "none",
-    };
-    return (
-      <>
-        <p
-          ref={wrapper => (this.wrapper = wrapper)}
-          dangerouslySetInnerHTML={{ __html: text.split("\n").join("<br />") }}
-          style={style}
-        />
-        {!!renderExpander && renderExpander({ isExpanded, isTruncated, expand })}
-      </>
-    );
-  }
-}
+  const style = {
+    WebkitLineClamp: isTruncated && !isExpanded ? lines : "unset",
+    maxHeight: isTruncated && !isExpanded ? lines * lineHeight : "none",
+  };
+  return (
+    <>
+      <P ref={wrapperRef} dangerouslySetInnerHTML={{ __html: text.split("\n").join("<br />") }} style={style} />
 
-const p = styled.p`
-  display: inline-flex;
-  position: fixed;
-  left: 30px;
-  width: 250px;
-  height: 400px;
+      {!!renderExpander && (
+        <ExpanderArea>
+          <Expander
+            onClick={() => setExpand(!isExpanded)}
+            text={isExpanded ? "접기" : "더보기"}
+            isExpanded={isExpanded}
+          />
+        </ExpanderArea>
+      )}
+    </>
+  );
+};
+
+const P = styled.p`
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow-y: hidden;
+  line-height: 1.5em;
+`;
+
+const ExpanderArea = styled.div`
+  text-align: right;
 `;
 
 export default TextTruncate;

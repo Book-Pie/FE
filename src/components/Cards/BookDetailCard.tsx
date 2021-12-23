@@ -29,15 +29,17 @@ interface BookDetailPanelProps {
 export const BookDetailPanel: React.FunctionComponent<BookDetailPanelProps> = props => {
   const { title, children, imageUrl, isMobile = false, useSkeleton = false, useTruncate = true } = props;
 
+  console.log(props);
+
   return children ? (
     <BookDetailPanelWrapper>
       <CardTitle>{title}</CardTitle>
       <div>
         {useTruncate ? (
           <TextTruncate
-            lines={isMobile ? 7 : 8}
+            lines={isMobile ? 4 : 6}
             text={`${imageUrl ? `<img src="${imageUrl}" /><br /><br />` : ""}${children}`}
-            lineHeight={15}
+            lineHeight={29}
             renderExpander={({ expand, isExpanded, isTruncated }) =>
               !isTruncated || isExpanded ? null : (
                 <ExpanderArea>

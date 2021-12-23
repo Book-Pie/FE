@@ -1,4 +1,5 @@
 import React from "react";
+import styled from "styled-components";
 
 interface Props {
   isExpanded: boolean;
@@ -9,9 +10,16 @@ interface Props {
 export const Expander: React.FC<Props> = props => {
   const { isExpanded, text, onClick } = props;
   return (
-    <button onClick={onClick} className="BookDetail_ContentTruncButton">
+    <Button onClick={onClick} className="BookDetail_ContentTruncButton">
       {text}
       {/* <Icon name={isExpanded ? "up" : "down"} /> */}
-    </button>
+    </Button>
   );
 };
+
+const Button = styled.button`
+  cursor: pointer;
+  color: #646c73;
+  border: none;
+  background-color: white;
+`;
