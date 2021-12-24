@@ -88,13 +88,14 @@ const BannerContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
+  /* position: relative; */
 `;
 
 const Banner = styled(motion.img)`
   width: 100vw;
-  position: absolute;
+  position: absolute; // 헤더 크기만큼 띄워주기
   z-index: -1;
+  display: flex;
 `;
 
 const PrevButton = styled.button`
