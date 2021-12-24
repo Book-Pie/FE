@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { PopupWrraper } from "./style";
+import { PopupWrapper } from "./style";
 import { Props } from "./types";
 
 const Popup = ({ isOpen, closeDelay, openDelay, children, autoClose, className, setIsOpen }: Props) => {
@@ -39,9 +39,9 @@ const Popup = ({ isOpen, closeDelay, openDelay, children, autoClose, className, 
   }, [closeDelay, autoClose]);
 
   return (
-    <PopupWrraper onClick={popUpCloase} visible={visible} className={className}>
+    <PopupWrapper onClick={popUpCloase} visible={visible} className={className}>
       {children}
-    </PopupWrraper>
+    </PopupWrapper>
   );
 };
 

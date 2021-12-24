@@ -1,5 +1,6 @@
 import { Route, Switch, useRouteMatch } from "react-router";
-import FindIdForm from "src/components/FindIdForm/FindIdForm";
+import FindIdForm from "components/FindIdForm/FindIdForm";
+import FindPasswordForm from "components/FindPassswordForm/FindPasswordForm";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
@@ -29,7 +30,8 @@ const Find = () => {
             <FindIdForm />
           </Route>
           <Route path={`${path}/password`}>
-            <div>비밀번호 찾기</div>
+            <h2>비밀번호 찾기</h2>
+            <FindPasswordForm />
           </Route>
           <Route
             path={`${path}/result`}
