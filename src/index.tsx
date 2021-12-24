@@ -2,6 +2,9 @@ import ReactDOM from "react-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { BrowserRouter } from "react-router-dom";
 import { createGlobalStyle } from "styled-components";
+import { Router } from "react-router";
+import { Provider } from "react-redux";
+import store, { customHistory } from "modules/store";
 import App from "./App";
 import Header from "./components/Header";
 
@@ -67,11 +70,13 @@ const client = new QueryClient();
 
 ReactDOM.render(
   <QueryClientProvider client={client}>
-    <BrowserRouter>
-      <GlobalStyle />
-      <Header />
-      <App />
-    </BrowserRouter>
+    <Provider store={store}>
+      <Router history={customHistory}>
+        <GlobalStyle />
+        <Header />
+        <App />
+      </Router>
+    </Provider>
   </QueryClientProvider>,
   rootElement,
 );
