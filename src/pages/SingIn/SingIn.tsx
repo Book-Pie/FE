@@ -20,8 +20,12 @@ const SignIn = () => {
       <Links>
         <input type="checkbox" onChange={handleOnChange} checked={isRemember} />
         <span>아이디 저장</span>
-        <span>아이디 찾기</span>
-        <span>비밀번호 찾기</span>
+        <Link to="/find/id">
+          <span>아이디 찾기</span>
+        </Link>
+        <Link to="/find/password">
+          <span>비밀번호 찾기</span>
+        </Link>
       </Links>
       <Links>
         <span>아직 회원이아니신가요?</span>

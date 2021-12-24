@@ -1,4 +1,3 @@
-// 함수로만 만들껀지 class써서만들껀지 뭐가 좋은지 확인해봐야한다.
 import { ValidationRule, ValidationValue } from "react-hook-form";
 
 export const makeOption = <T extends ValidationValue>(validationValue: T, errorMessage: string): ValidationRule<T> => ({

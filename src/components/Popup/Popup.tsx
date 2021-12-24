@@ -12,12 +12,19 @@ const Popup = ({ isOpen, closeDelay, openDelay, children, autoClose, className, 
   };
 
   useEffect(() => {
-    if (!visible && isOpen && !isClosed.current) setTimeout(() => setVisible(true), openDelay);
+    let timer: NodeJS.Timeout;
+    if (!visible && isOpen && !isClosed.current) {
+      timer = setTimeout(() => setVisible(true), openDelay);
+    }
 
     if (isClosed.current) {
-      setTimeout(() => setIsOpen(false), openDelay);
+      timer = setTimeout(() => setIsOpen(false), openDelay);
       isClosed.current = false;
     }
+
+    return () => {
+      clearTimeout(timer);
+    };
   }, [visible, isOpen, openDelay, setIsOpen]);
 
   useEffect(() => {
