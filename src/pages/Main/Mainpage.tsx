@@ -3,14 +3,13 @@ import styled from "styled-components";
 import BannerSlider from "../../components/Main/BannerSlider";
 
 const Mainpage = () => {
-  return <BannerSlider />;
+  return (
+    <>
+      <BannerSlider />
+      <h2>중고상품 추천</h2>
+      <ThumbnailSlider />
+    </>
+  );
 };
 
 export default Mainpage;
-
-const Container = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-`;

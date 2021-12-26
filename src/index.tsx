@@ -6,7 +6,7 @@ import { Router } from "react-router";
 import { Provider } from "react-redux";
 import store, { customHistory } from "modules/store";
 import App from "./App";
-import Header from "./components/Header";
+import Header from "./components/Main/Header";
 
 const GlobalStyle = createGlobalStyle`
   html, body, div, span, applet, object, iframe,

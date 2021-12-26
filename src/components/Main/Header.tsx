@@ -39,7 +39,6 @@ const Header = () => {
 export default Header;
 
 const HeaderContainer = styled.div`
-  background-color: pink;
   display: flex;
   justify-content: space-between;
   padding: 20px;
