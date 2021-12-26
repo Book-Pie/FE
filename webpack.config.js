@@ -115,6 +115,11 @@ module.exports = (_, argv) => {
             },
           ],
         },
+        {
+          // css-loader, style-loader
+          test: /\.css$/i,
+          use: ["style-loader", "css-loader"],
+        },
       ],
     },
 

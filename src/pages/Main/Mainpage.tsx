@@ -1,16 +1,9 @@
 import ThumbnailSlider from "src/components/Main/ThumbnailSlider";
 import styled from "styled-components";
-
 import BannerSlider from "../../components/Main/BannerSlider";
 
 const Mainpage = () => {
-  return (
-    <Container>
-      <BannerSlider />
-      <h3>중고상품추천</h3>
-      <ThumbnailSlider />
-    </Container>
-  );
+  return <BannerSlider />;
 };
 
 export default Mainpage;
