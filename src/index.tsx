@@ -57,7 +57,6 @@ const GlobalStyle = createGlobalStyle`
   }
   body {
     font-family: 'Source Sans Pro', sans-serif;
-    background-color: white;
   }
   a {
     text-decoration: none;
