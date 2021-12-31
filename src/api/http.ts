@@ -1,5 +1,14 @@
 import axios, { AxiosRequestConfig } from "axios";
-import { getAccessToken } from "src/utils/localStorageUtil";
+import { getAccessToken } from "utils/localStorageUtil";
+
+interface AxiosErrorResponse {
+  success: boolean;
+  error: {
+    message: string;
+    status: number;
+  };
+  data: null;
+}
 
 const baseURL = process.env.BASE_URL !== "production" ? "http://localhost:3000/api/" : "http://bookpie.tk:8080/api";
 
@@ -35,6 +44,7 @@ export const errorHandler = (error: any) => {
     // 요청이 이루어졌으며 서버가 2xx의 범위를 벗어나는 상태 코드로 응답했습니다.
     if (error.response) {
       const { status } = error.response;
+      const data = error.response.data as AxiosErrorResponse;
 
       // 상태코드 500이상부터
       if (status >= 500) {
@@ -43,6 +53,7 @@ export const errorHandler = (error: any) => {
       // 상태코드 500보다 작고 400이상부터
       if (status < 500 && status >= 400) {
         message = "잘못된 요청을 보냈습니다.";
+        if (data.error.message) message = data.error.message;
       }
     }
   }
