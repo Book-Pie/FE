@@ -1,4 +1,5 @@
 const path = require("path");
+const webpack = require("webpack");
 // 웹팩이 자동으로 html를 build 파일에 넣어주고
 // script, link 태그를 유저가 아닌 웹팩이 자동으로 넣어준다.
 const HtmlWebpackPlugin = require("html-webpack-plugin");
@@ -23,8 +24,7 @@ module.exports = (_, argv) => {
     // 프로젝트 모드 develoment, production
     mode,
     // 개발 시 필요한 소스맵 등록
-    // devtool: mode === PRODUCTION ? "source-map" : "eval-source-map",
-    devtool: mode === PRODUCTION ? "eval-source-map" : "eval-source-map",
+    devtool: mode === PRODUCTION ? "source-map" : "eval-source-map",
 
     resolve: {
       // 확장자를 생략 시 웹팩한태 어떤 확장자를 생략 했는지 알려준다.
@@ -118,7 +118,12 @@ module.exports = (_, argv) => {
       ],
     },
 
-    plugins: [new CleanWebpackPlugin(), new HtmlWebpackPlugin({ template: "./public/index.html" })],
+    plugins: [
+      new CleanWebpackPlugin(),
+      new HtmlWebpackPlugin({ template: "./public/index.html" }),
+      // process.env.XXXX로 접근하면 된다.
+      new webpack.EnvironmentPlugin({ BASE_URL: JSON.stringify(mode), MODE: JSON.stringify(mode) }),
+    ],
 
     output: {
       path: getAbsolutePath("dist"),
@@ -145,10 +150,17 @@ module.exports = (_, argv) => {
         publicPath: "/",
       },
       // 설정한 url에 대해서 dev-serve가 Forward 프록시를 해준다.
-      proxy: {},
+      proxy: {
+        "/api": {
+          target: "http://localhost:3000",
+          router: () => "http://bookpie.tk:8080/",
+          logLevel: "debug",
+        },
+      },
     },
   };
 
+  // 개발환경
   if (mode !== PRODUCTION && config.plugins) {
     // webpack v4 이상 부턴 hmr이 기본으로 들어가있다.
     // config.plugins.push(new webpack.HotModuleReplacementPlugin());
