@@ -8,26 +8,28 @@ import {
   hookFormEmailPatternCheck,
   hookFormMisMatchCheck,
 } from "utils/hookFormUtil";
-import FormInput from "src/components/FormInput/FormInput";
+import FormInput from "components/FormInput/FormInput";
 import ErrorMessage from "components/ErrorMessage/ErrorMessage";
-import FormLabel from "src/components/FormLabel/FormLabel";
+import FormLabel from "components/FormLabel/FormLabel";
 import DaumPostCode from "react-daum-postcode";
 import { useEffect, useState } from "react";
 import useDaumPost from "hooks/useDaumPost";
+import http, { errorHandler } from "src/api/http";
 import axios from "axios";
 import { FormErrorMessages, Rows, SignUpFormReponse, SignUpInputForm } from "./types";
 import { Button, Row } from "./style";
+import Popup from "../Popup/Popup";
 
 const signUpInputFormInit: SignUpInputForm = {
-  userId: "",
   userName: "",
+  name: "",
   password: "",
   nickName: "",
   confirmPassword: "",
-  mobileNumber: "",
+  phone: "",
   email: "",
   postalCode: "",
-  address: "",
+  mainAddress: "",
   detailedAddress: "",
 };
 
@@ -41,34 +43,51 @@ const SignUpForm = () => {
   const { addressState, handleComplete } = useDaumPost();
   const [password, confirmPassword] = watch(["password", "confirmPassword"]);
   const { errors } = formState;
+  const [isOpen, setIsOpen] = useState(false);
+  const [message, setMessage] = useState("");
 
   const onSubmit = async (data: SignUpInputForm) => {
     try {
-      const { address, detailedAddress, email, mobileNumber, nickName, password, postalCode, userId, userName } = data;
-      // ... id, nickname 중복체크
-      const responses = await Promise.all([
-        axios.get<SignUpFormReponse>("http://localhost:3001/signup-userId-duplicate-success"),
-        axios.get<SignUpFormReponse>("http://localhost:3001/signup-nickName-duplicate-success"),
-      ]);
-      const [userIdDuplicateValue, nickNameDuplicateValue] = responses;
+      const { mainAddress, detailedAddress, email, phone, nickName, password, postalCode, userName, name } = data;
 
-      if (!userIdDuplicateValue.data.success) {
-        setError("userId", { type: "duplicate", message: "아이디가 중복입니다." });
+      const validationReponse = await axios.all([
+        http.get<SignUpFormReponse>(`/user/username/${userName}`),
+        http.get<SignUpFormReponse>(`/user/nickname/${nickName}`),
+        http.get<SignUpFormReponse>(`/user/email/${email}`),
+      ]);
+
+      // validation 모두 성공했을때 요청을 한다.
+      const [userNameDuplicate, nickNameDuplicate, emailDuplicate] = validationReponse;
+
+      if (userNameDuplicate.data.success === false) {
+        setError("userName", { type: "duplicate", message: "아이디가 중복입니다." });
       }
-      if (!nickNameDuplicateValue.data.success) {
+      if (!nickNameDuplicate.data.success === false) {
         setError("nickName", { type: "duplicate", message: "닉네임이 중복입니다." });
       }
+      if (!emailDuplicate.data.success === false) {
+        setError("email", { type: "duplicate", message: "이메일이 중복입니다." });
+      }
 
-      if (userIdDuplicateValue.data.success && nickNameDuplicateValue.data.success) {
-        console.log("회원가입");
-        // ... 회원가입 api
-      }
+      const payload = {
+        username: userName,
+        password,
+        name,
+        phone,
+        email,
+        nickName,
+        address: {
+          postalCode,
+          mainAddress,
+          detailedAddress,
+        },
+      };
+
+      await http.post<SignUpFormReponse>("/user/signup", payload);
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        // axios 에러
-      } else {
-        // 런타임 에러
-      }
+      const message = errorHandler(error);
+      setIsOpen(true);
+      setMessage(message);
     }
   };
 
@@ -78,7 +97,7 @@ const SignUpForm = () => {
 
   const rows: Rows[] = [
     {
-      id: "userId",
+      id: "userName",
       placeholder: "아이디입력",
       text: "아이디",
       options: {
@@ -137,7 +156,7 @@ const SignUpForm = () => {
       },
     },
     {
-      id: "userName",
+      id: "name",
       placeholder: "이름 입력",
       text: "이름",
       options: {
@@ -150,9 +169,8 @@ const SignUpForm = () => {
         },
       },
     },
-
     {
-      id: "mobileNumber",
+      id: "phone",
       placeholder: "ex 000-0000-0000",
       text: "휴대폰 번호",
       options: {
@@ -187,7 +205,7 @@ const SignUpForm = () => {
       },
     },
     {
-      id: "address",
+      id: "mainAddress",
       placeholder: "주소",
       text: "",
       disabled: true,
@@ -224,33 +242,40 @@ const SignUpForm = () => {
 
   useEffect(() => {
     const { addr, extraAddr, zonecode } = addressState;
-    const { address, postalCode } = errors;
+    const { mainAddress, postalCode } = errors;
 
     if (addr && zonecode) {
-      if (address || postalCode) {
-        clearErrors(["postalCode", "address"]);
+      if (mainAddress || postalCode) {
+        clearErrors(["postalCode", "mainAddress"]);
       }
       setValue("postalCode", zonecode);
-      setValue("address", `${addr} ${extraAddr}`);
+      setValue("mainAddress", `${addr} ${extraAddr}`);
       setFocus("detailedAddress");
       setAddressPopUpOpen(false);
     }
   }, [addressState, errors, setValue, setAddressPopUpOpen, clearErrors, setFocus]);
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      {rowsEl}
-      {addressPopUpOpen && <DaumPostCode autoClose={false} onComplete={handleComplete} />}
-      <div>
-        <Button type="button" onClick={handlePopUpOpne}>
-          주소 찾기
-        </Button>
-        <Button type="submit">회원가입</Button>
-        <Button type="button" onClick={handleReset}>
-          초기화
-        </Button>
-      </div>
-    </form>
+    <>
+      {isOpen && (
+        <Popup className="red" isOpen={isOpen} setIsOpen={setIsOpen} autoClose closeDelay={3000}>
+          {message}
+        </Popup>
+      )}
+      <form onSubmit={handleSubmit(onSubmit)}>
+        {rowsEl}
+        {addressPopUpOpen && <DaumPostCode autoClose={false} onComplete={handleComplete} />}
+        <div>
+          <Button type="button" onClick={handlePopUpOpne}>
+            주소 찾기
+          </Button>
+          <Button type="submit">회원가입</Button>
+          <Button type="button" onClick={handleReset}>
+            초기화
+          </Button>
+        </div>
+      </form>
+    </>
   );
 };
 

@@ -1,17 +1,17 @@
-import { FormInputProps } from "src/components/FormInput/types";
+import { FormInputProps } from "components/FormInput/types";
 import { RegisterOptions } from "react-hook-form";
 
 // SignUpForm 이름으로 쓰고 싶지만 이미 SignUpForm 컴포넌트가 있다.
 export interface SignUpInputForm {
-  userId: string;
   userName: string;
+  name: string;
   nickName: string;
   password: string;
   confirmPassword: string;
-  mobileNumber: string;
+  phone: string;
   email: string;
   postalCode: string;
-  address: string;
+  mainAddress: string;
   detailedAddress: string;
 }
 

@@ -5,28 +5,26 @@ import {
   hookFormSpecialChractersCheck,
   hookFormWhiteSpaceCheck,
   makeOption,
-} from "src/utils/hookFormUtil";
+} from "utils/hookFormUtil";
 import { useForm } from "react-hook-form";
-import { signInAsync, signInSelector } from "src/modules/Slices/signInSlice";
-import { useDispatch } from "react-redux";
-import { useTypedSelector } from "modules/store";
+import { signInAsync } from "modules/Slices/signInSlice";
 import { useEffect, useState } from "react";
-import { getSaveId } from "utils/localStorageUtil";
+import { getRememberId } from "utils/localStorageUtil";
 import Popup from "components/Popup/Popup";
+import useSignIn from "hooks/useSignIn";
 import { Button, Form } from "./style";
 import { SignInInputs, SignInInputForm, FormErrorMessages, SignInFormProp } from "./types";
 
 const initialState: SignInInputForm = {
-  id: getSaveId(),
+  id: getRememberId(),
   password: "",
 };
 
 const SignInForm = ({ isRemember }: SignInFormProp) => {
-  const dispatch = useDispatch();
   const { register, handleSubmit, formState } = useForm<SignInInputForm>({
     defaultValues: initialState,
   });
-  const signIn = useTypedSelector(signInSelector);
+  const { dispatch, signIn } = useSignIn();
   const [isOpen, setIsOpen] = useState(false);
   const { errors } = formState;
   const { error } = signIn;
@@ -36,8 +34,8 @@ const SignInForm = ({ isRemember }: SignInFormProp) => {
   }, [error]);
 
   const onSubmit = (data: SignInInputForm) => {
-    const { id, password } = data;
-    dispatch(signInAsync({ id, password, isRemember }));
+    const { id: username, password } = data;
+    dispatch(signInAsync({ isRemember, password, username }));
   };
 
   const inputs: SignInInputs[] = [

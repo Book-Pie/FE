@@ -1,14 +1,14 @@
 import { Link } from "react-router-dom";
 import naver from "assets/oAuth/naver_oauth.png";
 import kakao from "assets/oAuth/kakao_oauth.png";
-import SignInForm from "src/components/SignInForm/SignInForm";
+import SignInForm from "components/SignInForm/SignInForm";
 import React, { useState } from "react";
-import { getSaveId } from "utils/localStorageUtil";
+import { getRememberId } from "utils/localStorageUtil";
 
 import { Links, OAuths, Container } from "./style";
 
 const SignIn = () => {
-  const [isRemember, setIsRemember] = useState(getSaveId() ? true : false);
+  const [isRemember, setIsRemember] = useState(getRememberId() ? true : false);
   const handleOnChange = ({ target: { checked } }: React.ChangeEvent<HTMLInputElement>) => setIsRemember(checked);
 
   return (
