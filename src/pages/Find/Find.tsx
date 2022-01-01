@@ -1,21 +1,9 @@
 import { Route, Switch, useRouteMatch } from "react-router";
 import FindIdForm from "components/FindIdForm/FindIdForm";
 import FindPasswordForm from "components/FindPassswordForm/FindPasswordForm";
-import styled from "styled-components";
 import { Link } from "react-router-dom";
-
-const Container = styled.div`
-  padding: 1rem;
-  width: 50%;
-  margin: 0 auto;
-  background-color: rgb(245, 246, 247);
-  text-align: center;
-`;
-
-interface ResultState {
-  id: string;
-  path: string;
-}
+import { LocationState } from "./types";
+import { Container } from "./style";
 
 const Find = () => {
   const match = useRouteMatch();
@@ -36,13 +24,13 @@ const Find = () => {
           <Route
             path={`${path}/result`}
             render={({ location }) => {
-              const { id, path } = location.state as ResultState;
+              const { username, path } = location.state as LocationState;
 
-              if (/\/find\/id/gi.test(path)) {
+              if (/id/gi.test(path)) {
                 return (
                   <div>
                     찾으신 아이디 결과
-                    <div>{JSON.stringify(id)}</div>
+                    <div>{username}</div>
                     <div>
                       <Link to="/signIn">로그인하기</Link>
                     </div>

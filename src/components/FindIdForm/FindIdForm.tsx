@@ -8,57 +8,40 @@ import {
   hookFormSpecialChractersCheck,
   hookFormWhiteSpaceCheck,
   makeOption,
-} from "src/utils/hookFormUtil";
-import axios from "axios";
+} from "utils/hookFormUtil";
 import { useState } from "react";
 import { useHistory } from "react-router";
 import Popup from "components/Popup/Popup";
-import { FindIdInputForm, FormErrorMessages } from "./types";
+import { errorHandler } from "src/api/http";
+import { getFindId } from "src/api/find/find";
+import { AxiosPayload, AxiosResponse, FindIdInputForm, FormErrorMessages } from "./types";
 import { Button, Row } from "./style";
 
 const FindIdForm = () => {
   const history = useHistory();
   const { register, handleSubmit, formState } = useForm<FindIdInputForm>();
   const [isOpen, setIsOpen] = useState(false);
-  const [popUpMessage, setPopUpMessage] = useState("");
+  const [message, setMessage] = useState("");
   const { errors } = formState;
 
   const onSubmit = async (data: FindIdInputForm) => {
-    function onMessages(message: string) {
-      setPopUpMessage(message);
-      setIsOpen(true);
-    }
-
     try {
-      const { email, mobileNumber, username } = data;
-      // const response = await axios.get("http://localhost:3001/find-id-fail");
-      const response = await axios.get("http://localhost:3001/find-id-success");
-      const { success, error, data: userId } = response.data;
-
-      // 응답 오류
-      if (!success) {
-        onMessages(error.message);
-        return;
-      }
+      const { email, phone, name } = data;
+      const response = await getFindId<AxiosResponse, AxiosPayload>({ email, phone, name });
+      const username = response.data.data;
 
       //  응답 성공
       history.push({
         pathname: "/find/result",
         state: {
-          id: userId,
-          path: "/find/id",
+          username,
+          path: "id",
         },
       });
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        // .. 서버오류
-        console.error(error);
-        onMessages("서버에서 오류가 발생했습니다.");
-      } else {
-        // 런타임 오류
-        console.error(error);
-        onMessages("클라이언트에서 오류가 발생했습니다.");
-      }
+      const message = errorHandler(error);
+      setIsOpen(true);
+      setMessage(message);
     }
   };
 
@@ -66,7 +49,7 @@ const FindIdForm = () => {
     <>
       {isOpen && (
         <Popup isOpen={isOpen} setIsOpen={setIsOpen} autoClose className="red" closeDelay={2000}>
-          <div>{popUpMessage}</div>
+          <div>{message}</div>
         </Popup>
       )}
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -74,7 +57,7 @@ const FindIdForm = () => {
           <FormLabel text="이름" />
           <FormInput
             placeholder="이름을 입력해주세요."
-            register={register("username", {
+            register={register("name", {
               maxLength: makeOption<number>(5, FormErrorMessages.MAX_LENGTH),
               minLength: makeOption<number>(3, FormErrorMessages.MIN_LENGTH),
               required: makeOption<boolean>(true, FormErrorMessages.REQUIRED),
@@ -84,7 +67,7 @@ const FindIdForm = () => {
               },
             })}
           />
-          <ErrorMessage message={errors.username?.message} />
+          <ErrorMessage message={errors.name?.message} />
         </Row>
         <Row>
           <FormLabel text="이메일" />
@@ -105,7 +88,7 @@ const FindIdForm = () => {
           <FormLabel text="휴대번호" />
           <FormInput
             placeholder="ex ) 010-0000-0000"
-            register={register("mobileNumber", {
+            register={register("phone", {
               maxLength: makeOption<number>(14, FormErrorMessages.MAX_LENGTH),
               minLength: makeOption<number>(10, FormErrorMessages.MIN_LENGTH),
               required: makeOption<boolean>(true, FormErrorMessages.REQUIRED),
@@ -114,7 +97,7 @@ const FindIdForm = () => {
               },
             })}
           />
-          <ErrorMessage message={errors.mobileNumber?.message} />
+          <ErrorMessage message={errors.phone?.message} />
         </Row>
         <div>
           <Button type="submit">아이디 찾기</Button>

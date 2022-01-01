@@ -1,9 +1,23 @@
 export interface FindPasswordInputForm {
-  userId: string;
-  userName: string;
+  username: string;
+  name: string;
   email: string;
-  mobileNumber: string;
-  newPassword: string;
+  phone: string;
+  password: string;
+}
+
+export interface AxiosResponse {
+  success: boolean;
+  error: null;
+  data: string;
+}
+
+export interface AxiosPayload {
+  username: string;
+  name: string;
+  email: string;
+  phone: string;
+  password: string;
 }
 
 export const FormErrorMessages = {

@@ -1,7 +1,18 @@
 export interface FindIdInputForm {
-  username: "";
+  name: "";
   email: "";
-  mobileNumber: "";
+  phone: "";
+}
+
+export interface AxiosResponse {
+  success: boolean;
+  error: null;
+  data: string;
+}
+export interface AxiosPayload {
+  email: string;
+  phone: string;
+  name: string;
 }
 
 export const FormErrorMessages = {

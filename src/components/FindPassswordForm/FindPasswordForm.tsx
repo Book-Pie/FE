@@ -10,57 +10,42 @@ import {
   makeOption,
 } from "utils/hookFormUtil";
 import ErrorMessage from "components/ErrorMessage/ErrorMessage";
-import axios from "axios";
 import { useHistory } from "react-router";
 import { useState } from "react";
 import Popup from "components/Popup/Popup";
+import { getFindPassword } from "src/api/find/find";
+import { errorHandler } from "src/api/http";
 import { Button, Row } from "./style";
-import { FindPasswordInputForm, FormErrorMessages } from "./types";
+import { AxiosPayload, AxiosResponse, FindPasswordInputForm, FormErrorMessages } from "./types";
 
 const FindPasswordForm = () => {
   const { register, handleSubmit, formState } = useForm<FindPasswordInputForm>();
-  const [isOpen, setIsOpen] = useState(false);
-  const [popUpMessage, setPopUpMessage] = useState("");
-  console.log("popUpMessage=>", popUpMessage);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [message, setMessage] = useState<string>("");
 
   const history = useHistory();
   const { errors } = formState;
 
   const onSubmit = async (FormData: FindPasswordInputForm) => {
-    function onMessages(message: string) {
-      setPopUpMessage(message);
-      setIsOpen(true);
-    }
-
     try {
-      const { email, mobileNumber, newPassword, userId, userName } = FormData;
-      // const response = await axios.get("http://localhost:3001/find-password-fail");
-      const response = await axios.get("http://localhost:3001/find-password-success");
-      const { success, error } = response.data;
-
-      // 응답 오류
-      if (!success) {
-        onMessages(error.message);
-        return;
-      }
+      const { email, phone, password, username, name } = FormData;
+      await getFindPassword<AxiosResponse, AxiosPayload>({
+        email,
+        phone,
+        password,
+        username,
+        name,
+      });
 
       // 응답 성공
       history.push({
         pathname: "/find/result",
-        state: {
-          path: "/find/password",
-        },
+        state: { path: "password" },
       });
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        // axios 에러
-        console.error(error);
-        onMessages("서버에서 오류가 발생했습니다.");
-      } else {
-        // 런타임 에러
-        console.error(error);
-        onMessages("클라이언트에서 오류가 발생했습니다.");
-      }
+      const message = errorHandler(error);
+      setIsOpen(true);
+      setMessage(message);
     }
   };
 
@@ -68,7 +53,7 @@ const FindPasswordForm = () => {
     <>
       {isOpen && (
         <Popup isOpen={isOpen} setIsOpen={setIsOpen} autoClose className="red" closeDelay={2000}>
-          {popUpMessage}
+          {message}
         </Popup>
       )}
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -76,7 +61,7 @@ const FindPasswordForm = () => {
           <FormLabel text="아이디" />
           <FormInput
             placeholder="아이디를 입력해주세요."
-            register={register("userId", {
+            register={register("username", {
               maxLength: makeOption<number>(10, FormErrorMessages.MAX_LENGTH),
               minLength: makeOption<number>(5, FormErrorMessages.MIN_LENGTH),
               required: makeOption<boolean>(true, FormErrorMessages.REQUIRED),
@@ -86,13 +71,13 @@ const FindPasswordForm = () => {
               },
             })}
           />
-          <ErrorMessage message={errors.userId?.message} />
+          <ErrorMessage message={errors.username?.message} />
         </Row>
         <Row>
           <FormLabel text="이름" />
           <FormInput
             placeholder="이름을 입력해주세요."
-            register={register("userName", {
+            register={register("name", {
               maxLength: makeOption<number>(5, FormErrorMessages.MAX_LENGTH),
               minLength: makeOption<number>(3, FormErrorMessages.MIN_LENGTH),
               required: makeOption<boolean>(true, FormErrorMessages.REQUIRED),
@@ -102,7 +87,7 @@ const FindPasswordForm = () => {
               },
             })}
           />
-          <ErrorMessage message={errors.userName?.message} />
+          <ErrorMessage message={errors.name?.message} />
         </Row>
         <Row>
           <FormLabel text="이메일" />
@@ -123,7 +108,7 @@ const FindPasswordForm = () => {
           <FormLabel text="휴대번호" />
           <FormInput
             placeholder="ex ) 010-0000-0000"
-            register={register("mobileNumber", {
+            register={register("phone", {
               maxLength: makeOption<number>(14, FormErrorMessages.MAX_LENGTH),
               minLength: makeOption<number>(10, FormErrorMessages.MIN_LENGTH),
               required: makeOption<boolean>(true, FormErrorMessages.REQUIRED),
@@ -132,14 +117,14 @@ const FindPasswordForm = () => {
               },
             })}
           />
-          <ErrorMessage message={errors.mobileNumber?.message} />
+          <ErrorMessage message={errors.phone?.message} />
         </Row>
         <Row>
           <FormLabel text="새로운 비밀번호" />
           <FormInput
             type="password"
             placeholder="새 비밀번호를 입력해주세요."
-            register={register("newPassword", {
+            register={register("password", {
               maxLength: makeOption<number>(20, FormErrorMessages.MAX_LENGTH),
               minLength: makeOption<number>(5, FormErrorMessages.MIN_LENGTH),
               required: makeOption<boolean>(true, FormErrorMessages.REQUIRED),
@@ -149,7 +134,7 @@ const FindPasswordForm = () => {
               },
             })}
           />
-          <ErrorMessage message={errors.newPassword?.message} />
+          <ErrorMessage message={errors.password?.message} />
         </Row>
         <Button type="submit">비밀번호 찾기 및 변경</Button>
       </form>
