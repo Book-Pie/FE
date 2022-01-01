@@ -1,5 +1,4 @@
-import axios, { AxiosRequestConfig } from "axios";
-import { getAccessToken } from "utils/localStorageUtil";
+import axios from "axios";
 
 interface AxiosErrorResponse {
   success: boolean;
@@ -19,14 +18,6 @@ const http = axios.create({
   },
   timeout: 2000,
 });
-
-const requsetSuccess = (config: AxiosRequestConfig) => {
-  const accessToken = getAccessToken();
-  if (accessToken && config.headers) config.headers["X-AUTH-TOKEN"] = accessToken;
-  return config;
-};
-
-http.interceptors.request.use(requsetSuccess);
 
 export const errorHandler = (error: any) => {
   // 런타임 오류
