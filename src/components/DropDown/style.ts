@@ -1,12 +1,21 @@
 import styled, { css } from "styled-components";
-import { UlWrapperProps } from "./types";
+import { UlProps } from "./types";
+
+const OpenCss = css`
+  opacity: 1;
+  transform: translateY(0);
+`;
+
+const CloseCss = css`
+  transition: opacity 0.35s, transform 0.5s, z-index 0.2s ease-in;
+`;
 
 export const Wrapper = styled.div`
   position: relative;
   display: inline-block;
 `;
 
-export const Select = styled.div`
+export const SelectBox = styled.div`
   display: flex;
   background: white;
   height: 2rem;
@@ -19,25 +28,16 @@ export const Select = styled.div`
   font-weight: 600;
   color: rgb(73, 80, 87);
   font-size: 0.875rem;
-  box-shadow: rgb(0 0 0 / 5%) 0px 0px 4px;
+  box-shadow: rgb(0 0 0 / 50%) 0px 0px 4px;
   cursor: pointer;
 
-  & > svg {
+  .dropDown__svg {
     width: 1.5rem;
     height: 1.5rem;
   }
 `;
 
-const OpenCss = css`
-  opacity: 1;
-  transform: translateY(0);
-`;
-
-const CloseCss = css`
-  transition: opacity 0.2s, transform 0.5s, z-index 0.35s ease-in;
-`;
-
-export const UlWrapper = styled.ul<UlWrapperProps>`
+export const SelectList = styled.ul<UlProps>`
   list-style: none;
   padding: 0;
   margin: 0;
@@ -48,18 +48,29 @@ export const UlWrapper = styled.ul<UlWrapperProps>`
   left: 0;
   right: 0;
   background-color: white;
-  box-shadow: rgb(0 0 0 / 5%) 0px 0px 4px;
+  overflow: hidden;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  box-shadow: rgb(0 0 0 / 50%) 0px 0px 4px;
   transition: opacity 0.5s, transform 0.35s, z-index 0.35s ease-in;
   transform: translateY(-50%);
 
-  ${({ visible }) => visible && OpenCss}
-  ${({ visible }) => !visible && CloseCss}
+  ${({ visible }) => (visible ? OpenCss : CloseCss)}
+
+  a {
+    padding: 0.5rem 1rem;
+    color: black;
+  }
+
+  .dropDown__list--selected {
+    background-color: rgba(205, 97, 51, 1);
+    color: white;
+  }
 
   li {
     cursor: pointer;
     font-weight: 600;
     font-size: 0.875rem;
-    padding: 0.75rem 1rem;
   }
   li + li {
     border-top: 1px solid rgb(241, 243, 245);

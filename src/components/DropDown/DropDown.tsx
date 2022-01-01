@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Select, UlWrapper, Wrapper } from "./style";
+import { SelectBox, SelectList, Wrapper } from "./style";
 import { DropDownProps } from "./types";
 
-const DropDown = ({ children, defaultValue, setValue }: DropDownProps) => {
+const DropDown = ({ children, defaultValue, setSelectedValue }: DropDownProps) => {
   const [selected, setSelected] = useState(defaultValue);
   const [visible, setVisible] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -13,15 +13,17 @@ const DropDown = ({ children, defaultValue, setValue }: DropDownProps) => {
   const dropDownClose = useCallback(
     (e: React.MouseEvent<HTMLUListElement>) => {
       e.preventDefault();
+
       const { target } = e;
-      if (target instanceof HTMLLIElement) {
-        setValue(target.id);
+
+      if (target instanceof HTMLAnchorElement) {
+        setSelectedValue(target.id);
         setSelected(target.innerText);
         setVisible(false);
         isClosed.current = true;
       }
     },
-    [setValue],
+    [setSelectedValue],
   );
 
   useEffect(() => {
@@ -33,15 +35,11 @@ const DropDown = ({ children, defaultValue, setValue }: DropDownProps) => {
       setTimeout(() => setIsOpen(false), 200);
       isClosed.current = false;
     }
-
-    return () => {
-      setValue("");
-    };
-  }, [visible, isOpen, setIsOpen, setValue]);
+  }, [visible, isOpen, setIsOpen, setSelectedValue]);
 
   return (
     <Wrapper>
-      <Select onClick={dropDorwnOpen}>
+      <SelectBox onClick={dropDorwnOpen}>
         {selected}
         <svg
           stroke="currentColor"
@@ -51,14 +49,15 @@ const DropDown = ({ children, defaultValue, setValue }: DropDownProps) => {
           height="1em"
           width="1em"
           xmlns="http://www.w3.org/2000/svg"
+          className="dropDown__svg"
         >
           <path d="M7 10l5 5 5-5z" />
         </svg>
-      </Select>
+      </SelectBox>
       {isOpen && (
-        <UlWrapper visible={visible} onClick={dropDownClose}>
+        <SelectList visible={visible} onClick={dropDownClose}>
           {children}
-        </UlWrapper>
+        </SelectList>
       )}
     </Wrapper>
   );

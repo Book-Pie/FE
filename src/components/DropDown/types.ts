@@ -1,9 +1,9 @@
 export interface DropDownProps {
   children: React.ReactNode;
   defaultValue?: string;
-  setValue: (param: string) => void;
+  setSelectedValue: (param: string) => void;
 }
 
-export interface UlWrapperProps {
+export interface UlProps {
   visible: boolean;
 }
