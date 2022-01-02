@@ -1,29 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
-import styled from "styled-components";
 import { Expander } from "./Expander";
+import { TextTruncateProps } from "./types";
+import { P, ExpanderArea } from "./style";
 
-interface Props {
-  text: string;
-  lines: number;
-  lineHeight: number;
-  renderExpander?: ({
-    isExpanded,
-    isTruncated,
-    expand,
-  }: {
-    isExpanded: boolean;
-    isTruncated: boolean;
-    expand: () => void;
-  }) => any;
-}
-
-export const TextTruncate: React.FC<Props> = props => {
+export const TextTruncate: React.FC<TextTruncateProps> = props => {
   const wrapperRef = useRef<HTMLParagraphElement>();
 
   console.log(props);
-  console.log(wrapperRef.current);
-  console.log(wrapperRef.current?.clientHeight);
-  console.log(props.lines);
 
   const [isExpanded, setExpand] = useState(false);
   const [isTruncated, setTruncate] = useState(false);
@@ -62,17 +45,5 @@ export const TextTruncate: React.FC<Props> = props => {
     </>
   );
 };
-
-const P = styled.p`
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  overflow-y: hidden;
-  line-height: 1.5em;
-`;
-
-const ExpanderArea = styled.div`
-  text-align: right;
-`;
 
 export default TextTruncate;

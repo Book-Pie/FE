@@ -1,7 +1,6 @@
-import React from "react";
-import styled from "styled-components";
-import Card from "../Cards/PublicCard";
+import Card from "src/components/Cards/PublicCard";
 import dummy from "../../db/data.json";
+import { A, SideBar, SourcesArea } from "./style";
 
 const BookSideBar = () => {
   return (
@@ -12,16 +11,11 @@ const BookSideBar = () => {
         bookCategory={dummy.book[0].bookCategory}
         authorName={dummy.book[0].authorName}
       />
+      <SourcesArea>
+        도서 DB 제공 : <A href="www.aladin.co.kr">알라딘 인터넷 서점</A>
+      </SourcesArea>
     </SideBar>
   );
 };
-
-const SideBar = styled.div`
-  display: inline-flex;
-  position: fixed;
-  left: 30px;
-  width: 250px;
-  height: 400px;
-`;
 
 export default BookSideBar;
