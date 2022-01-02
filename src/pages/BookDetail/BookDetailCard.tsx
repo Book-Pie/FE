@@ -5,9 +5,10 @@ import TextTruncate from "./TextTruncate";
 import { BookDetailCardWrapperProps, BookDetailPanelProps } from "./types";
 import { CardTitle, ExpanderArea } from "./style";
 
-export const BookDetailPanelWrapper: React.FunctionComponent<BookDetailCardWrapperProps> = props => {
-  const { renderCondition = true, children } = props;
-
+export const BookDetailPanelWrapper: React.FunctionComponent<BookDetailCardWrapperProps> = ({
+  renderCondition = true,
+  children,
+}) => {
   if (!children) {
     return null;
   }
@@ -15,11 +16,14 @@ export const BookDetailPanelWrapper: React.FunctionComponent<BookDetailCardWrapp
   return renderCondition ? <section>{children}</section> : <>{children}</>;
 };
 
-export const BookDetailPanel: React.FunctionComponent<BookDetailPanelProps> = props => {
-  const { title, children, imageUrl, isMobile = false, useSkeleton = false, useTruncate = true } = props;
-
-  console.log(props);
-
+export const BookDetailPanel: React.FunctionComponent<BookDetailPanelProps> = ({
+  title,
+  children,
+  imageUrl,
+  isMobile = false,
+  useSkeleton = false,
+  useTruncate = true,
+}) => {
   return children ? (
     <BookDetailPanelWrapper>
       <CardTitle>{title}</CardTitle>

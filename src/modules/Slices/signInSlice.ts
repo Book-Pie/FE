@@ -145,5 +145,6 @@ const signInSlice = createSlice({
 });
 
 export const signInSelector = (state: RootState) => state.signInReduce;
+export const myId = (state: RootState) => state.signInReduce.user.id;
 export const { logout } = signInSlice.actions;
 export default signInSlice;

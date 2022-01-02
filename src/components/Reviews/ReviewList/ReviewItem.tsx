@@ -5,13 +5,10 @@ import { deleteComment } from "src/modules/Slices/commentSlice";
 import { Content, ReplyDate, ContentBottom, Button, ClickArea, ReviewContentTop, ReviewContentBottom } from "./style";
 import { ReviewItemProps, TruncateProps } from "./types";
 
-export const ReviewItem: React.FC<ReviewItemProps> = props => {
-  const { key, content } = props;
-
+export const ReviewItem: React.FC<ReviewItemProps> = ({ key, content, myComment }) => {
   const dispatch = useDispatch();
 
-  const deleteReview = () => {
-    console.log("deleteReview 테스트 : ", content);
+  const deleteReview = props => {
     dispatch(
       deleteComment({
         id: content.id,
@@ -19,9 +16,9 @@ export const ReviewItem: React.FC<ReviewItemProps> = props => {
     );
   };
 
-  const deleteClick = ({ user_id }: any) => {
+  const deleteClick = () => {
     if (confirm("댓글을 정말로 삭제하시겠습니까?") == true) {
-      deleteReview();
+      deleteReview(content.id);
     } else {
       return;
     }
@@ -32,7 +29,7 @@ export const ReviewItem: React.FC<ReviewItemProps> = props => {
       <ReviewItemWrapper>
         <div className="ReviewItem_Right">
           <div className="ReviewItem_Right_Top">
-            <ClickArea>{content.user_id == 5 && <Button onClick={deleteClick}>x</Button>}</ClickArea>
+            <ClickArea>{content.user_id == myComment && <Button onClick={deleteClick}>x</Button>}</ClickArea>
             <ReviewContent>
               <ReviewContentTop>
                 <p>{content.rating}점</p>

@@ -141,11 +141,11 @@ const commentSlice = createSlice({
         state.status = "loading";
         console.log("댓글 작성 로딩중", action);
       })
-      .addCase(addComment.fulfilled, (state, action) => {
-        console.log("댓글 작성 extra fulfilled테스트중 : ", action);
-        state.content.push(action.meta.arg);
+      .addCase(addComment.fulfilled, (state, { payload }) => {
+        console.log("댓글 작성 extra fulfilled테스트중 : ", payload);
+        state.content.push(payload);
         state.status = "idle";
-        console.log("댓글 작성 성공 : ", action);
+        console.log("댓글 작성 성공 : ", payload);
       })
       .addCase(addComment.rejected, (state, action) => {
         state.status = "error";

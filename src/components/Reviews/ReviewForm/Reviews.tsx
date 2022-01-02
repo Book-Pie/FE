@@ -3,9 +3,7 @@ import { ReviewList } from "../ReviewList/ReviewList";
 import { ReviewWrite } from "../ReviewWrite";
 import { ReviewsProps } from "./types";
 
-export const Reviews: React.FC<ReviewsProps> = props => {
-  const { bookId } = props;
-
+export const Reviews: React.FC<ReviewsProps> = ({ bookId }) => {
   return (
     <div className="Reviews">
       {/* 정렬 부분 */}

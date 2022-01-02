@@ -13,9 +13,8 @@ export const ReviewForm: React.FC<ReviewFormProps> = props => {
   const { handleSubmit, register, reset } = useForm({ defaultValues: { something: "anything" } });
 
   // 임시 유저 데이터
-  const id: number = 6;
-  const review_id: number = 6;
   const user_id: number = 5;
+  const review_id: number = 6;
   const nickname: string = "테스트 닉네임";
   const rating: number = 3;
   const reviewLikeCount: number = 0;
@@ -31,9 +30,8 @@ export const ReviewForm: React.FC<ReviewFormProps> = props => {
   const addReview = (e: React.ChangeEvent<any>) => {
     dispatch(
       addComment({
-        id: id,
-        review_id: review_id,
         user_id: user_id,
+        review_id: review_id,
         nickname: nickname,
         rating: rating,
         content: reviewContent,

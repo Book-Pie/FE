@@ -1,3 +1,5 @@
+import { getCommentProps } from "../../../modules/Slices/commentSlice";
+
 export interface Review {
   review_id: number;
   id: number;
@@ -22,8 +24,9 @@ export interface ReviewItemProps {
   key: number;
   user: number;
   bookId: number;
-  content: string;
+  content: getCommentProps;
   children?: React.ReactNode;
+  myComment: string;
 }
 
 export interface TruncateProps extends React.HTMLProps<Truncate> {
