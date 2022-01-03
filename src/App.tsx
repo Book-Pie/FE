@@ -16,7 +16,7 @@ const App = () => {
       <Switch>
         <Route path="/" exact>
           <div>
-            <div> {user ? `아이디 : ${user.username}` : "로그인을 해주세요."}</div>
+            <div> {user ? `이메일 : ${user.email}` : "로그인을 해주세요."}</div>
             <button type="button">
               <Link to="/signUp">회원가입</Link>
             </button>

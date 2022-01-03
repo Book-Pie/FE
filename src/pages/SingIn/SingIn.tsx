@@ -3,12 +3,12 @@ import naver from "assets/oAuth/naver_oauth.png";
 import kakao from "assets/oAuth/kakao_oauth.png";
 import SignInForm from "components/SignInForm/SignInForm";
 import React, { useState } from "react";
-import { getRememberId } from "utils/localStorageUtil";
+import { getRememberEmail } from "utils/localStorageUtil";
 
 import { Links, OAuths, Container } from "./style";
 
 const SignIn = () => {
-  const [isRemember, setIsRemember] = useState(getRememberId() ? true : false);
+  const [isRemember, setIsRemember] = useState(getRememberEmail() ? true : false);
   const handleOnChange = ({ target: { checked } }: React.ChangeEvent<HTMLInputElement>) => setIsRemember(checked);
 
   return (
@@ -18,10 +18,12 @@ const SignIn = () => {
       </div>
       <SignInForm isRemember={isRemember} />
       <Links>
-        <input type="checkbox" onChange={handleOnChange} checked={isRemember} />
-        <span>아이디 저장</span>
+        <input type="checkbox" id="remember_email" onChange={handleOnChange} checked={isRemember} />
+        <label htmlFor="remember_email" className="links__email--remember">
+          이메일 저장
+        </label>
         <Link to="/find/id">
-          <span>아이디 찾기</span>
+          <span>이메일 찾기</span>
         </Link>
         <Link to="/find/password">
           <span>비밀번호 찾기</span>

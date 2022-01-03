@@ -2,13 +2,13 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 import { History } from "history";
 import { AppDispatch, RootState } from "modules/store";
-import { removeId, removeToken, setRememberId, setAccessToken } from "utils/localStorageUtil";
+import { removeEmail, removeToken, setRememberEmail, setAccessToken } from "utils/localStorageUtil";
 import { getMyProfile, getSignIn } from "src/api/signIn/signIn";
 
 // =========================== 썽크함수 파라미터 타입 ===========================
 // thunk 함수로 넘겨질 인자 타입
 interface SignInAsyncProps {
-  username: string;
+  email: string;
   password: string;
   isRemember: boolean;
 }
@@ -17,7 +17,6 @@ interface SignInAsyncProps {
 // =========================== 썽크함수 성공 시 리턴 타입 ===========================
 interface IUserPrfile {
   id: number;
-  username: string;
   email: string;
   nickName: string;
   name: string;
@@ -71,7 +70,7 @@ interface MyProfileAsyncFail {
 
 // =========================== axios 제네릭 ===========================
 interface IPayload {
-  username: string;
+  email: string;
   password: string;
 }
 interface IAxiosResponse {
@@ -121,18 +120,15 @@ export const getMyProfileAsync = createAsyncThunk<MyProfileSuccess, string, MyPr
 // 썽크 생성 함수의 세번째 제너릭은 {dispatch?, state?, extra?, rejectValue?}에 타입을 설정해줄 수 있다.
 export const signInAsync = createAsyncThunk<SignInAsyncSuccess, SignInAsyncProps, ThunkApi>(
   `${name}/signInAsync`,
-  async ({ username, password, isRemember }, { dispatch, extra, rejectWithValue }) => {
+  async ({ email, password, isRemember }, { dispatch, extra, rejectWithValue }) => {
     try {
       const { history } = extra;
-
-      const response = await getSignIn<IAxiosResponse, IPayload>({ username, password });
+      const response = await getSignIn<IAxiosResponse, IPayload>({ email, password });
       const { data } = response;
-      setRememberId(username);
-      if (!isRemember) removeId();
-
-      // 로그인 성공 시 홈으로 이동한다.
-      history.push("/");
+      setRememberEmail(email);
+      if (!isRemember) removeEmail();
       dispatch(getMyProfileAsync(data.data));
+      history.push("/");
       return { ...data };
     } catch (err) {
       const error = err as AxiosError<SignInAsyncFail>;
@@ -153,16 +149,18 @@ export interface SignInReduceProps {
   error: null | ErrorHandlring;
 }
 
+const initialState: SignInReduceProps = {
+  user: null,
+  token: null,
+  isLoggedIn: false,
+  error: null,
+  status: "idle",
+};
+
 // docks패턴처럼 하나의 함수에 initialState action reduce를 정의 할 수 있다.
 const signInSlice = createSlice({
   name,
-  initialState: {
-    user: null,
-    token: null,
-    isLoggedIn: false,
-    error: null,
-    status: "idle",
-  } as SignInReduceProps,
+  initialState,
   reducers: {
     logout: state => {
       state.user = null;
@@ -172,6 +170,7 @@ const signInSlice = createSlice({
       removeToken();
       alert("로그아웃 되었습니다.");
     },
+    setErrorReset: () => initialState,
   },
   extraReducers: builder => {
     builder.addCase(signInAsync.pending, state => {
@@ -225,5 +224,5 @@ const signInSlice = createSlice({
 });
 
 export const signInSelector = (state: RootState) => state.signInReduce;
-export const { logout } = signInSlice.actions;
+export const { logout, setErrorReset } = signInSlice.actions;
 export default signInSlice;
