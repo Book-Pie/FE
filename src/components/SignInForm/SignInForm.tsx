@@ -8,10 +8,11 @@ import {
 } from "utils/hookFormUtil";
 import { useForm } from "react-hook-form";
 import { setErrorReset, signInAsync } from "modules/Slices/signInSlice";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { getRememberEmail } from "utils/localStorageUtil";
 import Popup from "components/Popup/Popup";
 import useSignIn from "hooks/useSignIn";
+import useDebounce from "hooks/useDebounce";
 import { Button, Form } from "./style";
 import { SignInInputs, SignInInputForm, FormErrorMessages, SignInFormProp } from "./types";
 
@@ -24,11 +25,11 @@ const SignInForm = ({ isRemember }: SignInFormProp) => {
   const { register, handleSubmit, formState } = useForm<SignInInputForm>({
     defaultValues: initialState,
   });
+  const debouncdRef = useDebounce();
   const { dispatch, signIn } = useSignIn();
   const [isOpen, setIsOpen] = useState(false);
   const { errors } = formState;
   const { error } = signIn;
-  const debouncdRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     if (error) setIsOpen(true);

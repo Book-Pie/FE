@@ -22,7 +22,7 @@ const SignIn = () => {
         <label htmlFor="remember_email" className="links__email--remember">
           이메일 저장
         </label>
-        <Link to="/find/id">
+        <Link to="/find/email">
           <span>이메일 찾기</span>
         </Link>
         <Link to="/find/password">

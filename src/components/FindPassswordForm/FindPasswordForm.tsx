@@ -15,38 +15,43 @@ import { useState } from "react";
 import Popup from "components/Popup/Popup";
 import { getFindPassword } from "src/api/find/find";
 import { errorHandler } from "src/api/http";
+import useDebounce from "hooks/useDebounce";
+import { hyphenRemoveFormat } from "utils/formetUtil";
 import { Button, Row } from "./style";
-import { AxiosPayload, AxiosResponse, FindPasswordInputForm, FormErrorMessages } from "./types";
+import { AxiosResponse, IFindPasswordForm, FormErrorMessages, HisotryState } from "./types";
 
 const FindPasswordForm = () => {
-  const { register, handleSubmit, formState } = useForm<FindPasswordInputForm>();
+  const { register, handleSubmit, formState } = useForm<IFindPasswordForm>();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
 
-  const history = useHistory();
+  const history = useHistory<HisotryState>();
+  const debounce = useDebounce();
   const { errors } = formState;
 
-  const onSubmit = async (FormData: FindPasswordInputForm) => {
-    try {
-      const { email, phone, password, username, name } = FormData;
-      await getFindPassword<AxiosResponse, AxiosPayload>({
-        email,
-        phone,
-        password,
-        username,
-        name,
-      });
+  const onSubmit = (FormData: IFindPasswordForm) => {
+    if (debounce.current) clearTimeout(debounce.current);
+    debounce.current = setTimeout(async () => {
+      try {
+        const { email, phone, password, name } = FormData;
+        await getFindPassword<AxiosResponse, IFindPasswordForm>({
+          email,
+          name,
+          phone: hyphenRemoveFormat(phone),
+          password,
+        });
 
-      // 응답 성공
-      history.push({
-        pathname: "/find/result",
-        state: { path: "password" },
-      });
-    } catch (error) {
-      const message = errorHandler(error);
-      setIsOpen(true);
-      setMessage(message);
-    }
+        // 응답 성공
+        history.push({
+          pathname: "/find/result",
+          state: { path: "password" },
+        });
+      } catch (error) {
+        const message = errorHandler(error);
+        setIsOpen(true);
+        setMessage(message);
+      }
+    }, 1000);
   };
 
   return (
@@ -58,20 +63,19 @@ const FindPasswordForm = () => {
       )}
       <form onSubmit={handleSubmit(onSubmit)}>
         <Row>
-          <FormLabel text="아이디" />
+          <FormLabel text="이메일" />
           <FormInput
-            placeholder="아이디를 입력해주세요."
-            register={register("username", {
-              maxLength: makeOption<number>(10, FormErrorMessages.MAX_LENGTH),
-              minLength: makeOption<number>(5, FormErrorMessages.MIN_LENGTH),
+            placeholder="이메일을 입력해주세요."
+            register={register("email", {
+              maxLength: makeOption<number>(20, FormErrorMessages.MAX_LENGTH),
+              minLength: makeOption<number>(10, FormErrorMessages.MIN_LENGTH),
               required: makeOption<boolean>(true, FormErrorMessages.REQUIRED),
               validate: {
-                specialChracters: value => hookFormSpecialChractersCheck(value, FormErrorMessages.SPECIAL_CHARACTERS),
-                korea: value => hookFormKoreaChractersCheck(value, FormErrorMessages.KOREA_CHARACTERS),
+                email: value => hookFormEmailPatternCheck(value, FormErrorMessages.EMAIL),
               },
             })}
           />
-          <ErrorMessage message={errors.username?.message} />
+          <ErrorMessage message={errors.email?.message} />
         </Row>
         <Row>
           <FormLabel text="이름" />
@@ -89,21 +93,7 @@ const FindPasswordForm = () => {
           />
           <ErrorMessage message={errors.name?.message} />
         </Row>
-        <Row>
-          <FormLabel text="이메일" />
-          <FormInput
-            placeholder="이메일을 입력해주세요."
-            register={register("email", {
-              maxLength: makeOption<number>(20, FormErrorMessages.MAX_LENGTH),
-              minLength: makeOption<number>(10, FormErrorMessages.MIN_LENGTH),
-              required: makeOption<boolean>(true, FormErrorMessages.REQUIRED),
-              validate: {
-                email: value => hookFormEmailPatternCheck(value, FormErrorMessages.EMAIL),
-              },
-            })}
-          />
-          <ErrorMessage message={errors.email?.message} />
-        </Row>
+
         <Row>
           <FormLabel text="휴대번호" />
           <FormInput

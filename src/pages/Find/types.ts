@@ -1,4 +1,4 @@
 export interface LocationState {
-  username: string;
+  email: string;
   path: string;
 }

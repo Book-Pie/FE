@@ -6,3 +6,7 @@ export const make1000UnitsCommaFormet = (text: string) => {
     return cur + acc;
   });
 };
+
+export const hyphenRemoveFormat = (text: string) => {
+  return text.replaceAll("-", "");
+};

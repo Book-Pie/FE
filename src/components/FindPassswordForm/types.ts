@@ -1,7 +1,6 @@
-export interface FindPasswordInputForm {
-  username: string;
-  name: string;
+export interface IFindPasswordForm {
   email: string;
+  name: string;
   phone: string;
   password: string;
 }
@@ -12,12 +11,8 @@ export interface AxiosResponse {
   data: string;
 }
 
-export interface AxiosPayload {
-  username: string;
-  name: string;
-  email: string;
-  phone: string;
-  password: string;
+export interface HisotryState {
+  path: string;
 }
 
 export const FormErrorMessages = {
