@@ -1,7 +1,6 @@
-export interface FindIdInputForm {
-  name: "";
-  email: "";
-  phone: "";
+export interface IFindEmailForm {
+  name: string;
+  phone: string;
 }
 
 export interface AxiosResponse {
@@ -9,10 +8,10 @@ export interface AxiosResponse {
   error: null;
   data: string;
 }
-export interface AxiosPayload {
+
+export interface HisotryState {
+  path: string;
   email: string;
-  phone: string;
-  name: string;
 }
 
 export const FormErrorMessages = {

@@ -1,6 +1,6 @@
 import http from "../http";
 
-export const getFindId = <T, P>(payload: P) => {
+export const getFindEmail = <T, P>(payload: P) => {
   return http.post<T>("user/find/id", payload);
 };
 

@@ -1,5 +1,5 @@
 import { Route, Switch, useRouteMatch } from "react-router";
-import FindIdForm from "components/FindIdForm/FindIdForm";
+import FindEmailForm from "components/FindEmailForm/FindEmailForm";
 import FindPasswordForm from "components/FindPassswordForm/FindPasswordForm";
 import { Link } from "react-router-dom";
 import { LocationState } from "./types";
@@ -13,9 +13,9 @@ const Find = () => {
     <div>
       <Container>
         <Switch>
-          <Route path={`${path}/id`}>
-            <h2>아이디 찾기</h2>
-            <FindIdForm />
+          <Route path={`${path}/email`}>
+            <h2>이메일 찾기</h2>
+            <FindEmailForm />
           </Route>
           <Route path={`${path}/password`}>
             <h2>비밀번호 찾기</h2>
@@ -24,13 +24,13 @@ const Find = () => {
           <Route
             path={`${path}/result`}
             render={({ location }) => {
-              const { username, path } = location.state as LocationState;
+              const { email, path } = location.state as LocationState;
 
-              if (/id/gi.test(path)) {
+              if (/email/gi.test(path)) {
                 return (
                   <div>
-                    찾으신 아이디 결과
-                    <div>{username}</div>
+                    찾으신 이메일 결과
+                    <div>{email}</div>
                     <div>
                       <Link to="/signIn">로그인하기</Link>
                     </div>

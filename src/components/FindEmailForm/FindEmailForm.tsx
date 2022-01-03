@@ -3,7 +3,6 @@ import FormLabel from "components/FormLabel/FormLabel";
 import ErrorMessage from "components/ErrorMessage/ErrorMessage";
 import { useForm } from "react-hook-form";
 import {
-  hookFormEmailPatternCheck,
   hookFormMobileNumberPatternCheck,
   hookFormSpecialChractersCheck,
   hookFormWhiteSpaceCheck,
@@ -13,36 +12,43 @@ import { useState } from "react";
 import { useHistory } from "react-router";
 import Popup from "components/Popup/Popup";
 import { errorHandler } from "src/api/http";
-import { getFindId } from "src/api/find/find";
-import { AxiosPayload, AxiosResponse, FindIdInputForm, FormErrorMessages } from "./types";
+import { getFindEmail } from "src/api/find/find";
+import useDebounce from "hooks/useDebounce";
+import { hyphenRemoveFormat } from "utils/formetUtil";
+import { AxiosResponse, IFindEmailForm, FormErrorMessages, HisotryState } from "./types";
 import { Button, Row } from "./style";
 
-const FindIdForm = () => {
-  const history = useHistory();
-  const { register, handleSubmit, formState } = useForm<FindIdInputForm>();
+const FindEmailForm = () => {
+  const history = useHistory<HisotryState>();
+  const { register, handleSubmit, formState } = useForm<IFindEmailForm>();
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState("");
   const { errors } = formState;
+  const debounceRef = useDebounce();
 
-  const onSubmit = async (data: FindIdInputForm) => {
-    try {
-      const { email, phone, name } = data;
-      const response = await getFindId<AxiosResponse, AxiosPayload>({ email, phone, name });
-      const username = response.data.data;
+  const onSubmit = (formData: IFindEmailForm) => {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(async () => {
+      try {
+        const { phone, name } = formData;
+        const { data } = await getFindEmail<AxiosResponse, IFindEmailForm>({ phone: hyphenRemoveFormat(phone), name });
 
-      //  응답 성공
-      history.push({
-        pathname: "/find/result",
-        state: {
-          username,
-          path: "id",
-        },
-      });
-    } catch (error) {
-      const message = errorHandler(error);
-      setIsOpen(true);
-      setMessage(message);
-    }
+        const email = data.data;
+
+        //  응답 성공
+        history.push({
+          pathname: "/find/result",
+          state: {
+            email,
+            path: "email",
+          },
+        });
+      } catch (error) {
+        const message = errorHandler(error);
+        setIsOpen(true);
+        setMessage(message);
+      }
+    }, 1000);
   };
 
   return (
@@ -70,21 +76,6 @@ const FindIdForm = () => {
           <ErrorMessage message={errors.name?.message} />
         </Row>
         <Row>
-          <FormLabel text="이메일" />
-          <FormInput
-            placeholder="이메일을 입력해주세요."
-            register={register("email", {
-              maxLength: makeOption<number>(20, FormErrorMessages.MAX_LENGTH),
-              minLength: makeOption<number>(10, FormErrorMessages.MIN_LENGTH),
-              required: makeOption<boolean>(true, FormErrorMessages.REQUIRED),
-              validate: {
-                email: value => hookFormEmailPatternCheck(value, FormErrorMessages.EMAIL),
-              },
-            })}
-          />
-          <ErrorMessage message={errors.email?.message} />
-        </Row>
-        <Row>
           <FormLabel text="휴대번호" />
           <FormInput
             placeholder="ex ) 010-0000-0000"
@@ -107,4 +98,4 @@ const FindIdForm = () => {
   );
 };
 
-export default FindIdForm;
+export default FindEmailForm;
