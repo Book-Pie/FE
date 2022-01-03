@@ -3,7 +3,6 @@ import { RegisterOptions } from "react-hook-form";
 
 // SignUpForm 이름으로 쓰고 싶지만 이미 SignUpForm 컴포넌트가 있다.
 export interface SignUpInputForm {
-  userName: string;
   name: string;
   nickName: string;
   password: string;
@@ -29,6 +28,19 @@ export interface SignUpFormReponse {
 
 export interface StyledRowProps {
   isError?: boolean;
+}
+
+export interface IAxiosPostPayload {
+  email: string;
+  password: string;
+  name: string;
+  phone: string;
+  nickName: string;
+  address: {
+    postalCode: string;
+    mainAddress: string;
+    detailedAddress: string;
+  };
 }
 
 export const FormErrorMessages = {

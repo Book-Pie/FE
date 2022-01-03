@@ -14,20 +14,21 @@ import FormLabel from "components/FormLabel/FormLabel";
 import DaumPostCode from "react-daum-postcode";
 import { useEffect, useState } from "react";
 import useDaumPost from "hooks/useDaumPost";
-import http, { errorHandler } from "src/api/http";
+import { errorHandler } from "src/api/http";
 import axios from "axios";
-import { FormErrorMessages, Rows, SignUpFormReponse, SignUpInputForm } from "./types";
+import { getEmailDuplicateCheck, getNickNameDuplicateCheck, getSignUp } from "src/api/signUp/signUp";
+import { useHistory } from "react-router";
+import Popup from "components/Popup/Popup";
+import { FormErrorMessages, IAxiosPostPayload, Rows, SignUpFormReponse, SignUpInputForm } from "./types";
 import { Button, Row } from "./style";
-import Popup from "../Popup/Popup";
 
 const signUpInputFormInit: SignUpInputForm = {
-  userName: "",
+  email: "",
   name: "",
   password: "",
   nickName: "",
   confirmPassword: "",
   phone: "",
-  email: "",
   postalCode: "",
   mainAddress: "",
   detailedAddress: "",
@@ -45,32 +46,27 @@ const SignUpForm = () => {
   const { errors } = formState;
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState("");
+  const history = useHistory();
 
   const onSubmit = async (data: SignUpInputForm) => {
     try {
-      const { mainAddress, detailedAddress, email, phone, nickName, password, postalCode, userName, name } = data;
+      const { mainAddress, detailedAddress, email, phone, nickName, password, postalCode, name } = data;
 
       const validationReponse = await axios.all([
-        http.get<SignUpFormReponse>(`/user/username/${userName}`),
-        http.get<SignUpFormReponse>(`/user/nickname/${nickName}`),
-        http.get<SignUpFormReponse>(`/user/email/${email}`),
+        getEmailDuplicateCheck<SignUpFormReponse>(email),
+        getNickNameDuplicateCheck<SignUpFormReponse>(nickName),
       ]);
 
       // validation 모두 성공했을때 요청을 한다.
-      const [userNameDuplicate, nickNameDuplicate, emailDuplicate] = validationReponse;
+      const [nickNameDuplicate, emailDuplicate] = validationReponse;
 
-      if (userNameDuplicate.data.success === false) {
-        setError("userName", { type: "duplicate", message: "아이디가 중복입니다." });
-      }
-      if (!nickNameDuplicate.data.success === false) {
+      if (!nickNameDuplicate.data.success === false)
         setError("nickName", { type: "duplicate", message: "닉네임이 중복입니다." });
-      }
-      if (!emailDuplicate.data.success === false) {
-        setError("email", { type: "duplicate", message: "이메일이 중복입니다." });
-      }
 
-      const payload = {
-        username: userName,
+      if (!emailDuplicate.data.success === false)
+        setError("email", { type: "duplicate", message: "이메일이 중복입니다." });
+
+      const payload: IAxiosPostPayload = {
         password,
         name,
         phone,
@@ -83,7 +79,11 @@ const SignUpForm = () => {
         },
       };
 
-      await http.post<SignUpFormReponse>("/user/signup", payload);
+      const response = await getSignUp<SignUpFormReponse, IAxiosPostPayload>(payload);
+      const signUpData = response.data;
+      if (signUpData.success) {
+        history.push("/signIn");
+      }
     } catch (error) {
       const message = errorHandler(error);
       setIsOpen(true);
@@ -92,21 +92,19 @@ const SignUpForm = () => {
   };
 
   const handleReset = () => reset(signUpInputFormInit);
-
   const handlePopUpOpne = () => setAddressPopUpOpen(prve => !prve);
 
   const rows: Rows[] = [
     {
-      id: "userName",
-      placeholder: "아이디입력",
-      text: "아이디",
+      id: "email",
+      placeholder: "선택입력",
+      text: "이메일",
       options: {
-        maxLength: makeOption<number>(10, FormErrorMessages.MAX_LENGTH),
-        minLength: makeOption<number>(5, FormErrorMessages.MIN_LENGTH),
+        maxLength: makeOption<number>(20, FormErrorMessages.MAX_LENGTH),
+        minLength: makeOption<number>(10, FormErrorMessages.MIN_LENGTH),
         required: makeOption<boolean>(true, FormErrorMessages.REQUIRED),
         validate: {
-          specialChracters: value => hookFormSpecialChractersCheck(value, FormErrorMessages.SPECIAL_CHARACTERS),
-          korea: value => hookFormKoreaChractersCheck(value, FormErrorMessages.KOREA_CHARACTERS),
+          email: value => hookFormEmailPatternCheck(value, FormErrorMessages.EMAIL),
         },
       },
     },
@@ -179,19 +177,6 @@ const SignUpForm = () => {
         required: makeOption<boolean>(true, FormErrorMessages.REQUIRED),
         validate: {
           mobileNumber: value => hookFormMobileNumberPatternCheck(value, FormErrorMessages.MOBILE_NUMBER),
-        },
-      },
-    },
-    {
-      id: "email",
-      placeholder: "선택입력",
-      text: "본인 확인 이메일",
-      options: {
-        maxLength: makeOption<number>(20, FormErrorMessages.MAX_LENGTH),
-        minLength: makeOption<number>(10, FormErrorMessages.MIN_LENGTH),
-        required: makeOption<boolean>(true, FormErrorMessages.REQUIRED),
-        validate: {
-          email: value => hookFormEmailPatternCheck(value, FormErrorMessages.EMAIL),
         },
       },
     },
