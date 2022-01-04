@@ -17,6 +17,10 @@ const PORT = 3000;
 
 module.exports = (_, argv) => {
   const { mode } = argv;
+  const KAKAO_REDIRECT_URL =
+    PRODUCTION === mode ? "http://localhost:3000/oAuth/kakao" : "http://localhost:3000/oAuth/kakao";
+  const KAKAO_OAUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=18026e16808c2a78e74664808aa9dd9e&redirect_uri=${KAKAO_REDIRECT_URL}&response_type=code`;
+  const baseURL = mode !== "production" ? "http://localhost:3000/api/" : "http://bookpie.tk:8080/api";
 
   const config = {
     // 프로젝트 이름
@@ -121,8 +125,11 @@ module.exports = (_, argv) => {
     plugins: [
       new CleanWebpackPlugin(),
       new HtmlWebpackPlugin({ template: "./public/index.html" }),
-      // process.env.XXXX로 접근하면 된다.
-      new webpack.EnvironmentPlugin({ BASE_URL: JSON.stringify(mode), MODE: JSON.stringify(mode) }),
+      new webpack.DefinePlugin({
+        "process.env.KAKAO_OAUTH_URL": JSON.stringify(KAKAO_OAUTH_URL),
+        "process.env.MODE": JSON.stringify(mode),
+        "process.env.BASE_URL": JSON.stringify(baseURL),
+      }),
     ],
 
     output: {
@@ -137,7 +144,6 @@ module.exports = (_, argv) => {
     // 핫 리로딩은 하는법
     // 1. hot: "only" 설정
     // 2. @pmmmwh/react-refresh-webpack-plugin && react-reflash/babel추가
-
     devServer: {
       port: PORT,
       // 서버가 시작된 후 브라우저를 열도록 dev-server에 지시합니다.
