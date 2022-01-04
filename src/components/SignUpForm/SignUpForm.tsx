@@ -19,6 +19,7 @@ import axios from "axios";
 import { getEmailDuplicateCheck, getNickNameDuplicateCheck, getSignUp } from "src/api/signUp/signUp";
 import { useHistory } from "react-router";
 import Popup from "components/Popup/Popup";
+import { hyphenRemoveFormat } from "src/utils/formetUtil";
 import { FormErrorMessages, IAxiosPostPayload, Rows, SignUpFormReponse, SignUpInputForm } from "./types";
 import { Button, Row } from "./style";
 
@@ -58,31 +59,35 @@ const SignUpForm = () => {
       ]);
 
       // validation 모두 성공했을때 요청을 한다.
-      const [nickNameDuplicate, emailDuplicate] = validationReponse;
+      const [emailDuplicate, nickNameDuplicate] = validationReponse;
 
-      if (!nickNameDuplicate.data.success === false)
-        setError("nickName", { type: "duplicate", message: "닉네임이 중복입니다." });
-
-      if (!emailDuplicate.data.success === false)
+      // 중복은 false
+      if (emailDuplicate.data.data === false) {
         setError("email", { type: "duplicate", message: "이메일이 중복입니다." });
+      }
+      if (nickNameDuplicate.data.data === false) {
+        setError("nickName", { type: "duplicate", message: "닉네임이 중복입니다." });
+      }
 
-      const payload: IAxiosPostPayload = {
-        password,
-        name,
-        phone,
-        email,
-        nickName,
-        address: {
-          postalCode,
-          mainAddress,
-          detailedAddress,
-        },
-      };
+      if (nickNameDuplicate.data.data && emailDuplicate.data.data) {
+        const payload: IAxiosPostPayload = {
+          password,
+          name,
+          phone: hyphenRemoveFormat(phone),
+          email,
+          nickName,
+          address: {
+            postalCode,
+            mainAddress,
+            detailedAddress,
+          },
+        };
 
-      const response = await getSignUp<SignUpFormReponse, IAxiosPostPayload>(payload);
-      const signUpData = response.data;
-      if (signUpData.success) {
-        history.push("/signIn");
+        const response = await getSignUp<SignUpFormReponse, IAxiosPostPayload>(payload);
+        const signUpData = response.data;
+        if (signUpData.success) {
+          history.push("/signIn");
+        }
       }
     } catch (error) {
       const message = errorHandler(error);
