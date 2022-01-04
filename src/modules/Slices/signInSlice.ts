@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 import { History } from "history";
 import { AppDispatch, RootState } from "modules/store";
-import { removeEmail, removeToken, setRememberEmail, setAccessToken } from "utils/localStorageUtil";
+import { removeEmail, removeToken, setRememberEmail, setAccessToken, getAccessToken } from "utils/localStorageUtil";
 import { getMyProfile, getSignIn } from "src/api/signIn/signIn";
 
 // =========================== 썽크함수 파라미터 타입 ===========================
@@ -23,6 +23,7 @@ interface IUserPrfile {
   phone: string;
   grade: string;
   rating: number;
+  loginType: "LOCAL" | "KAKAO" | "NAVER";
   address: {
     postalCode: string;
     mainAddress: string;
@@ -106,11 +107,23 @@ export const getMyProfileAsync = createAsyncThunk<MyProfileSuccess, string, MyPr
   async (token, { rejectWithValue }) => {
     try {
       const { data } = await getMyProfile<MyProfileResponse>(token);
+
       return data;
     } catch (err) {
       const error = err as AxiosError<MyProfileAsyncFail>;
+
       if (!error.response) throw err;
-      return rejectWithValue(error.response.data);
+
+      const rejectParams = error.response.data;
+
+      // 서버에서 에러를 핸들링 했을때
+      if (!error.response.data) {
+        const { status } = error.response;
+        rejectParams.error = error.message;
+        rejectParams.status = status;
+        rejectParams.path = "";
+      }
+      return rejectWithValue(rejectParams);
     }
   },
 );
@@ -122,13 +135,13 @@ export const signInAsync = createAsyncThunk<SignInAsyncSuccess, SignInAsyncProps
   `${name}/signInAsync`,
   async ({ email, password, isRemember }, { dispatch, extra, rejectWithValue }) => {
     try {
-      const { history } = extra;
       const response = await getSignIn<IAxiosResponse, IPayload>({ email, password });
       const { data } = response;
       setRememberEmail(email);
       if (!isRemember) removeEmail();
       dispatch(getMyProfileAsync(data.data));
-      history.push("/");
+      // const { history } = extra;
+      // history.push("/");
       return { ...data };
     } catch (err) {
       const error = err as AxiosError<SignInAsyncFail>;
@@ -202,6 +215,7 @@ const signInSlice = createSlice({
     });
     builder.addCase(getMyProfileAsync.fulfilled, (state, { payload }) => {
       state.user = payload.data;
+      state.token = getAccessToken();
     });
     builder.addCase(getMyProfileAsync.rejected, (state, { payload }) => {
       if (payload) {
@@ -209,6 +223,13 @@ const signInSlice = createSlice({
           removeToken();
           state.error = {
             message: "유효하지않는 토큰입니다.",
+            status: payload.status,
+          };
+        }
+        if (payload.status === 500) {
+          removeToken();
+          state.error = {
+            message: "서버에서 에러가 발생했습니다. 다시 로그인해주세요.",
             status: payload.status,
           };
         }
