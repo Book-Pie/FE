@@ -1,12 +1,13 @@
 import { Link } from "react-router-dom";
-import naver from "assets/oAuth/naver_oauth.png";
-import kakao from "assets/oAuth/kakao_oauth.png";
+import naverImg from "assets/oAuth/naver_oauth.png";
+import kakaoImg from "assets/oAuth/kakao_oauth.png";
 import SignInForm from "components/SignInForm/SignInForm";
 import React, { useState } from "react";
 import { getRememberEmail } from "utils/localStorageUtil";
 
 import { Links, OAuths, Container } from "./style";
 
+const kakaOauthUrl = process.env.KAKAO_OAUTH_URL;
 const SignIn = () => {
   const [isRemember, setIsRemember] = useState(getRememberEmail() ? true : false);
   const handleOnChange = ({ target: { checked } }: React.ChangeEvent<HTMLInputElement>) => setIsRemember(checked);
@@ -37,11 +38,11 @@ const SignIn = () => {
       </Links>
       <OAuths>
         <Link to="/">
-          <img src={naver} alt="naver" />
+          <img src={naverImg} alt="naver" />
         </Link>
-        <Link to="/">
-          <img src={kakao} alt="kakao" />
-        </Link>
+        <a href={kakaOauthUrl}>
+          <img src={kakaoImg} alt="kakao" />
+        </a>
       </OAuths>
     </Container>
   );

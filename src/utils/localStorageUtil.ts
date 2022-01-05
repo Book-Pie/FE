@@ -23,5 +23,11 @@ export const getRememberEmail = () => {
 
   return "";
 };
+// 유효하지 않은 토큰 테스트용도
+export const setFakeAccessToken = () => {
+  const token =
+    "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0MTRAbmF2ZXIuY29tIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY0MTMxMzE2NywiZXhwIjoxNjQxMzE0OTY3fQ.Bnmt60eQr177unbTOs-SZ3es96Bkc37PAszDP4vApnU";
+  localStorage.setItem(TOKEN_KEY, token);
+};
 
 export const removeEmail = () => localStorage.removeItem(SAVE_EMAIL_KEY);

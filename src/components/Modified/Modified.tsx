@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useState } from "react";
 import useSignIn from "hooks/useSignIn";
 import FormLabel from "components/FormLabel/FormLabel";
 import { RegisterOptions, useForm } from "react-hook-form";
@@ -39,26 +39,21 @@ const Modified = ({ path }: ModifiedProps) => {
 
   const modifiedConfirmForm = useForm<IModifiedConfirmForm>();
   const modifiedForm = useForm<IModifiedForm>();
-  const [reconfirmation, setReconfirmation] = useState<boolean>(() => {
-    if (user) {
-      return user.loginType === "LOCAL" ? false : true;
-    }
-    return false;
-  });
+  const [reconfirmation, setReconfirmation] = useState<boolean>(false);
+
   const [message, setMessage] = useState<string>("");
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [addressPopUpOpen, setAddressPopUpOpen] = useState<boolean>(false);
   const [newPassword, confirmPassword] = modifiedForm.watch(["newPassword", "confirmPassword"]);
   const { addressState, handleComplete } = useDaumPost();
+  const debounce = useDebounce();
   const history = useHistory();
+  const modifiedConfirmFormErrors = modifiedConfirmForm.formState.errors;
+  const modifiedFormErrors = modifiedForm.formState.errors;
 
   const addressOptions: RegisterOptions = {
     required: makeOption<boolean>(true, FormErrorMessages.REQUIRED),
   };
-
-  const [addressPopUpOpen, setAddressPopUpOpen] = useState<boolean>(false);
-  const debounce = useDebounce();
-  const modifiedConfirmFormErrors = modifiedConfirmForm.formState.errors;
-  const modifiedFormErrors = modifiedForm.formState.errors;
 
   const passwordOpions: RegisterOptions = {
     maxLength: makeOption<number>(20, FormErrorMessages.MAX_LENGTH),
@@ -109,25 +104,30 @@ const Modified = ({ path }: ModifiedProps) => {
     },
   };
 
-  const handlePopUpOpne = () => setAddressPopUpOpen(prve => !prve);
-  const handlePasswordCheck = async (password: string, token: string) => {
+  const handlePopUpOpne = useCallback(() => setAddressPopUpOpen(prve => !prve), []);
+  const handlePasswordCheck = useCallback(async (password: string, token: string) => {
     const response = await passwordCheck<IAxiosResponse, IAxiosPayload>({ password }, token);
     const isSuccess = response.data.data;
     // 실패 시 false
     if (!isSuccess) throw new Error("비밀번호가 틀립니다.");
-  };
-  const handlePasswordChange = async (password: string, token: string) => {
+  }, []);
+
+  const handlePasswordChange = useCallback(async (password: string, token: string) => {
     const response = await passwordChange<IAxiosResponse, IAxiosPayload>({ password }, token);
     const isSuccess = response.data.data;
     // 실패 시 false
     if (!isSuccess) throw new Error("비밀번호 변경에 실패 했습니다.");
-  };
+  }, []);
 
-  const handlerError = (error: any) => {
+  const handlePasswordCheckPass = useCallback(() => {
+    if (user && user.loginType !== "LOCAL") setReconfirmation(true);
+  }, [user]);
+
+  const handlerError = useCallback((error: any) => {
     const message = errorHandler(error);
     setMessage(message);
     setIsOpen(true);
-  };
+  }, []);
 
   const modifiedConfirmFormSubmit = (data: IModifiedConfirmForm) => {
     if (debounce.current) clearTimeout(debounce.current);
@@ -146,37 +146,43 @@ const Modified = ({ path }: ModifiedProps) => {
   };
 
   // 유저 정보 수정
-  const modifiedFormSubmit = async (formData: IModifiedForm) => {
-    try {
-      const { token } = signIn;
-      if (user && token) {
-        // 썽크함수 호출
-        const { currentPassword } = formData;
-        const { newPassword, detailAddress, mainAddress, postalCode, name, phone } = formData;
-        // 일반 회원으로 가입한 유저면 비밀번호 체크 및 비밀번호 변경
-        if (user.loginType === "LOCAL") {
-          await handlePasswordCheck(currentPassword, token);
-          await handlePasswordChange(newPassword, token);
-        }
-        const payload: IMyProfileUpdatePayload = {
-          name,
-          phone: hyphenRemoveFormat(phone),
-          address: {
-            postalCode,
-            mainAddress,
-            detailAddress,
-          },
-        };
+  const modifiedFormSubmit = (formData: IModifiedForm) => {
+    if (debounce.current) clearTimeout(debounce.current);
+    debounce.current = setTimeout(async () => {
+      try {
+        const { token } = signIn;
+        if (user && token) {
+          // 썽크함수 호출
+          const { currentPassword } = formData;
+          const { newPassword, detailAddress, mainAddress, postalCode, name, phone } = formData;
+          // 일반 회원으로 가입한 유저면 비밀번호 체크 및 비밀번호 변경
+          if (user.loginType === "LOCAL") {
+            await handlePasswordCheck(currentPassword, token);
+            await handlePasswordChange(newPassword, token);
+          }
+          const payload: IMyProfileUpdatePayload = {
+            name,
+            phone: hyphenRemoveFormat(phone),
+            address: {
+              postalCode,
+              mainAddress,
+              detailAddress,
+            },
+          };
 
-        const myProfileChangeResponse = await myProfileChange<IAxiosResponse, IMyProfileUpdatePayload>(payload, token);
-        if (!myProfileChangeResponse.data.data) throw new Error("프로필 변경에 실패 했습니다.");
-        // 변경된 프로필 갱신
-        dispatch(myProfileAsync(token)).unwrap().catch(handlerError);
-        history.replace("/");
+          const myProfileChangeResponse = await myProfileChange<IAxiosResponse, IMyProfileUpdatePayload>(
+            payload,
+            token,
+          );
+          if (!myProfileChangeResponse.data.data) throw new Error("프로필 변경에 실패 했습니다.");
+          // 변경된 프로필 갱신
+          dispatch(myProfileAsync(token)).unwrap().catch(handlerError);
+          history.replace("/");
+        }
+      } catch (error) {
+        handlerError(error);
       }
-    } catch (error) {
-      handlerError(error);
-    }
+    }, 500);
   };
 
   const handleMisMatchReset = useCallback(() => {
@@ -216,6 +222,14 @@ const Modified = ({ path }: ModifiedProps) => {
     }
   }, [user, modifiedForm]);
 
+  useEffect(
+    () => () => {
+      if (debounce.current) clearTimeout(debounce.current);
+    },
+    [debounce],
+  );
+
+  useLayoutEffect(handlePasswordCheckPass, [handlePasswordCheckPass]);
   useEffect(handleMisMatchReset, [handleMisMatchReset]);
 
   if (user === null) return null;
