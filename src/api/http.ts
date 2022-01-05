@@ -9,7 +9,7 @@ interface AxiosErrorResponse {
   data: null;
 }
 
-const baseURL = process.env.BASE_URL !== "production" ? "http://localhost:3000/api/" : "http://bookpie.tk:8080/api";
+const baseURL = process.env.BASE_URL;
 
 const http = axios.create({
   baseURL,
@@ -47,7 +47,8 @@ export const errorHandler = (error: any) => {
         if (data.error.message) message = data.error.message;
       }
     }
-  }
+  } else if (error.message) message = error.message;
+
   return message;
 };
 
