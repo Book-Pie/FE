@@ -1,113 +1,31 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
-import { History } from "history";
-import { AppDispatch, RootState } from "modules/store";
 import { removeEmail, removeToken, setRememberEmail, setAccessToken, getAccessToken } from "utils/localStorageUtil";
 import { getMyProfile, getSignIn } from "src/api/signIn/signIn";
-
-// =========================== 썽크함수 파라미터 타입 ===========================
-// thunk 함수로 넘겨질 인자 타입
-interface SignInAsyncProps {
-  email: string;
-  password: string;
-  isRemember: boolean;
-}
-// =========================== 썽크함수 파라미터 타입 ===========================
-
-// =========================== 썽크함수 성공 시 리턴 타입 ===========================
-interface IUserPrfile {
-  id: number;
-  email: string;
-  nickName: string;
-  name: string;
-  phone: string;
-  grade: string;
-  rating: number;
-  loginType: "LOCAL" | "KAKAO" | "NAVER";
-  address: {
-    postalCode: string;
-    mainAddress: string;
-    detailAddress: string | null;
-  };
-  point: {
-    totalPoint: 0;
-    usedPoint: 0;
-    holdPoint: 0;
-  };
-  image: null | string;
-  createDate: string;
-}
-interface MyProfileSuccess {
-  success: boolean;
-  data: IUserPrfile;
-  error: null;
-}
-
-interface SignInAsyncSuccess {
-  success: boolean;
-  data: string;
-  error: null;
-}
-// =========================== 썽크함수 성공 시 리턴 타입 ===========================
-
-// =========================== 썽크함수 실패 시 리턴 타입 ===========================
-interface ErrorHandlring {
-  status: number;
-  message: string;
-}
-
-interface SignInAsyncFail {
-  success: boolean;
-  data: null;
-  error: ErrorHandlring;
-}
-
-interface MyProfileAsyncFail {
-  status: number;
-  error: string;
-  path: string;
-}
-// =========================== 썽크함수 실패 시 리턴 타입 ===========================
-
-// =========================== axios 제네릭 ===========================
-interface IPayload {
-  email: string;
-  password: string;
-}
-interface IAxiosResponse {
-  success: boolean;
-  data: string;
-  error: null;
-}
-interface MyProfileResponse {
-  data: IUserPrfile;
-  error: null;
-  success: boolean;
-}
-// =========================== axios 제네릭 ===========================
-
-// =========================== ThunkApi 제네릭 ===========================
-interface ThunkApi {
-  dispatch: AppDispatch;
-  state: RootState;
-  extra: { history: History };
-  rejectValue: SignInAsyncFail;
-}
-interface MyProfileThunkApi {
-  dispatch: AppDispatch;
-  state: RootState;
-  rejectValue: MyProfileAsyncFail;
-}
-// =========================== ThunkApi 제네릭 ===========================
+import { addHyphenFormat } from "src/utils/formetUtil";
+import { RootState } from "modules/store";
+import {
+  IAxiosResponse,
+  IPayload,
+  MyProfileAsyncFail,
+  MyProfileResponse,
+  MyProfileSuccess,
+  MyProfileThunkApi,
+  SignInAsyncFail,
+  SignInAsyncProps,
+  SignInAsyncSuccess,
+  SignInReduceProps,
+  SignInThunkApi,
+} from "./types";
 
 const name = "signInReduce";
 
-export const getMyProfileAsync = createAsyncThunk<MyProfileSuccess, string, MyProfileThunkApi>(
-  `${name}/getMyProfileAsync`,
+// 내 프로필 가져오기
+export const myProfileAsync = createAsyncThunk<MyProfileSuccess, string, MyProfileThunkApi>(
+  `${name}/myProfileAsync`,
   async (token, { rejectWithValue }) => {
     try {
       const { data } = await getMyProfile<MyProfileResponse>(token);
-
       return data;
     } catch (err) {
       const error = err as AxiosError<MyProfileAsyncFail>;
@@ -116,7 +34,7 @@ export const getMyProfileAsync = createAsyncThunk<MyProfileSuccess, string, MyPr
 
       const rejectParams = error.response.data;
 
-      // 서버에서 에러를 핸들링 했을때
+      // 서버에서 에러를 핸들링 안 했을때
       if (!error.response.data) {
         const { status } = error.response;
         rejectParams.error = error.message;
@@ -131,7 +49,8 @@ export const getMyProfileAsync = createAsyncThunk<MyProfileSuccess, string, MyPr
 // 썽크 생성 함수의 첫번째 제너릭은 반환 타입을 준다.
 // 썽크 생성 함수의 두번째 제너릭은 파라미터의 타입을 준다.
 // 썽크 생성 함수의 세번째 제너릭은 {dispatch?, state?, extra?, rejectValue?}에 타입을 설정해줄 수 있다.
-export const signInAsync = createAsyncThunk<SignInAsyncSuccess, SignInAsyncProps, ThunkApi>(
+// 로그인
+export const signInAsync = createAsyncThunk<SignInAsyncSuccess, SignInAsyncProps, SignInThunkApi>(
   `${name}/signInAsync`,
   async ({ email, password, isRemember }, { dispatch, extra, rejectWithValue }) => {
     try {
@@ -139,28 +58,32 @@ export const signInAsync = createAsyncThunk<SignInAsyncSuccess, SignInAsyncProps
       const { data } = response;
       setRememberEmail(email);
       if (!isRemember) removeEmail();
-      dispatch(getMyProfileAsync(data.data));
-      // const { history } = extra;
-      // history.push("/");
+      dispatch(myProfileAsync(data.data));
+      const { history } = extra;
+      history.push("/");
       return { ...data };
     } catch (err) {
       const error = err as AxiosError<SignInAsyncFail>;
       // axios 에러가 아닌 런타임 에러를 캐치하기 위한 용도입니다.
       if (!error.response) throw err;
 
+      const rejectParams = error.response.data;
+
+      // 서버에서 에러를 핸들링 안 했을때
+      if (!error.response.data) {
+        const { status } = error.response;
+        rejectParams.error = {
+          status,
+          message: error.message,
+        };
+        rejectParams.data = null;
+        rejectParams.success = false;
+      }
+
       return rejectWithValue(error.response.data);
     }
   },
 );
-
-// 리듀가 사용할 데이터 타입
-export interface SignInReduceProps {
-  user: IUserPrfile | null;
-  token: string | null;
-  isLoggedIn: boolean;
-  status: "loading" | "idle";
-  error: null | ErrorHandlring;
-}
 
 const initialState: SignInReduceProps = {
   user: null,
@@ -210,19 +133,20 @@ const signInSlice = createSlice({
       state.token = null;
       state.status = "idle";
     });
-    builder.addCase(getMyProfileAsync.pending, state => {
+    builder.addCase(myProfileAsync.pending, state => {
       state.isLoggedIn = true;
     });
-    builder.addCase(getMyProfileAsync.fulfilled, (state, { payload }) => {
+    builder.addCase(myProfileAsync.fulfilled, (state, { payload }) => {
       state.user = payload.data;
+      if (payload.data.phone !== null) state.user.phone = addHyphenFormat(payload.data.phone);
       state.token = getAccessToken();
     });
-    builder.addCase(getMyProfileAsync.rejected, (state, { payload }) => {
+    builder.addCase(myProfileAsync.rejected, (state, { payload }) => {
       if (payload) {
         if (payload.status === 403) {
           removeToken();
           state.error = {
-            message: "유효하지않는 토큰입니다.",
+            message: "유효하지않는 토큰입니다. 다시 로그인해주세요.",
             status: payload.status,
           };
         }
@@ -233,12 +157,10 @@ const signInSlice = createSlice({
             status: payload.status,
           };
         }
-        return;
       }
-      state.error = {
-        status: 500,
-        message: "서버에서 에러가 발생했습니다.",
-      };
+      state.user = null;
+      state.token = null;
+      state.isLoggedIn = false;
       state.status = "idle";
     });
   },
