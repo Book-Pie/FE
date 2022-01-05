@@ -11,7 +11,7 @@ export interface SignUpInputForm {
   email: string;
   postalCode: string;
   mainAddress: string;
-  detailedAddress: string;
+  detailAddress: string;
 }
 
 export interface Rows extends FormInputProps {
@@ -23,7 +23,7 @@ export interface Rows extends FormInputProps {
 export interface SignUpFormReponse {
   success: boolean;
   error: null;
-  data: null;
+  data: boolean;
 }
 
 export interface StyledRowProps {
@@ -39,7 +39,7 @@ export interface IAxiosPostPayload {
   address: {
     postalCode: string;
     mainAddress: string;
-    detailedAddress: string;
+    detailAddress: string;
   };
 }
 

@@ -19,7 +19,7 @@ import axios from "axios";
 import { getEmailDuplicateCheck, getNickNameDuplicateCheck, getSignUp } from "src/api/signUp/signUp";
 import { useHistory } from "react-router";
 import Popup from "components/Popup/Popup";
-import { hyphenRemoveFormat } from "src/utils/formetUtil";
+import { hyphenRemoveFormat } from "utils/formetUtil";
 import { FormErrorMessages, IAxiosPostPayload, Rows, SignUpFormReponse, SignUpInputForm } from "./types";
 import { Button, Row } from "./style";
 
@@ -32,7 +32,7 @@ const signUpInputFormInit: SignUpInputForm = {
   phone: "",
   postalCode: "",
   mainAddress: "",
-  detailedAddress: "",
+  detailAddress: "",
 };
 
 const SignUpForm = () => {
@@ -51,7 +51,7 @@ const SignUpForm = () => {
 
   const onSubmit = async (data: SignUpInputForm) => {
     try {
-      const { mainAddress, detailedAddress, email, phone, nickName, password, postalCode, name } = data;
+      const { mainAddress, detailAddress, email, phone, nickName, password, postalCode, name } = data;
 
       const validationReponse = await axios.all([
         getEmailDuplicateCheck<SignUpFormReponse>(email),
@@ -79,7 +79,7 @@ const SignUpForm = () => {
           address: {
             postalCode,
             mainAddress,
-            detailedAddress,
+            detailAddress,
           },
         };
 
@@ -204,7 +204,7 @@ const SignUpForm = () => {
       },
     },
     {
-      id: "detailedAddress",
+      id: "detailAddress",
       placeholder: "상세주소",
       text: "",
       options: {
@@ -240,7 +240,7 @@ const SignUpForm = () => {
       }
       setValue("postalCode", zonecode);
       setValue("mainAddress", `${addr} ${extraAddr}`);
-      setFocus("detailedAddress");
+      setFocus("detailAddress");
       setAddressPopUpOpen(false);
     }
   }, [addressState, errors, setValue, setAddressPopUpOpen, clearErrors, setFocus]);
