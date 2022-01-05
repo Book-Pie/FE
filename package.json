@@ -25,6 +25,7 @@
     "@types/styled-components": "^5.1.18",
     "axios": "^0.24.0",
     "crypto-js": "^4.1.1",
+    "dotenv": "^10.0.0",
     "query-string": "^7.0.1",
     "react": "^17.0.2",
     "react-daum-postcode": "^3.0.1",

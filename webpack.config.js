@@ -8,6 +8,7 @@ const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 // 웹팩 데브서버 핫 리로딩 시 필요한 플러그인
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
+require("dotenv").config();
 
 // 절대 경로로 바꿔주는 기능
 const getAbsolutePath = pathDir => path.resolve(__dirname, pathDir);
@@ -129,6 +130,8 @@ module.exports = (_, argv) => {
         "process.env.KAKAO_OAUTH_URL": JSON.stringify(KAKAO_OAUTH_URL),
         "process.env.MODE": JSON.stringify(mode),
         "process.env.BASE_URL": JSON.stringify(baseURL),
+        "process.env.KAKAO_CLIENT_ID": JSON.stringify(process.env.KAKAO_CLIENT_ID),
+        "process.env.KAKAP_JDK_KEY": JSON.stringify(process.env.KAKAP_JDK_KEY),
       }),
     ],
 
