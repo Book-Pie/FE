@@ -1,26 +1,34 @@
-import { getMyProfileAsync, SignInReduceProps, signInSelector } from "modules/Slices/signInSlice";
+import { myProfileAsync, signInSelector } from "modules/Slices/signInSlice";
 import { AppDispatch, useAppDispatch, useTypedSelector } from "modules/store";
 import { useCallback, useEffect } from "react";
+import { SignInReduceProps } from "modules/Slices/types";
 import { getAccessToken } from "utils/localStorageUtil";
+import { useHistory } from "react-router";
 
-const useSignIn = (): {
+interface ReturnType {
   dispatch: AppDispatch;
   signIn: SignInReduceProps;
-} => {
+}
+
+const useSignIn = (): ReturnType => {
   const dispatch = useAppDispatch();
+  const history = useHistory();
   const signIn = useTypedSelector(signInSelector);
-  const { isLoggedIn, error } = signIn;
+  const { isLoggedIn } = signIn;
 
   const getProfile = useCallback(() => {
     const accessToken = getAccessToken();
 
-    if (accessToken && isLoggedIn === false) dispatch(getMyProfileAsync(accessToken));
-  }, [dispatch, isLoggedIn]);
+    if (accessToken && isLoggedIn === false) {
+      dispatch(myProfileAsync(accessToken))
+        .unwrap()
+        .catch(error => {
+          if (error.status === 403) history.replace("signIn");
+        });
+    }
+  }, [dispatch, isLoggedIn, history]);
 
-  useEffect(() => getProfile(), [getProfile]);
-  useEffect(() => {
-    if (error && error.status === 403) alert(error.message);
-  }, [error]);
+  useEffect(getProfile, [getProfile]);
 
   return {
     dispatch,
