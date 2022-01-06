@@ -38,6 +38,9 @@ const SignIn = () => {
         <Link to="/signup">
           <span>회원가입</span>
         </Link>
+        <Link to="/">
+          <span>홈으로</span>
+        </Link>
       </Links>
       <OAuths>
         <a href={naverOauthUrl}>
