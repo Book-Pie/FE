@@ -22,9 +22,15 @@ const PrivateRoute = ({ component: Component, redirectPath, isLoggedIn, ...rest 
         if (path.match("/signIn")) {
           if (!isLoggedIn) returnComponent = <Component {...props} />;
         }
-
         if (path.match("/signUp")) {
           if (!isLoggedIn) returnComponent = <Component {...props} />;
+        }
+        if (path.match("/oAuth/kakao")) {
+          if (isLoggedIn) returnComponent = <Component {...props} />;
+        }
+        if (path.match("/oAuthTest")) {
+          console.log(1);
+          if (isLoggedIn) returnComponent = <Component {...props} />;
         }
 
         return returnComponent;
