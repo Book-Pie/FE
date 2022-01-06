@@ -1,7 +1,7 @@
-import { myProfileAsync, signInSelector } from "modules/Slices/signInSlice";
+import { myProfileAsync, signInSelector } from "modules/Slices/signIn/signInSlice";
+import { SignInReduceProps } from "modules/Slices/signIn/types";
 import { AppDispatch, useAppDispatch, useTypedSelector } from "modules/store";
 import { useCallback, useEffect } from "react";
-import { SignInReduceProps } from "modules/Slices/types";
 import { getAccessToken } from "utils/localStorageUtil";
 import { useHistory } from "react-router";
 

@@ -5,7 +5,7 @@ import SingIn from "pages/SingIn/SingIn";
 import Find from "pages/Find/Find";
 import UsedBook from "pages/UsedBook/UsedBook";
 import useSignIn from "hooks/useSignIn";
-import { logout } from "modules/Slices/signInSlice";
+import { logout } from "src/modules/Slices/signIn/signInSlice";
 import OauthTest from "src/pages/OauthTest/OauthTest";
 import MyProfile from "pages/MyProfile/MyProfile";
 import KaKaoOauth from "pages/KaKaoOauth/KaKaoOauth";
