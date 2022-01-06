@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
-import { RootState } from "../store";
-import book from "../../api/book";
+import { RootState } from "src/modules/store";
+import book from "src/api/book";
 
 export interface bookSliceProps {
   bookId: number;

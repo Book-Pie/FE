@@ -1,5 +1,5 @@
 import Card from "src/components/Cards/PublicCard";
-import dummy from "../../db/data.json";
+import dummy from "src/db/data.json";
 import { A, SideBar, SourcesArea } from "./style";
 
 const BookSideBar = () => {

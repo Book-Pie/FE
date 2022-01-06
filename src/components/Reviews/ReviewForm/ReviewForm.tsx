@@ -5,7 +5,7 @@ import { CancelButton, ClickButton, SubmitButton } from "./SubmitButton";
 import { ReviewTextarea } from "./ReviewTextarea";
 import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
-import { addComment, editComment } from "../../../modules/Slices/commentSlice";
+import { addComment, editComment } from "modules/Slices/commentSlice";
 import { dateFormat } from "src/utils/formatDate";
 import { ReviewFormProps } from "./types";
 
@@ -25,8 +25,6 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({
   const rating: number = 3;
   const reviewLikeCount: number = 0;
   const likeCheck: boolean = false;
-
-  console.log("ReviewForm myReviewContent 데이터 state : ", myReviewContent.content);
 
   let editStatus = true;
   if (myReviewContent.content === undefined) {
@@ -84,17 +82,6 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({
   const handleEdit = () => {
     editEnabled(prev => !prev);
   };
-
-  console.log("ReviewForm myReviewContent 데이터 : ", myReviewContent);
-  console.log("ReviewForm myReviewContent 배열 데이터 : ", myReviewContent[0]);
-
-  console.log("ReviewForm myReviewContent?.content 데이터 : ", myReviewContent?.content);
-  console.log("ReviewForm myReviewContent.content 데이터 : ", myReviewContent.content);
-
-  console.log("ReviewForm myContent 데이터 : ", myContent);
-
-  console.log("ReviewForm isMyReview 데이터 : ", isMyReview);
-  console.log("editDisabled 값 확인 ~~ ", editDisabled);
 
   return (
     <>

@@ -1,4 +1,4 @@
-import { getCommentProps } from "../../../modules/Slices/commentSlice";
+import { getCommentProps } from "modules/Slices/commentSlice";
 
 export interface Review {
   review_id: number;

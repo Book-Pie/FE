@@ -6,8 +6,6 @@ import { P, ExpanderArea } from "./style";
 export const TextTruncate: React.FC<TextTruncateProps> = props => {
   const wrapperRef = useRef<HTMLParagraphElement>();
 
-  console.log(props);
-
   const [isExpanded, setExpand] = useState(false);
   const [isTruncated, setTruncate] = useState(false);
 

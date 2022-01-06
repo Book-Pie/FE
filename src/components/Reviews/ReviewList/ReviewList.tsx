@@ -3,7 +3,7 @@ import { ReviewItem } from "./ReviewItem";
 import { ReviewListEmpty } from "./ReviewListEmpty";
 import { CommentUl } from "./style";
 import { ReviewListProps } from "./types";
-import { getCommentProps } from "../../../modules/Slices/commentSlice";
+import { getCommentProps } from "modules/Slices/commentSlice";
 
 export const ReviewList: React.FC<ReviewListProps> = ({ bookId, commentList, myCommentId }) => {
   return (
