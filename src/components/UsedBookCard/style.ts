@@ -22,29 +22,29 @@ export const Wrapper = styled.div`
     box-shadow: rgb(0 0 0 / 50%) 0px 4px 16px 0px;
   }
 
-  .usedBookContent__title {
+  .usedBookCard__title {
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
     text-align: left;
   }
 
-  .usedBookContent__cotent {
+  .usedBookCard__cotent {
     padding: 0.5rem 1rem 1rem;
   }
 
-  .usedBookContent__imgBox {
+  .usedBookCard__imgBox {
     position: relative;
     padding-top: 300px;
   }
-  .usedBookContent__img {
+  .usedBookCard__img {
     position: absolute;
     display: block;
     top: 0;
     width: 100%;
     height: 100%;
   }
-  .usedBookContent__price {
+  .usedBookCard__price {
     text-align: left;
     display: flex;
     align-items: center;
