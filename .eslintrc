@@ -105,8 +105,11 @@
     "react/no-unused-prop-types":"warn",
     
 
-    // 사용하지 않는 변수가 있을때 빌드에러
-    "no-unused-vars": "warn",
+    // 사용하지 않는 변수가 있을때 경고를 주지만 tpyescript의 interface도 경고를 줘서 
+    // eslint no-unused-vars는 꺼줘야된다.
+    // @typescrip/no-unused-vars가 interface를 제외한 나머지 사용하지 않는 변수를 경고준다.
+    "no-unused-vars": "off",
+
     
     "spaced-comment": ["error", "always"],
     "no-use-before-define": ["error", { "variables": false }],
