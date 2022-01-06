@@ -1,7 +1,18 @@
-export interface FindIdInputForm {
-  username: "";
-  email: "";
-  mobileNumber: "";
+export interface IFindPasswordForm {
+  email: string;
+  name: string;
+  phone: string;
+  password: string;
+}
+
+export interface AxiosResponse {
+  success: boolean;
+  error: null;
+  data: string;
+}
+
+export interface HisotryState {
+  path: string;
 }
 
 export const FormErrorMessages = {

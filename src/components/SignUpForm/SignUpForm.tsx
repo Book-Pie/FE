@@ -8,27 +8,31 @@ import {
   hookFormEmailPatternCheck,
   hookFormMisMatchCheck,
 } from "utils/hookFormUtil";
-import FormInput from "src/components/FormInput/FormInput";
+import FormInput from "components/FormInput/FormInput";
 import ErrorMessage from "components/ErrorMessage/ErrorMessage";
-import FormLabel from "src/components/FormLabel/FormLabel";
+import FormLabel from "components/FormLabel/FormLabel";
 import DaumPostCode from "react-daum-postcode";
 import { useEffect, useState } from "react";
 import useDaumPost from "hooks/useDaumPost";
+import { errorHandler } from "src/api/http";
 import axios from "axios";
-import { FormErrorMessages, Rows, SignUpFormReponse, SignUpInputForm } from "./types";
+import { getEmailDuplicateCheck, getNickNameDuplicateCheck, getSignUp } from "src/api/signUp/signUp";
+import { useHistory } from "react-router";
+import Popup from "components/Popup/Popup";
+import { hyphenRemoveFormat } from "utils/formetUtil";
+import { FormErrorMessages, IAxiosPostPayload, Rows, SignUpFormReponse, SignUpInputForm } from "./types";
 import { Button, Row } from "./style";
 
 const signUpInputFormInit: SignUpInputForm = {
-  userId: "",
-  userName: "",
+  email: "",
+  name: "",
   password: "",
   nickName: "",
   confirmPassword: "",
-  mobileNumber: "",
-  email: "",
+  phone: "",
   postalCode: "",
-  address: "",
-  detailedAddress: "",
+  mainAddress: "",
+  detailAddress: "",
 };
 
 const SignUpForm = () => {
@@ -41,53 +45,71 @@ const SignUpForm = () => {
   const { addressState, handleComplete } = useDaumPost();
   const [password, confirmPassword] = watch(["password", "confirmPassword"]);
   const { errors } = formState;
+  const [isOpen, setIsOpen] = useState(false);
+  const [message, setMessage] = useState("");
+  const history = useHistory();
 
   const onSubmit = async (data: SignUpInputForm) => {
     try {
-      const { address, detailedAddress, email, mobileNumber, nickName, password, postalCode, userId, userName } = data;
-      // ... id, nickname 중복체크
-      const responses = await Promise.all([
-        axios.get<SignUpFormReponse>("http://localhost:3001/signup-userId-duplicate-success"),
-        axios.get<SignUpFormReponse>("http://localhost:3001/signup-nickName-duplicate-success"),
-      ]);
-      const [userIdDuplicateValue, nickNameDuplicateValue] = responses;
+      const { mainAddress, detailAddress, email, phone, nickName, password, postalCode, name } = data;
 
-      if (!userIdDuplicateValue.data.success) {
-        setError("userId", { type: "duplicate", message: "아이디가 중복입니다." });
+      const validationReponse = await axios.all([
+        getEmailDuplicateCheck<SignUpFormReponse>(email),
+        getNickNameDuplicateCheck<SignUpFormReponse>(nickName),
+      ]);
+
+      // validation 모두 성공했을때 요청을 한다.
+      const [emailDuplicate, nickNameDuplicate] = validationReponse;
+
+      // 중복은 false
+      if (emailDuplicate.data.data === false) {
+        setError("email", { type: "duplicate", message: "이메일이 중복입니다." });
       }
-      if (!nickNameDuplicateValue.data.success) {
+      if (nickNameDuplicate.data.data === false) {
         setError("nickName", { type: "duplicate", message: "닉네임이 중복입니다." });
       }
 
-      if (userIdDuplicateValue.data.success && nickNameDuplicateValue.data.success) {
-        console.log("회원가입");
-        // ... 회원가입 api
+      if (nickNameDuplicate.data.data && emailDuplicate.data.data) {
+        const payload: IAxiosPostPayload = {
+          password,
+          name,
+          phone: hyphenRemoveFormat(phone),
+          email,
+          nickName,
+          address: {
+            postalCode,
+            mainAddress,
+            detailAddress,
+          },
+        };
+
+        const response = await getSignUp<SignUpFormReponse, IAxiosPostPayload>(payload);
+        const signUpData = response.data;
+        if (signUpData.success) {
+          history.push("/signIn");
+        }
       }
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        // axios 에러
-      } else {
-        // 런타임 에러
-      }
+      const message = errorHandler(error);
+      setIsOpen(true);
+      setMessage(message);
     }
   };
 
   const handleReset = () => reset(signUpInputFormInit);
-
   const handlePopUpOpne = () => setAddressPopUpOpen(prve => !prve);
 
   const rows: Rows[] = [
     {
-      id: "userId",
-      placeholder: "아이디입력",
-      text: "아이디",
+      id: "email",
+      placeholder: "선택입력",
+      text: "이메일",
       options: {
-        maxLength: makeOption<number>(10, FormErrorMessages.MAX_LENGTH),
-        minLength: makeOption<number>(5, FormErrorMessages.MIN_LENGTH),
+        maxLength: makeOption<number>(20, FormErrorMessages.MAX_LENGTH),
+        minLength: makeOption<number>(10, FormErrorMessages.MIN_LENGTH),
         required: makeOption<boolean>(true, FormErrorMessages.REQUIRED),
         validate: {
-          specialChracters: value => hookFormSpecialChractersCheck(value, FormErrorMessages.SPECIAL_CHARACTERS),
-          korea: value => hookFormKoreaChractersCheck(value, FormErrorMessages.KOREA_CHARACTERS),
+          email: value => hookFormEmailPatternCheck(value, FormErrorMessages.EMAIL),
         },
       },
     },
@@ -137,7 +159,7 @@ const SignUpForm = () => {
       },
     },
     {
-      id: "userName",
+      id: "name",
       placeholder: "이름 입력",
       text: "이름",
       options: {
@@ -150,9 +172,8 @@ const SignUpForm = () => {
         },
       },
     },
-
     {
-      id: "mobileNumber",
+      id: "phone",
       placeholder: "ex 000-0000-0000",
       text: "휴대폰 번호",
       options: {
@@ -161,19 +182,6 @@ const SignUpForm = () => {
         required: makeOption<boolean>(true, FormErrorMessages.REQUIRED),
         validate: {
           mobileNumber: value => hookFormMobileNumberPatternCheck(value, FormErrorMessages.MOBILE_NUMBER),
-        },
-      },
-    },
-    {
-      id: "email",
-      placeholder: "선택입력",
-      text: "본인 확인 이메일",
-      options: {
-        maxLength: makeOption<number>(20, FormErrorMessages.MAX_LENGTH),
-        minLength: makeOption<number>(10, FormErrorMessages.MIN_LENGTH),
-        required: makeOption<boolean>(true, FormErrorMessages.REQUIRED),
-        validate: {
-          email: value => hookFormEmailPatternCheck(value, FormErrorMessages.EMAIL),
         },
       },
     },
@@ -187,7 +195,7 @@ const SignUpForm = () => {
       },
     },
     {
-      id: "address",
+      id: "mainAddress",
       placeholder: "주소",
       text: "",
       disabled: true,
@@ -196,7 +204,7 @@ const SignUpForm = () => {
       },
     },
     {
-      id: "detailedAddress",
+      id: "detailAddress",
       placeholder: "상세주소",
       text: "",
       options: {
@@ -224,33 +232,40 @@ const SignUpForm = () => {
 
   useEffect(() => {
     const { addr, extraAddr, zonecode } = addressState;
-    const { address, postalCode } = errors;
+    const { mainAddress, postalCode } = errors;
 
     if (addr && zonecode) {
-      if (address || postalCode) {
-        clearErrors(["postalCode", "address"]);
+      if (mainAddress || postalCode) {
+        clearErrors(["postalCode", "mainAddress"]);
       }
       setValue("postalCode", zonecode);
-      setValue("address", `${addr} ${extraAddr}`);
-      setFocus("detailedAddress");
+      setValue("mainAddress", `${addr} ${extraAddr}`);
+      setFocus("detailAddress");
       setAddressPopUpOpen(false);
     }
   }, [addressState, errors, setValue, setAddressPopUpOpen, clearErrors, setFocus]);
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      {rowsEl}
-      {addressPopUpOpen && <DaumPostCode autoClose={false} onComplete={handleComplete} />}
-      <div>
-        <Button type="button" onClick={handlePopUpOpne}>
-          주소 찾기
-        </Button>
-        <Button type="submit">회원가입</Button>
-        <Button type="button" onClick={handleReset}>
-          초기화
-        </Button>
-      </div>
-    </form>
+    <>
+      {isOpen && (
+        <Popup className="red" isOpen={isOpen} setIsOpen={setIsOpen} autoClose closeDelay={3000}>
+          {message}
+        </Popup>
+      )}
+      <form onSubmit={handleSubmit(onSubmit)}>
+        {rowsEl}
+        {addressPopUpOpen && <DaumPostCode autoClose={false} onComplete={handleComplete} />}
+        <div>
+          <Button type="button" onClick={handlePopUpOpne}>
+            주소 찾기
+          </Button>
+          <Button type="submit">회원가입</Button>
+          <Button type="button" onClick={handleReset}>
+            초기화
+          </Button>
+        </div>
+      </form>
+    </>
   );
 };
 

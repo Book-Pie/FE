@@ -1,6 +1,6 @@
 type Colors = "green" | "red";
 
-export interface Props {
+export interface PopUpProps {
   isOpen: boolean;
   autoClose?: boolean;
   openDelay?: number;
