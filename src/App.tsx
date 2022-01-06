@@ -9,7 +9,7 @@ import { logout } from "modules/Slices/signIn/signInSlice";
 import OauthTest from "pages/OauthTest/OauthTest";
 import MyProfile from "pages/MyProfile/MyProfile";
 import KaKaoOauth from "pages/KaKaoOauth/KaKaoOauth";
-import PrivateRoute from "src/router/PrivateRoute";
+import PrivateRoute from "src/router/PrivateRoute/PrivateRoute";
 import styled from "styled-components";
 
 // 임시로 만들었습니다.

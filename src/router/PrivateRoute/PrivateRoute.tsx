@@ -1,11 +1,6 @@
-import { Redirect, Route, RouteProps } from "react-router";
+import { Redirect, Route } from "react-router";
 import { getAccessToken } from "utils/localStorageUtil";
-
-interface PrivateRouteProps extends RouteProps {
-  component: any;
-  redirectPath: string;
-  isLoggedIn: boolean;
-}
+import { PrivateRouteProps } from "./types";
 
 const PrivateRoute = ({ component: Component, redirectPath, isLoggedIn, ...rest }: PrivateRouteProps) => {
   return (
@@ -29,7 +24,6 @@ const PrivateRoute = ({ component: Component, redirectPath, isLoggedIn, ...rest 
           if (isLoggedIn) returnComponent = <Component {...props} />;
         }
         if (path.match("/oAuthTest")) {
-          console.log(1);
           if (isLoggedIn) returnComponent = <Component {...props} />;
         }
 
