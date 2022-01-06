@@ -13,16 +13,21 @@ export const Links = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  font-size: 0.7rem;
+  font-weight: bold;
+
+  a + a,
+  .links__email--remember + a,
+  input + .links__email--remember {
+    margin-left: 5px;
+  }
 
   input {
     margin: 0;
-    margin-right: 10px;
   }
   a,
   span {
     position: relative;
-    font-weight: bold;
-    font-size: 0.7rem;
   }
 
   span + span {

@@ -1,20 +1,9 @@
 import { Route, Switch, useRouteMatch } from "react-router";
-import FindIdForm from "src/components/FindIdForm/FindIdForm";
-import styled from "styled-components";
+import FindEmailForm from "components/FindEmailForm/FindEmailForm";
+import FindPasswordForm from "components/FindPassswordForm/FindPasswordForm";
 import { Link } from "react-router-dom";
-
-const Container = styled.div`
-  padding: 1rem;
-  width: 50%;
-  margin: 0 auto;
-  background-color: rgb(245, 246, 247);
-  text-align: center;
-`;
-
-interface ResultState {
-  id: string;
-  path: string;
-}
+import { LocationState } from "./types";
+import { Container } from "./style";
 
 const Find = () => {
   const match = useRouteMatch();
@@ -24,23 +13,24 @@ const Find = () => {
     <div>
       <Container>
         <Switch>
-          <Route path={`${path}/id`}>
-            <h2>아이디 찾기</h2>
-            <FindIdForm />
+          <Route path={`${path}/email`}>
+            <h2>이메일 찾기</h2>
+            <FindEmailForm />
           </Route>
           <Route path={`${path}/password`}>
-            <div>비밀번호 찾기</div>
+            <h2>비밀번호 찾기</h2>
+            <FindPasswordForm />
           </Route>
           <Route
             path={`${path}/result`}
             render={({ location }) => {
-              const { id, path } = location.state as ResultState;
+              const { email, path } = location.state as LocationState;
 
-              if (/\/find\/id/gi.test(path)) {
+              if (/email/gi.test(path)) {
                 return (
                   <div>
-                    찾으신 아이디 결과
-                    <div>{JSON.stringify(id)}</div>
+                    찾으신 이메일 결과
+                    <div>{email}</div>
                     <div>
                       <Link to="/signIn">로그인하기</Link>
                     </div>

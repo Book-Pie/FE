@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import { PopupWrraper } from "./style";
-import { Props } from "./types";
+import { PopupWrapper } from "./style";
+import { PopUpProps } from "./types";
 
-const Popup = ({ isOpen, closeDelay, openDelay, children, autoClose, className, setIsOpen }: Props) => {
+const Popup = ({ isOpen, closeDelay, openDelay, children, autoClose, className, setIsOpen }: PopUpProps) => {
   const [visible, setVisible] = useState<boolean>(false);
   const isClosed = useRef<boolean>(false);
 
@@ -39,9 +39,9 @@ const Popup = ({ isOpen, closeDelay, openDelay, children, autoClose, className, 
   }, [closeDelay, autoClose]);
 
   return (
-    <PopupWrraper onClick={popUpCloase} visible={visible} className={className}>
+    <PopupWrapper onClick={popUpCloase} visible={visible} className={className}>
       {children}
-    </PopupWrraper>
+    </PopupWrapper>
   );
 };
 

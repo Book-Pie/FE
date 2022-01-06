@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { ReviewList } from "../ReviewList/ReviewList";
 import { ReviewWrite } from "../ReviewWrite";
 import { ReviewsProps } from "./types";
+import useSignIn from "hooks/useSignIn";
 import {
   comments,
   myComment,
@@ -18,6 +19,10 @@ export const Reviews: React.FC<ReviewsProps> = ({ bookId }) => {
   const commentList = useTypedSelector(comments);
   // const myComment = useTypedSelector(myId); // 나의 아이디 정보
   const myUserId = 5; // 나의 아이디 임시 데이터
+
+  const { signIn } = useSignIn();
+
+  console.log("나의 아이디 : ", signIn);
 
   console.log("Reviews myReviewContent 데이터!!! : ", myReviewContent);
   console.log("Reviews myReviewCheck 데이터!!! : ", myReviewCheck);
