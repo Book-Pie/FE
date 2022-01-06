@@ -27,7 +27,7 @@ const BookDetailContent = () => {
         </BookDetailPanel> */}
       </BasicCard>
       <BookDetailPanelWrapper>
-        <Reviews bookId={bookId} getReviews={undefined} />
+        <Reviews bookId={bookId} />
       </BookDetailPanelWrapper>
     </Container>
   );

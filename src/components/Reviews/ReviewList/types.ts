@@ -9,7 +9,8 @@ export interface Review {
 
 export interface ReviewListProps {
   bookId: number;
-  reviewList: Review[];
+  commentList: getCommentProps[];
+  myCommentId: number;
 }
 
 export interface Comment {
@@ -22,11 +23,9 @@ export interface Comment {
 
 export interface ReviewItemProps {
   key: number;
-  user: number;
-  bookId: number;
   content: getCommentProps;
   children?: React.ReactNode;
-  myComment: string;
+  myCommentId: number;
 }
 
 export interface TruncateProps extends React.HTMLProps<Truncate> {
@@ -38,7 +37,8 @@ export interface TruncateProps extends React.HTMLProps<Truncate> {
 
 export interface ReviewsWriteProps {
   bookId: number;
-  myReviewId: number;
+  myReviewCheck: boolean;
+  myReviewContent: getCommentProps;
 }
 
 export type DateDTO = string;

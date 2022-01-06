@@ -14,9 +14,15 @@ export interface getCommentProps {
   likeCheck: boolean;
 }
 
+export interface myReviewCommentProps {
+  myUserId: number;
+}
+
 // 리듀가 사용할 데이터 타입
 export interface commentReduceProps {
   content: getCommentProps[];
+  myCommentCheck: boolean;
+  myComment: getCommentProps;
   status: "loading" | "idle" | "error";
   error: null | {
     code: number;
@@ -37,9 +43,13 @@ export interface commentAsyncFail {
 // 통신 성공 시 반환하는 타입
 type commentAsyncSuccess = getCommentProps[];
 
+type myCommentAsyncSuccess = getCommentProps;
+
 // json-server로 받을 데이터
 const initialState = {
   content: [],
+  myCommentCheck: false,
+  myComment: [],
   status: "loading",
   error: null,
 };
@@ -115,6 +125,45 @@ export const deleteComment = createAsyncThunk<commentAsyncSuccess, getCommentPro
   },
 );
 
+// 댓글 수정
+export const editComment = createAsyncThunk<myCommentAsyncSuccess, getCommentProps>(
+  "comment/edit",
+  async (data, { rejectWithValue }) => {
+    try {
+      const response = await book.patch(`/content/${data.user_id}`, data);
+      console.log("editComment data 데이터 확인 : ", data);
+      console.log("editComment data 데이터 확인 : ", data.user_id);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response.data);
+    }
+  },
+);
+
+// 나의 댓글
+export const myReviewComment = createAsyncThunk<commentAsyncSuccess, myReviewCommentProps>(
+  "comments/myComment",
+  async (myUserId, { rejectWithValue }) => {
+    try {
+      const response = await book.get(`/content?user_id=${myUserId}`);
+      console.log("myReviewComment data 데이터 확인 : ", myUserId);
+      console.log("myReviewComment response 데이터 확인 : ", response);
+      console.log("myReviewComment response 데이터 확인22 : ", response.data);
+
+      console.log("myReviewComment response 데이터 길이 확인3 : ", response.data.length);
+
+      if (response.data.length > 0) {
+        return response.data[0];
+      } else {
+        return response.data;
+      }
+    } catch (error: any) {
+      console.log(error);
+      return rejectWithValue(error.response.data);
+    }
+  },
+);
+
 const commentSlice = createSlice({
   name: "commentReduce",
   initialState: initialState as commentReduceProps,
@@ -142,10 +191,11 @@ const commentSlice = createSlice({
         console.log("댓글 작성 로딩중", action);
       })
       .addCase(addComment.fulfilled, (state, { payload }) => {
-        console.log("댓글 작성 extra fulfilled테스트중 : ", payload);
+        console.log("댓글 작성 성공 fulfilled : ", payload);
         state.content.push(payload);
         state.status = "idle";
-        console.log("댓글 작성 성공 : ", payload);
+        state.myCommentCheck = true;
+        state.myComment = payload;
       })
       .addCase(addComment.rejected, (state, action) => {
         state.status = "error";
@@ -159,16 +209,48 @@ const commentSlice = createSlice({
       .addCase(deleteComment.fulfilled, (state, action) => {
         state.status = "idle";
         console.log("댓글 삭제 성공", action);
+        state.myCommentCheck = false;
         state.content = state.content.filter(comment => comment.id !== action.payload);
+        state.myComment = state.content.filter(comment => comment.id !== action.payload);
       })
       .addCase(deleteComment.rejected, (state, action) => {
         state.status = "loading";
         console.log("댓글 삭제 실패", action);
+      })
+      // 댓글 수정
+      .addCase(editComment.pending, (state, action) => {
+        console.log("댓글 수정 로딩중", action);
+        state.status = "loading";
+      })
+      .addCase(editComment.fulfilled, (state, { payload }) => {
+        console.log("댓글 수정 성공", payload);
+        state.myComment = payload;
+        state.content = state.content.map(v => (v.id !== payload.id ? v : { ...v, content: payload.content }));
+      })
+      .addCase(editComment.rejected, (state, action) => {
+        console.log("댓글 수정 성공", action);
+        state.status = "loading";
+      })
+      // 나의 댓글
+      .addCase(myReviewComment.pending, (state, action) => {
+        console.log("나의 댓글 로딩중", action);
+        state.status = "loading";
+      })
+      .addCase(myReviewComment.fulfilled, (state, { payload }) => {
+        console.log("나의 댓글 통신 성공 : ", payload);
+        state.myComment = payload;
+        state.status = "idle";
+      })
+      .addCase(myReviewComment.rejected, (state, action) => {
+        console.log("나의 댓글 실패", action);
+        state.status = "loading";
       });
   },
 });
 
 export const commentsSelector = (state: RootState) => state.commentReduce;
 export const comments = (state: RootState) => state.commentReduce.content;
+export const myComment = (state: RootState) => state.commentReduce.myComment;
+export const myCommentCheck = (state: RootState) => state.commentReduce.myCommentCheck;
 
 export default commentSlice.reducer;
