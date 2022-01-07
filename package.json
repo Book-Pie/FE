@@ -16,6 +16,11 @@
   "homepage": "https://github.com/Book-Pie/FE#readme",
   "dependencies": {
     "@babel/runtime": "^7.16.5",
+    "@emotion/react": "^11.7.1",
+    "@emotion/styled": "^11.6.0",
+    "@mui/icons-material": "^5.2.5",
+    "@mui/material": "^5.2.7",
+    "@mui/styled-engine-sc": "^5.1.0",
     "@reduxjs/toolkit": "^1.7.1",
     "@types/crypto-js": "^4.0.2",
     "@types/react": "^17.0.37",

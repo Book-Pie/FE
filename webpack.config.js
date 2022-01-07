@@ -39,6 +39,7 @@ module.exports = (_, argv) => {
       // example const bar_1 = require("@src/bar"); 웹팩은 이렇게 들어가서 못찾느다.
       // 1. tsconfig.json path 등록 > 2. 웹팩 alias도 등록
       alias: {
+        "@mui/styled-engine": "@mui/styled-engine-sc",
         src: getAbsolutePath("src"),
         api: getAbsolutePath("src/api"),
         assets: getAbsolutePath("src/assets"),

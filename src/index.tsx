@@ -1,7 +1,7 @@
 import ReactDOM from "react-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { BrowserRouter } from "react-router-dom";
-import { createGlobalStyle } from "styled-components";
+import styled, { createGlobalStyle } from "styled-components";
 import { Router } from "react-router";
 import { Provider } from "react-redux";
 import store, { customHistory } from "modules/store";
@@ -68,12 +68,19 @@ const GlobalStyle = createGlobalStyle`
 
 const rootElement = document.getElementById("root");
 
+const Layout = styled.div`
+  max-width: 1200px;
+  margin: 0 auto;
+`;
+
 ReactDOM.render(
   <Provider store={store}>
     <Router history={customHistory}>
       <GlobalStyle />
-      <Header />
-      <App />
+      <Layout>
+        <Header />
+        <App />
+      </Layout>
     </Router>
   </Provider>,
   rootElement,
