@@ -150,7 +150,13 @@ module.exports = (_, argv) => {
         publicPath: "/",
       },
       // 설정한 url에 대해서 dev-serve가 Forward 프록시를 해준다.
-      proxy: {},
+      proxy: {
+        "/api": {
+          target: "http://localhost:3000",
+          router: () => "http://bookpie.tk:8080/",
+          logLevel: "debug",
+        },
+      },
     },
   };
 

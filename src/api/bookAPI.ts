@@ -4,12 +4,7 @@ const api = axios.create({
   baseURL: `http://localhost:4000`,
 });
 
-export function getBookData() {
-  return api
-    .get(`/bestSeller`)
-    .then(response => console.log(response.data.item))
-    .catch(error => console.error(error));
-}
+export default api;
 
 // 알라딘 API 요청 (CORB 해결 필요)
 

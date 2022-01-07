@@ -3,30 +3,30 @@ import { theme } from "src/utils/theme";
 import styled from "styled-components";
 
 interface BestSellerProps {
-  bestRank: string;
-  categoryName: string;
+  itemId: number;
   title: string;
+  categoryName: string;
+  cover: string;
+  bestRank: number;
 }
 
-const BestSeller = ({ bestRank, categoryName, title }: BestSellerProps) => {
+const BestSeller = ({ bestRank, categoryName, title, cover, itemId }: BestSellerProps) => {
   return (
-    <div>
-      <ItemWrapper>
-        <TextArea>
-          <div>
-            <Text fontSize="30px" color={theme.colors.white} lineHeight="1.3">
-              02
-            </Text>
-          </div>
-          <Text fontSize="20px" margin="12px 0px 0px 0px">
-            이것은 누구의 이갸이인가
+    <ItemWrapper>
+      <TextArea>
+        <div>
+          <Text fontSize="20px" color={theme.colors.white} lineHeight="1.3">
+            {bestRank}
           </Text>
-          <Text color={theme.colors.DarkGrey}>#소설</Text>
-        </TextArea>
+        </div>
 
-        <img src="https://img.ridicdn.net/cover/745000167/xxlarge?dpi=xxhdpi#1" alt="bookimg" />
-      </ItemWrapper>
-    </div>
+        <Text width="60px" fontSize="15px" margin="12px 0px 0px 0px">
+          {title}
+        </Text>
+        <Text color={theme.colors.DarkGrey}>{categoryName}</Text>
+      </TextArea>
+      <img src={cover} alt={title} />
+    </ItemWrapper>
   );
 };
 
@@ -48,8 +48,6 @@ const TextArea = styled.div`
 `;
 
 const ItemWrapper = styled.div`
-  width: 250px;
-  height: 250px;
   background-color: ${theme.colors.mainLightBrown};
   display: flex;
   padding: 20px;

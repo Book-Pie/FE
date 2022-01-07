@@ -31,7 +31,7 @@ export default BannerSlider;
 const SlierBox = styled.div`
   width: 100%;
   max-width: 1920px;
-  height: 35vh;
+  height: 600px;
   background-color: ${theme.colors.mainDarkBrown};
   &:hover {
     cursor: pointer;

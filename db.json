@@ -1,304 +1,138 @@
 {
-    "data": [
-        {
-            "id": 1,
-            "name": "pathas",
-            "age": 1000
+    "recentlyUsedBook": { 
+        "success": true,
+        "data": {
+          "pages": [
+            {
+              "id": 1,
+              "title": "청춘은 아름다워",
+              "category": "소설",
+              "price": "10000",
+              "image": "https://img.ridicdn.net/cover/4653000052/xxlarge?dpi=xxhdpi#1"
+            },
+            {
+              "id": 2,
+              "title": "허상의 어릿광대",
+              "category": "소설",
+              "price": "10000",
+              "image": "https://img.ridicdn.net/cover/4653000052/xxlarge?dpi=xxhdpi#1"
+            },
+            {
+              "id": 3,
+              "title": "허상의 어릿광대",
+              "category": "소설",
+              "price": "10000",
+              "image": "https://img.ridicdn.net/cover/4653000052/xxlarge?dpi=xxhdpi#1"
+            },
+            {
+              "id": 4,
+              "title": "허상의 어릿광대",
+              "category": "소설",
+              "price": "10000",
+              "image": "https://img.ridicdn.net/cover/4653000052/xxlarge?dpi=xxhdpi#1"
+            },
+            {
+              "id": 5,
+              "title": "허상의 어릿광대",
+              "category": "소설",
+              "price": "10000",
+              "image": "https://img.ridicdn.net/cover/4653000052/xxlarge?dpi=xxhdpi#1"
+            },
+            {
+              "id": 6,
+              "title": "허상의 어릿광대",
+              "category": "소설",
+              "price": "10000",
+              "image": "https://img.ridicdn.net/cover/4653000052/xxlarge?dpi=xxhdpi#1"
+            },
+            {
+              "id": 7,
+              "title": "허상의 어릿광대",
+              "category": "소설",
+              "price": "10000",
+              "image": "https://img.ridicdn.net/cover/4653000052/xxlarge?dpi=xxhdpi#1"
+            },
+            {
+              "id": 8,
+              "title": "허상의 어릿광대",
+              "category": "소설",
+              "price": "10000",
+              "image": "https://img.ridicdn.net/cover/4653000052/xxlarge?dpi=xxhdpi#1"
+            }
+          ]
         },
-        {
-            "id": 2,
-            "name": "pathasHH",
-            "age": 1000
-        }
-    ],
-    "bestSeller": {    
-        "version": "20131101",
-        "logo": "http://image.aladin.co.kr/img/header/2011/aladin_logo_new.gif",
-        "title": "알라딘 베스트셀러 리스트 - 국내도서",
-        "link": "https://www.aladin.co.kr/shop/common/wbest.aspx?BestType=Bestseller&amp;BranchType=1&amp;Year=2021&amp;Month=12&amp;Week=4&amp;partner=openAPI",
-        "pubDate": "Wed, 29 Dec 2021 13:44:52 GMT",
-        "totalResults": 1000,
-        "startIndex": 1,
-        "itemsPerPage": 10,
-        "query": "QueryType=BESTSELLER;SearchTarget=Book;Year=2021;Month=12;Week=4",
-        "searchCategoryId": 0,
-        "searchCategoryName": "국내도서",
-        "item": [
-          {
+        "error": null
+    },
+
+    "bestSeller": { 
+        "success": true,   
+        "data": {
+          "bookList" : [
+            {
             "title": "월간순정 노자키 군 13 한정판 (82p 소책자 포함)",
-            "link": "http://www.aladin.co.kr/shop/wproduct.aspx?ItemId=285408606&amp;partner=openAPI&amp;start=api",
-            "author": "츠바키 이즈미 (지은이)",
-            "pubDate": "2021-12-23",
-            "description": "무뚝뚝하지만 말끔하게 잘생긴, 평범한 남고생인 줄 알았던 노자키 군이 알고보니 현재 인기몰이 하고 있는 유명 순정만화의 작가였다?! 그를 짝사랑하는 평범한 여고생 사쿠라 치요가 고백하면서부터 시작되는 버라이어티한 일상 4컷만화!",
-            "isbn": "K162835233",
-            "isbn13": "9791134895556",
             "itemId": 285408606,
-            "priceSales": 12600,
-            "priceStandard": 14000,
-            "mallType": "BOOK",
-            "stockStatus": "",
-            "mileage": 700,
             "cover": "https://image.aladin.co.kr/product/28540/86/coversum/k162835233_2.jpg",
-            "categoryId": 3742,
-            "categoryName": "국내도서>만화>순정만화>레이디스 코믹",
-            "publisher": "학산문화사(만화)",
-            "salesPoint": 91570,
-            "adult": false,
-            "fixedPrice": true,
-            "customerReviewRank": 10,
-            "bestRank": 1,
-            "subInfo": { }
-          },
-          {
-          "title": "The Earthian Tales 어션 테일즈 No.1 - alone",
-          "link": "http://www.aladin.co.kr/shop/wproduct.aspx?ItemId=284863481&amp;partner=openAPI&amp;start=api",
-          "author": "김보영, 고호관, 곽재식, 구한나리, 구환회, 김창규, 김효선, 박경만, 박문영, 서바이벌SF키트, 시아란, 심너울, 심완선, 위래, 이경희, 이서영, 이수현, 이지용, 이하진, 전삼혜, 전혜진, 정명섭, 정보라, 정이담, 진규, 최의택, 한승태, 해도연, 홍지운, 황인찬, LUTO, OOO (지은이)",
-          "pubDate": "2022-01-01",
-          "description": "지구에서, 지구인들이, 계절마다 만들어내는 경이로운 이야기, SF 전문 계간 문학잡지. 각자의 시간을, 공간을, 세상을 성실히 다져온 이야기꾼들은 그 빛을 반사해 저 먼 지면에 스민 밤을 밝혀줄 준비가 되어 있다. 일 년에 네 번, 계절이 올 때마다 찾아올 어션 테일즈의 시작을 알린다.",
-          "isbn": "K912835128",
-          "isbn13": "9772799628000",
-          "itemId": 284863481,
-          "priceSales": 22500,
-          "priceStandard": 25000,
-          "mallType": "BOOK",
-          "stockStatus": "",
-          "mileage": 1130,
-          "cover": "https://image.aladin.co.kr/product/28486/34/coversum/k912835128_1.jpg",
-          "categoryId": 51234,
-          "categoryName": "국내도서>소설/시/희곡>문학 잡지>기타",
-          "publisher": "아작",
-          "salesPoint": 30220,
-          "adult": false,
-          "fixedPrice": false,
-          "customerReviewRank": 10,
-          "bestRank": 2,
-          "subInfo": { }
-          },
-          {
-          "title": "설민석의 한국사 대모험 19 - 고려 편 : 왕건, 새로운 세상을 열다!",
-          "link": "http://www.aladin.co.kr/shop/wproduct.aspx?ItemId=285408840&amp;partner=openAPI&amp;start=api",
-          "author": "설민석, 스토리박스 (지은이), 정현희 (그림), 강석화 (감수)",
-          "pubDate": "2021-12-28",
-          "description": "왕건이 궁예를 대신해 어떻게 백성을 위한 세상을 만들었는지, 진정한 의미의 민족 통일을 이룬 비결은 무엇인지 알아본다. 18권에서 궁예의 후고구려를 중심으로 후삼국 시대의 역사를 알아보았다면, 19권에서 온달은 고려를 세운 태조 왕건과 함께한다.",
-          "isbn": "K222835233",
-          "isbn13": "9791165383053",
-          "itemId": 285408840,
-          "priceSales": 10800,
-          "priceStandard": 12000,
-          "mallType": "BOOK",
-          "stockStatus": "",
-          "mileage": 600,
-          "cover": "https://image.aladin.co.kr/product/28540/88/coversum/k222835233_1.jpg",
-          "categoryId": 48904,
-          "categoryName": "국내도서>어린이>초등 한국사",
-          "publisher": "아이휴먼",
-          "salesPoint": 53520,
-          "adult": false,
-          "fixedPrice": true,
-          "customerReviewRank": 10,
-          "bestRank": 3,
-          "seriesInfo": {
-          "seriesId": 120172,
-          "seriesLink": "http://www.aladin.co.kr/shop/common/wseriesitem.aspx?SRID=120172&amp;partner=openAPI",
-          "seriesName": "설민석의 한국사 대모험 19"
-          },
-          "subInfo": { }
-          },
-          {
-          "title": "므레모사",
-          "link": "http://www.aladin.co.kr/shop/wproduct.aspx?ItemId=285549774&amp;partner=openAPI&amp;start=api",
-          "author": "김초엽 (지은이)",
-          "pubDate": "2021-12-25",
-          "description": "당대 한국 문학의 가장 현대적이면서도 첨예한 작가들을 선정, 신작 시와 소설을 수록하는 월간 &lt;현대문학&gt;의 특집 지면 '현대문학 핀 시리즈'의 서른여덟 번째 소설선, 김초엽의 &lt;므레모사&gt;가 출간되었다.",
-          "isbn": "K162835148",
-          "isbn13": "9791167900821",
-          "itemId": 285549774,
-          "priceSales": 12600,
-          "priceStandard": 14000,
-          "mallType": "BOOK",
-          "stockStatus": "",
-          "mileage": 700,
-          "cover": "https://image.aladin.co.kr/product/28554/97/coversum/k162835148_1.jpg",
-          "categoryId": 107414,
-          "categoryName": "국내도서>소설/시/희곡>호러.공포소설>한국 호러.공포소설",
-          "publisher": "현대문학",
-          "salesPoint": 46720,
-          "adult": false,
-          "fixedPrice": true,
-          "customerReviewRank": 0,
-          "bestRank": 4,
-          "seriesInfo": {
-          "seriesId": 636413,
-          "seriesLink": "http://www.aladin.co.kr/shop/common/wseriesitem.aspx?SRID=636413&amp;partner=openAPI",
-          "seriesName": "현대문학 핀 시리즈 소설선 38"
-          },
-          "subInfo": { }
-          },
-          {
-          "title": "흔한남매 9",
-          "link": "http://www.aladin.co.kr/shop/wproduct.aspx?ItemId=283951526&amp;partner=openAPI&amp;start=api",
-          "author": "흔한남매 (지은이), 백난도 (글), 유난희 (그림), 흔한컴퍼니 (감수)",
-          "pubDate": "2021-12-09",
-          "description": "‘흔한남매’ 유튜브 영상의 스토리를 앙증맞고 유머러스한 만화로 풀어 낸 코믹북이다. 하루도 조용할 날이 없는 으뜸이와 에이미의 일상 스토리는 진짜 웃음이 필요한 어린이들에게 순수한 웃음과 유쾌한 우애를 선사할 것이다.",
-          "isbn": "K962835911",
-          "isbn13": "9791164139897",
-          "itemId": 283951526,
-          "priceSales": 12150,
-          "priceStandard": 13500,
-          "mallType": "BOOK",
-          "stockStatus": "",
-          "mileage": 670,
-          "cover": "https://image.aladin.co.kr/product/28395/15/coversum/k962835911_1.jpg",
-          "categoryId": 49995,
-          "categoryName": "국내도서>어린이>TV/만화/영화>만화 일반",
-          "publisher": "미래엔아이세움",
-          "salesPoint": 136140,
-          "adult": false,
-          "fixedPrice": true,
-          "customerReviewRank": 10,
-          "bestDuration": "종합 10위 3주",
-          "bestRank": 5,
-          "seriesInfo": {
-          "seriesId": 685263,
-          "seriesLink": "http://www.aladin.co.kr/shop/common/wseriesitem.aspx?SRID=685263&amp;partner=openAPI",
-          "seriesName": "흔한남매 "
-          },
-          "subInfo": { }
-          },
-          {
-          "title": "불편한 편의점",
-          "link": "http://www.aladin.co.kr/shop/wproduct.aspx?ItemId=269428498&amp;partner=openAPI&amp;start=api",
-          "author": "김호연 (지은이)",
-          "pubDate": "2021-04-20",
-          "description": "&lt;망원동 브라더스&gt;의 작가 김호연의 '동네이야기' 시즌 2. 청파동 골목 모퉁이에 자리 잡은 작은 편의점을 무대로 힘겨운 시대를 살아가는 우리 이웃들의 삶의 속내와 희로애락을 따뜻하고 유머러스하게 담아냈다.",
-          "isbn": "K582730818",
-          "isbn13": "9791161571188",
-          "itemId": 269428498,
-          "priceSales": 12600,
-          "priceStandard": 14000,
-          "mallType": "BOOK",
-          "stockStatus": "",
-          "mileage": 700,
-          "cover": "https://image.aladin.co.kr/product/26942/84/coversum/k582730818_1.jpg",
-          "categoryId": 50993,
-          "categoryName": "국내도서>소설/시/희곡>한국소설>2000년대 이후 한국소설",
-          "publisher": "나무옆의자",
-          "salesPoint": 180844,
-          "adult": false,
-          "fixedPrice": true,
-          "customerReviewRank": 10,
-          "bestDuration": "종합 100위 21주",
-          "bestRank": 6,
-          "subInfo": { }
-          },
-          {
-          "title": "한 게으른 시인의 이야기",
-          "link": "http://www.aladin.co.kr/shop/wproduct.aspx?ItemId=284079972&amp;partner=openAPI&amp;start=api",
-          "author": "최승자 (지은이)",
-          "pubDate": "2021-11-30",
-          "description": "난다에서 최승자 시인의 첫 산문집 &lt;한 게으른 시인의 이야기&gt;를 다시 펴낸다. 1989년 처음 출간된 지 32년 만이다. 3부에 걸쳐 25편의 산문을 엮었던 기존 책에 1995년부터 2013년까지 쓰인 산문을 4부로 더해 증보한 개정판이다.",
-          "isbn": "K162835916",
-          "isbn13": "9791191859133",
-          "itemId": 284079972,
-          "priceSales": 11700,
-          "priceStandard": 13000,
-          "mallType": "BOOK",
-          "stockStatus": "",
-          "mileage": 650,
-          "cover": "https://image.aladin.co.kr/product/28407/99/coversum/k162835916_2.jpg",
-          "categoryId": 51371,
-          "categoryName": "국내도서>에세이>한국에세이",
-          "publisher": "난다",
-          "salesPoint": 112090,
-          "adult": false,
-          "fixedPrice": true,
-          "customerReviewRank": 10,
-          "bestDuration": "종합 10위 3주",
-          "bestRank": 7,
-          "subInfo": { }
-          },
-          {
-          "title": "마법천자문 52 - 불러 모아라! 모을 모(募)",
-          "link": "http://www.aladin.co.kr/shop/wproduct.aspx?ItemId=285273593&amp;partner=openAPI&amp;start=api",
-          "author": "유대영 (지은이), 홍거북 (그림), 김창환 (감수)",
-          "pubDate": "2021-12-20",
-          "description": "손오공의 모험 이야기를 따라가면서 쓰기보다 뜻과 소리를 먼저 읽고 그림으로 한자를 보면서 학습할 수 있도록 한 한자학습만화다. 마법의 주문으로 음과 훈을 읽기 때문에 재미있게 한자를 배울 수 있다.",
-          "isbn": "8950997711",
-          "isbn13": "9788950997717",
-          "itemId": 285273593,
-          "priceSales": 10800,
-          "priceStandard": 12000,
-          "mallType": "BOOK",
-          "stockStatus": "",
-          "mileage": 600,
-          "cover": "https://image.aladin.co.kr/product/28527/35/coversum/8950997711_1.jpg",
-          "categoryId": 48941,
-          "categoryName": "국내도서>어린이>어린이 한자>학습만화",
-          "publisher": "아울북",
-          "salesPoint": 72490,
-          "adult": false,
-          "fixedPrice": true,
-          "customerReviewRank": 10,
-          "bestRank": 8,
-          "seriesInfo": {
-          "seriesId": 13717,
-          "seriesLink": "http://www.aladin.co.kr/shop/common/wseriesitem.aspx?SRID=13717&amp;partner=openAPI",
-          "seriesName": "마법천자문 52"
-          },
-          "subInfo": { }
-          },
-          {
-          "title": "웰씽킹 WEALTHINKING - 부를 창조하는 생각의 뿌리",
-          "link": "http://www.aladin.co.kr/shop/wproduct.aspx?ItemId=282733777&amp;partner=openAPI&amp;start=api",
-          "author": "켈리 최 (지은이)",
-          "pubDate": "2021-11-10",
-          "description": "부를 창조한 사람들이 갖고 있는 생각의 뿌리를 이해하고 체득하기 위해 ‘풍요의 생각’을 이야기하는 책이다. 풍요의 생각은 결핍의 생각과 반대되는 개념이다. 풍요의 생각이나 결핍의 생각이나 모두 에너지이지만, 그 방향성은 정반대다.",
-          "isbn": "K852835990",
-          "isbn13": "9791130677774",
-          "itemId": 282733777,
-          "priceSales": 14400,
-          "priceStandard": 16000,
-          "mallType": "BOOK",
-          "stockStatus": "",
-          "mileage": 800,
-          "cover": "https://image.aladin.co.kr/product/28273/37/coversum/k852835990_3.jpg",
-          "categoryId": 70216,
-          "categoryName": "국내도서>자기계발>성공>성공학",
-          "publisher": "다산북스",
-          "salesPoint": 146090,
-          "adult": false,
-          "fixedPrice": true,
-          "customerReviewRank": 10,
-          "bestDuration": "종합 10위 6주",
-          "bestRank": 9,
-          "subInfo": { }
-          },
-          {
-          "title": "트렌드 코리아 2022 - 서울대 소비트렌드 분석센터의 2022 전망",
-          "link": "http://www.aladin.co.kr/shop/wproduct.aspx?ItemId=279711074&amp;partner=openAPI&amp;start=api",
-          "author": "김난도, 전미영, 최지혜, 이향은, 이준영, 이수진, 서유현, 권정윤, 한다혜, 이혜원 (지은이)",
-          "pubDate": "2021-10-06",
-          "description": "2021년 대한민국은 2020년에 이어 코로나19 팬데믹의 타격으로 휘청거릴 수밖에 없었다. 이러한 격변에 우리는 어떻게 대응할 것인가? 용맹하고 거침없는 호랑이의 기세가 기대되는 2022년, 『트렌드 코리아 2022』은 반전의 시작을 알리는 변화의 징후들을 포착하는 데 결정적인 도움을 줄 것이다.",
-          "isbn": "8959897000",
-          "isbn13": "9788959897001",
-          "itemId": 279711074,
-          "priceSales": 16200,
-          "priceStandard": 18000,
-          "mallType": "BOOK",
-          "stockStatus": "",
-          "mileage": 900,
-          "cover": "https://image.aladin.co.kr/product/27971/10/coversum/s822734222_3.jpg",
-          "categoryId": 263,
-          "categoryName": "국내도서>경제경영>마케팅/세일즈>트렌드/미래예측",
-          "publisher": "미래의창",
-          "salesPoint": 257590,
-          "adult": false,
-          "fixedPrice": true,
-          "customerReviewRank": 8,
-          "bestDuration": "종합 10위 12주",
-          "bestRank": 10,
-          "subInfo": { }
-          }
-    ]
+            "categoryName": "만화",
+            "bestRank": 1
+            },
+            {
+            "title": "The Earthian Tales 어션 테일즈 No.1 - alone",
+            "itemId": 284863481,
+            "cover": "https://image.aladin.co.kr/product/28486/34/coversum/k912835128_1.jpg",
+            "categoryName": "소설/시/희곡",
+            "bestRank": 2
+            },
+            {
+            "title": "설민석의 한국사 대모험 19 - 고려 편 : 왕건, 새로운 세상을 열다!",
+            "itemId": 285408840,
+            "cover": "https://image.aladin.co.kr/product/28540/88/coversum/k222835233_1.jpg",
+            "categoryName": "어린이",
+            "bestRank": 3
+            },
+            {
+            "title": "므레모사",
+            "itemId": 285549774,
+            "cover": "https://image.aladin.co.kr/product/28554/97/coversum/k162835148_1.jpg",
+            "categoryName": "소설/시/희곡",
+            "bestRank": 4
+            },
+            {
+            "title": "흔한남매 9",
+            "itemId": 283951526,
+            "cover": "https://image.aladin.co.kr/product/28395/15/coversum/k962835911_1.jpg",
+            "categoryName": "어린이",
+            "bestRank": 5
+            },
+            {
+            "title": "불편한 편의점",
+            "itemId": 269428498,
+            "cover": "https://image.aladin.co.kr/product/26942/84/coversum/k582730818_1.jpg",
+            "categoryName": "소설/시/희곡",
+            "bestRank": 6
+            },
+            {
+            "title": "한 게으른 시인의 이야기",
+            "itemId": 284079972,
+            "cover": "https://image.aladin.co.kr/product/28407/99/coversum/k162835916_2.jpg",
+            "categoryName": "에세이",
+            "bestRank": 7
+            },
+            {
+            "title": "마법천자문 52 - 불러 모아라! 모을 모(募)",
+            "itemId": 285273593,
+            "cover": "https://image.aladin.co.kr/product/28527/35/coversum/8950997711_1.jpg",
+            "categoryName": "어린이",
+            "bestRank": 8
+            },
+            {
+            "title": "웰씽킹 WEALTHINKING - 부를 창조하는 생각의 뿌리",
+            "itemId": 282733777,
+            "cover": "https://image.aladin.co.kr/product/28273/37/coversum/k852835990_3.jpg",
+            "categoryName": "자기계발",
+            "bestRank": 9
+            }
+          ]
+        },
+        "error": null
   }
 }
