@@ -2,12 +2,13 @@ import { FormInputProps } from "components/FormInput/types";
 import { RegisterOptions } from "react-hook-form";
 
 export interface SignInInputForm {
-  id: string;
+  email: string;
   password: string;
 }
 export interface SignInInputs extends FormInputProps {
   options: RegisterOptions;
   id: keyof SignInInputForm;
+  placeholder?: string;
 }
 export interface SignInFormProp {
   isRemember: boolean;

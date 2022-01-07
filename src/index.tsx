@@ -5,6 +5,7 @@ import { createGlobalStyle } from "styled-components";
 import { Router } from "react-router";
 import { Provider } from "react-redux";
 import store, { customHistory } from "modules/store";
+import React from "react";
 import App from "./App";
 import Header from "./components/Main/Header";
 

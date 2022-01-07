@@ -10,7 +10,7 @@ export const PopupWrraperCloseCss = css`
   transition: transform 0.5s, z-index 1s ease-in;
 `;
 
-export const PopupWrraper = styled.div<PopupWrraperProps>`
+export const PopupWrapper = styled.div<PopupWrraperProps>`
   position: fixed;
   top: 5%;
   color: white;
@@ -20,7 +20,7 @@ export const PopupWrraper = styled.div<PopupWrraperProps>`
   transition: transform 1s, z-index 0.25s ease-in;
   transform: rotateX(90deg);
   box-shadow: rgb(0 0 0 / 4%) 0px 4px 16px 0px;
-
+  padding: 1rem;
   ${({ visible }) => visible && PopupWrraperOpenCss}
   ${({ visible }) => !visible && PopupWrraperCloseCss} 
 

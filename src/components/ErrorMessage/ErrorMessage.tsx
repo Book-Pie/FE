@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { ErrorMessageWapper } from "./style";
 import { ErrorMessageProps } from "./types";
 
@@ -16,4 +17,4 @@ ErrorMessage.defaultProps = {
   message: "",
 };
 
-export default ErrorMessage;
+export default memo(ErrorMessage);

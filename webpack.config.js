@@ -1,4 +1,5 @@
 const path = require("path");
+const webpack = require("webpack");
 // 웹팩이 자동으로 html를 build 파일에 넣어주고
 // script, link 태그를 유저가 아닌 웹팩이 자동으로 넣어준다.
 const HtmlWebpackPlugin = require("html-webpack-plugin");
@@ -7,6 +8,7 @@ const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 // 웹팩 데브서버 핫 리로딩 시 필요한 플러그인
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
+require("dotenv").config();
 
 // 절대 경로로 바꿔주는 기능
 const getAbsolutePath = pathDir => path.resolve(__dirname, pathDir);
@@ -16,6 +18,10 @@ const PORT = 3000;
 
 module.exports = (_, argv) => {
   const { mode } = argv;
+  const KAKAO_REDIRECT_URL =
+    PRODUCTION === mode ? "http://localhost:3000/oAuth/kakao" : "http://localhost:3000/oAuth/kakao";
+  const KAKAO_OAUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=18026e16808c2a78e74664808aa9dd9e&redirect_uri=${KAKAO_REDIRECT_URL}&response_type=code`;
+  const baseURL = mode !== "production" ? "http://localhost:3000/api/" : "http://bookpie.tk:8080/api";
 
   const config = {
     // 프로젝트 이름
@@ -23,8 +29,7 @@ module.exports = (_, argv) => {
     // 프로젝트 모드 develoment, production
     mode,
     // 개발 시 필요한 소스맵 등록
-    // devtool: mode === PRODUCTION ? "source-map" : "eval-source-map",
-    devtool: mode === PRODUCTION ? "eval-source-map" : "eval-source-map",
+    devtool: mode === PRODUCTION ? "source-map" : "eval-source-map",
 
     resolve: {
       // 확장자를 생략 시 웹팩한태 어떤 확장자를 생략 했는지 알려준다.
@@ -43,6 +48,7 @@ module.exports = (_, argv) => {
         pages: getAbsolutePath("src/pages"),
         style: getAbsolutePath("src/style"),
         utils: getAbsolutePath("src/utils"),
+        router: getAbsolutePath("src/router"),
       },
     },
 
@@ -117,13 +123,24 @@ module.exports = (_, argv) => {
         },
         {
           // css-loader, style-loader
+          // react-quill 사용을 할려면 css-loader가 필요하다.
           test: /\.css$/i,
           use: ["style-loader", "css-loader"],
         },
       ],
     },
 
-    plugins: [new CleanWebpackPlugin(), new HtmlWebpackPlugin({ template: "./public/index.html" })],
+    plugins: [
+      new CleanWebpackPlugin(),
+      new HtmlWebpackPlugin({ template: "./public/index.html" }),
+      new webpack.DefinePlugin({
+        "process.env.KAKAO_OAUTH_URL": JSON.stringify(KAKAO_OAUTH_URL),
+        "process.env.MODE": JSON.stringify(mode),
+        "process.env.BASE_URL": JSON.stringify(baseURL),
+        "process.env.KAKAO_CLIENT_ID": JSON.stringify(process.env.KAKAO_CLIENT_ID),
+        "process.env.KAKAP_JDK_KEY": JSON.stringify(process.env.KAKAP_JDK_KEY),
+      }),
+    ],
 
     output: {
       path: getAbsolutePath("dist"),
@@ -137,7 +154,6 @@ module.exports = (_, argv) => {
     // 핫 리로딩은 하는법
     // 1. hot: "only" 설정
     // 2. @pmmmwh/react-refresh-webpack-plugin && react-reflash/babel추가
-
     devServer: {
       port: PORT,
       // 서버가 시작된 후 브라우저를 열도록 dev-server에 지시합니다.
@@ -160,6 +176,7 @@ module.exports = (_, argv) => {
     },
   };
 
+  // 개발환경
   if (mode !== PRODUCTION && config.plugins) {
     // webpack v4 이상 부턴 hmr이 기본으로 들어가있다.
     // config.plugins.push(new webpack.HotModuleReplacementPlugin());
