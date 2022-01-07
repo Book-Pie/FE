@@ -121,8 +121,9 @@ module.exports = (_, argv) => {
             },
           ],
         },
-        // react-quill 사용을 할려면 css-loader가 필요하다.
         {
+          // css-loader, style-loader
+          // react-quill 사용을 할려면 css-loader가 필요하다.
           test: /\.css$/i,
           use: ["style-loader", "css-loader"],
         },
