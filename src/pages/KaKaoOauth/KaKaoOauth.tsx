@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import { useHistory } from "react-router";
 import { kakaoOauth } from "src/api/oauth/oauth";
 import { useDispatch } from "react-redux";
-import { myProfileAsync } from "modules/Slices/signInSlice";
+import { myProfileAsync } from "src/modules/Slices/signIn/signInSlice";
 import Popup from "components/Popup/Popup";
 
 const KaKaoOauth = () => {

@@ -1,7 +1,8 @@
 export interface DropDownProps {
   children: React.ReactNode;
   defaultValue?: string;
-  setSelectedValue: (param: string) => void;
+  setSelectedId?: (id: string) => void;
+  setSelectedText?: (text: string) => void;
 }
 
 export interface UlProps {

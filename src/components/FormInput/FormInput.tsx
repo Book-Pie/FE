@@ -2,7 +2,7 @@ import { memo } from "react";
 import * as Styled from "./style";
 import { FormInputProps } from "./types";
 
-const FormInput: React.FC<FormInputProps> = props => {
+const FormInput = (props: FormInputProps) => {
   const { register } = props;
 
   if (register) {

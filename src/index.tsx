@@ -3,6 +3,7 @@ import { Router } from "react-router";
 import { Provider } from "react-redux";
 import store, { customHistory } from "modules/store";
 import { createGlobalStyle } from "styled-components";
+import React from "react";
 import App from "./App";
 
 const rootElement = document.getElementById("root");
@@ -16,11 +17,13 @@ a {
 `;
 
 ReactDOM.render(
-  <Provider store={store}>
-    <Router history={customHistory}>
-      <GlobalStyle />
-      <App />
-    </Router>
-  </Provider>,
+  <React.StrictMode>
+    <Provider store={store}>
+      <Router history={customHistory}>
+        <GlobalStyle />
+        <App />
+      </Router>
+    </Provider>
+  </React.StrictMode>,
   rootElement,
 );

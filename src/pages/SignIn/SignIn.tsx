@@ -8,6 +8,9 @@ import { getRememberEmail } from "utils/localStorageUtil";
 import { Links, OAuths, Container } from "./style";
 
 const kakaOauthUrl = process.env.KAKAO_OAUTH_URL;
+const naverOauthUrl =
+  "https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=qtbZhYGrYVHhLWesnRyJ&redirect_uri=http://localhost:3000/oAuth/naver&state=state";
+
 const SignIn = () => {
   const [isRemember, setIsRemember] = useState(getRememberEmail() ? true : false);
   const handleOnChange = ({ target: { checked } }: React.ChangeEvent<HTMLInputElement>) => setIsRemember(checked);
@@ -35,11 +38,14 @@ const SignIn = () => {
         <Link to="/signup">
           <span>회원가입</span>
         </Link>
+        <Link to="/">
+          <span>홈으로</span>
+        </Link>
       </Links>
       <OAuths>
-        <Link to="/">
+        <a href={naverOauthUrl}>
           <img src={naverImg} alt="naver" />
-        </Link>
+        </a>
         <a href={kakaOauthUrl}>
           <img src={kakaoImg} alt="kakao" />
         </a>

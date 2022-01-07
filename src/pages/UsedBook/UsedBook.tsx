@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Popup from "components/Popup/Popup";
 import Categorys from "components/Categorys/Categorys";
-import UsedBookContent from "components/UsedBookContent/UsedBookContent";
+import UsedBookCard from "src/components/UsedBookCard/UsedBookCard";
 import Loading from "components/Loading/Loading";
 import DropDown from "components/DropDown/DropDown";
 import { getCategory, getUsedBooks } from "src/api/usedBook/usedBook";
@@ -9,7 +9,7 @@ import { errorHandler } from "src/api/http";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router";
 import queryString from "query-string";
-import { Wrapper } from "components/UsedBookContent/style";
+import { Wrapper } from "src/components/UsedBookCard/style";
 import { makeNewQueryString, removeQueryString } from "utils/queryStringUtil";
 import { UsedBookState, ICategory, IUsedBook, UsedBooksResponse, CategorysResponse, RequestParam } from "./types";
 import { UsedBookContainer, ContentsWrapper, DropDownWrapper } from "./style";
@@ -121,7 +121,7 @@ const UsedBook = () => {
   }, [currentPage, hasMorePosts]);
   // ============================================ useEffect ============================================
 
-  const usedBookContents =
+  const UsedBookCards =
     pages.length !== 0 ? (
       pages.map((row, rowIndex) => {
         let ref = null;
@@ -130,7 +130,7 @@ const UsedBook = () => {
           <div key={rowIndex} className="contentsWrapper__row" ref={ref}>
             {row.map((col, colIndex) => {
               return Object.keys(col).length !== 0 ? (
-                <UsedBookContent key={colIndex} page={col} />
+                <UsedBookCard key={colIndex} page={col} />
               ) : (
                 <Wrapper key={colIndex} />
               );
@@ -155,7 +155,7 @@ const UsedBook = () => {
       <h2 className="usedBook__title">중고 장터 메인</h2>
       <Categorys categorys={categorys} />
       <DropDownWrapper>
-        <DropDown setSelectedValue={setCurrentDropDownValue} defaultValue={currentDropDownValue}>
+        <DropDown setSelectedId={setCurrentDropDownValue} defaultValue={currentDropDownValue}>
           <li>
             <Link to={removeQueryString(pathname, search, ["sort"])}>초기화</Link>
           </li>
@@ -179,7 +179,7 @@ const UsedBook = () => {
           </li>
         </DropDown>
       </DropDownWrapper>
-      <ContentsWrapper>{usedBookContents}</ContentsWrapper>
+      <ContentsWrapper>{UsedBookCards}</ContentsWrapper>
     </UsedBookContainer>
   );
 };
