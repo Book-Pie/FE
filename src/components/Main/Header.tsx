@@ -51,7 +51,7 @@ const Header = () => {
 export default Header;
 
 const HeaderContainer = styled.div`
-  width: 100%;
+  width: 100vw;
 `;
 
 const SignWrapper = styled.div`
@@ -63,7 +63,7 @@ const SignWrapper = styled.div`
     display: flex;
     justify-content: flex-end;
     max-width: 1920px;
-    padding-right: 150px;
+    /* padding-right: 150px; */
     h3 {
       padding: 14px 5px 15px 5px;
     }
@@ -76,7 +76,7 @@ const SignWrapper = styled.div`
 const HeaderWrapper = styled.div`
   height: 87px;
   max-width: 1920px;
-  padding: 0px 160px;
+  /* padding: 0px 10rem; */
   img {
     height: 31px;
   }

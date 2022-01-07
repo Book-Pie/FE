@@ -3,8 +3,6 @@ import { Link } from "react-router-dom";
 import SignUp from "pages/SignUp/SignUp";
 import SingIn from "pages/SignIn/SignIn";
 import Find from "pages/Find/Find";
-import Mainpage from "./pages/Main/Mainpage";
-import SearchResult from "./pages/SearchResult/SearchResult";
 import UsedBook from "pages/UsedBook/UsedBook";
 import useSignIn from "hooks/useSignIn";
 import { logout } from "modules/Slices/signIn/signInSlice";
@@ -13,6 +11,8 @@ import MyProfile from "pages/MyProfile/MyProfile";
 import KaKaoOauth from "pages/KaKaoOauth/KaKaoOauth";
 import PrivateRoute from "src/router/PrivateRoute/PrivateRoute";
 import styled from "styled-components";
+import Mainpage from "./pages/Main/Mainpage";
+import SearchResult from "./pages/SearchResult/SearchResult";
 
 // 임시로 만들었습니다.
 // 유저 정보를 더 보고싶으면 아래 div태그 추가하시고 원하는 정보 넣으시면됩니다.
@@ -39,8 +39,8 @@ const App = () => {
   return (
     <div>
       <Switch>
-        <Route path="/" exact  component={Mainpage} />
-        <Route path="/test" >
+        <Route path="/" exact component={Mainpage} />
+        <Route path="/test">
           <div>
             {user ? (
               <StyledMyProfile>

@@ -37,6 +37,7 @@ const GlobalStyle = createGlobalStyle`
   }
   body {
     line-height: 1;
+    width: 100vw;
   }
   ol, ul {
     list-style: none;
@@ -66,17 +67,14 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 const rootElement = document.getElementById("root");
-const client = new QueryClient();
 
 ReactDOM.render(
-  <QueryClientProvider client={client}>
-    <Provider store={store}>
-      <Router history={customHistory}>
-        <GlobalStyle />
-        <Header />
-        <App />
-      </Router>
-    </Provider>
-  </QueryClientProvider>,
+  <Provider store={store}>
+    <Router history={customHistory}>
+      <GlobalStyle />
+      <Header />
+      <App />
+    </Router>
+  </Provider>,
   rootElement,
 );

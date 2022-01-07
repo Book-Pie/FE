@@ -5,16 +5,39 @@ import api from "../../api/bookAPI";
 
 // initialState로 사용할 객체의 data type
 interface BookItemProps {
-  itemId: number;
+  author: string;
+  isbn: string;
+  link: string;
+  description: string;
   title: string;
+  pubDate: string;
   categoryName: string;
+  fixedPrice: boolean;
+  mallType: string;
+  customerReviewRank: number;
   cover: string;
+  itemId: number;
+  subInfo: any;
+  isbn13: string;
+  stockStatus: string;
+  publisher: string;
+  priceSales: number;
+  salesPoint: number;
+  adult: boolean;
+  categoryId: number;
+  priceStandard: number;
+  mileage: number;
   bestRank: number;
+  // itemId: number;
+  // title: string;
+  // categoryName: string;
+  // cover: string;
+  // bestRank: number;
 }
 
 // 리듀가 사용할 데이터 타입
 interface BookListReduceProps {
-  bookList: BookItemProps[];
+  item: BookItemProps[];
   status: "loading" | "idle";
   error: null | {
     code: number;
@@ -26,7 +49,9 @@ interface BookListReduceProps {
 interface getBookAsyncSucess {
   success: boolean;
   data: {
-    bookList: BookItemProps[];
+    totalResults: number;
+    startIndex: number;
+    item: BookItemProps[];
   };
   error: null;
 }
@@ -53,7 +78,7 @@ export const getbookAPI = createAsyncThunk<getBookAsyncSucess, undefined, ThunkA
   `${name}/bookAsync`,
   async (_, { rejectWithValue }) => {
     try {
-      const response = await api.get("/bestSeller");
+      const response = await api.get("/book/bestSeller");
       return response.data;
     } catch (err) {
       const error = err as AxiosError<getBookAsyncFail>;
@@ -82,14 +107,14 @@ export const getbookAPI = createAsyncThunk<getBookAsyncSucess, undefined, ThunkA
 export const getBookSlice = createSlice({
   name: "bookList",
   initialState: {
-    bookList: [
-      {
-        itemId: 12345,
-        title: "책이름",
-        categoryName: "소설",
-        cover: "https://image.aladin.co.kr/product/28540/88/coversum/k222835233_1.jpg",
-        bestRank: 1,
-      },
+    item: [
+      // {
+      //   itemId: 12345,
+      //   title: "책이름",
+      //   categoryName: "소설",
+      //   cover: "https://image.aladin.co.kr/product/28540/88/coversum/k222835233_1.jpg",
+      //   bestRank: 1,
+      // },
     ],
     status: "idle",
     error: null,
@@ -101,9 +126,11 @@ export const getBookSlice = createSlice({
       state.status = "loading";
     });
     builder.addCase(getbookAPI.fulfilled, (state, { payload }) => {
-      state.bookList = payload.data.bookList;
+      console.log(payload);
+      state.item = payload.data.item;
     });
     builder.addCase(getbookAPI.rejected, (state, { payload }) => {
+      console.log("error");
       // 에러핸들링
       if (!payload) {
         state.error = {
@@ -112,7 +139,6 @@ export const getBookSlice = createSlice({
         };
       }
     });
-    // builder.addCase(getbookAPItest.pending, state => );
   },
 });
 
