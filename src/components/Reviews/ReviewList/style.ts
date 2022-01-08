@@ -44,6 +44,7 @@ export const ReviewContent = styled.div`
 
 export const Content = styled.p`
   max-width: 600px;
+  padding-left: 20px;
 `;
 
 export const ReplyDate = styled.p`
@@ -71,3 +72,9 @@ export const ReviewContentTop = styled.div`
 `;
 
 export const ReviewContentBottom = styled.div``;
+
+export const ReviewsListTitle = styled.h4`
+  padding: 30px 0;
+`;
+
+export const ReviewsListWrapper = styled.div``;

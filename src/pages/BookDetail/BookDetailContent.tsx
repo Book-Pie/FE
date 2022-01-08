@@ -20,11 +20,11 @@ const BookDetailContent = () => {
       <BasicCard>
         <BookDetailPanel title="저자 소개">{authorIntroText}</BookDetailPanel>
       </BasicCard>
-      <BasicCard>
-        {/* <BookDetailPanel title="저자의 다른 도서" useTruncate={false}>
+      {/* <BasicCard>
+        <BookDetailPanel title="저자의 다른 도서" useTruncate={false}>
           {ImgList[0].props.img}
-        </BookDetailPanel> */}
-      </BasicCard>
+        </BookDetailPanel> 
+      </BasicCard> */}
       <BookDetailPanelWrapper>
         <Reviews bookId={bookId} />
       </BookDetailPanelWrapper>

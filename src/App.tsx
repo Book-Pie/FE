@@ -106,7 +106,7 @@ const App = () => {
         <PrivateRoute path="/oAuthTest" component={OauthTest} redirectPath="/signIn" isLoggedIn={isLoggedIn} />
         <Route path="/search" exact component={SearchResult} />
         <Route path="/find" component={Find} />
-        <Route path="/api/book-review/getReview/1" component={BookDetail} />
+        <Route path="/book-review/getReview/1" component={BookDetail} />
         <Route path="/usedBook" component={UsedBook} />
         <Route path="*" render={() => <Redirect to="/" />} />
       </Switch>

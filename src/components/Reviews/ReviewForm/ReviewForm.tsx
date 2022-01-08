@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 import { addComment, editComment } from "modules/Slices/commentSlice";
 import { dateFormat } from "src/utils/formatDate";
 import { ReviewFormProps } from "./types";
+import { HoverRating } from "src/components/Rating/Rating";
 
 export const ReviewForm: React.FC<ReviewFormProps> = ({
   bookId,
@@ -22,7 +23,6 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({
   const user_id: number = 5;
   const review_id: number = 6;
   const nickname: string = "테스트 닉네임";
-  const rating: number = 3;
   const reviewLikeCount: number = 0;
   const likeCheck: boolean = false;
 
@@ -36,6 +36,7 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({
   const dispatch = useDispatch();
   const [reviewContent, setContent] = useState(""); // 리뷰 등록
   const [myContent, setMyContent] = useState(myReviewContent.content); // 리뷰 수정
+  const [ratingValue, setValue] = useState<number | null>(2); // 별점 추가
   const [editDisabled, editEnabled] = useState(editStatus);
 
   useEffect(() => {
@@ -46,6 +47,10 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({
     setContent(e.target.value);
   };
 
+  const handleRatingChange = (event: any, newValue: React.SetStateAction<number | null>) => {
+    setValue(newValue);
+  };
+
   const addReview = (e: React.ChangeEvent<any>) => {
     // 로그인 시 리뷰 입력 기능 추가 필요
     dispatch(
@@ -53,7 +58,7 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({
         user_id: user_id,
         review_id: review_id,
         nickname: nickname,
-        rating: rating,
+        rating: ratingValue,
         content: reviewContent,
         reviewDate: dateFormat(new Date()),
         reviewLikeCount: reviewLikeCount,
@@ -85,12 +90,11 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({
 
   return (
     <>
-      {/* {true ? ( */}
-      {/* {myReviewContent ? ( */}
       {isMyReview ? (
         editDisabled ? (
           <form onSubmit={handleSubmit(editReview)}>
             <div className="ReviewForm">
+              <HoverRating isMyReview={isMyReview} rating={ratingValue} />
               <ReviewTextarea autoFocus={autoFocus} content={myReviewContent.content} isDisabled={true} />
               <ButtonArea>
                 <ClickButton onClick={handleEdit}>수정하기</ClickButton>
@@ -100,6 +104,7 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({
         ) : (
           <form onSubmit={handleSubmit(editReview)}>
             <div className="ReviewForm">
+              <HoverRating isMyReview={isMyReview} rating={ratingValue} handleChange={handleRatingChange} />
               <ReviewTextarea
                 autoFocus={autoFocus}
                 content={myContent}
@@ -118,6 +123,7 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({
       ) : (
         <form onSubmit={handleSubmit(addReview)}>
           <div className="ReviewForm">
+            <HoverRating isMyReview={isMyReview} rating={ratingValue} handleChange={handleRatingChange} />
             <ReviewTextarea
               autoFocus={autoFocus}
               content={reviewContent}
