@@ -1,8 +1,6 @@
 import styled from "styled-components";
 
 export const UsedBookContainer = styled.div`
-  width: 1600px;
-  margin: 0 auto;
   text-align: center;
   .usedBook__title {
     margin-top: 5rem;
