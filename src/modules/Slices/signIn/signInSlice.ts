@@ -168,5 +168,6 @@ const signInSlice = createSlice({
 });
 
 export const signInSelector = (state: RootState) => state.signInReduce;
+
 export const { logout, setErrorReset } = signInSlice.actions;
 export default signInSlice;
