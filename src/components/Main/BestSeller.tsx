@@ -1,5 +1,5 @@
 import Text from "src/elements/Text";
-import { theme } from "src/utils/theme";
+import theme from "src/assets/style/styledTheme";
 import styled from "styled-components";
 
 interface BestSellerProps {
@@ -23,7 +23,7 @@ const BestSeller = ({ bestRank, categoryName, title, cover, itemId }: BestSeller
         <Text width="60px" fontSize="15px" margin="12px 0px 0px 0px">
           {title}
         </Text>
-        <Text color={theme.colors.DarkGrey}>{categoryName}</Text>
+        <Text color={theme.colors.darkGrey}>{categoryName}</Text>
       </TextArea>
       <img src={cover} alt={title} />
     </ItemWrapper>

@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
-import naverImg from "assets/oAuth/naver_oauth.png";
-import kakaoImg from "assets/oAuth/kakao_oauth.png";
+import naverImg from "assets/image/naver_oauth.png";
+import kakaoImg from "assets/image/kakao_oauth.png";
 import SignInForm from "components/SignInForm/SignInForm";
 import React, { useState } from "react";
 import { getRememberEmail } from "utils/localStorageUtil";

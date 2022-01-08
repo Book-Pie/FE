@@ -24,7 +24,7 @@ export interface IUserPrfile {
     postalCode: string;
     mainAddress: string;
     detailAddress: string;
-  };
+  } | null;
   point: {
     totalPoint: 0;
     usedPoint: 0;
