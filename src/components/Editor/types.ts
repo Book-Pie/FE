@@ -14,6 +14,6 @@ export interface EditorProps {
   setEditorValue: (value: string) => void;
 }
 
-export interface ReactQuillContainerProps {
+export interface ReactQuillWrapperProps {
   height: number | undefined;
 }
