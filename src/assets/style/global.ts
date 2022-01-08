@@ -83,8 +83,9 @@ a:hover {
     outline: 0;
     text-decoration: none; 
 }
-
-
+img{
+  -webkit-user-drag: none;
+}
 
 * {
     box-sizing: border-box;
@@ -100,6 +101,7 @@ export const Colors = {
   MAINLIGHT_BROWN: "#edeae9",
   WHITE: "#ffffff",
   DARK_GREY: "#434343",
+  ERROR: "rgba(225, 112, 85, 1)",
 };
 
 export default GlobalStyle;

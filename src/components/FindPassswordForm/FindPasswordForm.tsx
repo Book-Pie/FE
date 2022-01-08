@@ -9,7 +9,7 @@ import {
   hookFormWhiteSpaceCheck,
   makeOption,
 } from "utils/hookFormUtil";
-import ErrorMessage from "components/ErrorMessage/ErrorMessage";
+import ErrorMessage from "src/elements/ErrorMessage";
 import { useHistory } from "react-router";
 import { useState } from "react";
 import Popup from "components/Popup/Popup";

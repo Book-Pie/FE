@@ -17,6 +17,10 @@ const KAKAO_CLIENT_ID = process.env.KAKAO_CLIENT_ID ?? "";
 const KAKAO_CLIENT_KEY = process.env.KAKAP_JDK_KEY ?? "";
 const KAKAO_OAUTH_URL_DEV = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_CLIENT_ID}&redirect_uri=http://localhost:3000/oAuth/kakao&response_type=code`;
 const KAKAO_OAUTH_URL_PRO = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_CLIENT_ID}&redirect_uri=http://localhost:3000/oAuth/kakao&response_type=code`;
+const NAVER_OAUTH_URL_DEV =
+  "https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=qtbZhYGrYVHhLWesnRyJ&redirect_uri=http://localhost:3000/oAuth/naver&state=state";
+const NAVER_OAUTH_URL_PRO =
+  "https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=qtbZhYGrYVHhLWesnRyJ&redirect_uri=http://localhost:3000/oAuth/naver&state=state";
 const BASE_URL_DEV = "http://localhost:3000/api/";
 const BASE_URL_PRO = "http://bookpie.tk:8080/api";
 
@@ -173,6 +177,7 @@ module.exports = (_, argv) => {
     config.plugins.push(
       new webpack.DefinePlugin({
         "process.env.KAKAO_OAUTH_URL": JSON.stringify(KAKAO_OAUTH_URL_PRO),
+        "process.env.NAVER_OAUTH_URL": JSON.stringify(NAVER_OAUTH_URL_PRO),
         "process.env.REDUX_DEV_TOOL": JSON.stringify(false),
         "process.env.BASE_URL": JSON.stringify(BASE_URL_PRO),
         "process.env.KAKAO_CLIENT_ID": JSON.stringify(KAKAO_CLIENT_ID),
@@ -190,6 +195,7 @@ module.exports = (_, argv) => {
     config.plugins.push(
       new webpack.DefinePlugin({
         "process.env.KAKAO_OAUTH_URL": JSON.stringify(KAKAO_OAUTH_URL_DEV),
+        "process.env.NAVER_OAUTH_URL": JSON.stringify(NAVER_OAUTH_URL_DEV),
         "process.env.REDUX_DEV_TOOL": JSON.stringify(true),
         "process.env.BASE_URL": JSON.stringify(BASE_URL_DEV),
         "process.env.KAKAO_CLIENT_ID": JSON.stringify(KAKAO_CLIENT_ID),

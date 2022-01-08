@@ -7,6 +7,7 @@ declare module "styled-components" {
       mainLightBrown: string;
       white: string;
       darkGrey: string;
+      error: string;
     };
     media: {
       pc: string;
@@ -56,6 +57,12 @@ declare module "@mui/material/Button" {
 
 declare module "@mui/material/Checkbox" {
   export interface CheckboxPropsColorOverrides {
+    mainDarkBrown: true;
+    mainLightBrown: true;
+  }
+}
+declare module "@mui/material/TextField" {
+  export interface TextFieldPropsColorOverrides {
     mainDarkBrown: true;
     mainLightBrown: true;
   }

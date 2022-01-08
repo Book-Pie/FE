@@ -9,7 +9,7 @@ import {
   hookFormMisMatchCheck,
 } from "utils/hookFormUtil";
 import FormInput from "components/FormInput/FormInput";
-import ErrorMessage from "components/ErrorMessage/ErrorMessage";
+import ErrorMessage from "src/elements/ErrorMessage";
 import FormLabel from "components/FormLabel/FormLabel";
 import DaumPostCode from "react-daum-postcode";
 import { useEffect, useState } from "react";

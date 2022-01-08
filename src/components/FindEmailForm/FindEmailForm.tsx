@@ -1,6 +1,6 @@
 import FormInput from "components/FormInput/FormInput";
 import FormLabel from "components/FormLabel/FormLabel";
-import ErrorMessage from "components/ErrorMessage/ErrorMessage";
+import ErrorMessage from "src/elements/ErrorMessage";
 import { useForm } from "react-hook-form";
 import {
   hookFormMobileNumberPatternCheck,

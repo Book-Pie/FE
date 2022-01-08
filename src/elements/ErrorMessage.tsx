@@ -1,6 +1,16 @@
 import { memo } from "react";
-import { ErrorMessageWapper } from "./style";
-import { ErrorMessageProps } from "./types";
+import styled from "styled-components";
+
+interface ErrorMessageProps {
+  message?: string;
+}
+
+const ErrorMessageWapper = styled.div`
+  background-color: ${props => props.theme.colors.error};
+  padding: 1rem;
+  color: white;
+  border-radius: 5px;
+`;
 
 const ErrorMessage = ({ message }: ErrorMessageProps) => {
   if (message) {

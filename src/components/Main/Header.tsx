@@ -19,20 +19,25 @@ const Header = () => {
   return (
     <HeaderContainer>
       <SignWrapper>
-        <div>
-          <span>
-            <Link to="/signUp">회원가입</Link>
-          </span>
-          {user ? (
+        {user ? (
+          <div>
+            <span>
+              <Link to="/myProfile">마이페이지</Link>
+            </span>
             <span>
               <Link to="/logout">로그아웃</Link>
             </span>
-          ) : (
+          </div>
+        ) : (
+          <div>
+            <span>
+              <Link to="/signUp">회원가입</Link>
+            </span>
             <span>
               <Link to="/signIn">로그인</Link>
             </span>
-          )}
-        </div>
+          </div>
+        )}
       </SignWrapper>
       <NavWrapper>
         <Link to="/">
@@ -95,6 +100,9 @@ const NavWrapper = styled.div`
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid ${props => props.theme.colors.mainDarkBrown};
+  a {
+    color: ${props => props.theme.colors.mainDarkBrown};
+  }
   img {
     height: 2.5375rem;
   }
