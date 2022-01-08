@@ -1,8 +1,8 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { SelectBox, SelectList, Wrapper } from "./style";
 import { DropDownProps } from "./types";
 
-const DropDown = ({ children, defaultValue, setSelectedValue }: DropDownProps) => {
+const DropDown = ({ children, defaultValue, setSelectedId, setSelectedText }: DropDownProps) => {
   const [selected, setSelected] = useState(defaultValue);
   const [visible, setVisible] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -16,14 +16,19 @@ const DropDown = ({ children, defaultValue, setSelectedValue }: DropDownProps) =
 
       const { target } = e;
 
-      if (target instanceof HTMLAnchorElement) {
-        setSelectedValue(target.id);
+      if (target instanceof HTMLElement) {
         setSelected(target.innerText);
         setVisible(false);
         isClosed.current = true;
+        if (setSelectedText instanceof Function && setSelectedText !== undefined) {
+          setSelectedText(target.innerText);
+        }
+        if (setSelectedId instanceof Function && setSelectedId !== undefined) {
+          setSelectedId(target.id);
+        }
       }
     },
-    [setSelectedValue],
+    [setSelectedId, setSelectedText],
   );
 
   useEffect(() => {
@@ -35,7 +40,7 @@ const DropDown = ({ children, defaultValue, setSelectedValue }: DropDownProps) =
       setTimeout(() => setIsOpen(false), 200);
       isClosed.current = false;
     }
-  }, [visible, isOpen, setIsOpen, setSelectedValue]);
+  }, [visible, isOpen, setIsOpen]);
 
   return (
     <Wrapper>
@@ -67,4 +72,4 @@ DropDown.defaultProps = {
   defaultValue: "선택",
 };
 
-export default DropDown;
+export default memo(DropDown);

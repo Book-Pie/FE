@@ -20,7 +20,7 @@ import Popup from "components/Popup/Popup";
 import useDaumPost from "hooks/useDaumPost";
 import DaumPostcode from "react-daum-postcode";
 import { myProfileChange, passwordChange, passwordCheck } from "src/api/modified/modified";
-import { myProfileAsync } from "modules/Slices/signInSlice";
+import { myProfileAsync } from "modules/Slices/signIn/signInSlice";
 import { hyphenRemoveFormat } from "utils/formetUtil";
 import { useHistory } from "react-router";
 import { ModifiedContainer } from "./style";

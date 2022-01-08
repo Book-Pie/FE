@@ -158,6 +158,7 @@ const signInSlice = createSlice({
           };
         }
       }
+      removeToken();
       state.user = null;
       state.token = null;
       state.isLoggedIn = false;

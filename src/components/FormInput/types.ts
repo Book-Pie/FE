@@ -11,4 +11,5 @@ export interface FormInputProps extends InputProps {
   type?: string;
   disabled?: boolean;
   register?: UseFormRegisterReturn;
+  value?: string;
 }

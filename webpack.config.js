@@ -48,6 +48,7 @@ module.exports = (_, argv) => {
         pages: getAbsolutePath("src/pages"),
         style: getAbsolutePath("src/style"),
         utils: getAbsolutePath("src/utils"),
+        router: getAbsolutePath("src/router"),
       },
     },
 
@@ -119,6 +120,11 @@ module.exports = (_, argv) => {
               },
             },
           ],
+        },
+        // react-quill 사용을 할려면 css-loader가 필요하다.
+        {
+          test: /\.css$/i,
+          use: ["style-loader", "css-loader"],
         },
       ],
     },

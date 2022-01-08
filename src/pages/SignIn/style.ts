@@ -29,6 +29,9 @@ export const Links = styled.div`
   span {
     position: relative;
   }
+  span + a {
+    margin-left: 15px;
+  }
 
   span + span {
     margin-left: 20px;
