@@ -12,6 +12,8 @@ import MyProfile from "pages/MyProfile/MyProfile";
 import KaKaoOauth from "pages/KaKaoOauth/KaKaoOauth";
 import PrivateRoute from "src/router/PrivateRoute/PrivateRoute";
 import styled from "styled-components";
+import Mainpage from "./pages/Main/Mainpage";
+import SearchResult from "./pages/SearchResult/SearchResult";
 
 // 임시로 만들었습니다.
 // 유저 정보를 더 보고싶으면 아래 div태그 추가하시고 원하는 정보 넣으시면됩니다.
@@ -40,7 +42,8 @@ const App = () => {
   return (
     <div>
       <Switch>
-        <Route path="/" exact>
+        <Route path="/" exact component={Mainpage} />
+        <Route path="/test">
           <div>
             {user ? (
               <StyledMyProfile>
@@ -101,6 +104,7 @@ const App = () => {
         <PrivateRoute path="/myProfile" component={MyProfile} redirectPath="/signIn" isLoggedIn={isLoggedIn} />
         <PrivateRoute path="/oAuth/kakao" component={KaKaoOauth} redirectPath="/signIn" isLoggedIn={isLoggedIn} />
         <PrivateRoute path="/oAuthTest" component={OauthTest} redirectPath="/signIn" isLoggedIn={isLoggedIn} />
+        <Route path="/search" exact component={SearchResult} />
         <Route path="/find" component={Find} />
         <Route path="/api/book-review/getReview/1" component={BookDetail} />
         <Route path="/usedBook" component={UsedBook} />
