@@ -13,13 +13,13 @@ const CloseCss = css`
 export const Wrapper = styled.div`
   position: relative;
   display: inline-block;
+  width: 5rem;
 `;
 
 export const SelectBox = styled.div`
   display: flex;
   background: white;
   height: 2rem;
-  width: 5rem;
   border-radius: 4px;
   justify-content: space-between;
   align-items: center;

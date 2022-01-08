@@ -5,8 +5,8 @@ import { useDispatch } from "react-redux";
 import { useTypedSelector } from "src/modules/store";
 import { getbookAPI, getBookSelector } from "src/modules/Slices/bookSlice";
 import Text from "src/elements/Text";
-import { images } from "src/assets/image-data";
-import { theme } from "src/utils/theme";
+import { images } from "src/assets/image/image-data";
+import theme from "src/assets/style/styledTheme";
 import { BannerImage, BookContainer, BookListContainer, BookWrapper, TextWrapper } from "./style";
 
 const Mainpage = () => {

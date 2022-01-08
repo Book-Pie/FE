@@ -25,7 +25,7 @@
       "hooks/*": ["src/hooks/*"],
       "modules/*": ["src/modules/*"],
       "pages/*": ["src/pages/*"],
-      "style/*": ["src/style/*"],
+      "style/*": ["src/assets/style/*"],
       "utils/*": ["src/utils/*"],
     }
   },

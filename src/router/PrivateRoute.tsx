@@ -14,6 +14,9 @@ const PrivateRoute = ({ component: Component, redirectPath, isLoggedIn, ...rest 
         if (path.match("/myProfile")) {
           if (isLoggedIn || getAccessToken()) returnComponent = <Component {...props} />;
         }
+        if (path.match("/payment")) {
+          if (isLoggedIn || getAccessToken()) returnComponent = <Component {...props} />;
+        }
         if (path.match("/signIn")) {
           if (!isLoggedIn) returnComponent = <Component {...props} />;
         }

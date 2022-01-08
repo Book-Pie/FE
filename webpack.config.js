@@ -12,17 +12,16 @@ require("dotenv").config();
 
 // 절대 경로로 바꿔주는 기능
 const getAbsolutePath = pathDir => path.resolve(__dirname, pathDir);
-
 const PRODUCTION = "production";
-const PORT = 3000;
+const KAKAO_CLIENT_ID = process.env.KAKAO_CLIENT_ID ?? "";
+const KAKAO_CLIENT_KEY = process.env.KAKAP_JDK_KEY ?? "";
+const KAKAO_OAUTH_URL_DEV = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_CLIENT_ID}&redirect_uri=http://localhost:3000/oAuth/kakao&response_type=code`;
+const KAKAO_OAUTH_URL_PRO = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_CLIENT_ID}&redirect_uri=http://localhost:3000/oAuth/kakao&response_type=code`;
+const BASE_URL_DEV = "http://localhost:3000/api/";
+const BASE_URL_PRO = "http://bookpie.tk:8080/api";
 
 module.exports = (_, argv) => {
   const { mode } = argv;
-  const KAKAO_REDIRECT_URL =
-    PRODUCTION === mode ? "http://localhost:3000/oAuth/kakao" : "http://localhost:3000/oAuth/kakao";
-  const KAKAO_OAUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=18026e16808c2a78e74664808aa9dd9e&redirect_uri=${KAKAO_REDIRECT_URL}&response_type=code`;
-  const baseURL = mode !== "production" ? "http://localhost:3000/api/" : "http://bookpie.tk:8080/api";
-
   const config = {
     // 프로젝트 이름
     name: "book-pie",
@@ -47,7 +46,7 @@ module.exports = (_, argv) => {
         hooks: getAbsolutePath("src/hooks"),
         modules: getAbsolutePath("src/modules"),
         pages: getAbsolutePath("src/pages"),
-        style: getAbsolutePath("src/style"),
+        style: getAbsolutePath("src/assets/style/"),
         utils: getAbsolutePath("src/utils"),
         router: getAbsolutePath("src/router"),
       },
@@ -131,17 +130,7 @@ module.exports = (_, argv) => {
       ],
     },
 
-    plugins: [
-      new CleanWebpackPlugin(),
-      new HtmlWebpackPlugin({ template: "./public/index.html" }),
-      new webpack.DefinePlugin({
-        "process.env.KAKAO_OAUTH_URL": JSON.stringify(KAKAO_OAUTH_URL),
-        "process.env.MODE": JSON.stringify(mode),
-        "process.env.BASE_URL": JSON.stringify(baseURL),
-        "process.env.KAKAO_CLIENT_ID": JSON.stringify(process.env.KAKAO_CLIENT_ID),
-        "process.env.KAKAP_JDK_KEY": JSON.stringify(process.env.KAKAP_JDK_KEY),
-      }),
-    ],
+    plugins: [new HtmlWebpackPlugin({ template: "./public/index.html" })],
 
     output: {
       path: getAbsolutePath("dist"),
@@ -156,7 +145,7 @@ module.exports = (_, argv) => {
     // 1. hot: "only" 설정
     // 2. @pmmmwh/react-refresh-webpack-plugin && react-reflash/babel추가
     devServer: {
-      port: PORT,
+      port: 3000,
       // 서버가 시작된 후 브라우저를 열도록 dev-server에 지시합니다.
       open: true,
       // 제공되는 모든 항목에 대해 gzip 압축을 활성화합니다.
@@ -177,12 +166,36 @@ module.exports = (_, argv) => {
     },
   };
 
+  // 배포 환경
+  if (mode === PRODUCTION && config.plugins) {
+    config.plugins.push(new BundleAnalyzerPlugin({ analyzerMode: "server", openAnalyzer: true }));
+    config.plugins.push(new CleanWebpackPlugin());
+    config.plugins.push(
+      new webpack.DefinePlugin({
+        "process.env.KAKAO_OAUTH_URL": JSON.stringify(KAKAO_OAUTH_URL_PRO),
+        "process.env.REDUX_DEV_TOOL": JSON.stringify(false),
+        "process.env.BASE_URL": JSON.stringify(BASE_URL_PRO),
+        "process.env.KAKAO_CLIENT_ID": JSON.stringify(KAKAO_CLIENT_ID),
+        "process.env.KAKAP_JDK_KEY": JSON.stringify(KAKAO_CLIENT_KEY),
+      }),
+    );
+  }
+
   // 개발환경
   if (mode !== PRODUCTION && config.plugins) {
     // webpack v4 이상 부턴 hmr이 기본으로 들어가있다.
     // config.plugins.push(new webpack.HotModuleReplacementPlugin());
-    config.plugins.push(new BundleAnalyzerPlugin({ analyzerMode: "server", openAnalyzer: true }));
+    // config.plugins.push(new BundleAnalyzerPlugin({ analyzerMode: "server", openAnalyzer: true }));
     config.plugins.push(new ReactRefreshWebpackPlugin());
+    config.plugins.push(
+      new webpack.DefinePlugin({
+        "process.env.KAKAO_OAUTH_URL": JSON.stringify(KAKAO_OAUTH_URL_DEV),
+        "process.env.REDUX_DEV_TOOL": JSON.stringify(true),
+        "process.env.BASE_URL": JSON.stringify(BASE_URL_DEV),
+        "process.env.KAKAO_CLIENT_ID": JSON.stringify(KAKAO_CLIENT_ID),
+        "process.env.KAKAP_JDK_KEY": JSON.stringify(KAKAO_CLIENT_KEY),
+      }),
+    );
   }
 
   return config;
