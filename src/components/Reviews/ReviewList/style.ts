@@ -42,7 +42,7 @@ export const ReviewContent = styled.div`
   word-break: break-all;
 `;
 
-export const Content = styled.p`
+export const ContentWrapper = styled.div`
   max-width: 600px;
   padding-left: 20px;
 `;

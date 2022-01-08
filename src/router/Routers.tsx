@@ -15,6 +15,7 @@ import { logout } from "modules/Slices/signIn/signInSlice";
 import { useCallback } from "react";
 import MaterailUiExample from "src/pages/Test/MaterailUiExample";
 import PrivateRoute from "./PrivateRoute";
+import BookDetail from "src/pages/BookDetail/BookDetail";
 
 const Routers = () => {
   const { signIn, dispatch } = useSignIn();
@@ -41,6 +42,7 @@ const Routers = () => {
       <Route path="/oAuthTest" component={OauthTest} />
       <Route path="/oAuth/:name" component={Oauth} />
       <Route path="/materailUiExample" component={MaterailUiExample} />
+      <Route path="/book/1" component={BookDetail} />
       <Route path="*" render={() => <Redirect to="/" />} />
     </Switch>
   );

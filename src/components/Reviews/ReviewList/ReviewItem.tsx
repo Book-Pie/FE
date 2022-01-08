@@ -1,8 +1,8 @@
 import React from "react";
-import { ReviewContent, ReviewItemWrapper } from "./style";
+import { ContentWrapper, ReviewContent, ReviewItemWrapper } from "./style";
 import { useDispatch } from "react-redux";
 import { deleteComment } from "src/modules/Slices/commentSlice";
-import { Content, ReplyDate, ContentBottom, Button, ClickArea, ReviewContentTop, ReviewContentBottom } from "./style";
+import { ReplyDate, ContentBottom, Button, ClickArea, ReviewContentTop, ReviewContentBottom } from "./style";
 import { ReviewItemProps } from "./types";
 import { Rating } from "@mui/material";
 
@@ -38,7 +38,9 @@ export const ReviewItem: React.FC<ReviewItemProps> = ({ key, content, myCommentI
             </ContentBottom>
           </ReviewContentTop>
           <ReviewContentBottom>
-            <Content>{content.content}</Content>
+            <ContentWrapper>
+              <div dangerouslySetInnerHTML={{ __html: content.content }}></div>
+            </ContentWrapper>
           </ReviewContentBottom>
           {/* 좋아요 영역 */}
         </ReviewContent>

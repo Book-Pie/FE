@@ -14,6 +14,7 @@ const Editor = ({
   height,
   limit = 50,
   value = "",
+  isDisabled,
   setEditorValue,
 }: EditorProps) => {
   const quillRef = useRef<ReactQuill>();
@@ -94,6 +95,7 @@ const Editor = ({
       modules={noMoDules}
       theme="snow"
       placeholder={placeholder}
+      readOnly={isDisabled}
     />
   );
 
@@ -106,6 +108,7 @@ const Editor = ({
         modules={noUploadModules}
         theme="snow"
         placeholder={placeholder}
+        readOnly={isDisabled}
       />
     );
   }
@@ -119,12 +122,13 @@ const Editor = ({
         modules={uploadModules}
         theme="snow"
         placeholder={placeholder}
+        readOnly={isDisabled}
       />
     );
   }
 
   return (
-    <ReactQuillWrapper height={height}>
+    <ReactQuillWrapper height={height} isDisabled={isDisabled}>
       {editor}
       <div className="reactQuill__textLimitBox">
         <div>최대 {limit}자</div>

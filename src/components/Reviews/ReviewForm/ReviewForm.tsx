@@ -2,21 +2,15 @@ import React, { useEffect } from "react";
 import { useState } from "react";
 import { ButtonArea } from "./style";
 import { CancelButton, ClickButton, SubmitButton } from "./SubmitButton";
-import { ReviewTextarea } from "./ReviewTextarea";
 import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import { addComment, editComment } from "modules/Slices/commentSlice";
 import { dateFormat } from "src/utils/formatDate";
 import { ReviewFormProps } from "./types";
 import { HoverRating } from "src/components/Rating/Rating";
+import Editor from "src/components/Editor/Editor";
 
-export const ReviewForm: React.FC<ReviewFormProps> = ({
-  bookId,
-  isMyReview,
-  autoFocus,
-  isDisabled,
-  myReviewContent,
-}) => {
+export const ReviewForm: React.FC<ReviewFormProps> = ({ bookId, isMyReview, isDisabled, myReviewContent }) => {
   const { handleSubmit, register, reset } = useForm({ defaultValues: { something: "anything" } });
 
   // 임시 유저 데이터
@@ -42,10 +36,6 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({
   useEffect(() => {
     setMyContent(myReviewContent.content);
   }, []);
-
-  const onChangeReviewContent = (e: React.ChangeEvent<any>) => {
-    setContent(e.target.value);
-  };
 
   const handleRatingChange = (event: any, newValue: React.SetStateAction<number | null>) => {
     setValue(newValue);
@@ -95,7 +85,14 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({
           <form onSubmit={handleSubmit(editReview)}>
             <div className="ReviewForm">
               <HoverRating isMyReview={isMyReview} rating={ratingValue} />
-              <ReviewTextarea autoFocus={autoFocus} content={myReviewContent.content} isDisabled={true} />
+              <Editor
+                setEditorValue={setContent}
+                value={myReviewContent.content}
+                limit={100}
+                height={100}
+                placeholder="리뷰 작성 시 10자 이상 작성해주세요."
+                isDisabled={true}
+              />
               <ButtonArea>
                 <ClickButton onClick={handleEdit}>수정하기</ClickButton>
               </ButtonArea>
@@ -105,10 +102,12 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({
           <form onSubmit={handleSubmit(editReview)}>
             <div className="ReviewForm">
               <HoverRating isMyReview={isMyReview} rating={ratingValue} handleChange={handleRatingChange} />
-              <ReviewTextarea
-                autoFocus={autoFocus}
-                content={myContent}
-                onChange={onChangeReviewContent}
+              <Editor
+                setEditorValue={setContent}
+                value={myContent}
+                limit={100}
+                height={100}
+                placeholder="리뷰 작성 시 10자 이상 작성해주세요."
                 isDisabled={editDisabled}
               />
               <ButtonArea>
@@ -124,20 +123,15 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({
         <form onSubmit={handleSubmit(addReview)}>
           <div className="ReviewForm">
             <HoverRating isMyReview={isMyReview} rating={ratingValue} handleChange={handleRatingChange} />
-            <ReviewTextarea
-              autoFocus={autoFocus}
-              content={reviewContent}
-              // onClick={this.checkAuth}
-              onChange={onChangeReviewContent}
-              isDisabled={isDisabled}
+            <Editor
+              setEditorValue={setContent}
+              value={reviewContent}
+              limit={100}
+              height={100}
+              placeholder="리뷰 작성 시 10자 이상 작성해주세요."
             />
             <ButtonArea>
-              <SubmitButton
-                isDisabled={reviewContent.length < 10}
-                // onClick={() => ())}
-                onClick={handleEdit}
-                isFetching={false}
-              >
+              <SubmitButton isDisabled={reviewContent.length < 10} onClick={handleEdit} isFetching={false}>
                 리뷰 등록
               </SubmitButton>
             </ButtonArea>

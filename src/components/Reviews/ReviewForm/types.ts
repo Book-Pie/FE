@@ -14,7 +14,6 @@ export interface ReviewsProps {
 
 export interface ReviewFormProps {
   bookId: number;
-  autoFocus: boolean;
   isMyReview?: boolean;
   onSubmit: (reviewContent: string) => void;
   onCancel?: () => void;

@@ -12,8 +12,10 @@ export interface EditorProps {
   value?: string;
   placeholder?: string;
   setEditorValue: (value: string) => void;
+  isDisabled?: boolean;
 }
 
 export interface ReactQuillWrapperProps {
   height: number | undefined;
+  isDisabled?: boolean;
 }
