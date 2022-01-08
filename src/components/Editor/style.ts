@@ -1,9 +1,9 @@
 import styled from "styled-components";
-import { ReactQuillContainerProps } from "./types";
+import { ReactQuillWrapperProps } from "./types";
 
-export const ReactQuillContainer = styled.div<ReactQuillContainerProps>`
+export const ReactQuillWrapper = styled.div<ReactQuillWrapperProps>`
   .ql-container {
-    height: ${({ height }) => `${height}px`};
+    height: ${props => (props.height ? `${props.height}px` : "auto")};
   }
   .reactQuill__textLimitBox {
     margin-top: 0.5rem;

@@ -3,7 +3,7 @@ import ReactQuill from "react-quill";
 import * as Quill from "quill";
 import "react-quill/dist/quill.snow.css";
 import { EditorProps } from "./types";
-import { ReactQuillContainer } from "./style";
+import { ReactQuillWrapper } from "./style";
 /*
  이미지 업로드 에디터 빼고는 사용 가능합니다. 
  이미지 업로드 에디터는 추후에 업데이트 할 려고합니다.  
@@ -11,7 +11,7 @@ import { ReactQuillContainer } from "./style";
 const Editor = ({
   placeholder = "내용을 입력해주세요.",
   toolbar,
-  height = 100,
+  height,
   limit = 50,
   value = "",
   setEditorValue,
@@ -124,13 +124,13 @@ const Editor = ({
   }
 
   return (
-    <ReactQuillContainer height={height}>
+    <ReactQuillWrapper height={height}>
       {editor}
       <div className="reactQuill__textLimitBox">
         <div>최대 {limit}자</div>
         <div>{currentLimt}자</div>
       </div>
-    </ReactQuillContainer>
+    </ReactQuillWrapper>
   );
 };
 
