@@ -14,8 +14,8 @@ import useSignIn from "src/hooks/useSignIn";
 import { logout } from "modules/Slices/signIn/signInSlice";
 import { useCallback } from "react";
 import MaterailUiExample from "src/pages/Test/MaterailUiExample";
-import PrivateRoute from "./PrivateRoute";
 import BookDetail from "src/pages/BookDetail/BookDetail";
+import PrivateRoute from "./PrivateRoute";
 
 const Routers = () => {
   const { signIn, dispatch } = useSignIn();

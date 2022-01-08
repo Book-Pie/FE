@@ -12,6 +12,7 @@ const theme: DefaultTheme = {
     mainLightBrown: Colors.MAINLIGHT_BROWN,
     white: Colors.WHITE,
     darkGrey: Colors.DARK_GREY,
+    error: Colors.ERROR,
   },
   media: {
     pc: `@media screen and (max-width: ${Size.pc})`,

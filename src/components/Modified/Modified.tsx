@@ -3,7 +3,7 @@ import { useCallback, useEffect, useLayoutEffect, useState } from "react";
 import useSignIn from "hooks/useSignIn";
 import FormLabel from "components/FormLabel/FormLabel";
 import { RegisterOptions, useForm } from "react-hook-form";
-import ErrorMessage from "components/ErrorMessage/ErrorMessage";
+import ErrorMessage from "src/elements/ErrorMessage";
 import {
   hookFormKoreaChractersCheck,
   hookFormMisMatchCheck,

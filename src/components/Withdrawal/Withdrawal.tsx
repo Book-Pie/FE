@@ -9,7 +9,7 @@ import {
   hookFormWhiteSpaceCheck,
   makeOption,
 } from "src/utils/hookFormUtil";
-import ErrorMessage from "components/ErrorMessage/ErrorMessage";
+import ErrorMessage from "src/elements/ErrorMessage";
 import { passwordCheck } from "src/api/modified/modified";
 import axios from "axios";
 import { withDrawal } from "src/api/withDrawal/withDrawal";

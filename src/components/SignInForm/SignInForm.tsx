@@ -1,19 +1,19 @@
-import FormInput from "components/FormInput/FormInput";
-import ErrorMessage from "components/ErrorMessage/ErrorMessage";
+import ErrorMessage from "src/elements/ErrorMessage";
 import {
   hookFormEmailPatternCheck,
   hookFormKoreaChractersCheck,
   hookFormWhiteSpaceCheck,
   makeOption,
 } from "utils/hookFormUtil";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { setErrorReset, signInAsync } from "modules/Slices/signIn/signInSlice";
 import { useEffect, useState } from "react";
 import { getRememberEmail } from "utils/localStorageUtil";
 import Popup from "components/Popup/Popup";
 import useSignIn from "hooks/useSignIn";
 import useDebounce from "hooks/useDebounce";
-import { Button, Form } from "./style";
+import TextField from "@mui/material/TextField";
+import { Form, FullSizeButton } from "./style";
 import { SignInInputs, SignInInputForm, FormErrorMessages, SignInFormProp } from "./types";
 
 const initialState: SignInInputForm = {
@@ -22,7 +22,7 @@ const initialState: SignInInputForm = {
 };
 
 const SignInForm = ({ isRemember }: SignInFormProp) => {
-  const { register, handleSubmit, formState } = useForm<SignInInputForm>({
+  const { handleSubmit, control, formState } = useForm<SignInInputForm>({
     defaultValues: initialState,
   });
   const debouncdRef = useDebounce();
@@ -88,17 +88,26 @@ const SignInForm = ({ isRemember }: SignInFormProp) => {
       <Form onSubmit={handleSubmit(onSubmit)}>
         <div>
           {inputs.map((input, idx) => {
-            const { id, options } = input;
+            const { id, options, type } = input;
+            const isError = errors[`${id}`] ? true : false;
+
             return (
               <div key={idx}>
-                <FormInput {...input} register={register(id, options)} />
+                <Controller
+                  name={id}
+                  control={control}
+                  rules={options}
+                  render={({ field }) => (
+                    <TextField {...field} label={id} error={isError} type={type} fullWidth color="mainDarkBrown" />
+                  )}
+                />
                 <ErrorMessage message={errors[`${id}`]?.message} />
               </div>
             );
           })}
         </div>
         <div>
-          <Button type="submit">로그인</Button>
+          <FullSizeButton type="submit">로그인</FullSizeButton>
         </div>
       </Form>
     </div>

@@ -10,7 +10,7 @@ import useSignIn from "hooks/useSignIn";
 import { make1000UnitsCommaFormet } from "src/utils/formetUtil";
 import { makeOption } from "src/utils/hookFormUtil";
 import { FormErrorMessages } from "../SignUpForm/types";
-import ErrorMessage from "../ErrorMessage/ErrorMessage";
+import ErrorMessage from "../../elements/ErrorMessage";
 
 const Container = styled.div`
   width: 70%;
