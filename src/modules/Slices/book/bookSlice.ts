@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 import { RootState } from "modules/store";
-import api from "../../api/bookAPI";
+import api from "../../../api/bookAPI";
 
 // initialState로 사용할 객체의 data type
 interface BookItemProps {

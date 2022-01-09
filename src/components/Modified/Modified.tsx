@@ -21,7 +21,7 @@ import useDaumPost from "hooks/useDaumPost";
 import DaumPostcode from "react-daum-postcode";
 import { myProfileChange, passwordChange, passwordCheck } from "src/api/modified/modified";
 import { myProfileAsync } from "modules/Slices/signIn/signInSlice";
-import { hyphenRemoveFormat } from "utils/formetUtil";
+import { hyphenRemoveFormat } from "src/utils/formatUtil";
 import { useHistory } from "react-router";
 import { ModifiedContainer } from "./style";
 import {

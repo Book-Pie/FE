@@ -1,4 +1,4 @@
-import { getCommentProps } from "src/modules/Slices/commentSlice";
+import { getCommentProps } from "src/modules/Slices/comment/types";
 
 export interface ReviewTextareaProps {
   content?: string;
@@ -14,15 +14,16 @@ export interface ReviewsProps {
 
 export interface ReviewFormProps {
   bookId: number;
-  isMyReview?: boolean;
-  onSubmit: (reviewContent: string) => void;
+  isMyReview: boolean;
+  onSubmit?: (reviewContent: string) => void;
   onCancel?: () => void;
-  isDisabled: boolean;
+  isDisabled?: boolean;
   myReviewContent: getCommentProps;
 }
 
 export interface SubmitButtonProps {
-  onClick: () => void;
+  onClick?: () => void;
+  isDisabled: boolean;
 }
 
 export interface CancelButtonProps {

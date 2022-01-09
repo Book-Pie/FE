@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 import { History } from "history";
 import { RootState } from "modules/store";
-import api from "../../api/bookAPI";
+import api from "../../../api/bookAPI";
 
 // 메인페이지 최신등록상품
 

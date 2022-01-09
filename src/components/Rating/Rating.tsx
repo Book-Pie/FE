@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Rating from "@mui/material/Rating";
 import Box from "@mui/material/Box";
 import StarIcon from "@mui/icons-material/Star";
 import { styled } from "@mui/material/styles";
+import { HoverRatingProps } from "./types";
 
 const labels: { [index: string]: string } = {
   0.5: "최악이에요",
@@ -21,7 +22,7 @@ export const SmallStarIcon = styled(StarIcon)`
   font-size: 0.5rem;
 `;
 
-export const HoverRating = ({ isMyReview, rating, handleChange }) => {
+export const HoverRating = ({ isMyReview, rating, handleChange }: HoverRatingProps) => {
   const [hover, setHover] = useState(-1);
 
   return (

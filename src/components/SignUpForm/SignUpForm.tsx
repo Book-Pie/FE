@@ -19,7 +19,7 @@ import axios from "axios";
 import { getEmailDuplicateCheck, getNickNameDuplicateCheck, getSignUp } from "src/api/signUp/signUp";
 import { useHistory } from "react-router";
 import Popup from "components/Popup/Popup";
-import { hyphenRemoveFormat } from "utils/formetUtil";
+import { hyphenRemoveFormat } from "src/utils/formatUtil";
 import { FormErrorMessages, IAxiosPostPayload, Rows, SignUpFormReponse, SignUpInputForm } from "./types";
 import { Button, Row } from "./style";
 

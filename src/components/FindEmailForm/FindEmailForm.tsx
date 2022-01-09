@@ -14,7 +14,7 @@ import Popup from "components/Popup/Popup";
 import { errorHandler } from "src/api/http";
 import { getFindEmail } from "src/api/find/find";
 import useDebounce from "hooks/useDebounce";
-import { hyphenRemoveFormat } from "utils/formetUtil";
+import { hyphenRemoveFormat } from "src/utils/formatUtil";
 import { AxiosResponse, IFindEmailForm, FormErrorMessages, HisotryState } from "./types";
 import { Button, Row } from "./style";
 

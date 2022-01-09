@@ -9,10 +9,6 @@ export const TextTruncate: React.FC<TextTruncateProps> = props => {
   const [isExpanded, setExpand] = useState(false);
   const [isTruncated, setTruncate] = useState(false);
 
-  const expand = () => {
-    setExpand(true);
-  };
-
   useEffect(() => {
     if (wrapperRef.current) {
       if (wrapperRef.current.clientHeight > lineHeight * lines) {

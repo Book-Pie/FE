@@ -1,61 +1,19 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "src/modules/store";
 import book from "src/api/book";
-
-export interface getCommentProps {
-  id: number;
-  review_id: number;
-  user_id: number;
-  nickname: string;
-  content: string;
-  rating: number;
-  reviewLikeCount: number;
-  reviewDate: string;
-  likeCheck: boolean;
-}
-
-export interface myReviewCommentProps {
-  myUserId: number;
-}
-
-// 리듀가 사용할 데이터 타입
-export interface commentReduceProps {
-  content: getCommentProps[];
-  myCommentCheck: boolean;
-  myComment: getCommentProps;
-  status: "loading" | "idle" | "error";
-  error: null | {
-    code: number;
-    message: string;
-  };
-}
-
-// 통신 실패 시 반환하는 타입
-export interface commentAsyncFail {
-  success: boolean;
-  data: null;
-  error: {
-    code: number;
-    message: string;
-  };
-}
-
-// 통신 성공 시 반환하는 타입
-type commentAsyncSuccess = getCommentProps[];
-
-type myCommentAsyncSuccess = getCommentProps;
+import { getCommentProps, commentAsyncSuccess, myCommentAsyncSuccess, deleteCommentProps } from "./types";
 
 // json-server로 받을 데이터
 const initialState = {
-  content: [],
+  content: [] as any,
   myCommentCheck: false,
-  myComment: [],
+  myComment: {},
   status: "loading",
   error: null,
 };
 
 // 댓글 리스트
-export const reviewCommentList = createAsyncThunk<commentAsyncSuccess, getCommentProps>(
+export const reviewCommentList = createAsyncThunk<commentAsyncSuccess>(
   "comments/commentLoad",
   async (data, { rejectWithValue }) => {
     try {
@@ -102,18 +60,19 @@ export const addComment = createAsyncThunk<commentAsyncSuccess, getCommentProps>
         console.log(error.config);
         return rejectWithValue(error.response.data);
       }
+      return rejectWithValue(error.response.data);
     }
   },
 );
 
 // 댓글 삭제하기
-export const deleteComment = createAsyncThunk<commentAsyncSuccess, getCommentProps>(
+export const deleteComment = createAsyncThunk(
   "comment/delete",
-  async ({ id }, { rejectWithValue }) => {
+  async (data: deleteCommentProps, { rejectWithValue }) => {
     try {
-      const response = await book.delete(`/content/${id}`);
-      // const response = await axios.delete(`/api/book-review/delete/${id}`);
-      return id;
+      await book.delete(`/content/${data.id}`);
+      // await axios.delete(`/api/book-review/delete/${id}`);
+      return data.id;
     } catch (error: any) {
       return rejectWithValue(error.response.data);
     }
@@ -125,7 +84,7 @@ export const editComment = createAsyncThunk<myCommentAsyncSuccess, getCommentPro
   "comment/edit",
   async (data, { rejectWithValue }) => {
     try {
-      const response = await book.patch(`/content/${data.user_id}`, data);
+      const response = await book.patch(`/content/${data.userId}`, data);
 
       return response.data;
     } catch (error: any) {
@@ -135,17 +94,16 @@ export const editComment = createAsyncThunk<myCommentAsyncSuccess, getCommentPro
 );
 
 // 나의 댓글
-export const myReviewComment = createAsyncThunk<commentAsyncSuccess, myReviewCommentProps>(
+export const myReviewComment = createAsyncThunk<commentAsyncSuccess, number>(
   "comments/myComment",
   async (myUserId, { rejectWithValue }) => {
     try {
-      const response = await book.get(`/content?user_id=${myUserId}`);
+      const response = await book.get(`/content?userId=${myUserId}`);
 
       if (response.data.length > 0) {
         return response.data[0];
-      } else {
-        return response.data;
       }
+      return response.data;
     } catch (error: any) {
       console.log(error);
       return rejectWithValue(error.response.data);
@@ -155,68 +113,71 @@ export const myReviewComment = createAsyncThunk<commentAsyncSuccess, myReviewCom
 
 const commentSlice = createSlice({
   name: "commentReduce",
-  initialState: initialState as commentReduceProps,
+  initialState,
   reducers: {},
   extraReducers: builder => {
     builder
       // 포스트 불러오기
-      .addCase(reviewCommentList.pending, (state, action) => {
+      .addCase(reviewCommentList.pending, state => {
         state.status = "loading";
       })
       .addCase(reviewCommentList.fulfilled, (state, { payload }) => {
         state.content = payload;
-        state.status = "idle";
+        state.status = "success";
       })
-      .addCase(reviewCommentList.rejected, (state, action) => {
-        state.status = "error";
+      .addCase(reviewCommentList.rejected, state => {
+        state.status = "failed";
       })
       // 댓글 작성
-      .addCase(addComment.pending, (state, action) => {
+      .addCase(addComment.pending, state => {
         state.status = "loading";
       })
       .addCase(addComment.fulfilled, (state, { payload }) => {
         state.content.push(payload);
-        state.status = "idle";
+        state.status = "success";
         state.myCommentCheck = true;
         state.myComment = payload;
       })
-      .addCase(addComment.rejected, (state, action) => {
-        state.status = "error";
+      .addCase(addComment.rejected, state => {
+        state.status = "failed";
       })
       // 댓글 삭제
-      .addCase(deleteComment.pending, (state, action) => {
+      .addCase(deleteComment.pending, state => {
         state.status = "loading";
       })
       .addCase(deleteComment.fulfilled, (state, action) => {
-        state.status = "idle";
+        state.status = "success";
         state.myCommentCheck = false;
-        state.content = state.content.filter(comment => comment.id !== action.payload);
-        state.myComment = state.content.filter(comment => comment.id !== action.payload);
+        state.content = state.content.filter((comment: { id: number }) => comment.id !== action.payload);
+        state.myComment = state.content.filter((comment: { id: number }) => comment.id !== action.payload);
       })
-      .addCase(deleteComment.rejected, (state, action) => {
-        state.status = "loading";
+      .addCase(deleteComment.rejected, state => {
+        state.status = "failed";
       })
       // 댓글 수정
-      .addCase(editComment.pending, (state, action) => {
+      .addCase(editComment.pending, state => {
         state.status = "loading";
       })
       .addCase(editComment.fulfilled, (state, { payload }) => {
         state.myComment = payload;
-        state.content = state.content.map(v => (v.id !== payload.id ? v : { ...v, content: payload.content }));
+        state.status = "success";
+        state.content = state.content.map((v: { id: number }) =>
+          v.id !== payload.id ? v : { ...v, content: payload.content },
+        );
       })
-      .addCase(editComment.rejected, (state, action) => {
-        state.status = "loading";
+      .addCase(editComment.rejected, state => {
+        state.status = "failed";
       })
       // 나의 댓글
-      .addCase(myReviewComment.pending, (state, action) => {
+      .addCase(myReviewComment.pending, state => {
         state.status = "loading";
       })
       .addCase(myReviewComment.fulfilled, (state, { payload }) => {
         state.myComment = payload;
-        state.status = "idle";
+        state.status = "success";
       })
-      .addCase(myReviewComment.rejected, (state, action) => {
-        state.status = "loading";
+      .addCase(myReviewComment.rejected, state => {
+        state.status = "failed";
       });
   },
 });
@@ -226,4 +187,4 @@ export const comments = (state: RootState) => state.commentReduce.content;
 export const myComment = (state: RootState) => state.commentReduce.myComment;
 export const myCommentCheck = (state: RootState) => state.commentReduce.myCommentCheck;
 
-export default commentSlice.reducer;
+export default commentSlice;

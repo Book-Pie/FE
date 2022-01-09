@@ -3,14 +3,13 @@ import theme from "src/assets/style/styledTheme";
 import styled from "styled-components";
 
 interface BestSellerProps {
-  itemId: number;
   title: string;
   categoryName: string;
   cover: string;
   bestRank: number;
 }
 
-const BestSeller = ({ bestRank, categoryName, title, cover, itemId }: BestSellerProps) => {
+const BestSeller = ({ bestRank, categoryName, title, cover }: BestSellerProps) => {
   return (
     <ItemWrapper>
       <TextArea>

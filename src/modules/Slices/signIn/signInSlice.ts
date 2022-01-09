@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 import { removeEmail, removeToken, setRememberEmail, setAccessToken, getAccessToken } from "utils/localStorageUtil";
 import { getMyProfile, getSignIn } from "src/api/signIn/signIn";
-import { addHyphenFormat } from "src/utils/formetUtil";
+import { addHyphenFormat } from "src/utils/formatUtil";
 import { RootState } from "modules/store";
 import {
   IAxiosResponse,
