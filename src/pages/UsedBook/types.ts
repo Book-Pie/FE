@@ -10,6 +10,7 @@ export interface IUsedBook {
 export interface UsedBookState {
   pages: IUsedBook[][];
   pageCount: number;
+  isEmpty: boolean;
 }
 
 export interface ICategory {

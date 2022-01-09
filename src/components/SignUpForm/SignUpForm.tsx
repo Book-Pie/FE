@@ -21,6 +21,7 @@ import { useHistory } from "react-router";
 import Popup from "components/Popup/Popup";
 import { hyphenRemoveFormat } from "utils/formatUtil";
 import Button from "@mui/material/Button";
+import { Alert } from "@mui/material";
 import { FormErrorMessages, IAxiosPostPayload, IRows, SignUpFormReponse, ISignUpForm } from "./types";
 import { InputWrapper, ButtonWrapper, SignUpWrapper, ErrorWrapper, DaumPostWrapper } from "./style";
 
@@ -64,10 +65,10 @@ const SignUpForm = () => {
 
       // 중복은 false
       if (emailDuplicate.data.data === false) {
-        setError("email", { type: "duplicate", message: "이메일이 중복입니다." });
+        setError("email", { type: "duplicate", message: "이미 가입한 이메일입니다." });
       }
       if (nickNameDuplicate.data.data === false) {
-        setError("nickName", { type: "duplicate", message: "닉네임이 중복입니다." });
+        setError("nickName", { type: "duplicate", message: "사용중인 닉네임입니다." });
       }
 
       if (nickNameDuplicate.data.data && emailDuplicate.data.data) {
@@ -251,7 +252,7 @@ const SignUpForm = () => {
   return (
     <SignUpWrapper>
       {isOpen && (
-        <Popup isOpen={isOpen} setIsOpen={setIsOpen} autoClose>
+        <Popup isOpen={isOpen} setIsOpen={setIsOpen} autoClose className="red">
           {message}
         </Popup>
       )}
