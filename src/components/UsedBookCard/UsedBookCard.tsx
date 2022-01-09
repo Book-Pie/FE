@@ -2,25 +2,31 @@ import { memo } from "react";
 import { make1000UnitsCommaFormet } from "src/utils/formatUtil";
 import { Link } from "react-router-dom";
 import { UsedBookCardProps } from "./types";
-import { Wrapper } from "./style";
+import { Wrapper, EmptyWrapper } from "./style";
 
-// 디자인이 나오면 수정
-const UsedBookCard = ({ page }: UsedBookCardProps) => {
-  return (
-    <Wrapper>
-      <Link to={`/usedBook/${page.id}`}>
-        <div className="usedBookCard__imgBox">
-          <img src="https://picsum.photos/200/300" alt="usedBookImg" className="usedBookCard__img" />
-        </div>
-        <div className="usedBookCard__cotent">
-          <div className="usedBookCard__title">{page.title}</div>
-          <div className="usedBookCard__price">
-            <strong>가격</strong> : <span>{make1000UnitsCommaFormet(`${page.price}`)}원</span>
+const UsedBookCard = ({ card }: UsedBookCardProps) => {
+  const { id, image, price, title } = card;
+
+  if (Object.keys(card).length) {
+    return (
+      <Wrapper>
+        <Link to={`/usedBook/${id}`}>
+          <div className="usedBookCard__imgBox">
+            <img src="https://picsum.photos/200/200" alt="usedBookCardImg" />
           </div>
-        </div>
-      </Link>
-    </Wrapper>
-  );
+          <div className="usedBookCard__cotent">
+            <div className="usedBookCard__title">{title}</div>
+            <div className="usedBookCard__price">
+              <strong>판매가</strong>
+              <span>:</span>
+              <span> {make1000UnitsCommaFormet(`${price}`)}원</span>
+            </div>
+          </div>
+        </Link>
+      </Wrapper>
+    );
+  }
+  return <EmptyWrapper />;
 };
 
 export default memo(UsedBookCard);

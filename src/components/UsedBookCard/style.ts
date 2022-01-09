@@ -3,23 +3,42 @@ import styled from "styled-components";
 export const Wrapper = styled.div`
   cursor: pointer;
   width: 20%;
-  box-sizing: border-box;
+  margin: 0.5rem;
   display: flex;
   flex-direction: column;
-  margin: 0.5rem;
   border-radius: 5px;
   overflow: hidden;
   transition: transform 0.4s, box-shadow 0.4s ease-in;
-  box-shadow: rgb(0 0 0 / 30%) 0px 4px 16px 0px;
-
-  a {
-    text-decoration: none;
-    color: black;
-  }
+  ${props => props.theme.shadow[30]};
 
   &:hover {
     transform: scale(1.02);
-    box-shadow: rgb(0 0 0 / 50%) 0px 4px 16px 0px;
+    ${props => props.theme.shadow[50]};
+  }
+  a {
+    height: 100%;
+  }
+
+  .usedBookCard__imgBox {
+    position: relative;
+    padding-top: 200px;
+    img {
+      position: absolute;
+      display: block;
+      top: 0;
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  .usedBookCard__cotent {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+
+    & > div + div {
+      margin-top: 1rem;
+    }
   }
 
   .usedBookCard__title {
@@ -27,27 +46,27 @@ export const Wrapper = styled.div`
     overflow: hidden;
     white-space: nowrap;
     text-align: left;
+    text-align: center;
+    font-weight: 900;
   }
 
-  .usedBookCard__cotent {
-    padding: 0.5rem 1rem 1rem;
-  }
-
-  .usedBookCard__imgBox {
-    position: relative;
-    padding-top: 300px;
-  }
-  .usedBookCard__img {
-    position: absolute;
-    display: block;
-    top: 0;
-    width: 100%;
-    height: 100%;
-  }
   .usedBookCard__price {
-    text-align: left;
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 5px;
+    font-size: 1.1rem;
+    strong {
+      font-weight: 900;
+    }
   }
+`;
+
+export const EmptyWrapper = styled.div`
+  width: 20%;
+  margin: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  border-radius: 5px;
+  overflow: hidden;
 `;

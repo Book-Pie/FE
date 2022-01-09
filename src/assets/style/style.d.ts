@@ -70,3 +70,9 @@ declare module "@mui/material/TextField" {
     mainLightBrown: true;
   }
 }
+declare module "@mui/material/FormControl" {
+  export interface FormControlPropsColorOverrides {
+    mainDarkBrown: true;
+    mainLightBrown: true;
+  }
+}

@@ -13,18 +13,17 @@ const CloseCss = css`
 export const Wrapper = styled.div`
   position: relative;
   display: inline-block;
-  width: 5rem;
 `;
 
 export const SelectBox = styled.div`
   display: flex;
   background: white;
-  height: 2rem;
   border-radius: 4px;
   justify-content: space-between;
   align-items: center;
   padding-left: 0.5rem;
   padding-right: 0.5rem;
+  height: 100%;
   font-weight: 600;
   color: rgb(73, 80, 87);
   font-size: 0.875rem;
@@ -56,16 +55,6 @@ export const SelectList = styled.ul<UlProps>`
   transform: translateY(-50%);
 
   ${({ visible }) => (visible ? OpenCss : CloseCss)}
-
-  a {
-    padding: 0.5rem 1rem;
-    color: black;
-  }
-
-  .dropDown__list--selected {
-    background-color: rgba(205, 97, 51, 1);
-    color: white;
-  }
 
   li {
     cursor: pointer;
