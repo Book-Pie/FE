@@ -13,7 +13,10 @@ export const BookDetailPanelWrapper: React.FunctionComponent<BookDetailCardWrapp
     return null;
   }
 
-  return renderCondition ? <section>{children}</section> : <>{children}</>;
+  if (renderCondition) {
+    return <section>{children}</section>;
+  }
+  return children;
 };
 
 export const BookDetailPanel: React.FunctionComponent<BookDetailPanelProps> = ({

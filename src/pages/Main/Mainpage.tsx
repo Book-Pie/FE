@@ -3,7 +3,7 @@ import ThumbnailSlider from "src/components/Main/ThumbnailSlider";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useTypedSelector } from "src/modules/store";
-import { getbookAPI, getBookSelector } from "src/modules/Slices/bookSlice";
+import { getbookAPI, getBookSelector } from "src/modules/Slices/book/bookSlice";
 import Text from "src/elements/Text";
 import { images } from "src/assets/image/image-data";
 import theme from "src/assets/style/styledTheme";

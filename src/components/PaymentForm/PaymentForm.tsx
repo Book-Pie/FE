@@ -7,7 +7,7 @@ import { useEffect, useMemo, useState } from "react";
 import DropDown from "components/DropDown/DropDown";
 import { Link } from "react-router-dom";
 import useSignIn from "hooks/useSignIn";
-import { make1000UnitsCommaFormet } from "src/utils/formetUtil";
+import { make1000UnitsCommaFormet } from "src/utils/formatUtil";
 import { makeOption } from "src/utils/hookFormUtil";
 import { FormErrorMessages } from "../SignUpForm/types";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";

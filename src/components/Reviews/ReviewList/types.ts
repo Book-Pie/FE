@@ -1,13 +1,17 @@
-import { getCommentProps } from "modules/Slices/commentSlice";
+import { getCommentProps } from "src/modules/Slices/comment/types";
+
+export type DateDTO = string;
+export type BookId = number;
 
 export interface Review {
-  review_id: number;
+  reviewId: number;
   id: number;
-  user_id: number;
+  userId: number;
   content: string;
 }
 
 export interface ReviewListProps {
+  key: number;
   bookId: number;
   commentList: getCommentProps[];
   myCommentId: number;
@@ -28,7 +32,7 @@ export interface ReviewItemProps {
   myCommentId: number;
 }
 
-export interface TruncateProps extends React.HTMLProps<Truncate> {
+export interface TruncateProps {
   lines?: number | false;
   ellipsis?: React.ReactNode;
   trimWhitespace?: boolean;
@@ -40,6 +44,3 @@ export interface ReviewsWriteProps {
   myReviewCheck: boolean;
   myReviewContent: getCommentProps;
 }
-
-export type DateDTO = string;
-export type BookId = number;

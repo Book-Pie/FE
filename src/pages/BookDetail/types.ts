@@ -5,6 +5,7 @@ export interface ReviewsProps {
 
 export interface BookDetailCardWrapperProps {
   renderCondition?: boolean;
+  children?: any;
 }
 
 export interface BookDetailPanelProps {

@@ -25,3 +25,18 @@ export const addHyphenFormat = (text: string) => {
     return acc + cur;
   });
 };
+
+export function dateFormat(date: Date) {
+  let month = date.getMonth() + 1;
+  let day = date.getDate();
+  let hour = date.getHours();
+  let minute = date.getMinutes();
+
+  const zero = 0;
+  month = month >= 10 ? month : zero + month;
+  day = day >= 10 ? day : zero + day;
+  hour = hour >= 10 ? hour : zero + hour;
+  minute = minute >= 10 ? minute : zero + minute;
+
+  return `${date.getFullYear()}-${month}-${day} ${hour}:${minute}`;
+}

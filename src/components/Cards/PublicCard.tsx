@@ -22,7 +22,6 @@ function Card({
   authorIntroTitle,
   authorIntroText,
   anotherBooks,
-  image,
   smallImage,
 }: CardProps) {
   return (

@@ -103,7 +103,9 @@
     // useEeffect 안에 state 변수를 쓴다면 dependency array에 넣어줘야되는 룰
     "react-hooks/exhaustive-deps": "warn",
     "react/no-unused-prop-types":"warn",
-    
+
+    // 중첩 삼항 연산자 허용
+    "no-nested-ternary":"off",
 
     // 사용하지 않는 변수가 있을때 경고를 주지만 tpyescript의 interface도 경고를 줘서 
     // eslint no-unused-vars는 꺼줘야된다.

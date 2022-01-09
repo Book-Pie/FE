@@ -16,7 +16,7 @@ import Popup from "components/Popup/Popup";
 import { getFindPassword } from "src/api/find/find";
 import { errorHandler } from "src/api/http";
 import useDebounce from "hooks/useDebounce";
-import { hyphenRemoveFormat } from "utils/formetUtil";
+import { hyphenRemoveFormat } from "src/utils/formatUtil";
 import { Button, Row } from "./style";
 import { AxiosResponse, IFindPasswordForm, FormErrorMessages, HisotryState } from "./types";
 

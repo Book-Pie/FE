@@ -1,10 +1,16 @@
 import React, { useEffect } from "react";
 import { ReviewList } from "components/Reviews/ReviewList/ReviewList";
 import { ReviewWrite } from "components/Reviews/ReviewWrite";
-import { ReviewsProps } from "./types";
 import useSignIn from "hooks/useSignIn";
-import { comments, myComment, myReviewComment, myCommentCheck, reviewCommentList } from "modules/Slices/commentSlice";
+import {
+  comments,
+  myComment,
+  myReviewComment,
+  myCommentCheck,
+  reviewCommentList,
+} from "src/modules/Slices/comment/commentSlice";
 import { useTypedSelector } from "src/modules/store";
+import { ReviewsProps } from "./types";
 
 export const Reviews: React.FC<ReviewsProps> = ({ bookId }) => {
   const myReviewContent = useTypedSelector(myComment);
@@ -13,7 +19,9 @@ export const Reviews: React.FC<ReviewsProps> = ({ bookId }) => {
   // const myComment = useTypedSelector(myId); // 나의 아이디 정보
   const myUserId = 5; // 나의 아이디 임시 데이터
 
-  const { signIn, dispatch } = useSignIn();
+  console.log("myReviewContent : ", myReviewContent);
+
+  const { dispatch } = useSignIn();
 
   useEffect(() => {
     dispatch(reviewCommentList());

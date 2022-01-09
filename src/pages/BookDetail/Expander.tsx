@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "./style";
 import { ExpanderProps } from "./types";
 
-export const Expander: React.FC<ExpanderProps> = ({ isExpanded, text, onClick }) => {
+export const Expander: React.FC<ExpanderProps> = ({ text, onClick }) => {
   return (
     <Button onClick={onClick} className="BookDetail_ContentTruncButton">
       {text}

@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import { useEffect, useState } from "react";
-
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css/bundle";
 import "swiper/css";
@@ -10,7 +9,7 @@ import "swiper/css/free-mode";
 import SwiperCore, { Navigation, Pagination } from "swiper";
 import { useDispatch } from "react-redux";
 import { useTypedSelector } from "src/modules/store";
-import { getRecentlyBookAPI, getRecentlyBookSelector } from "src/modules/Slices/usedbookSlice";
+import { getRecentlyBookAPI, getRecentlyBookSelector } from "src/modules/Slices/usedbook/usedbookSlice";
 import SliderItem from "./SliderItem";
 
 SwiperCore.use([Navigation, Pagination]);

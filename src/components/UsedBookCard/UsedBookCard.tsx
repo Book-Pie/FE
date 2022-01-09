@@ -1,5 +1,5 @@
 import { memo } from "react";
-import { make1000UnitsCommaFormet } from "utils/formetUtil";
+import { make1000UnitsCommaFormet } from "src/utils/formatUtil";
 import { Link } from "react-router-dom";
 import { UsedBookCardProps } from "./types";
 import { Wrapper } from "./style";

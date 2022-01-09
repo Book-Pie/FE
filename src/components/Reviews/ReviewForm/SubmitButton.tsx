@@ -18,14 +18,6 @@ export const SubmitButton: React.FC<SubmitButtonProps> = ({ isDisabled, onClick,
   );
 };
 
-// export const SubmitButton: React.FC<SubmitButtonProps> = ({ isDisabled, onClick, children, buttonType }) => {
-//   return (
-//     <Button disabled={isDisabled} type={buttonType} onClick={onClick}>
-//       {children}
-//     </Button>
-//   );
-// };
-
 export const CancelButton: React.FC<CancelButtonProps> = ({ onClick }) => {
   return <Button onClick={onClick}>취소</Button>;
 };

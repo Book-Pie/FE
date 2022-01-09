@@ -90,8 +90,6 @@
     "serve": "serve ./dist",
     "dev": "webpack serve --mode=development",
     "prettier": "prettier --write --config .prettierrc.js \"./src/**/*.{ts,tsx}\"",
-    "lint": "eslint \"./src/**/*.{ts,tsx}\"",
-    "mockserver": "json-server --watch --delay 500 --port 4000 db.json",
-    "mockdev": "concurrently \"yarn dev\" \"yarn mockserver\" "
+    "lint": "eslint \"./src/**/*.{ts,tsx}\""
   }
 }
