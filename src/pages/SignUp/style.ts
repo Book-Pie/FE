@@ -2,12 +2,8 @@ import styled from "styled-components";
 
 export const Container = styled.div`
   padding: 1rem;
-  width: 50%;
-  margin: 0 auto;
-  background-color: rgb(245, 246, 247);
+  margin: 2rem 0;
+  background-color: ${props => props.theme.colors.mainLightBrown};
   text-align: center;
-
-  @media screen and (max-width: 310px) {
-    width: auto;
-  }
+  ${props => props.theme.shadow[30]};
 `;

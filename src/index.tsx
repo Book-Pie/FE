@@ -21,7 +21,6 @@ ReactDOM.render(
         <Provider store={store}>
           <Router history={customHistory}>
             <GlobalStyle />
-
             <App />
           </Router>
         </Provider>

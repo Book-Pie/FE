@@ -1,7 +1,7 @@
 import { RegisterOptions, useForm } from "react-hook-form";
 import useDaumPost from "src/hooks/useDaumPost";
 import styled from "styled-components";
-import FormInput from "components/FormInput/FormInput";
+import FormInput from "src/elements/FormInput";
 import DaumPostcode from "react-daum-postcode";
 import { useEffect, useMemo, useState } from "react";
 import DropDown from "components/DropDown/DropDown";
@@ -131,15 +131,12 @@ const PaymentForm = () => {
   const { formState, register, handleSubmit, setValue, clearErrors, setFocus, setError, watch, reset } =
     useForm<IPaymentForm>();
   const [point] = watch(["ponint"]);
-  console.log("point===>", point);
 
   const [isDaumPostcodeOpen, setIsDaumPostcodeOpen] = useState(false);
   const [deliveryText, setDeliveryText] = useState(deliveryTextInit);
   const { dispatch, signIn } = useSignIn();
   const { user } = signIn;
   const { errors } = formState;
-
-  console.log(errors);
 
   const addressOptions: RegisterOptions = {
     required: makeOption<boolean>(true, FormErrorMessages.REQUIRED),
@@ -194,8 +191,6 @@ const PaymentForm = () => {
       window.scrollTo(0, parseInt(scrollY || "0", 10) * -1);
     };
   }, [isDaumPostcodeOpen]);
-
-  console.log(errors);
 
   if (user === null) return null;
 

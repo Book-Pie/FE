@@ -2,7 +2,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Popup from "components/Popup/Popup";
 import Categorys from "components/Categorys/Categorys";
 import UsedBookCard from "src/components/UsedBookCard/UsedBookCard";
-import Loading from "components/Loading/Loading";
 import DropDown from "components/DropDown/DropDown";
 import { getCategory, getUsedBooks } from "src/api/usedBook/usedBook";
 import { errorHandler } from "src/api/http";
@@ -34,8 +33,6 @@ const UsedBook = () => {
   const { search, pathname } = location;
 
   const queryObj = useMemo(() => queryString.parse(search), [search]);
-
-  console.log(queryString.exclude(search, ["sort"]));
 
   // 무한스크롤
   const handleObserver = (node: HTMLDivElement) => {
@@ -151,7 +148,6 @@ const UsedBook = () => {
   return (
     <UsedBookContainer>
       {isOpen && popup}
-      <Loading isVisible={isLoading} />
       <h2 className="usedBook__title">중고 장터 메인</h2>
       <Categorys categorys={categorys} />
       <DropDownWrapper>

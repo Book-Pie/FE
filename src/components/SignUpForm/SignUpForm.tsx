@@ -8,22 +8,23 @@ import {
   hookFormEmailPatternCheck,
   hookFormMisMatchCheck,
 } from "utils/hookFormUtil";
-import FormInput from "components/FormInput/FormInput";
+import FormInput from "src/elements/FormInput";
 import ErrorMessage from "src/elements/ErrorMessage";
-import FormLabel from "components/FormLabel/FormLabel";
+import FormLabel from "src/elements/FormLabel";
 import DaumPostCode from "react-daum-postcode";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import useDaumPost from "hooks/useDaumPost";
 import { errorHandler } from "src/api/http";
 import axios from "axios";
 import { getEmailDuplicateCheck, getNickNameDuplicateCheck, getSignUp } from "src/api/signUp/signUp";
 import { useHistory } from "react-router";
 import Popup from "components/Popup/Popup";
-import { hyphenRemoveFormat } from "src/utils/formatUtil";
-import { FormErrorMessages, IAxiosPostPayload, Rows, SignUpFormReponse, SignUpInputForm } from "./types";
-import { Button, Row } from "./style";
+import { hyphenRemoveFormat } from "utils/formatUtil";
+import Button from "@mui/material/Button";
+import { FormErrorMessages, IAxiosPostPayload, IRows, SignUpFormReponse, ISignUpForm } from "./types";
+import { InputWrapper, ButtonWrapper, SignUpWrapper, ErrorWrapper, DaumPostWrapper } from "./style";
 
-const signUpInputFormInit: SignUpInputForm = {
+const signUpFormInit: ISignUpForm = {
   email: "",
   name: "",
   password: "",
@@ -37,11 +38,11 @@ const signUpInputFormInit: SignUpInputForm = {
 
 const SignUpForm = () => {
   const { register, handleSubmit, reset, formState, setValue, watch, clearErrors, setFocus, setError } =
-    useForm<SignUpInputForm>({
-      defaultValues: signUpInputFormInit,
+    useForm<ISignUpForm>({
+      defaultValues: signUpFormInit,
     });
 
-  const [addressPopUpOpen, setAddressPopUpOpen] = useState(false);
+  const [isDaumPostOpen, setIsDaumPostOpen] = useState(false);
   const { addressState, handleComplete } = useDaumPost();
   const [password, confirmPassword] = watch(["password", "confirmPassword"]);
   const { errors } = formState;
@@ -49,7 +50,7 @@ const SignUpForm = () => {
   const [message, setMessage] = useState("");
   const history = useHistory();
 
-  const onSubmit = async (data: SignUpInputForm) => {
+  const onSubmit = async (data: ISignUpForm) => {
     try {
       const { mainAddress, detailAddress, email, phone, nickName, password, postalCode, name } = data;
 
@@ -96,137 +97,139 @@ const SignUpForm = () => {
     }
   };
 
-  const handleReset = () => reset(signUpInputFormInit);
-  const handlePopUpOpne = () => setAddressPopUpOpen(prve => !prve);
+  const handleReset = () => reset(signUpFormInit);
+  const handleDaumPostOpne = () => setIsDaumPostOpen(prve => !prve);
 
-  const rows: Rows[] = [
-    {
-      id: "email",
-      placeholder: "선택입력",
-      text: "이메일",
-      options: {
-        maxLength: makeOption<number>(20, FormErrorMessages.MAX_LENGTH),
-        minLength: makeOption<number>(10, FormErrorMessages.MIN_LENGTH),
-        required: makeOption<boolean>(true, FormErrorMessages.REQUIRED),
-        validate: {
-          email: value => hookFormEmailPatternCheck(value, FormErrorMessages.EMAIL),
+  const rows = useMemo((): IRows[] => {
+    return [
+      {
+        id: "email",
+        placeholder: "이메일 입력",
+        text: "이메일",
+        options: {
+          maxLength: makeOption<number>(20, FormErrorMessages.MAX_LENGTH),
+          minLength: makeOption<number>(10, FormErrorMessages.MIN_LENGTH),
+          required: makeOption<boolean>(true, FormErrorMessages.EMAIL_REQUIRED),
+          validate: {
+            email: value => hookFormEmailPatternCheck(value, FormErrorMessages.EMAIL),
+          },
         },
       },
-    },
-    {
-      id: "nickName",
-      placeholder: "닉네임 입력",
-      text: "닉네임",
-      options: {
-        maxLength: makeOption<number>(10, FormErrorMessages.MAX_LENGTH),
-        minLength: makeOption<number>(3, FormErrorMessages.MIN_LENGTH),
-        required: makeOption<boolean>(true, FormErrorMessages.REQUIRED),
-        validate: {
-          specialChracters: value => hookFormSpecialChractersCheck(value, FormErrorMessages.SPECIAL_CHARACTERS),
+      {
+        id: "nickName",
+        placeholder: "닉네임 입력",
+        text: "닉네임",
+        options: {
+          maxLength: makeOption<number>(10, FormErrorMessages.MAX_LENGTH),
+          minLength: makeOption<number>(3, FormErrorMessages.MIN_LENGTH),
+          required: makeOption<boolean>(true, FormErrorMessages.NICKNAME_REQUIRED),
+          validate: {
+            specialChracters: value => hookFormSpecialChractersCheck(value, FormErrorMessages.SPECIAL_CHARACTERS),
+          },
         },
       },
-    },
-    {
-      id: "password",
-      placeholder: "비밀번호(5~20자리)",
-      text: "비밀번호",
-      type: "password",
-      options: {
-        maxLength: makeOption<number>(20, FormErrorMessages.MAX_LENGTH),
-        minLength: makeOption<number>(5, FormErrorMessages.MIN_LENGTH),
-        required: makeOption<boolean>(true, FormErrorMessages.REQUIRED),
-        validate: {
-          korea: value => hookFormKoreaChractersCheck(value, FormErrorMessages.KOREA_CHARACTERS),
-          whiteSpace: value => hookFormWhiteSpaceCheck(value, FormErrorMessages.WHITE_SPACE),
-          misMatch: value => hookFormMisMatchCheck(value, confirmPassword, FormErrorMessages.PASSWORD_MISMATCH),
+      {
+        id: "password",
+        placeholder: "비밀번호(5~20자리)",
+        text: "비밀번호",
+        type: "password",
+        options: {
+          maxLength: makeOption<number>(20, FormErrorMessages.MAX_LENGTH),
+          minLength: makeOption<number>(5, FormErrorMessages.MIN_LENGTH),
+          required: makeOption<boolean>(true, FormErrorMessages.PASSWORD_REQUIRED),
+          validate: {
+            korea: value => hookFormKoreaChractersCheck(value, FormErrorMessages.KOREA_CHARACTERS),
+            whiteSpace: value => hookFormWhiteSpaceCheck(value, FormErrorMessages.WHITE_SPACE),
+            misMatch: value => hookFormMisMatchCheck(value, confirmPassword, FormErrorMessages.PASSWORD_MISMATCH),
+          },
         },
       },
-    },
-    {
-      id: "confirmPassword",
-      placeholder: "비밀번호 재입력",
-      text: "비밀번호 재확인",
-      type: "password",
-      options: {
-        maxLength: makeOption<number>(20, FormErrorMessages.MAX_LENGTH),
-        minLength: makeOption<number>(5, FormErrorMessages.MIN_LENGTH),
-        required: makeOption<boolean>(true, FormErrorMessages.REQUIRED),
-        validate: {
-          korea: value => hookFormKoreaChractersCheck(value, FormErrorMessages.KOREA_CHARACTERS),
-          whiteSpace: value => hookFormWhiteSpaceCheck(value, FormErrorMessages.WHITE_SPACE),
-          misMatch: value => hookFormMisMatchCheck(value, password, FormErrorMessages.PASSWORD_MISMATCH),
+      {
+        id: "confirmPassword",
+        placeholder: "비밀번호 재입력",
+        text: "비밀번호 재확인",
+        type: "password",
+        options: {
+          maxLength: makeOption<number>(20, FormErrorMessages.MAX_LENGTH),
+          minLength: makeOption<number>(5, FormErrorMessages.MIN_LENGTH),
+          required: makeOption<boolean>(true, FormErrorMessages.PASSWORD_REQUIRED),
+          validate: {
+            korea: value => hookFormKoreaChractersCheck(value, FormErrorMessages.KOREA_CHARACTERS),
+            whiteSpace: value => hookFormWhiteSpaceCheck(value, FormErrorMessages.WHITE_SPACE),
+            misMatch: value => hookFormMisMatchCheck(value, password, FormErrorMessages.PASSWORD_MISMATCH),
+          },
         },
       },
-    },
-    {
-      id: "name",
-      placeholder: "이름 입력",
-      text: "이름",
-      options: {
-        maxLength: makeOption<number>(5, FormErrorMessages.MAX_LENGTH),
-        minLength: makeOption<number>(3, FormErrorMessages.MIN_LENGTH),
-        required: makeOption<boolean>(true, FormErrorMessages.REQUIRED),
-        validate: {
-          whiteSpace: value => hookFormWhiteSpaceCheck(value, FormErrorMessages.WHITE_SPACE),
-          specialChracters: value => hookFormSpecialChractersCheck(value, FormErrorMessages.SPECIAL_CHARACTERS),
+      {
+        id: "name",
+        placeholder: "이름 입력",
+        text: "이름",
+        options: {
+          maxLength: makeOption<number>(5, FormErrorMessages.MAX_LENGTH),
+          minLength: makeOption<number>(3, FormErrorMessages.MIN_LENGTH),
+          required: makeOption<boolean>(true, FormErrorMessages.NAME_REQUIRED),
+          validate: {
+            whiteSpace: value => hookFormWhiteSpaceCheck(value, FormErrorMessages.WHITE_SPACE),
+            specialChracters: value => hookFormSpecialChractersCheck(value, FormErrorMessages.SPECIAL_CHARACTERS),
+          },
         },
       },
-    },
-    {
-      id: "phone",
-      placeholder: "ex 000-0000-0000",
-      text: "휴대폰 번호",
-      options: {
-        maxLength: makeOption<number>(14, FormErrorMessages.MAX_LENGTH),
-        minLength: makeOption<number>(10, FormErrorMessages.MIN_LENGTH),
-        required: makeOption<boolean>(true, FormErrorMessages.REQUIRED),
-        validate: {
-          mobileNumber: value => hookFormMobileNumberPatternCheck(value, FormErrorMessages.MOBILE_NUMBER),
+      {
+        id: "phone",
+        placeholder: "ex 000-0000-0000",
+        text: "휴대번호",
+        options: {
+          maxLength: makeOption<number>(14, FormErrorMessages.MAX_LENGTH),
+          minLength: makeOption<number>(10, FormErrorMessages.MIN_LENGTH),
+          required: makeOption<boolean>(true, FormErrorMessages.PHONE_REQUIRED),
+          validate: {
+            mobileNumber: value => hookFormMobileNumberPatternCheck(value, FormErrorMessages.MOBILE_NUMBER),
+          },
         },
       },
-    },
-    {
-      id: "postalCode",
-      placeholder: "선택입력",
-      text: "우편주소",
-      disabled: true,
-      options: {
-        required: makeOption<boolean>(true, FormErrorMessages.REQUIRED),
+      {
+        id: "postalCode",
+        placeholder: "선택입력",
+        text: "우편주소",
+        disabled: true,
+        options: {
+          required: makeOption<boolean>(true, FormErrorMessages.POST_REQUIRED),
+        },
       },
-    },
-    {
-      id: "mainAddress",
-      placeholder: "주소",
-      text: "",
-      disabled: true,
-      options: {
-        required: makeOption<boolean>(true, FormErrorMessages.REQUIRED),
+      {
+        id: "mainAddress",
+        placeholder: "주소",
+        text: "",
+        disabled: true,
+        options: {
+          required: makeOption<boolean>(true, FormErrorMessages.MAINADRRESS_REQUIRED),
+        },
       },
-    },
-    {
-      id: "detailAddress",
-      placeholder: "상세주소",
-      text: "",
-      options: {
-        maxLength: makeOption<number>(20, FormErrorMessages.MAX_LENGTH),
-        minLength: makeOption<number>(10, FormErrorMessages.MIN_LENGTH),
-        required: makeOption<boolean>(true, FormErrorMessages.REQUIRED),
+      {
+        id: "detailAddress",
+        placeholder: "상세주소",
+        text: "",
+        options: {
+          maxLength: makeOption<number>(20, FormErrorMessages.MAX_LENGTH),
+          minLength: makeOption<number>(10, FormErrorMessages.MIN_LENGTH),
+          required: makeOption<boolean>(true, FormErrorMessages.DETAILADRRESS_REQUIRED),
+        },
       },
-    },
-  ];
+    ];
+  }, [confirmPassword, password]);
 
   const rowsEl = rows.map((row, idx) => {
     const { id, text, options } = row;
-
-    const error = errors[`${id}`];
+    const isError = errors[`${id}`] ? true : false;
     return (
-      <Row key={idx} isError={error?.message ? true : false}>
+      <InputWrapper key={idx} isError={isError}>
         <div>
           <FormLabel id={id} text={text} />
         </div>
-        <FormInput {...row} register={register(id, options)} />
-        <ErrorMessage message={error?.message} />
-      </Row>
+        <div>
+          <FormInput {...row} register={register(id, options)} />
+        </div>
+      </InputWrapper>
     );
   });
 
@@ -241,31 +244,57 @@ const SignUpForm = () => {
       setValue("postalCode", zonecode);
       setValue("mainAddress", `${addr} ${extraAddr}`);
       setFocus("detailAddress");
-      setAddressPopUpOpen(false);
+      setIsDaumPostOpen(false);
     }
-  }, [addressState, errors, setValue, setAddressPopUpOpen, clearErrors, setFocus]);
+  }, [addressState, errors, setValue, setIsDaumPostOpen, clearErrors, setFocus]);
 
   return (
-    <>
+    <SignUpWrapper>
       {isOpen && (
-        <Popup className="red" isOpen={isOpen} setIsOpen={setIsOpen} autoClose closeDelay={3000}>
+        <Popup isOpen={isOpen} setIsOpen={setIsOpen} autoClose>
           {message}
         </Popup>
       )}
       <form onSubmit={handleSubmit(onSubmit)}>
-        {rowsEl}
-        {addressPopUpOpen && <DaumPostCode autoClose={false} onComplete={handleComplete} />}
         <div>
-          <Button type="button" onClick={handlePopUpOpne}>
-            주소 찾기
-          </Button>
-          <Button type="submit">회원가입</Button>
-          <Button type="button" onClick={handleReset}>
-            초기화
-          </Button>
+          {rowsEl}
+          {isDaumPostOpen && (
+            <DaumPostWrapper>
+              <div>
+                <DaumPostCode autoClose={false} onComplete={handleComplete} style={{ width: "400px" }} />
+                <Button variant="contained" color="mainDarkBrown" onClick={handleDaumPostOpne}>
+                  닫기
+                </Button>
+              </div>
+            </DaumPostWrapper>
+          )}
+        </div>
+        <div>
+          <ErrorWrapper isError={Object.keys(errors).length !== 0}>
+            <ErrorMessage message={errors.email?.message} />
+            <ErrorMessage message={errors.nickName?.message} />
+            <ErrorMessage message={errors.password?.message} />
+            <ErrorMessage message={errors.confirmPassword?.message} />
+            <ErrorMessage message={errors.name?.message} />
+            <ErrorMessage message={errors.phone?.message} />
+            <ErrorMessage message={errors.postalCode?.message} />
+            <ErrorMessage message={errors.mainAddress?.message} />
+            <ErrorMessage message={errors.detailAddress?.message} />
+          </ErrorWrapper>
+          <ButtonWrapper>
+            <Button variant="contained" color="mainDarkBrown" onClick={handleDaumPostOpne}>
+              주소찾기
+            </Button>
+            <Button variant="contained" color="mainDarkBrown" type="submit">
+              회원가입
+            </Button>
+            <Button variant="contained" color="mainDarkBrown" onClick={handleReset}>
+              초기화
+            </Button>
+          </ButtonWrapper>
         </div>
       </form>
-    </>
+    </SignUpWrapper>
   );
 };
 

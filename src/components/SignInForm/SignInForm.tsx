@@ -7,22 +7,22 @@ import {
 } from "utils/hookFormUtil";
 import { useForm, Controller } from "react-hook-form";
 import { setErrorReset, signInAsync } from "modules/Slices/signIn/signInSlice";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { getRememberEmail } from "utils/localStorageUtil";
 import Popup from "components/Popup/Popup";
 import useSignIn from "hooks/useSignIn";
 import useDebounce from "hooks/useDebounce";
 import TextField from "@mui/material/TextField";
 import { Form, FullSizeButton } from "./style";
-import { SignInInputs, SignInInputForm, FormErrorMessages, SignInFormProp } from "./types";
+import { IRows, ISignInForm, FormErrorMessages, SignInFormProps } from "./types";
 
-const initialState: SignInInputForm = {
+const initialState: ISignInForm = {
   email: getRememberEmail(),
   password: "",
 };
 
-const SignInForm = ({ isRemember }: SignInFormProp) => {
-  const { handleSubmit, control, formState } = useForm<SignInInputForm>({
+const SignInForm = ({ isRemember }: SignInFormProps) => {
+  const { handleSubmit, control, formState } = useForm<ISignInForm>({
     defaultValues: initialState,
   });
   const debouncdRef = useDebounce();
@@ -31,16 +31,7 @@ const SignInForm = ({ isRemember }: SignInFormProp) => {
   const { errors } = formState;
   const { error } = signIn;
 
-  useEffect(() => {
-    if (error) setIsOpen(true);
-    return () => {
-      if (error) {
-        dispatch(setErrorReset());
-      }
-    };
-  }, [error, dispatch]);
-
-  const onSubmit = (data: SignInInputForm) => {
+  const onSubmit = (data: ISignInForm) => {
     const { email, password } = data;
     if (debouncdRef.current) clearTimeout(debouncdRef.current);
     debouncdRef.current = setTimeout(() => {
@@ -48,7 +39,7 @@ const SignInForm = ({ isRemember }: SignInFormProp) => {
     }, 1000);
   };
 
-  const inputs: SignInInputs[] = [
+  const inputs: IRows[] = [
     {
       id: "email",
       type: "text",
@@ -78,6 +69,15 @@ const SignInForm = ({ isRemember }: SignInFormProp) => {
     },
   ];
 
+  const handleError = useCallback(() => {
+    if (error) setIsOpen(true);
+    return () => {
+      if (error) dispatch(setErrorReset());
+    };
+  }, [dispatch, error]);
+
+  useEffect(handleError, [handleError]);
+
   return (
     <div>
       {isOpen && (
@@ -90,7 +90,6 @@ const SignInForm = ({ isRemember }: SignInFormProp) => {
           {inputs.map((input, idx) => {
             const { id, options, type } = input;
             const isError = errors[`${id}`] ? true : false;
-
             return (
               <div key={idx}>
                 <Controller

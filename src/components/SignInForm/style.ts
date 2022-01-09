@@ -19,22 +19,16 @@ export const Form = styled.form`
 export const Button = styled.button`
   width: 100%;
   height: 100%;
-  background-color: rgb(52, 152, 219);
   border: none;
   border-radius: 5px;
-  transition: background-color 0.25s ease-in;
   color: white;
   cursor: pointer;
-  &:hover {
-    background-color: rgba(52, 152, 219, 0.5);
-  }
 `;
 
 export const FullSizeButton = mStyled(Button)(({ theme }) => {
   return {
     background: theme.colors.mainDarkBrown,
-    width: "100%",
-    height: "100%",
+    color: theme.colors.white,
     fontWeight: "bold",
     ":hover": {
       opacity: 0.7,

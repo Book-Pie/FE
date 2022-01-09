@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useCallback, useEffect, useLayoutEffect, useState } from "react";
 import useSignIn from "hooks/useSignIn";
-import FormLabel from "components/FormLabel/FormLabel";
+import FormLabel from "src/elements/FormLabel";
 import { RegisterOptions, useForm } from "react-hook-form";
 import ErrorMessage from "src/elements/ErrorMessage";
 import {
@@ -14,7 +14,7 @@ import {
 } from "utils/hookFormUtil";
 import useDebounce from "hooks/useDebounce";
 import { errorHandler } from "src/api/http";
-import FormInput from "components/FormInput/FormInput";
+import FormInput from "src/elements/FormInput";
 import { FormErrorMessages } from "components/SignUpForm/types";
 import Popup from "components/Popup/Popup";
 import useDaumPost from "hooks/useDaumPost";

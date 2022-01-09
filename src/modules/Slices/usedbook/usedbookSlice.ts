@@ -94,7 +94,6 @@ export const getRecentlyBookSlice = createSlice({
       state.status = "loading";
     });
     builder.addCase(getRecentlyBookAPI.fulfilled, (state, { payload }) => {
-      console.log("페이로드확인", payload.data);
       state.pages = payload.data.pages;
     });
     builder.addCase(getRecentlyBookAPI.rejected, (state, { payload }) => {

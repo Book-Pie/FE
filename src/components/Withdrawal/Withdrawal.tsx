@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import FormInput from "components/FormInput/FormInput";
+import FormInput from "src/elements/FormInput";
 import { RegisterOptions, useForm } from "react-hook-form";
 import useSignIn from "hooks/useSignIn";
 import {

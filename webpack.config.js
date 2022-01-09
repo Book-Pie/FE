@@ -107,7 +107,16 @@ module.exports = (_, argv) => {
               // babel-plugin-styled-components dev시 styled-components 디버그를 편하게 해준다.
               // example App__test.icasd012 이런 형태로 class이름이 정해진다. App컴포넌트 하위에 Test 컴포넌트
               mode === PRODUCTION
-                ? ["@babel/plugin-transform-runtime", ["transform-remove-console", { exclude: ["error", "warn"] }]]
+                ? [
+                    "@babel/plugin-transform-runtime",
+                    ["transform-remove-console", { exclude: ["error", "warn"] }],
+                    [
+                      "babel-plugin-direct-import",
+                      {
+                        modules: ["@mui/material", "@mui/icons-material"],
+                      },
+                    ],
+                  ]
                 : ["@babel/plugin-transform-runtime", "babel-plugin-styled-components", "react-refresh/babel"],
           },
         },
@@ -151,7 +160,7 @@ module.exports = (_, argv) => {
     devServer: {
       port: 3000,
       // 서버가 시작된 후 브라우저를 열도록 dev-server에 지시합니다.
-      open: true,
+      // open: true,
       // 제공되는 모든 항목에 대해 gzip 압축을 활성화합니다.
       compress: true,
       // dev-serve에 없는 라우팅에 대해서는 index.html를 반환
