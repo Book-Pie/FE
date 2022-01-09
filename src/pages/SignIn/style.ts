@@ -2,12 +2,12 @@ import styled from "styled-components";
 
 export const Wrapper = styled.main`
   padding: 2rem 1rem 1rem 1rem;
-  margin: 0 auto;
+  margin: 2rem auto;
   background-color: ${props => props.theme.colors.mainLightBrown};
   color: ${props => props.theme.colors.mainDarkBrown};
   border-radius: 5px;
   text-align: center;
-  margin-top: 2rem;
+  ${props => props.theme.shadow[30]};
   & > div {
     height: 80%;
   }

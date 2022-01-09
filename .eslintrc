@@ -111,6 +111,13 @@
     // eslint no-unused-vars는 꺼줘야된다.
     // @typescrip/no-unused-vars가 interface를 제외한 나머지 사용하지 않는 변수를 경고준다.
     "no-unused-vars": "off",
+    // material Ui 최적에 필요한 lint 입니다.
+    "no-restricted-imports": [
+      "error",
+      {
+        "patterns": ["@mui/*/*/*", "!@mui/material/test-utils/*"]
+      }
+    ],
 
     
     "spaced-comment": ["error", "always"],

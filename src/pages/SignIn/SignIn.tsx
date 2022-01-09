@@ -42,7 +42,7 @@ const SignIn = () => {
                 </span>
               </div>
               <div>
-                <span>아직 회원이아니신가요?</span>
+                <span>아직 회원이 아니신가요?</span>
                 <span>
                   <Link to="/signup">회원가입</Link>
                 </span>

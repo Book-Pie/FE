@@ -1,5 +1,5 @@
-import FormInput from "components/FormInput/FormInput";
-import FormLabel from "components/FormLabel/FormLabel";
+import FormInput from "src/elements/FormInput";
+import FormLabel from "src/elements/FormLabel";
 import { useForm } from "react-hook-form";
 import {
   hookFormEmailPatternCheck,

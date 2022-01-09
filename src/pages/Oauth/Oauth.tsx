@@ -54,7 +54,6 @@ const Oauth = () => {
   }, [query, handleError, handleMyProfile]);
 
   const handleKakaoOauth = useCallback(async () => {
-    console.log("카카오 oauth 시작");
     try {
       if (typeof query.code !== "string") throw new Error("옳바른 요청이 아닙니다.");
       const kakaoRequestData: IKakaoRequestData = {

@@ -13,6 +13,9 @@ declare module "styled-components" {
       pc: string;
       mobile: string;
     };
+    shadow: {
+      [key: number]: string;
+    };
   }
 }
 
