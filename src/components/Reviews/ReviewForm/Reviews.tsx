@@ -19,8 +19,6 @@ export const Reviews: React.FC<ReviewsProps> = ({ bookId }) => {
   // const myComment = useTypedSelector(myId); // 나의 아이디 정보
   const myUserId = 5; // 나의 아이디 임시 데이터
 
-  console.log("myReviewContent : ", myReviewContent);
-
   const { dispatch } = useSignIn();
 
   useEffect(() => {

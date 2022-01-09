@@ -13,7 +13,9 @@ export const Container = styled.div`
   display: flex;
 `;
 
-export const BookTitle = styled.h4``;
+export const BookTitle = styled.h4`
+  margin: 20px 0px;
+`;
 
 export const BookCategory = styled.div`
   margin-right: 15px;

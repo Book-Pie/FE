@@ -84,6 +84,8 @@ export const editComment = createAsyncThunk<myCommentAsyncSuccess, getCommentPro
   "comment/edit",
   async (data, { rejectWithValue }) => {
     try {
+      console.log("editComment data : ", data);
+
       const response = await book.patch(`/content/${data.userId}`, data);
 
       return response.data;
@@ -159,14 +161,18 @@ const commentSlice = createSlice({
         state.status = "loading";
       })
       .addCase(editComment.fulfilled, (state, { payload }) => {
+        console.log("editComment payload : ", payload);
         state.myComment = payload;
         state.status = "success";
         state.content = state.content.map((v: { id: number }) =>
-          v.id !== payload.id ? v : { ...v, content: payload.content },
+          v.id !== payload.id
+            ? v
+            : { ...v, content: payload.content, rating: payload.rating, reviewDate: payload.reviewDate },
         );
       })
-      .addCase(editComment.rejected, state => {
+      .addCase(editComment.rejected, (state, action) => {
         state.status = "failed";
+        console.log("editComment rejected", action);
       })
       // 나의 댓글
       .addCase(myReviewComment.pending, state => {

@@ -12,6 +12,7 @@ export const ExpanderArea = styled.div`
 export const Container = styled.div`
   margin: 0 auto;
   width: 700px;
+  height: 1500px;
 `;
 
 export const A = styled.a`
@@ -22,7 +23,7 @@ export const SideBar = styled.div`
   position: fixed;
   left: 30px;
   width: 250px;
-  height: 400px;
+  height: 200px;
 `;
 
 export const SourcesArea = styled.div`

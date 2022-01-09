@@ -23,7 +23,7 @@ export interface ReviewFormProps {
 
 export interface SubmitButtonProps {
   onClick?: () => void;
-  isDisabled: boolean;
+  isDisabled?: boolean;
 }
 
 export interface CancelButtonProps {

@@ -29,15 +29,15 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({ bookId, isMyReview, myRe
   const dispatch = useDispatch();
   const [reviewContent, setContent] = useState(""); // 리뷰 등록
   const [myContent, setMyContent] = useState(myReviewContent.content); // 리뷰 수정
-  const [ratingValue, setValue] = useState<number>(2); // 별점 추가
+  const [ratingValue, setValue] = useState(3); // 별점 추가
   const [editDisabled, editEnabled] = useState(editStatus);
 
   useEffect(() => {
     setMyContent(myReviewContent.content);
   }, [myReviewContent.content]);
 
-  const handleRatingChange = (event: any, newValue: React.SetStateAction<number>) => {
-    setValue(newValue);
+  const handleRatingChange = (event: any) => {
+    setValue(event.target.value);
   };
 
   const addReview = () => {
@@ -63,7 +63,7 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({ bookId, isMyReview, myRe
         userId,
         reviewId,
         nickname,
-        rating,
+        rating: ratingValue,
         content: reviewContent,
         reviewDate: dateFormat(new Date()),
         reviewLikeCount,
@@ -75,32 +75,33 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({ bookId, isMyReview, myRe
 
   const handleEdit = () => {
     editEnabled(prev => !prev);
+    if (editDisabled === false) {
+      setMyContent(myReviewContent.content);
+    }
   };
 
   return isMyReview ? (
     editDisabled ? (
       <form onSubmit={handleSubmit(editReview)}>
         <div className="ReviewForm">
-          <HoverRating isMyReview={isMyReview} rating={ratingValue} />
+          <HoverRating isDisabled={editDisabled} rating={ratingValue} />
           <Editor
             setEditorValue={setContent}
             value={myReviewContent.content}
             limit={100}
             height={100}
             placeholder="리뷰 작성 시 10자 이상 작성해주세요."
-            isDisabled
+            isDisabled={editDisabled}
           />
           <ButtonArea>
-            <ClickButton onClick={handleEdit} isDisabled={false}>
-              수정하기
-            </ClickButton>
+            <ClickButton onClick={handleEdit}>수정하기</ClickButton>
           </ButtonArea>
         </div>
       </form>
     ) : (
       <form onSubmit={handleSubmit(editReview)}>
         <div className="ReviewForm">
-          <HoverRating isMyReview={isMyReview} rating={ratingValue} handleChange={handleRatingChange} />
+          <HoverRating isDisabled={editDisabled} rating={ratingValue} handleChange={handleRatingChange} />
           <Editor
             setEditorValue={setContent}
             value={myContent}
@@ -119,7 +120,7 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({ bookId, isMyReview, myRe
   ) : (
     <form onSubmit={handleSubmit(addReview)}>
       <div className="ReviewForm">
-        <HoverRating isMyReview={isMyReview} rating={ratingValue} handleChange={handleRatingChange} />
+        <HoverRating isDisabled={editDisabled} rating={ratingValue} handleChange={handleRatingChange} />
         <Editor
           setEditorValue={setContent}
           value={reviewContent}
