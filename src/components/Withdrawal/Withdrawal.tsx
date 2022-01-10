@@ -19,10 +19,10 @@ import { FormErrorMessages } from "components/SignUpForm/types";
 import { errorHandler } from "src/api/http";
 import Popup from "components/Popup/Popup";
 import Editor from "../Editor/Editor";
-import { IAxiosRequsetPayload, IAxiosResponse, IWithdrawalForm, WithdrawalProps } from "./types";
-import { Contaniner, StyledSpan } from "./style";
+import { IAxiosRequsetPayload, IAxiosResponse, IWithdrawalForm } from "./types";
+import { Wrapper } from "./style";
 
-const Withdrawal = ({ path }: WithdrawalProps) => {
+const Withdrawal = () => {
   const currentReasonInit = useMemo(() => "탈퇴사유를 선택하세요.", []);
   const [currentReason, setCurrentReason] = useState(currentReasonInit);
   const { signIn, dispatch } = useSignIn();
@@ -127,19 +127,17 @@ const Withdrawal = ({ path }: WithdrawalProps) => {
     return (
       <>
         <li>
-          <StyledSpan>서비스가 부족</StyledSpan>
+          <p>서비스가 부족</p>
         </li>
         <li>
-          <StyledSpan>이용불편</StyledSpan>
+          <p>이용불편</p>
         </li>
         <li>
-          <StyledSpan>기타</StyledSpan>
+          <p>기타</p>
         </li>
       </>
     );
   }, []);
-
-  if (user === null) return null;
 
   return (
     <>
@@ -148,19 +146,19 @@ const Withdrawal = ({ path }: WithdrawalProps) => {
           {message}
         </Popup>
       )}
-      <Contaniner>
+      <Wrapper>
         <div>
-          <div className="withdrawal__title withdrawal__text--center">탈퇴페이지</div>
-          <div className="withdrawal__email withdrawal__text--center">{`${user.email}님`}</div>
-          <div className="withdrawal__warning withdrawal__text--center withdrawal__warning--red">
-            회원탈퇴사유를 입력해 주시면 앞으로 더욱더 개선해 나가는 모아모아가 되도록 하겠습니다.
+          <div className="withdrawal__title">회원탈퇴</div>
+          <p className="withdrawal__email withdrawal__text--center">{`${user?.email ?? ""}님`}</p>
+          <p className="withdrawal__warning withdrawal__text--center withdrawal__warning--red">
+            회원탈퇴사유를 입력해 주시면 앞으로 더욱더 개선해 나가는 북파이가 되도록 하겠습니다.
+          </p>
+          <div className="withdrawal__row">
+            <span>
+              탈퇴사유<strong className="withdrawal__warning--red"> *</strong>
+            </span>
           </div>
-          <div className="withdrawal__dropDownWrap">
-            <div>
-              <span>
-                탈퇴사유<strong className="withdrawal__warning--red">*</strong>
-              </span>
-            </div>
+          <div className="withdrawal__dropDown">
             <DropDown defaultValue={currentReason} setSelectedText={handleDropDownTextChange}>
               {dropDownChildren}
             </DropDown>
@@ -173,7 +171,7 @@ const Withdrawal = ({ path }: WithdrawalProps) => {
             <div className="withdrawal__row">
               <div>이메일</div>
               <div>
-                <FormInput value={user.email} disabled />
+                <FormInput value={user?.email ?? ""} disabled />
               </div>
             </div>
             <div className="withdrawal__row">
@@ -196,13 +194,10 @@ const Withdrawal = ({ path }: WithdrawalProps) => {
             </div>
             <div className="withdrawal__buttons">
               <button type="submit">탈퇴</button>
-              <button type="button">
-                <Link to={path}>뒤로가기</Link>
-              </button>
             </div>
           </form>
         </div>
-      </Contaniner>
+      </Wrapper>
     </>
   );
 };
