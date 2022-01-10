@@ -8,14 +8,18 @@ import { errorHandler } from "src/api/http";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router";
 import queryString from "query-string";
-import { Wrapper } from "src/components/UsedBookCard/style";
 import { makeNewQueryString, removeQueryString } from "utils/queryStringUtil";
+import noUsedBookCard from "assets/image/noComments.png";
+import Text from "src/elements/Text";
+import Loading from "src/elements/Loading";
+import { Skeleton, Stack } from "@mui/material";
 import { UsedBookState, ICategory, IUsedBook, UsedBooksResponse, CategorysResponse, RequestParam } from "./types";
-import { UsedBookContainer, ContentsWrapper, DropDownWrapper } from "./style";
+import { Wrapper, UsedBookCardWrapper, DropDownWrapper, UsedBookCardEmpty, UsedBookRow } from "./style";
 
 const initialState: UsedBookState = {
   pages: [],
   pageCount: 1,
+  isEmpty: false,
 };
 
 const UsedBook = () => {
@@ -29,10 +33,11 @@ const UsedBook = () => {
   const observerRef = useRef<IntersectionObserver>();
   const timerRef = useRef<NodeJS.Timeout | null>();
   const [currentDropDownValue, setCurrentDropDownValue] = useState("정렬");
-  const { pages, pageCount } = usedBook;
+  const { pages, pageCount, isEmpty } = usedBook;
   const { search, pathname } = location;
+  const firstLoad = useRef(true);
 
-  const queryObj = useMemo(() => queryString.parse(search), [search]);
+  const currentQuery = useMemo(() => queryString.parse(search), [search]);
 
   // 무한스크롤
   const handleObserver = (node: HTMLDivElement) => {
@@ -68,19 +73,41 @@ const UsedBook = () => {
     observerRef.current.observe(node);
   };
 
-  const hasMorePosts = useCallback(async (param: RequestParam) => {
+  const handleGetMoreUsedBooks = useCallback(async (param: RequestParam) => {
     try {
       const { nextPage, query = {} } = param;
       const { data } = await getUsedBooks<UsedBooksResponse>(nextPage, query);
       const { pageCount, pages } = data.data;
 
       // 응답으로 넘어온 배열을 [[],[],[],[]] 이차원배열로 만들어준다.
-      const array = makeTwoDimensionalArray(pages);
+      const array = makeTwoDimensionalArray([
+        { id: 1, title: "테스트1", price: 100000, image: "" },
+        { id: 2, title: "테스트1", price: 100000, image: "" },
+        { id: 3, title: "테스트1", price: 100000, image: "" },
+        { id: 4, title: "테스트1", price: 100000, image: "" },
+        { id: 5, title: "테스트1", price: 100000, image: "" },
+        { id: 6, title: "테스트1", price: 100000, image: "" },
+        { id: 7, title: "테스트1", price: 100000, image: "" },
+        { id: 8, title: "테스트1", price: 100000, image: "" },
+        { id: 9, title: "테스트1", price: 100000, image: "" },
+        { id: 10, title: "테스트1", price: 100000, image: "" },
+        { id: 11, title: "테스트1", price: 100000, image: "" },
+        { id: 12, title: "테스트1", price: 100000, image: "" },
+        { id: 13, title: "테스트1", price: 100000, image: "" },
+        { id: 14, title: "테스트1", price: 100000, image: "" },
+        { id: 15, title: "테스트1", price: 100000, image: "" },
+      ]);
+      // const array = makeTwoDimensionalArray(pages);
+
+      await new Promise(res => {
+        setTimeout(res, 600);
+      });
 
       setUsedBook(prev => ({
         ...prev,
         pageCount,
         pages: prev.pages.length === 0 ? [...array] : [...prev.pages, ...array],
+        isEmpty: array.length === 0,
       }));
     } catch (error) {
       const message = errorHandler(error);
@@ -89,94 +116,108 @@ const UsedBook = () => {
     }
   }, []);
 
+  const handleLoadCategory = async () => {
+    const { data } = await getCategory<CategorysResponse>();
+    setCategorys(data.data);
+  };
+
+  const cards = pages.map((cards, idx) => (
+    <UsedBookRow key={idx} ref={pages.length - 2 === idx ? handleObserver : undefined}>
+      {cards.map((card, idx) => (
+        <UsedBookCard key={idx} card={card} />
+      ))}
+    </UsedBookRow>
+  ));
+
+  const cardsSkeleton = useMemo(
+    () =>
+      Array.from({ length: 3 }).map((_, idx) => (
+        <UsedBookRow key={idx}>
+          {Array.from({ length: 5 }).map((_, idx) => (
+            <Stack spacing={0.5} key={idx} width="20%" sx={{ margin: "0.5rem" }}>
+              <Skeleton variant="rectangular" width="100%" height={200} animation="wave" sx={{ borderRadius: "5px" }} />
+              <Skeleton variant="text" width="100%" height={30} animation="wave" sx={{ borderRadius: "5px" }} />
+              <Skeleton variant="text" width="100%" height={30} animation="wave" sx={{ borderRadius: "5px" }} />
+            </Stack>
+          ))}
+        </UsedBookRow>
+      )),
+    [],
+  );
+
   // ============================================ useEffect ============================================
   useEffect(() => {
-    getCategory<CategorysResponse>().then(({ data }) => setCategorys(data.data));
+    handleLoadCategory();
+    firstLoad.current = false;
   }, []);
 
-  // 카테고리가 없을때 요청
   useEffect(() => {
-    const propertyLength = Object.keys(queryObj).length;
-
-    // 카테고리 선택 시
-    if (propertyLength !== 0) {
-      setUsedBook(initialState);
-      setCurrentPage(1);
-      hasMorePosts({ nextPage: 1, query: queryObj });
-      return;
+    if (Object.keys(currentQuery).length === 0) {
+      // 첫 컴포넌트 마운트 됬을때
+      handleGetMoreUsedBooks({ nextPage: 1 });
     }
 
-    // 첫 컴포넌트 마운트 됬을때
-    hasMorePosts({ nextPage: 1 });
-  }, [hasMorePosts, queryObj]);
+    if (Object.keys(currentQuery).length !== 0) {
+      // 카테고리 및 정렬 선택 시
+      setUsedBook(initialState);
+      setCurrentPage(1);
+      handleGetMoreUsedBooks({ nextPage: 1, query: currentQuery });
+    }
+  }, [handleGetMoreUsedBooks, currentQuery]);
 
   useEffect(() => {
     if (currentPage !== 1)
-      hasMorePosts({
+      handleGetMoreUsedBooks({
         nextPage: currentPage,
       });
-  }, [currentPage, hasMorePosts]);
+  }, [currentPage, handleGetMoreUsedBooks]);
   // ============================================ useEffect ============================================
 
-  const UsedBookCards =
-    pages.length !== 0 ? (
-      pages.map((row, rowIndex) => {
-        let ref = null;
-        if (rowIndex === pages.length - 2) ref = handleObserver;
-        return (
-          <div key={rowIndex} className="contentsWrapper__row" ref={ref}>
-            {row.map((col, colIndex) => {
-              return Object.keys(col).length !== 0 ? (
-                <UsedBookCard key={colIndex} page={col} />
-              ) : (
-                <Wrapper key={colIndex} />
-              );
-            })}
-          </div>
-        );
-      })
-    ) : (
-      <div className="contentsWrapper__row--empty">등록된 글이 없습니다.</div>
-    );
-
-  const popup = (
-    <Popup isOpen={isOpen} setIsOpen={setIsOpen} className="red" autoClose>
-      {message}
-    </Popup>
-  );
-
   return (
-    <UsedBookContainer>
-      {isOpen && popup}
-      <h2 className="usedBook__title">중고 장터 메인</h2>
+    <Wrapper>
+      <Loading isLoading={isLoading} />
+      {isOpen && (
+        <Popup isOpen={isOpen} setIsOpen={setIsOpen} className="red" autoClose>
+          {message}
+        </Popup>
+      )}
       <Categorys categorys={categorys} />
       <DropDownWrapper>
-        <DropDown setSelectedId={setCurrentDropDownValue} defaultValue={currentDropDownValue}>
+        <Text bold fontSize="30px">
+          회원님들이 등록한 중고 책입니다.
+        </Text>
+        <DropDown defaultValue={currentDropDownValue} setSelectedId={setCurrentDropDownValue}>
           <li>
-            <Link to={removeQueryString(pathname, search, ["sort"])}>초기화</Link>
+            <Link to={removeQueryString(pathname, search, ["sort"])}>정렬</Link>
           </li>
           <li>
-            <Link
-              id="date"
-              to={makeNewQueryString(pathname, queryObj, { sort: "date" })}
-              className={currentDropDownValue === "date" ? "dropDown__list--selected" : ""}
-            >
+            <Link id="date" to={makeNewQueryString(pathname, currentQuery, { sort: "date" })}>
               최신순
             </Link>
           </li>
           <li>
-            <Link
-              id="view"
-              to={makeNewQueryString(pathname, queryObj, { sort: "view" })}
-              className={currentDropDownValue === "view" ? "dropDown__list--selected" : ""}
-            >
+            <Link id="view" to={makeNewQueryString(pathname, currentQuery, { sort: "view" })}>
               조회순
             </Link>
           </li>
         </DropDown>
       </DropDownWrapper>
-      <ContentsWrapper>{UsedBookCards}</ContentsWrapper>
-    </UsedBookContainer>
+      <UsedBookCardWrapper>
+        {isEmpty ? (
+          <UsedBookCardEmpty>
+            <span>등록된 글이 없습니다.</span>
+            <span>게시글을 작성해주세요.</span>
+            <span>
+              <img src={noUsedBookCard} alt="noUsedBookCard" />
+            </span>
+          </UsedBookCardEmpty>
+        ) : pages.length === 0 ? (
+          cardsSkeleton
+        ) : (
+          cards
+        )}
+      </UsedBookCardWrapper>
+    </Wrapper>
   );
 };
 
