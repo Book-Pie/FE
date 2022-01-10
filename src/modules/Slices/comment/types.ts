@@ -1,11 +1,11 @@
-import { AppDispatch } from "modules/store";
+import { AppDispatch, RootState } from "modules/store";
 
 export interface getCommentProps {
-  id?: number;
+  id: number;
   reviewId?: number;
   userId?: number;
   nickname?: string;
-  content?: string;
+  content: string;
   rating: number;
   reviewLikeCount?: number;
   reviewDate?: string;
@@ -16,37 +16,19 @@ export interface myReviewCommentProps {
   myUserId: number;
 }
 
-// 리듀가 사용할 데이터 타입
-export interface commentReduceProps {
-  content: getCommentProps[];
-  myCommentCheck: boolean;
-  myComment: getCommentProps;
-  status: "loading" | "idle" | "error";
-  error: null | {
-    code: number;
-    message: string;
-  };
+export interface ErrorHandling {
+  status: number;
+  message: string;
 }
 
-// 통신 실패 시 반환하는 타입
-// export interface commentAsyncFail {
-//   success: boolean;
-//   data: null;
-//   error: {
-//     code: number;
-//     message: string;
-//   };
-// }
-
-// export interface ErrorHandling {
-//   status: number;
-//   message: string;
-// }
-
-// export interface IErrorMessage {
-//   error: string;
-//   message?: string[];
-// }
+// 리듀가 사용할 데이터 타입
+export interface commentReduceProps {
+  content: getCommentProps[] | null;
+  myCommentCheck: boolean;
+  myComment: getCommentProps | null;
+  status: "loading" | "success" | "failed";
+  error: null | ErrorHandling;
+}
 
 export interface commentAsyncFail {
   status: number;
@@ -66,3 +48,8 @@ export interface deleteCommentProps {
 export type commentAsyncSuccess = getCommentProps[];
 
 export type myCommentAsyncSuccess = getCommentProps;
+
+export interface CommentId {
+  commentId: any;
+  id: number;
+}

@@ -1,13 +1,20 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "src/modules/store";
 import book from "src/api/book";
-import { getCommentProps, commentAsyncSuccess, myCommentAsyncSuccess, deleteCommentProps } from "./types";
+import {
+  getCommentProps,
+  commentAsyncSuccess,
+  myCommentAsyncSuccess,
+  deleteCommentProps,
+  CommentId,
+  commentReduceProps,
+} from "./types";
 
 // json-server로 받을 데이터
-const initialState = {
-  content: [] as any,
+const initialState: commentReduceProps = {
+  content: [],
   myCommentCheck: false,
-  myComment: {},
+  myComment: null,
   status: "loading",
   error: null,
 };
@@ -113,6 +120,40 @@ export const myReviewComment = createAsyncThunk<commentAsyncSuccess, number>(
   },
 );
 
+// 댓글 좋아요 추가하기
+export const commentLike = createAsyncThunk<commentAsyncSuccess, CommentId>(
+  "/comments/like",
+  async (data, { rejectWithValue }) => {
+    try {
+      console.log("commentLike data.id : ", data);
+      console.log("commentLike data.id : ", data.id);
+
+      const response = await book.patch(`/content/${data.id}`, data);
+
+      console.log("commentLike response.data : ", response.data);
+
+      return data;
+    } catch (error: any) {
+      console.error(error);
+      return rejectWithValue(error.response.data);
+    }
+  },
+);
+
+// 댓글 좋아요 취소하기
+export const commentUnLike = createAsyncThunk<commentAsyncSuccess, CommentId>(
+  "/comments/unlike",
+  async (data, { rejectWithValue }) => {
+    try {
+      const response = await book.patch(`/content/${data.id}`, data);
+      return data;
+    } catch (error: any) {
+      console.error(error);
+      return rejectWithValue(error.response.data);
+    }
+  },
+);
+
 const commentSlice = createSlice({
   name: "commentReduce",
   initialState,
@@ -161,7 +202,6 @@ const commentSlice = createSlice({
         state.status = "loading";
       })
       .addCase(editComment.fulfilled, (state, { payload }) => {
-        console.log("editComment payload : ", payload);
         state.myComment = payload;
         state.status = "success";
         state.content = state.content.map((v: { id: number }) =>
@@ -184,6 +224,32 @@ const commentSlice = createSlice({
       })
       .addCase(myReviewComment.rejected, state => {
         state.status = "failed";
+      })
+      // 댓글 좋아요
+      .addCase(commentLike.pending, state => {
+        state.status = "loading";
+      })
+      .addCase(commentLike.fulfilled, (state, { payload }) => {
+        state.status = "success";
+        state.content = state.content.map(v =>
+          v.id !== payload.id ? v : { ...v, reviewLikeCount: v.reviewLikeCount + 1, likeCheck: true },
+        );
+      })
+      .addCase(commentLike.rejected, state => {
+        state.status = "failed";
+      })
+      // 댓글 좋아요 삭제
+      .addCase(commentUnLike.pending, state => {
+        state.status = "loading";
+      })
+      .addCase(commentUnLike.fulfilled, (state, { payload }) => {
+        state.status = "success";
+        state.content = state.content.map(v =>
+          v.id !== payload.id ? v : { ...v, reviewLikeCount: v.reviewLikeCount - 1, likeCheck: false },
+        );
+      })
+      .addCase(commentUnLike.rejected, state => {
+        state.status = "failed";
       });
   },
 });
@@ -191,6 +257,7 @@ const commentSlice = createSlice({
 export const commentsSelector = (state: RootState) => state.commentReduce;
 export const comments = (state: RootState) => state.commentReduce.content;
 export const myComment = (state: RootState) => state.commentReduce.myComment;
+export const likeCount = (state: RootState) => state.commentReduce.content.reviewLikeCount;
 export const myCommentCheck = (state: RootState) => state.commentReduce.myCommentCheck;
 
 export default commentSlice;

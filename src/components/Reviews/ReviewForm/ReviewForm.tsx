@@ -20,21 +20,25 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({ bookId, isMyReview, myRe
   const likeCheck = false;
 
   let editStatus = true;
-  if (myReviewContent.content === undefined) {
+  let myCommentDefault: React.SetStateAction<string> | null = null;
+
+  if (myReviewContent == null) {
     editStatus = false;
+    myCommentDefault = "";
   } else {
     editStatus = true;
+    myCommentDefault = myReviewContent.content;
   }
 
   const dispatch = useDispatch();
   const [reviewContent, setContent] = useState(""); // 리뷰 등록
-  const [myContent, setMyContent] = useState(myReviewContent.content); // 리뷰 수정
+  const [myContent, setMyContent] = useState(myCommentDefault); // 리뷰 수정
   const [ratingValue, setValue] = useState(3); // 별점 추가
   const [editDisabled, editEnabled] = useState(editStatus);
 
   useEffect(() => {
-    setMyContent(myReviewContent.content);
-  }, [myReviewContent.content]);
+    return setMyContent(myCommentDefault);
+  }, [myCommentDefault]);
 
   const handleRatingChange = (event: any) => {
     setValue(event.target.value);
