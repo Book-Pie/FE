@@ -1,17 +1,18 @@
 import styled from "styled-components";
 
-export const Contaniner = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 50%;
+export const Wrapper = styled.div`
   margin: 0 auto;
-  flex-direction: column;
+  width: 70%;
 
-  & > div:first-child {
-    width: 60%;
-    margin: 0 auto;
+  input {
+    height: 60px;
   }
+
+  /* & > div:first-child {
+    width: 70%;
+    margin: 0 auto;
+  } */
+
   .withdrawal__text--center {
     text-align: center;
   }
@@ -24,28 +25,35 @@ export const Contaniner = styled.div`
   .withdrawal__email {
     font-size: 1.5rem;
     font-weight: 900;
-    padding: 1rem;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
     border-bottom: 2px solid rgba(44, 62, 80, 1);
+    color: ${props => props.theme.colors.mainDarkBrown};
   }
   .withdrawal__warning {
     text-align: center;
     font-weight: 900;
-    padding: 3rem 2rem 0rem 2rem;
+    font-size: 1.5rem;
+    padding: 3rem 2rem;
     line-height: 1.5;
   }
 
   .withdrawal__warning--red {
-    color: rgba(231, 76, 60, 1);
+    color: ${props => props.theme.colors.error};
     font-weight: 900;
   }
 
-  .withdrawal__dropDownWrap {
-    margin-bottom: 2rem;
-    margin-top: 2rem;
+  .withdrawal__dropDown {
+    margin: 1rem 0;
     div {
       width: 100%;
-      box-sizing: border-box;
-      margin-top: 0.5rem;
+    }
+    p {
+      padding: 1rem;
+    }
+
+    & > div > div {
+      padding: 1rem;
     }
   }
   .withdrawal__form {
@@ -64,10 +72,13 @@ export const Contaniner = styled.div`
       box-sizing: border-box;
     }
     & > div:first-child {
-      flex: 3;
+      flex: 2;
     }
     & > div:last-child {
-      flex: 7;
+      flex: 8;
+    }
+    input + div {
+      margin-top: 15px;
     }
   }
 
@@ -77,10 +88,13 @@ export const Contaniner = styled.div`
     margin-top: 1.5rem;
     gap: 10px;
 
-    & > button:first-child {
-      background-color: rgba(52, 152, 219, 1);
-      color: white;
+    button {
+      height: 50px;
+      width: 100px;
+      background-color: ${props => props.theme.colors.mainDarkBrown};
+      color: ${props => props.theme.colors.white};
     }
+
     & > button {
       cursor: pointer;
       border: none;
@@ -94,9 +108,4 @@ export const Contaniner = styled.div`
       }
     }
   }
-`;
-
-export const StyledSpan = styled.span`
-  padding: 0.5rem;
-  display: block;
 `;

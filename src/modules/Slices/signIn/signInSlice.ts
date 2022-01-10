@@ -4,6 +4,8 @@ import { removeEmail, removeToken, setRememberEmail, setAccessToken, getAccessTo
 import { getMyProfile, getSignIn } from "src/api/signIn/signIn";
 import { addHyphenFormat } from "src/utils/formatUtil";
 import { RootState } from "modules/store";
+import { getNickNameUpdate } from "src/api/modified/modified";
+import { errorHandler } from "src/api/http";
 import {
   IAxiosResponse,
   IPayload,
@@ -11,11 +13,14 @@ import {
   MyProfileResponse,
   MyProfileSuccess,
   MyProfileThunkApi,
+  NickNameUpdateParam,
+  NickNameUpdateThunkApi,
   SignInAsyncFail,
-  SignInAsyncProps,
+  SignInAsyncParam,
   SignInAsyncSuccess,
-  SignInReduceProps,
+  ISignInReduce,
   SignInThunkApi,
+  NickNameResponse,
 } from "./types";
 
 const name = "signInReduce";
@@ -50,7 +55,7 @@ export const myProfileAsync = createAsyncThunk<MyProfileSuccess, string, MyProfi
 // 썽크 생성 함수의 두번째 제너릭은 파라미터의 타입을 준다.
 // 썽크 생성 함수의 세번째 제너릭은 {dispatch?, state?, extra?, rejectValue?}에 타입을 설정해줄 수 있다.
 // 로그인
-export const signInAsync = createAsyncThunk<SignInAsyncSuccess, SignInAsyncProps, SignInThunkApi>(
+export const signInAsync = createAsyncThunk<SignInAsyncSuccess, SignInAsyncParam, SignInThunkApi>(
   `${name}/signInAsync`,
   async ({ email, password, isRemember }, { dispatch, extra, rejectWithValue }) => {
     try {
@@ -85,7 +90,21 @@ export const signInAsync = createAsyncThunk<SignInAsyncSuccess, SignInAsyncProps
   },
 );
 
-const initialState: SignInReduceProps = {
+export const nickNameUpdateAsync = createAsyncThunk<NickNameResponse, NickNameUpdateParam, NickNameUpdateThunkApi>(
+  `${name}/nickNameUpdateAsync`,
+  async ({ nickName, token }, { rejectWithValue, dispatch }) => {
+    try {
+      await getNickNameUpdate(nickName, token);
+      dispatch(myProfileAsync(token));
+      return { message: "닉네임이 변경 되었습니다." };
+    } catch (error) {
+      const message = errorHandler(error);
+      return rejectWithValue({ message });
+    }
+  },
+);
+
+const initialState: ISignInReduce = {
   user: null,
   token: null,
   isLoggedIn: false,
@@ -168,6 +187,5 @@ const signInSlice = createSlice({
 });
 
 export const signInSelector = (state: RootState) => state.signInReduce;
-
 export const { logout, setErrorReset } = signInSlice.actions;
 export default signInSlice;

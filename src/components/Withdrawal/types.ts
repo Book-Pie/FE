@@ -3,10 +3,6 @@ export interface IWithdrawalForm {
   confirmPassword: string;
 }
 
-export interface WithdrawalProps {
-  path: string;
-}
-
 export interface IAxiosResponse {
   data: boolean;
   error: null;

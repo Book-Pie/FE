@@ -21,7 +21,6 @@ import { useHistory } from "react-router";
 import Popup from "components/Popup/Popup";
 import { hyphenRemoveFormat } from "utils/formatUtil";
 import Button from "@mui/material/Button";
-import { Alert } from "@mui/material";
 import { FormErrorMessages, IAxiosPostPayload, IRows, SignUpFormReponse, ISignUpForm } from "./types";
 import { InputWrapper, ButtonWrapper, SignUpWrapper, ErrorWrapper, DaumPostWrapper } from "./style";
 
@@ -271,17 +270,19 @@ const SignUpForm = () => {
           )}
         </div>
         <div>
-          <ErrorWrapper isError={Object.keys(errors).length !== 0}>
-            <ErrorMessage message={errors.email?.message} />
-            <ErrorMessage message={errors.nickName?.message} />
-            <ErrorMessage message={errors.password?.message} />
-            <ErrorMessage message={errors.confirmPassword?.message} />
-            <ErrorMessage message={errors.name?.message} />
-            <ErrorMessage message={errors.phone?.message} />
-            <ErrorMessage message={errors.postalCode?.message} />
-            <ErrorMessage message={errors.mainAddress?.message} />
-            <ErrorMessage message={errors.detailAddress?.message} />
-          </ErrorWrapper>
+          {Object.keys(errors).length !== 0 && (
+            <ErrorWrapper isError={Object.keys(errors).length !== 0}>
+              <ErrorMessage message={errors.email?.message} />
+              <ErrorMessage message={errors.nickName?.message} />
+              <ErrorMessage message={errors.password?.message} />
+              <ErrorMessage message={errors.confirmPassword?.message} />
+              <ErrorMessage message={errors.name?.message} />
+              <ErrorMessage message={errors.phone?.message} />
+              <ErrorMessage message={errors.postalCode?.message} />
+              <ErrorMessage message={errors.mainAddress?.message} />
+              <ErrorMessage message={errors.detailAddress?.message} />
+            </ErrorWrapper>
+          )}
           <ButtonWrapper>
             <Button variant="contained" color="mainDarkBrown" onClick={handleDaumPostOpne}>
               주소찾기

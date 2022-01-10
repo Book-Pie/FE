@@ -23,17 +23,11 @@ import { myProfileChange, passwordChange, passwordCheck } from "src/api/modified
 import { myProfileAsync } from "modules/Slices/signIn/signInSlice";
 import { hyphenRemoveFormat } from "src/utils/formatUtil";
 import { useHistory } from "react-router";
-import { ModifiedContainer } from "./style";
-import {
-  IAxiosPayload,
-  IAxiosResponse,
-  IModifiedConfirmForm,
-  IModifiedForm,
-  IMyProfileUpdatePayload,
-  ModifiedProps,
-} from "./types";
+import Skeleton from "@mui/material/Skeleton";
+import { ModifiedWrapper } from "./style";
+import { IAxiosPayload, IAxiosResponse, IModifiedConfirmForm, IModifiedForm, IMyProfileUpdatePayload } from "./types";
 
-const Modified = ({ path }: ModifiedProps) => {
+const Modified = () => {
   const { signIn, dispatch } = useSignIn();
   const { user } = signIn;
 
@@ -232,39 +226,37 @@ const Modified = ({ path }: ModifiedProps) => {
   useLayoutEffect(handlePasswordCheckPass, [handlePasswordCheckPass]);
   useEffect(handleMisMatchReset, [handleMisMatchReset]);
 
-  if (user === null) return null;
-
   return (
-    <ModifiedContainer>
+    <>
       {isOpen && (
         <Popup isOpen={isOpen} setIsOpen={setIsOpen} className="red" autoClose>
           {message}
         </Popup>
       )}
       {reconfirmation ? (
-        <div className="modified">
+        <ModifiedWrapper className="modified">
           <div className="modified__title">회원정보 수정</div>
           <form className="modified__form" onSubmit={modifiedForm.handleSubmit(modifiedFormSubmit)}>
-            <div className="modified__form--row">
-              <div className="modified__form--inner">
-                <span>아이디(이메일)</span>
+            <div className="modified__form__row">
+              <div className="modified__form__cell">
+                <span>이메일</span>
               </div>
-              <div className="modified__form--inner">{user.email}</div>
+              <div className="modified__form__cell">{user?.email ?? ""}</div>
             </div>
-            <div className="modified__form--row">
-              <div className="modified__form--inner">
+            <div className="modified__form__row">
+              <div className="modified__form__cell">
                 <span>이름</span>
               </div>
-              <div className="modified__form--inner">
+              <div className="modified__form__cell">
                 <FormInput type="text" id="name" register={modifiedForm.register("name", nameOptions)} />
                 <ErrorMessage message={modifiedFormErrors.name?.message} />
               </div>
             </div>
-            <div className="modified__form--row">
-              <div className="modified__form--inner">
+            <div className="modified__form__row">
+              <div className="modified__form__cell">
                 <span>휴대폰 번호</span>
               </div>
-              <div className="modified__form--inner">
+              <div className="modified__form__cell">
                 <FormInput
                   type="text"
                   id="phone"
@@ -274,8 +266,8 @@ const Modified = ({ path }: ModifiedProps) => {
                 <ErrorMessage message={modifiedFormErrors.phone?.message} />
               </div>
             </div>
-            {user.loginType === "LOCAL" && (
-              <div className="modified__form--row">
+            {user?.loginType === "LOCAL" && (
+              <div className="modified__form__row">
                 <div className="modified__form__password">
                   <span>비밀번호 변경</span>
                 </div>
@@ -316,7 +308,7 @@ const Modified = ({ path }: ModifiedProps) => {
                 </div>
               </div>
             )}
-            <div className="modified__form--row">
+            <div className="modified__form__row">
               <div className="modified__form__address">
                 <span>배송지</span>
               </div>
@@ -343,6 +335,10 @@ const Modified = ({ path }: ModifiedProps) => {
                   />
                 </div>
                 <div>
+                  <ErrorMessage message={modifiedFormErrors.postalCode?.message} />
+                  <ErrorMessage message={modifiedFormErrors.mainAddress?.message} />
+                </div>
+                <div>
                   <FormInput
                     type="text"
                     id="detailAddress"
@@ -350,22 +346,13 @@ const Modified = ({ path }: ModifiedProps) => {
                     register={modifiedForm.register("detailAddress", addressOptions)}
                   />
                 </div>
-                <div className="modified__errorbox">
-                  <ErrorMessage message={modifiedFormErrors.postalCode?.message} />
-                </div>
-                <div className="modified__errorbox">
-                  <ErrorMessage message={modifiedFormErrors.mainAddress?.message} />
-                </div>
-                <div className="modified__errorbox">
+                <div>
                   <ErrorMessage message={modifiedFormErrors.detailAddress?.message} />
                 </div>
               </div>
             </div>
             <div className="modified__buttons">
               <button type="submit">전송</button>
-              <button type="button">
-                <Link to={path}>취소</Link>
-              </button>
               <button type="button" className="modified__buttons--reset" onClick={() => modifiedForm.reset()}>
                 초기화
               </button>
@@ -373,61 +360,67 @@ const Modified = ({ path }: ModifiedProps) => {
           </form>
           {addressPopUpOpen && (
             <div className="fixed">
-              <DaumPostcode
-                autoClose
-                onComplete={handleComplete}
-                onClose={() => handlePopUpOpne()}
-                style={{
-                  width: "50%",
-                  boxShadow: "rgb(0 0 0 / 50%) 0px 4px 16px 0px",
-                  height: "500px",
-                }}
-              />
-              <button type="button" onClick={handlePopUpOpne}>
-                닫기
-              </button>
+              <div>
+                <DaumPostcode
+                  autoClose
+                  onComplete={handleComplete}
+                  onClose={() => handlePopUpOpne()}
+                  style={{
+                    width: "400px",
+                    height: "500px",
+                  }}
+                />
+                <button type="button" onClick={handlePopUpOpne}>
+                  닫기
+                </button>
+              </div>
             </div>
           )}
-        </div>
+        </ModifiedWrapper>
       ) : (
-        <div className="modified">
+        <ModifiedWrapper className="modified">
           <div className="modified__title">회원정보확인</div>
-          <div>
-            <span className="modified__email">{user.email}</span>
-            님의 정보를 안전하게 보호하기 위해 비밀번호를 다시 한번 확인 합니다.
+          <div className="modified__text">
+            {user ? (
+              <span className="modified__email">{user.email}</span>
+            ) : (
+              <Skeleton variant="text" width={140} height={40} animation="wave" />
+            )}
+            <span>님의 정보를 안전하게 보호하기 위해 비밀번호를 다시 한번 확인 합니다. </span>
           </div>
           <form className="modified__form" onSubmit={modifiedConfirmForm.handleSubmit(modifiedConfirmFormSubmit)}>
-            <div className="modified__form--row">
-              <div className="modified__form--inner">
-                <span>아이디(이메일)</span>
+            <div className="modified__form__row">
+              <div className="modified__form__cell">
+                <span>이메일</span>
               </div>
-              <div className="modified__form--inner">{user.email}</div>
+              <div className="modified__form__cell">
+                {user ? (
+                  <span>{user.email}</span>
+                ) : (
+                  <Skeleton variant="text" width={140} height={40} animation="wave" />
+                )}
+              </div>
             </div>
-            <div className="modified__form--row">
-              <div className="modified__form--inner">
-                <FormLabel id="password" text="비밀번호" />
+            <div className="modified__form__row">
+              <div className="modified__form__cell">
+                <span>비밀번호</span>
               </div>
-              <div className="modified__form--inner">
+              <div className="modified__form__cell">
                 <FormInput
                   type="password"
                   id="password"
                   register={modifiedConfirmForm.register("password", passwordOpions)}
                 />
+                <ErrorMessage message={modifiedConfirmFormErrors.password?.message} />
               </div>
             </div>
-            <div className="modified__errorbox">
-              <ErrorMessage message={modifiedConfirmFormErrors.password?.message} />
-            </div>
             <div className="modified__buttons">
-              <button type="submit">전송</button>
-              <button type="button">
-                <Link to={path}>취소</Link>
-              </button>
+              <button type="submit">확인</button>
             </div>
           </form>
-        </div>
+        </ModifiedWrapper>
       )}
-    </ModifiedContainer>
+    </>
   );
 };
 
