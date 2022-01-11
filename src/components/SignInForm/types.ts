@@ -1,4 +1,4 @@
-import { FormInputProps } from "components/FormInput/types";
+import { FormInputProps } from "src/elements/FormInput";
 import { RegisterOptions } from "react-hook-form";
 
 export interface ISignInForm {

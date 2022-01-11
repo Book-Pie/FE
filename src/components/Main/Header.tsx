@@ -22,7 +22,7 @@ const Header = () => {
         {user ? (
           <div>
             <span>
-              <Link to="/myProfile">마이페이지</Link>
+              <Link to="/myProfile/modified">마이페이지</Link>
             </span>
             <span>
               <Link to="/logout">로그아웃</Link>

@@ -80,24 +80,7 @@ const UsedBook = () => {
       const { pageCount, pages } = data.data;
 
       // 응답으로 넘어온 배열을 [[],[],[],[]] 이차원배열로 만들어준다.
-      const array = makeTwoDimensionalArray([
-        { id: 1, title: "테스트1", price: 100000, image: "" },
-        { id: 2, title: "테스트1", price: 100000, image: "" },
-        { id: 3, title: "테스트1", price: 100000, image: "" },
-        { id: 4, title: "테스트1", price: 100000, image: "" },
-        { id: 5, title: "테스트1", price: 100000, image: "" },
-        { id: 6, title: "테스트1", price: 100000, image: "" },
-        { id: 7, title: "테스트1", price: 100000, image: "" },
-        { id: 8, title: "테스트1", price: 100000, image: "" },
-        { id: 9, title: "테스트1", price: 100000, image: "" },
-        { id: 10, title: "테스트1", price: 100000, image: "" },
-        { id: 11, title: "테스트1", price: 100000, image: "" },
-        { id: 12, title: "테스트1", price: 100000, image: "" },
-        { id: 13, title: "테스트1", price: 100000, image: "" },
-        { id: 14, title: "테스트1", price: 100000, image: "" },
-        { id: 15, title: "테스트1", price: 100000, image: "" },
-      ]);
-      // const array = makeTwoDimensionalArray(pages);
+      const array = makeTwoDimensionalArray(pages);
 
       await new Promise(res => {
         setTimeout(res, 600);
@@ -113,6 +96,8 @@ const UsedBook = () => {
       const message = errorHandler(error);
       setIsOpen(true);
       setMessage(message);
+    } finally {
+      setIsLoading(false);
     }
   }, []);
 
@@ -152,6 +137,7 @@ const UsedBook = () => {
   }, []);
 
   useEffect(() => {
+    setIsLoading(true);
     if (Object.keys(currentQuery).length === 0) {
       // 첫 컴포넌트 마운트 됬을때
       handleGetMoreUsedBooks({ nextPage: 1 });
@@ -184,7 +170,7 @@ const UsedBook = () => {
       <Categorys categorys={categorys} />
       <DropDownWrapper>
         <Text bold fontSize="30px">
-          회원님들이 등록한 중고 책입니다.
+          중고장터
         </Text>
         <DropDown defaultValue={currentDropDownValue} setSelectedId={setCurrentDropDownValue}>
           <li>

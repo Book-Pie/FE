@@ -1,5 +1,5 @@
 import { myProfileAsync, signInSelector } from "modules/Slices/signIn/signInSlice";
-import { SignInReduceProps } from "modules/Slices/signIn/types";
+import { ISignInReduce } from "modules/Slices/signIn/types";
 import { AppDispatch, useAppDispatch, useTypedSelector } from "modules/store";
 import { useCallback, useEffect } from "react";
 import { getAccessToken } from "utils/localStorageUtil";
@@ -7,7 +7,7 @@ import { useHistory } from "react-router";
 
 interface ReturnType {
   dispatch: AppDispatch;
-  signIn: SignInReduceProps;
+  signIn: ISignInReduce;
 }
 
 const useSignIn = (): ReturnType => {
