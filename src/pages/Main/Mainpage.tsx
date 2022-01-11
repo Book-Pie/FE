@@ -14,7 +14,7 @@ const Mainpage = () => {
   const bestsellerBooks = useTypedSelector(getBookSelector);
 
   useEffect(() => {
-    dispatch(getbookAPI());
+    // dispatch(getbookAPI());
   }, []);
 
   return (

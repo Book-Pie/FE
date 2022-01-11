@@ -1,7 +1,3 @@
-export interface ModifiedProps {
-  path: string;
-}
-
 export interface IModifiedConfirmForm {
   password: string;
 }

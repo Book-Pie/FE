@@ -3,10 +3,14 @@ import { AppDispatch } from "modules/store";
 // =========================== 썽크함수 파라미터 타입 ===========================
 // thunk 함수로 넘겨질 인자 타입
 
-export interface SignInAsyncProps {
+export interface SignInAsyncParam {
   email: string;
   password: string;
   isRemember: boolean;
+}
+export interface NickNameUpdateParam {
+  nickName: string;
+  token: string;
 }
 // =========================== 썽크함수 파라미터 타입 ===========================
 
@@ -44,6 +48,10 @@ export interface SignInAsyncSuccess {
   data: string;
   error: null;
 }
+export interface NickNameResponse {
+  message: string;
+}
+
 // =========================== 썽크함수 성공 시 리턴 타입 ===========================
 
 // =========================== 썽크함수 실패 시 리턴 타입 ===========================
@@ -63,6 +71,13 @@ export interface MyProfileAsyncFail {
   error: string;
   path: string;
 }
+
+export interface IAxiosError {
+  success: boolean;
+  data: null;
+  error: ErrorHandlring;
+}
+
 // =========================== 썽크함수 실패 시 리턴 타입 ===========================
 
 // =========================== axios 제네릭 ===========================
@@ -92,9 +107,15 @@ export interface MyProfileThunkApi {
   dispatch: AppDispatch;
   rejectValue: MyProfileAsyncFail;
 }
+
+export interface NickNameUpdateThunkApi {
+  dispatch: AppDispatch;
+  rejectValue: NickNameResponse;
+}
+
 // =========================== ThunkApi 제네릭 ===========================
 // 리듀가 사용할 데이터 타입
-export interface SignInReduceProps {
+export interface ISignInReduce {
   user: IUserPrfile | null;
   token: string | null;
   isLoggedIn: boolean;
