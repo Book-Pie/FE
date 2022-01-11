@@ -87,7 +87,7 @@
   },
   "scripts": {
     "build": "webpack --mode=production",
-    "serve": "serve ./dist",
+    "serve": "serve ./build",
     "dev": "webpack serve --mode=development",
     "prettier": "prettier --write --config .prettierrc.js \"./src/**/*.{ts,tsx}\"",
     "lint": "eslint \"./src/**/*.{ts,tsx}\""

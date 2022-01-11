@@ -1,3 +1,4 @@
+import { make1000UnitsCommaFormet } from "src/utils/formatUtil";
 import styled from "styled-components";
 
 interface BestSellerProps {
@@ -17,7 +18,7 @@ const SliderItem = ({ id, title, category, price, image }: BestSellerProps) => {
       <BookInfo>
         <span>{title}</span>
         <span>{category}</span>
-        <span>{price}</span>
+        <span>{`${make1000UnitsCommaFormet(price)}원`}</span>
       </BookInfo>
     </>
   );
@@ -26,17 +27,27 @@ const SliderItem = ({ id, title, category, price, image }: BestSellerProps) => {
 export default SliderItem;
 
 const SlierBox = styled.div`
-  width: 190px;
+  width: 100%;
+  height: 150px;
+  overflow: hidden;
+  border-radius: 5px;
 `;
 
 const ProductImage = styled.img`
-  height: 280px;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.5s ease-in;
+  &:hover {
+    transform: scale(1.1);
+  }
 `;
 
 const BookInfo = styled.div`
-  width: 182px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding: 1rem;
+  padding-bottom: 0;
+  gap: 10px;
 `;
