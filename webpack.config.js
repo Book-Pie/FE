@@ -175,6 +175,11 @@ module.exports = (_, argv) => {
           router: () => "http://bookpie.tk:8080/",
           logLevel: "debug",
         },
+        // "/ItemLookUp.aspx": {
+        //   target: "https://www.aladin.co.kr/ttb/api/ItemLookUp.aspx",
+        //   changeOrigin: true,
+        //   // pathRewrite: { "^/ItemLookUp.aspx": "" },
+        // },
       },
     },
   };

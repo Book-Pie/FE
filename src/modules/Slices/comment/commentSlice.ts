@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "src/modules/store";
-import book from "src/api/book";
+import { book } from "src/api/book";
 import {
   getCommentProps,
   commentAsyncSuccess,
@@ -91,8 +91,6 @@ export const editComment = createAsyncThunk<myCommentAsyncSuccess, getCommentPro
   "comment/edit",
   async (data, { rejectWithValue }) => {
     try {
-      console.log("editComment data : ", data);
-
       const response = await book.patch(`/content/${data.userId}`, data);
 
       return response.data;

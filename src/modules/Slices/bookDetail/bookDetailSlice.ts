@@ -1,22 +1,23 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
-import book from "../../../api/book";
-import { RootState } from "../../store";
-import { ThunkApi, bookAsyncFail, bookAsyncSuccess, bookSliceProps, name } from "./types";
+import http from "src/api/http";
+import { RootState } from "src/modules/store";
+import { bookAsyncFail, bookAsyncSuccess } from "./types";
 
 const initialState = {
-  bookId: 0,
   user: 0,
-  content: [] as any,
+  content: {} as bookAsyncSuccess,
   status: "loading",
   replyDate: "",
 };
 
-export const bookDetailAsync = createAsyncThunk<bookAsyncSuccess, bookSliceProps, ThunkApi>(
-  `${name}/bookAsync`,
-  async ({ bookId, user, content, replyDate }, { rejectWithValue }) => {
+export const bookDetailAsync = createAsyncThunk<bookAsyncSuccess, number>(
+  `book/bookAsync`,
+  async (item, { rejectWithValue }) => {
     try {
-      const response = await book.get("/book");
+      console.log("bookDetailAsync 데이터 확인 : ", item);
+
+      const response = await http.get(`book/${item}`, item);
       const { data } = response;
       const { success } = data;
 
@@ -34,34 +35,28 @@ export const bookDetailAsync = createAsyncThunk<bookAsyncSuccess, bookSliceProps
   },
 );
 
-export const bookDetailSlice = createSlice({
-  name: "bookReduce",
+const bookDetailSlice = createSlice({
+  name: "bookDetailReduce",
   initialState,
-  reducers: {
-    addbook: (state, action: PayloadAction<any>) => {
-      const newbook = {
-        bookId: Date.now(),
-        user: Date.now(),
-        content: action.payload.content,
-        replyDate: action.payload.replyDate,
-      };
-      state.content.push(newbook);
-    },
-  },
+  reducers: {},
   extraReducers: builder => {
-    builder.addCase(bookDetailAsync.pending, state => {
-      state.status = "loading";
-    });
-    builder.addCase(bookDetailAsync.fulfilled, (state, { payload }) => {
-      state.status = "success";
-      state.content = payload;
-    });
-    builder.addCase(bookDetailAsync.rejected, state => {
-      state.status = "failed";
-    });
+    builder
+      .addCase(bookDetailAsync.pending, (state, action) => {
+        console.log("bookDetailAsync pending : ", action);
+        state.status = "loading";
+      })
+
+      .addCase(bookDetailAsync.fulfilled, (state, { payload }) => {
+        console.log("bookDetailAsync fulfilled : ", payload);
+        state.status = "success";
+        state.content = payload;
+      })
+      .addCase(bookDetailAsync.rejected, (state, action) => {
+        console.log("bookDetailAsync rejected : ", action);
+        state.status = "failed";
+      });
   },
 });
 
 export const booksSelector = (state: RootState) => state.bookDetailReduce;
-export const { addbook } = bookDetailSlice.actions;
 export default bookDetailSlice;

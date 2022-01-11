@@ -1,14 +1,9 @@
-import dummy from "src/db/data.json";
 import { BookDetailPanel, BookDetailPanelWrapper } from "pages/BookDetail/BookDetailCard";
 import BasicCard from "components/Cards/BasicCard";
 import { Reviews } from "components/Reviews/ReviewForm/Reviews";
 import { Container } from "./style";
 
-const BookDetailContent = () => {
-  const { bookIntroText } = dummy.book[0];
-  const { authorIntroText } = dummy.book[0];
-  const { bookId } = dummy.comments[0];
-
+const BookDetailContent = ({ bookIntroText, authorIntroText, bookId }) => {
   return (
     <Container>
       <BasicCard>

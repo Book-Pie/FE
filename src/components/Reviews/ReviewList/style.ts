@@ -17,7 +17,6 @@ export const ReviewListEmptyWrapper = styled.div`
 export const ReviewListEmptyParagraph = styled.p`
   margin: 0;
   padding: 75px 0;
-  border-bottom: 1px solid #ced2d6;
   color: #808991;
   font-size: 15px;
   font-weight: 700;

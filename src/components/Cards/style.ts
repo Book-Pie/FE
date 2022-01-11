@@ -11,6 +11,7 @@ export const CardBase = styled.div`
 
 export const Container = styled.div`
   display: flex;
+  padding-bottom: 20px;
 `;
 
 export const BookTitle = styled.h4`
@@ -20,16 +21,19 @@ export const BookTitle = styled.h4`
 export const BookCategory = styled.div`
   margin-right: 15px;
   font-size: 14px;
+  padding-bottom: 20px;
 `;
 
-export const AuthorName = styled.div`
+export const SmallBookInfo = styled.div`
   font-size: 14px;
 `;
+
+export const PublisherName = styled.div``;
 
 export const SmallBookCard = styled.div``;
 
 export const SideBarImg = styled.img<{ sidebar?: string }>`
-  width: 150px;
+  width: 120px;
   ${props => props.sidebar && "height: 200px; margin: 0 auto;"}
 `;
 
