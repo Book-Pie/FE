@@ -104,7 +104,7 @@ const Test = () => {
           <Link to="/oAuthTest">oAuth Test</Link>
         </button>
         <button type="button">
-          <Link to="/myProfile">마이페이지</Link>
+          <Link to="/my">마이페이지</Link>
         </button>
         <button type="button">
           <Link to="/payment">결제페이지</Link>

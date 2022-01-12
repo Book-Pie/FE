@@ -3,7 +3,7 @@ const webpack = require("webpack");
 // 웹팩이 자동으로 html를 build 파일에 넣어주고
 // script, link 태그를 유저가 아닌 웹팩이 자동으로 넣어준다.
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
+// const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
 // 웹팩 build시 이전 build 내용물을 제거해준다.
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 // 웹팩 데브서버 핫 리로딩 시 필요한 플러그인
