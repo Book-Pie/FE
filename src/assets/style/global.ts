@@ -90,6 +90,8 @@ img{
 * {
     box-sizing: border-box;
   }
+
+
 `;
 export const Container = styled.div`
   max-width: 1200px;

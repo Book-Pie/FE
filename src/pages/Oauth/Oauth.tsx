@@ -59,7 +59,7 @@ const Oauth = () => {
       const kakaoRequestData: IKakaoRequestData = {
         grant_type: "authorization_code",
         client_id: process.env.KAKAO_CLIENT_ID ?? "",
-        redirect_uri: "http://localhost:3000/oAuth/kakao",
+        redirect_uri: process.env.KAKAO_REDIRECT_PATH ?? "",
         code: query.code,
       };
       const kakaoRequestQeury = Object.entries(kakaoRequestData)
