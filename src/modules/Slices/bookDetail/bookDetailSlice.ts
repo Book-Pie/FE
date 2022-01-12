@@ -15,8 +15,6 @@ export const bookDetailAsync = createAsyncThunk<bookAsyncSuccess, number>(
   `book/bookAsync`,
   async (item, { rejectWithValue }) => {
     try {
-      console.log("bookDetailAsync 데이터 확인 : ", item);
-
       const response = await http.get(`book/${item}`, item);
       const { data } = response;
       const { success } = data;
