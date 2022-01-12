@@ -1,4 +1,3 @@
-import Text from "src/elements/Text";
 import styled from "styled-components";
 
 interface BestSellerProps {
@@ -7,25 +6,36 @@ interface BestSellerProps {
   cover: string;
   bestRank: number;
   link: string;
+  index: number;
 }
 
-const BestSeller = ({ bestRank, categoryName, title, cover, link }: BestSellerProps) => {
+const BestSeller = ({ bestRank, categoryName, title, cover, link, index }: BestSellerProps) => {
+  if (index === 0) {
+    return (
+      <FisrtItemWrapper>
+        <a href={link} target="_blank" rel="noreferrer" className="BestSeller__first">
+          <div>
+            <div className="bestSeller__rank">{`0${bestRank}`}</div>
+            <div className="bestSeller__title">{title}</div>
+          </div>
+          <div className="bestSeller__img">
+            <img src={cover} alt={title} />
+          </div>
+        </a>
+      </FisrtItemWrapper>
+    );
+  }
+
   return (
     <ItemWrapper>
       <a href={link} target="_blank" rel="noreferrer">
         <TextArea>
-          <div className="bestSeller__title">
-            <div>{bestRank}</div>
-            <div>{title}</div>
-          </div>
-          <div className="bestSeller__category">
-            <p>카테고리</p>
-            <Text>{categoryName}</Text>
-          </div>
+          <div className="bestSeller__rank">{`0${bestRank}`}</div>
+          <div className="bestSeller__title">{title}</div>
         </TextArea>
-        <ImgWrapper>
+        <div className="bestSeller__img">
           <img src={cover} alt={title} />
-        </ImgWrapper>
+        </div>
       </a>
     </ItemWrapper>
   );
@@ -33,71 +43,141 @@ const BestSeller = ({ bestRank, categoryName, title, cover, link }: BestSellerPr
 
 export default BestSeller;
 
-const ItemWrapper = styled.div`
-  background-color: ${props => props.theme.colors.mainLightBrown};
+const FisrtItemWrapper = styled.div`
+  background-color: ${props => props.theme.colors.mainDarkBrown};
   margin: 10px;
-  padding: 15px 20px;
+  padding: 15px 10px;
   overflow: hidden;
-  border-radius: 5px;
   height: 100%;
-  ${props => props.theme.shadow[30]};
   transition: transform 0.5s ease-in-out;
 
+  .BestSeller__first {
+    display: flex;
+    padding: 25px 30px;
+    height: 100%;
+    & > div:first-child {
+      width: 160px;
+    }
+    & > div:last-child {
+      width: 200px;
+    }
+  }
   :hover {
     transform: scale(1.05);
   }
+
+  .bestSeller__rank {
+    width: 76px;
+    height: 76px;
+    background-color: #dd002c;
+    color: ${props => props.theme.colors.white};
+    border-radius: 50%;
+    font-family: NotoSerifDisplay;
+    font-size: 40px;
+    font-weight: 500;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: -1.6px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .bestSeller__title {
+    height: 250px;
+    display: -webkit-box;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    padding: 0 15px;
+    color: ${props => props.theme.colors.white};
+    font-size: 30px;
+  }
+
+  .bestSeller__rank + .bestSeller__title {
+    margin-top: 15px;
+  }
+  .bestSeller__img {
+    height: 340px;
+    width: 150px;
+    img {
+      width: 100%;
+      height: 100%;
+      border-radius: 5px;
+    }
+  }
 `;
 
-const TextArea = styled.div`
-  .bestSeller__title {
+const ItemWrapper = styled.div`
+  background-color: #f2f2f2;
+  margin: 10px;
+  padding: 15px 10px;
+  overflow: hidden;
+  height: 100%;
+  transition: transform 0.5s ease-in-out;
+
+  & > a {
     display: flex;
-    align-items: center;
-    gap: 10px;
     & > div:first-child {
-      ${props => props.theme.shadow[30]};
-      width: 25px;
-      height: 25px;
-      padding: 15px;
-      background-color: ${props => props.theme.colors.mainDarkBrown};
-      color: ${props => props.theme.colors.white};
-      border-radius: 50px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 1.2rem;
+      width: 60px;
     }
     & > div:last-child {
-      width: 90%;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      font-size: 1.5rem;
+      width: 100px;
     }
   }
-  .bestSeller__category {
-    padding: 1rem 0;
-    & > p :first-child {
-      font-size: 1.5rem;
-      color: ${props => props.theme.colors.mainDarkBrown};
+
+  :hover {
+    transform: scale(1.02);
+  }
+  .bestSeller__img {
+    height: 170px;
+    width: 150px;
+    img {
+      width: 100%;
+      height: 100%;
+      border-radius: 5px;
     }
-    & > p :last-child {
-      font-size: 0.9rem;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-    p + p {
-      margin-top: 0.5rem;
-    }
+  }
+
+  .bestSeller__rank {
+    width: 40px;
+    height: 40px;
+    color: ${props => props.theme.colors.white};
+    background-color: ${props => props.theme.colors.mainDarkBrown};
+    border-radius: 50%;
+    font-size: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: -1.2px;
+    text-align: center;
+  }
+
+  .bestSeller__title {
+    height: 120px;
+    display: -webkit-box;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    padding: 0 5px;
+  }
+
+  .bestSeller__rank + .bestSeller__title {
+    margin-top: 10px;
   }
 `;
 
-export const ImgWrapper = styled.div`
-  height: 150px;
-  width: 150px;
-  img {
-    width: 100%;
-    height: 100%;
-    border-radius: 5px;
-  }
-`;
+const TextArea = styled.div``;

@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 import { History } from "history";
 import { RootState } from "modules/store";
-import api from "../../../api/bookAPI";
+import http from "src/api/http";
 
 // 메인페이지 최신등록상품
 
@@ -61,7 +61,7 @@ export const getRecentlyBookAPI = createAsyncThunk<getRecentlyBookAsyncSuccess, 
   `${name}/recentlyBookAsync`,
   async (_, { rejectWithValue }) => {
     try {
-      const response = await api.get("/recentlyUsedBook");
+      const response = await http.get("/recentlyUsedBook");
       return response.data;
     } catch (err) {
       const error = err as AxiosError<getRecentlyBookAsyncFail>;

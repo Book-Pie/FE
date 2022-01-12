@@ -12,7 +12,7 @@ import { FormErrorMessages } from "../SignUpForm/types";
 import { ProfileImg, UserInfoMation, Wrapper, CustomInput } from "./style";
 import { NickNameForm } from "./type";
 
-const MyProfileTop = () => {
+const MyTop = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [popUpState, setPopUpState] = useState({
     isSuccess: false,
@@ -81,7 +81,11 @@ const MyProfileTop = () => {
           <div>
             <ProfileImg>
               <div>
-                <img src={noProfileImg} alt="noProfileImg" />
+                {user.image ? (
+                  <img src={`/api/image/${user.image}`} alt="myProfileImg" />
+                ) : (
+                  <img src={noProfileImg} alt="noProfileImg" />
+                )}
               </div>
             </ProfileImg>
             <UserInfoMation>
@@ -156,4 +160,4 @@ const MyProfileTop = () => {
   );
 };
 
-export default MyProfileTop;
+export default MyTop;

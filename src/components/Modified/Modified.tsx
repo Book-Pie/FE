@@ -1,9 +1,9 @@
-import { Link } from "react-router-dom";
-import { useCallback, useEffect, useLayoutEffect, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import useSignIn from "hooks/useSignIn";
 import FormLabel from "src/elements/FormLabel";
 import { RegisterOptions, useForm } from "react-hook-form";
 import ErrorMessage from "src/elements/ErrorMessage";
+import noProfileImg from "assets/image/noProfile.jpg";
 import {
   hookFormKoreaChractersCheck,
   hookFormMisMatchCheck,
@@ -19,11 +19,15 @@ import { FormErrorMessages } from "components/SignUpForm/types";
 import Popup from "components/Popup/Popup";
 import useDaumPost from "hooks/useDaumPost";
 import DaumPostcode from "react-daum-postcode";
-import { myProfileChange, passwordChange, passwordCheck } from "src/api/modified/modified";
+import { getMyProfileImgUpload, myProfileChange, passwordChange, passwordCheck } from "src/api/my/my";
 import { myProfileAsync } from "modules/Slices/signIn/signInSlice";
 import { hyphenRemoveFormat } from "src/utils/formatUtil";
 import { useHistory } from "react-router";
 import Skeleton from "@mui/material/Skeleton";
+import Button from "@mui/material/Button";
+import DeleteIcon from "@mui/icons-material/Delete";
+import Loading from "src/elements/Loading";
+import { Stack } from "@mui/material";
 import { ModifiedWrapper } from "./style";
 import { IAxiosPayload, IAxiosResponse, IModifiedConfirmForm, IModifiedForm, IMyProfileUpdatePayload } from "./types";
 
@@ -34,11 +38,18 @@ const Modified = () => {
   const modifiedConfirmForm = useForm<IModifiedConfirmForm>();
   const modifiedForm = useForm<IModifiedForm>();
   const [reconfirmation, setReconfirmation] = useState<boolean>(false);
+  const [imgBase64, setImgBase64] = useState<string>(""); // 파일 base64
+  const [imgFile, setImgFile] = useState<File | null>(null); // 파일
+  const imgFileRef = useRef<HTMLInputElement>(null);
+  const [popUpState, setPopUpState] = useState({
+    isSuccess: false,
+    message: "",
+  });
 
-  const [message, setMessage] = useState<string>("");
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [addressPopUpOpen, setAddressPopUpOpen] = useState<boolean>(false);
   const [newPassword, confirmPassword] = modifiedForm.watch(["newPassword", "confirmPassword"]);
+  const [isLoading, setIsLoading] = useState(false);
   const { addressState, handleComplete } = useDaumPost();
   const debounce = useDebounce();
   const history = useHistory();
@@ -98,6 +109,61 @@ const Modified = () => {
     },
   };
 
+  const handleFileUpload = async () => {
+    const { token } = signIn;
+    try {
+      if (!imgFile) throw new Error("사진을 업로드해주세요");
+      if (imgFile && token) {
+        setIsLoading(true);
+        const formData = new FormData();
+        formData.append("image", imgFile);
+
+        await new Promise(res => {
+          setTimeout(res, 600);
+        });
+        await getMyProfileImgUpload(formData, token);
+        dispatch(myProfileAsync(token))
+          .unwrap()
+          .then(() => {
+            handleFileDelete();
+            handlePopUp("업로드에 성공했습니다.", true);
+          })
+          .catch(error => {
+            handlePopUp(errorHandler(error), false);
+          })
+          .finally(() => {
+            setIsLoading(false);
+          });
+      }
+    } catch (error) {
+      handlePopUp(errorHandler(error), false);
+    }
+  };
+
+  const handleFileOnChange = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files === null) return;
+    if (e.target.files.length === 0) return;
+
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      const base64 = reader.result;
+      if (base64) {
+        const base64Sub = base64.toString();
+        setImgFile(file);
+        setImgBase64(base64Sub);
+      }
+    };
+  }, []);
+
+  const handleFileDelete = useCallback(() => {
+    if (!imgFile || !imgFileRef.current) return;
+    setImgBase64("");
+    setImgFile(null);
+    imgFileRef.current.value = "";
+  }, [imgFile]);
+
   const handlePopUpOpne = useCallback(() => setAddressPopUpOpen(prve => !prve), []);
   const handlePasswordCheck = useCallback(async (password: string, token: string) => {
     const response = await passwordCheck<IAxiosResponse, IAxiosPayload>({ password }, token);
@@ -117,9 +183,11 @@ const Modified = () => {
     if (user && user.loginType !== "LOCAL") setReconfirmation(true);
   }, [user]);
 
-  const handlerError = useCallback((error: any) => {
-    const message = errorHandler(error);
-    setMessage(message);
+  const handlePopUp = useCallback((message: string, isSuccess: boolean) => {
+    setPopUpState({
+      isSuccess,
+      message,
+    });
     setIsOpen(true);
   }, []);
 
@@ -134,7 +202,7 @@ const Modified = () => {
           setReconfirmation(true);
         }
       } catch (error) {
-        handlerError(error);
+        handlePopUp(errorHandler(error), false);
       }
     }, 500);
   };
@@ -154,6 +222,7 @@ const Modified = () => {
             await handlePasswordCheck(currentPassword, token);
             await handlePasswordChange(newPassword, token);
           }
+
           const payload: IMyProfileUpdatePayload = {
             name,
             phone: hyphenRemoveFormat(phone),
@@ -170,11 +239,13 @@ const Modified = () => {
           );
           if (!myProfileChangeResponse.data.data) throw new Error("프로필 변경에 실패 했습니다.");
           // 변경된 프로필 갱신
-          dispatch(myProfileAsync(token)).unwrap().catch(handlerError);
+          dispatch(myProfileAsync(token))
+            .unwrap()
+            .catch(error => handlePopUp(errorHandler(error), false));
           history.replace("/");
         }
       } catch (error) {
-        handlerError(error);
+        handlePopUp(errorHandler(error), false);
       }
     }, 500);
   };
@@ -229,13 +300,46 @@ const Modified = () => {
   return (
     <>
       {isOpen && (
-        <Popup isOpen={isOpen} setIsOpen={setIsOpen} className="red" autoClose>
-          {message}
+        <Popup isOpen={isOpen} setIsOpen={setIsOpen} className={popUpState.isSuccess ? "green" : "red"} autoClose>
+          {popUpState.message}
         </Popup>
       )}
+      <Loading isLoading={isLoading} />
       {reconfirmation ? (
         <ModifiedWrapper className="modified">
           <div className="modified__title">회원정보 수정</div>
+          <div className="modified__imgUpload">
+            <div>
+              <label htmlFor="myProfile-upload">
+                <div>
+                  <img src={imgBase64 ? imgBase64 : noProfileImg} alt="noProfileImg" />
+                </div>
+                <input
+                  accept=".jpg, .png"
+                  type="file"
+                  id="myProfile-upload"
+                  onChange={handleFileOnChange}
+                  ref={imgFileRef}
+                />
+              </label>
+            </div>
+            <Stack spacing={1} direction="row">
+              <Button variant="contained" component="span" color="mainDarkBrown" onClick={handleFileUpload}>
+                Upload
+              </Button>
+              {imgFile && (
+                <Button
+                  onClick={handleFileDelete}
+                  variant="contained"
+                  component="span"
+                  color="mainDarkBrown"
+                  startIcon={<DeleteIcon />}
+                >
+                  Delete
+                </Button>
+              )}
+            </Stack>
+          </div>
           <form className="modified__form" onSubmit={modifiedForm.handleSubmit(modifiedFormSubmit)}>
             <div className="modified__form__row">
               <div className="modified__form__cell">

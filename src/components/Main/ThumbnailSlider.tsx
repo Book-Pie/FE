@@ -20,10 +20,10 @@ const ThumbnailSlider = () => {
   // dispatch(getRecentlyBookAPI());
   // }, []);
 
-  const slides = Array.from({ length: 9 }).map((_, index) => ({
+  const slides = Array.from({ length: 15 }).map((_, index) => ({
     id: index,
-    title: `타이틀${index + 1}`,
-    category: `카테고리${index + 1}`,
+    title: `허상의 어릿광대`,
+    category: "#소설#화제작",
     price: "10000",
     image: "https://picsum.photos/200/200",
   }));
@@ -34,15 +34,12 @@ const ThumbnailSlider = () => {
         modules={[Pagination, Autoplay]}
         slidesPerView={5}
         spaceBetween={20}
-        pagination={{
-          clickable: true,
-        }}
         freeMode
         autoplay
-        style={{ paddingBottom: "50px" }}
+        style={{ paddingBottom: "50px", overflow: "visible", width: "1200px" }}
       >
         {slides.map((v, index) => (
-          <SwiperSlide key={index} style={{ width: "200px", padding: "1rem" }}>
+          <SwiperSlide key={index}>
             <SliderItem {...v} />
           </SwiperSlide>
         ))}
@@ -54,16 +51,12 @@ const ThumbnailSlider = () => {
 export default ThumbnailSlider;
 
 const SwipierContainer = styled.div`
-  margin-bottom: 200px;
-  background-color: ${props => props.theme.colors.mainLightBrown};
-  padding: 1rem 30px;
-  border-radius: 5px;
+  margin-bottom: 100px;
   cursor: pointer;
 
   .swiper-slide {
-    background-color: rgba(79, 54, 41, 0.7);
-    border-radius: 5px;
-    color: white;
+    width: 190px;
+    color: ${props => props.theme.colors.darkGrey};
   }
 
   .swiper-pagination {

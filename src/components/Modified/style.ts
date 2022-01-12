@@ -17,6 +17,36 @@ export const ModifiedWrapper = styled.div`
     font-size: 2.5rem;
     font-weight: 900;
   }
+
+  .modified__imgUpload {
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    div + div {
+      margin-top: 15px;
+    }
+
+    img {
+      width: 200px;
+      height: 200px;
+    }
+    input {
+      display: none;
+    }
+    span {
+      width: 100px;
+    }
+    label + span {
+      margin-left: 15px;
+    }
+    label {
+      cursor: pointer;
+    }
+  }
+
   .modified__email {
     color: ${props => props.theme.colors.mainDarkBrown};
     font-weight: 900;

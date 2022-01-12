@@ -2,23 +2,25 @@ import styled from "styled-components";
 
 const activeBorderColor = "rgba(52, 73, 94, 1)";
 
-export const Wrapper = styled.div`
+export const Container = styled.div`
+  margin: 0 auto;
+`;
+
+export const RouterWrapper = styled.div`
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+  min-height: 400px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const MyMenuWrapper = styled.div`
   display: flex;
   justify-content: center;
   margin-top: 1rem;
 
-  .myProfile__title,
-  .myProfile__link {
-    display: flex;
-    justify-content: center;
-  }
-
-  .myProfile__title {
-    align-items: center;
-    font-size: 3rem;
-  }
-
-  .myProfile__link--active {
+  .my__link--active {
     background-color: ${props => props.theme.colors.white};
     border: 1px solid ${activeBorderColor};
     border-bottom: none;
@@ -37,7 +39,7 @@ export const Wrapper = styled.div`
     opacity: 0.5;
   }
 
-  & > span {
+  span {
     flex: 1;
   }
 `;
