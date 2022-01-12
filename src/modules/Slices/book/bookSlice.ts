@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 import { RootState } from "modules/store";
+import http from "src/api/http";
 import api from "../../../api/bookAPI";
 
 // initialState로 사용할 객체의 data type
@@ -78,7 +79,7 @@ export const getbookAPI = createAsyncThunk<getBookAsyncSucess, undefined, ThunkA
   `${name}/bookAsync`,
   async (_, { rejectWithValue }) => {
     try {
-      const response = await api.get("/book/bestSeller");
+      const response = await http.get("/book/bestseller?page=1&size=12");
       return response.data;
     } catch (err) {
       const error = err as AxiosError<getBookAsyncFail>;

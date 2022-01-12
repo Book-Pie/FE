@@ -14,15 +14,17 @@ require("dotenv").config();
 const getAbsolutePath = pathDir => path.resolve(__dirname, pathDir);
 const PRODUCTION = "production";
 const KAKAO_CLIENT_ID = process.env.KAKAO_CLIENT_ID ?? "";
-const KAKAO_CLIENT_KEY = process.env.KAKAP_JDK_KEY ?? "";
-const KAKAO_OAUTH_URL_DEV = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_CLIENT_ID}&redirect_uri=http://localhost:3000/oAuth/kakao&response_type=code`;
-const KAKAO_OAUTH_URL_PRO = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_CLIENT_ID}&redirect_uri=http://localhost:3000/oAuth/kakao&response_type=code`;
+const KAKAO_CLIENT_KEY = process.env.KAKAO_JDK_KEY ?? "";
+const KAKAO_REDIRECT_PATH_DEV = "http://localhost:3000/oAuth/kakao";
+const KAKAO_REDIRECT_PATH_PRO = "http://www.react-dev.p-e.kr/oAuth/kakao";
+const KAKAO_OAUTH_URL_DEV = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_CLIENT_ID}&redirect_uri=${KAKAO_REDIRECT_PATH_DEV}&response_type=code`;
+const KAKAO_OAUTH_URL_PRO = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_CLIENT_ID}&redirect_uri=${KAKAO_REDIRECT_PATH_PRO}&response_type=code`;
 const NAVER_OAUTH_URL_DEV =
   "https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=qtbZhYGrYVHhLWesnRyJ&redirect_uri=http://localhost:3000/oAuth/naver&state=state";
 const NAVER_OAUTH_URL_PRO =
-  "https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=qtbZhYGrYVHhLWesnRyJ&redirect_uri=http://localhost:3000/oAuth/naver&state=state";
+  "https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=qtbZhYGrYVHhLWesnRyJ&redirect_uri=http://www.react-dev.p-e.kr/oAuth/naver&state=state";
 const BASE_URL_DEV = "http://localhost:3000/api/";
-const BASE_URL_PRO = "http://bookpie.tk:8080/api";
+const BASE_URL_PRO = "http://3.34.100.122:8080/api";
 
 module.exports = (_, argv) => {
   const { mode } = argv;
@@ -143,10 +145,10 @@ module.exports = (_, argv) => {
       ],
     },
 
-    plugins: [new HtmlWebpackPlugin({ template: "./public/index.html" })],
+    plugins: [new CleanWebpackPlugin(), new HtmlWebpackPlugin({ template: "./public/index.html" })],
 
     output: {
-      path: getAbsolutePath("dist"),
+      path: getAbsolutePath("build"),
       filename: "[name].[chunkhash].js",
       publicPath: "/",
       clean: true, // 내보내기 전에 output 디렉토리를 정리합니다.
@@ -171,9 +173,12 @@ module.exports = (_, argv) => {
       // 설정한 url에 대해서 dev-serve가 Forward 프록시를 해준다.
       proxy: {
         "/api": {
-          target: "http://localhost:3000",
-          router: () => "http://bookpie.tk:8080/",
-          logLevel: "debug",
+          target: "http://3.34.100.122:8080",
+          changeOrigin: true,
+        },
+        "/ttb": {
+          target: "http://www.aladin.co.kr",
+          changeOrigin: true,
         },
         // "/ItemLookUp.aspx": {
         //   target: "https://www.aladin.co.kr/ttb/api/ItemLookUp.aspx",
@@ -186,8 +191,7 @@ module.exports = (_, argv) => {
 
   // 배포 환경
   if (mode === PRODUCTION && config.plugins) {
-    config.plugins.push(new BundleAnalyzerPlugin({ analyzerMode: "server", openAnalyzer: true }));
-    config.plugins.push(new CleanWebpackPlugin());
+    // config.plugins.push(new BundleAnalyzerPlugin({ analyzerMode: "server", openAnalyzer: true }));
     config.plugins.push(
       new webpack.DefinePlugin({
         "process.env.KAKAO_OAUTH_URL": JSON.stringify(KAKAO_OAUTH_URL_PRO),
@@ -195,7 +199,8 @@ module.exports = (_, argv) => {
         "process.env.REDUX_DEV_TOOL": JSON.stringify(false),
         "process.env.BASE_URL": JSON.stringify(BASE_URL_PRO),
         "process.env.KAKAO_CLIENT_ID": JSON.stringify(KAKAO_CLIENT_ID),
-        "process.env.KAKAP_JDK_KEY": JSON.stringify(KAKAO_CLIENT_KEY),
+        "process.env.KAKAO_JDK_KEY": JSON.stringify(KAKAO_CLIENT_KEY),
+        "process.env.KAKAO_REDIRECT_PATH": JSON.stringify(KAKAO_REDIRECT_PATH_PRO),
       }),
     );
   }
@@ -213,7 +218,8 @@ module.exports = (_, argv) => {
         "process.env.REDUX_DEV_TOOL": JSON.stringify(true),
         "process.env.BASE_URL": JSON.stringify(BASE_URL_DEV),
         "process.env.KAKAO_CLIENT_ID": JSON.stringify(KAKAO_CLIENT_ID),
-        "process.env.KAKAP_JDK_KEY": JSON.stringify(KAKAO_CLIENT_KEY),
+        "process.env.KAKAO_JDK_KEY": JSON.stringify(KAKAO_CLIENT_KEY),
+        "process.env.KAKAO_REDIRECT_PATH": JSON.stringify(KAKAO_REDIRECT_PATH_DEV),
       }),
     );
   }
