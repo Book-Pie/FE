@@ -82,7 +82,7 @@ const MyTop = () => {
             <ProfileImg>
               <div>
                 {user.image ? (
-                  <img src={`/api/image/${user.image}`} alt="myProfileImg" />
+                  <img src={`${process.env.BASE_URL}/image/${user.image}`} alt="myProfileImg" />
                 ) : (
                   <img src={noProfileImg} alt="noProfileImg" />
                 )}
