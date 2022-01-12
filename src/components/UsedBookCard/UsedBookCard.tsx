@@ -12,7 +12,7 @@ const UsedBookCard = ({ card }: UsedBookCardProps) => {
       <Wrapper>
         <Link to={`/usedBook/${id}`}>
           <div className="usedBookCard__imgBox">
-            <img src="https://picsum.photos/200/200" alt="usedBookCardImg" />
+            <img src={`/api/image/${image}`} alt="usedBookImg" />
           </div>
           <div className="usedBookCard__cotent">
             <div className="usedBookCard__title">{title}</div>

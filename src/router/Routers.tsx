@@ -1,9 +1,9 @@
 import { Redirect, Route, Switch } from "react-router";
-import Mainpage from "src/pages/Main/Mainpage";
+import Main from "src/pages/Main/Main";
 import SignUp from "src/pages/SignUp/SignUp";
 import Test from "src/pages/Test/Test";
 import SingIn from "pages/SignIn/SignIn";
-import MyProfile from "src/pages/MyProfile/MyProfile";
+import My from "src/pages/My/My";
 import OauthTest from "src/pages/OauthTest/OauthTest";
 import Payment from "src/pages/Payment/Payment";
 import SearchResult from "src/pages/SearchResult/SearchResult";
@@ -28,10 +28,10 @@ const Routers = () => {
 
   return (
     <Switch>
-      <Route path="/" exact component={Mainpage} />
+      <Route path="/" exact component={Main} />
       <PrivateRoute path="/signUp" component={SignUp} redirectPath="/" isLoggedIn={isLoggedIn} />
       <PrivateRoute path="/signIn" component={SingIn} redirectPath="/" isLoggedIn={isLoggedIn} />
-      <PrivateRoute path="/myProfile" component={MyProfile} redirectPath="/signIn" isLoggedIn={isLoggedIn} />
+      <PrivateRoute path="/my" component={My} redirectPath="/signIn" isLoggedIn={isLoggedIn} />
       <PrivateRoute path="/oAuthTest" component={OauthTest} redirectPath="/signIn" isLoggedIn={isLoggedIn} />
       <PrivateRoute path="/payment" component={Payment} redirectPath="/signIn" isLoggedIn={isLoggedIn} />
       <Route path="/search" component={SearchResult} />

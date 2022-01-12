@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import FormInput from "src/elements/FormInput";
 import { RegisterOptions, useForm } from "react-hook-form";
@@ -10,7 +9,7 @@ import {
   makeOption,
 } from "src/utils/hookFormUtil";
 import ErrorMessage from "src/elements/ErrorMessage";
-import { passwordCheck } from "src/api/modified/modified";
+import { passwordCheck } from "src/api/my/my";
 import axios from "axios";
 import { withDrawal } from "src/api/withDrawal/withDrawal";
 import { logout } from "modules/Slices/signIn/signInSlice";
