@@ -43,4 +43,5 @@ export interface ReviewsWriteProps {
   bookId: number;
   myReviewCheck: boolean;
   myReviewContent: getCommentProps;
+  myCommentId: number;
 }

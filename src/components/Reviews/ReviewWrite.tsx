@@ -4,11 +4,16 @@ import { ReviewForm } from "./ReviewForm/ReviewForm";
 import { Container } from "./ReviewList/style";
 import { ReviewsWriteProps } from "./ReviewList/types";
 
-export const ReviewWrite: React.FC<ReviewsWriteProps> = ({ bookId, myReviewCheck, myReviewContent }) => {
+export const ReviewWrite: React.FC<ReviewsWriteProps> = ({ bookId, myReviewCheck, myReviewContent, myCommentId }) => {
   return (
     <Container>
       <Review>
-        <ReviewForm bookId={bookId} isMyReview={myReviewCheck} myReviewContent={myReviewContent} />
+        <ReviewForm
+          userId={myCommentId}
+          isbn={bookId}
+          // isMyReview={myReviewCheck}
+          // myReviewContent={myReviewContent}
+        />
       </Review>
     </Container>
   );

@@ -39,18 +39,15 @@ const bookDetailSlice = createSlice({
   reducers: {},
   extraReducers: builder => {
     builder
-      .addCase(bookDetailAsync.pending, (state, action) => {
-        console.log("bookDetailAsync pending : ", action);
+      .addCase(bookDetailAsync.pending, state => {
         state.status = "loading";
       })
 
       .addCase(bookDetailAsync.fulfilled, (state, { payload }) => {
-        console.log("bookDetailAsync fulfilled : ", payload);
         state.status = "success";
         state.content = payload;
       })
-      .addCase(bookDetailAsync.rejected, (state, action) => {
-        console.log("bookDetailAsync rejected : ", action);
+      .addCase(bookDetailAsync.rejected, state => {
         state.status = "failed";
       });
   },

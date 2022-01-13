@@ -16,7 +16,7 @@ const BookDetail = () => {
     return (
       <>
         <BookSideBar author={author} cover={cover} title={title} categoryName={categoryName} publisher={publisher} />
-        <BookDetailContent bookIntroText={fullDescription} authorIntroText={fullDescription2} bookId={isbn13} />
+        <BookDetailContent bookIntroText={fullDescription} authorIntroText={fullDescription2} bookId={itemId} />
       </>
     );
   }
@@ -33,10 +33,6 @@ const BookDetail = () => {
       <FlexColum>
         <Skeleton sx={{ marginTop: 10 }} variant="rectangular" width={700} height={220} />
         <Skeleton sx={{ marginTop: 5 }} variant="rectangular" width={700} height={220} />
-        <Box sx={{ pt: 0, marginRight: 5, marginTop: 5 }}>
-          <Skeleton width="150px" variant="rectangular" />
-        </Box>
-        <Skeleton sx={{ marginTop: 2 }} variant="rectangular" width={700} height={220} />
       </FlexColum>
     </FlexWrapper>
   );

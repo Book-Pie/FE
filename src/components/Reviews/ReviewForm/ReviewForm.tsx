@@ -2,43 +2,37 @@ import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import { addComment, editComment } from "src/modules/Slices/comment/commentSlice";
-import { dateFormat } from "src/utils/formatUtil";
 import { HoverRating } from "src/components/Rating/Rating";
 import Editor from "src/components/Editor/Editor";
 import { CancelButton, ClickButton, SubmitButton } from "./SubmitButton";
 import { ButtonArea } from "./style";
 import { ReviewFormProps } from "./types";
 
-export const ReviewForm: React.FC<ReviewFormProps> = ({ bookId, isMyReview, myReviewContent }) => {
+export const ReviewForm: React.FC<ReviewFormProps> = ({ isbn, isMyReview, myReviewContent, userId }) => {
   const { handleSubmit } = useForm({ defaultValues: { something: "anything" } });
 
-  // 임시 유저 데이터
-  const userId = 5;
-  const reviewId = 6;
-  const nickname = "테스트 닉네임";
-  const reviewLikeCount = 0;
-  const likeCheck = false;
+  const editStatus = false;
+  // let myCommentDefault: React.SetStateAction<string> | null = null;
 
-  let editStatus = true;
-  let myCommentDefault: React.SetStateAction<string> | null = null;
-
-  if (myReviewContent == null) {
-    editStatus = false;
-    myCommentDefault = "";
-  } else {
-    editStatus = true;
-    myCommentDefault = myReviewContent.content;
-  }
+  // if (myReviewContent == null) {
+  //   editStatus = false;
+  //   myCommentDefault = "";
+  // } else {
+  //   editStatus = true;
+  //   myCommentDefault = myReviewContent.content;
+  // }
 
   const dispatch = useDispatch();
   const [reviewContent, setContent] = useState(""); // 리뷰 등록
-  const [myContent, setMyContent] = useState(myCommentDefault); // 리뷰 수정
+  // const [myContent, setMyContent] = useState(myCommentDefault); // 리뷰 수정
+  const [myContent, setMyContent] = useState(""); // 리뷰 수정
+
   const [ratingValue, setValue] = useState(3); // 별점 추가
   const [editDisabled, editEnabled] = useState(editStatus);
 
-  useEffect(() => {
-    return setMyContent(myCommentDefault);
-  }, [myCommentDefault]);
+  // useEffect(() => {
+  //   return setMyContent(myCommentDefault);
+  // }, [myCommentDefault]);
 
   const handleRatingChange = (event: any) => {
     setValue(event.target.value);
@@ -48,14 +42,10 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({ bookId, isMyReview, myRe
     // 로그인 시 리뷰 입력 기능 추가 필요
     dispatch(
       addComment({
+        isbn,
         userId,
-        reviewId,
-        nickname,
-        rating: ratingValue,
         content: reviewContent,
-        reviewDate: dateFormat(new Date()),
-        reviewLikeCount,
-        likeCheck,
+        rating: ratingValue,
       }),
     );
     setContent("");
@@ -64,14 +54,10 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({ bookId, isMyReview, myRe
   const editReview = () => {
     dispatch(
       editComment({
+        // reviewId:myReviewContent.content.reviewId;
         userId,
-        reviewId,
-        nickname,
-        rating: ratingValue,
         content: reviewContent,
-        reviewDate: dateFormat(new Date()),
-        reviewLikeCount,
-        likeCheck,
+        rating: ratingValue,
       }),
     );
     editEnabled(prev => !prev);
@@ -80,7 +66,7 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({ bookId, isMyReview, myRe
   const handleEdit = () => {
     editEnabled(prev => !prev);
     if (editDisabled === false) {
-      setMyContent(myReviewContent.content);
+      setMyContent(reviewContent);
     }
   };
 
