@@ -3,7 +3,7 @@ import ThumbnailSlider from "src/components/Main/ThumbnailSlider";
 import { useEffect, lazy, Suspense } from "react";
 import { useDispatch } from "react-redux";
 import { useTypedSelector } from "src/modules/store";
-import { getbookAPI, getBookSelector } from "src/modules/Slices/book/bookSlice";
+import { getBookAPI, getBookSelector } from "src/modules/Slices/book/bookSlice";
 import Text from "src/elements/Text";
 import theme from "src/assets/style/styledTheme";
 import { Skeleton, Stack } from "@mui/material";
@@ -17,7 +17,7 @@ const Main = () => {
   const { item } = bestsellerBooks;
 
   useEffect(() => {
-    dispatch(getbookAPI());
+    dispatch(getBookAPI());
   }, [dispatch]);
 
   const skelatons = Array.from({ length: 9 }).map(() => ({

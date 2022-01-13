@@ -41,8 +41,6 @@ export const addComment = createAsyncThunk<commentAsyncSuccess, addCommentProps>
   "/api/book-review/create",
   async (data, { rejectWithValue }) => {
     try {
-      console.log("addComment createAsyncThunk : ", data);
-
       const response = await http.post(`/book-review/`, data);
 
       return response.data;
@@ -168,9 +166,6 @@ const commentSlice = createSlice({
         state.status = "loading";
       })
       .addCase(addComment.fulfilled, (state, { payload }) => {
-        console.log("commentSlice addComment : ", payload.data);
-        console.log("commentSlice state : ", state);
-
         state.content.data.content.push(payload.data);
         state.status = "success";
         // state.myCommentCheck = true;
@@ -184,7 +179,6 @@ const commentSlice = createSlice({
         state.status = "loading";
       })
       .addCase(deleteComment.fulfilled, (state, action) => {
-        console.log("deleteComment : ", action);
         state.status = "success";
         state.content.data.content = state.content.data.content.filter(comment => comment.reviewId !== action.payload);
         // state.myCommentCheck = false;
@@ -208,7 +202,6 @@ const commentSlice = createSlice({
       })
       .addCase(editComment.rejected, (state, action) => {
         state.status = "failed";
-        console.log("editComment rejected", action);
       })
       // 나의 댓글
       .addCase(myReviewComment.pending, state => {

@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-interface SpanProps {
+export interface SpanProps {
   color?: string;
   fontSize?: string;
   margin?: string;
@@ -11,7 +11,7 @@ interface SpanProps {
   bold?: boolean;
 }
 
-const Text = (props: SpanProps) => {
+export const Text = (props: SpanProps) => {
   const { color, fontSize, children, margin, padding, lineHeight, width, bold } = props;
   const styles = {
     color,
@@ -35,7 +35,7 @@ Text.defaultProps = {
   bold: false,
 };
 
-const P = styled.p<SpanProps>`
+export const P = styled.p<SpanProps>`
   color: ${props => props.color};
   font-size: ${props => props.fontSize};
   font-weight: ${props => (props.bold ? "600" : "400")};
