@@ -32,3 +32,11 @@ export const getMyProfileImgUpload = (formData: FormData, token: string) => {
     },
   });
 };
+
+export const getShopInsert = (formData: FormData, token: string) => {
+  return http.post("/usedbook", formData, {
+    headers: {
+      "X-AUTH-TOKEN": token,
+    },
+  });
+};
