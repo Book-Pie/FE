@@ -75,7 +75,6 @@ export const signInAsync = createAsyncThunk<SignInAsyncSuccess, SignInAsyncParam
       const rejectParams = error.response.data;
 
       // 서버에서 에러를 핸들링 안 했을때
-      console.log(error.response.data);
       if (!error.response.data) {
         const { status } = error.response;
         rejectParams.error = {
@@ -185,6 +184,10 @@ const signInSlice = createSlice({
       state.token = null;
       state.isLoggedIn = false;
       state.status = "idle";
+      state.error = {
+        message: "유효하지않는 토큰입니다. 다시 로그인해주세요.",
+        status: 404,
+      };
     });
   },
 });

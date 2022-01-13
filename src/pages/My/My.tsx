@@ -4,6 +4,8 @@ import Withdrawal from "components/Withdrawal/Withdrawal";
 import MyProfileTop from "src/components/MyTop/MyTop";
 import { NavLink } from "react-router-dom";
 import { useMemo } from "react";
+import MyShopList from "src/components/MyShopList/MyShopList";
+import MyshopInsert from "src/components/MyShopInsert/MyshopInsert";
 import { Container, RouterWrapper, MyMenuWrapper } from "./style";
 
 const My = () => {
@@ -63,6 +65,8 @@ const My = () => {
       </MyMenuWrapper>
       <RouterWrapper>
         <Switch>
+          <Route path={`${match.path}/shop`} exact component={MyShopList} />
+          <Route path={`${match.path}/shop/insert`} component={MyshopInsert} />
           <Route path={`${match.path}/b`} render={() => <div />} />
           <Route path={`${match.path}/c`} render={() => <div />} />
           <Route path={`${match.path}/d`} render={() => <div />} />
