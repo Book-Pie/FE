@@ -11,7 +11,7 @@ import { SelectChangeEvent } from "@mui/material";
 import { Wrapper, LinkWrapper } from "./style";
 import { CategorysProps } from "./types";
 
-const Categorys = ({ categorys }: CategorysProps) => {
+const Categorys = ({ categorys, defaultLocation }: CategorysProps) => {
   const location = useLocation();
   const { pathname, search } = location;
   const currentQuery = queryString.parse(search);
@@ -39,7 +39,7 @@ const Categorys = ({ categorys }: CategorysProps) => {
           >
             <MenuItem value="">
               <LinkWrapper>
-                <Link to="/usedBook">취소</Link>
+                <Link to={`/${defaultLocation}`}>취소</Link>
               </LinkWrapper>
             </MenuItem>
             {second.map((value, i) => (

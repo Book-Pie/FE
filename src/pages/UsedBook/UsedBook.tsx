@@ -167,7 +167,7 @@ const UsedBook = () => {
           {message}
         </Popup>
       )}
-      <Categorys categorys={categorys} />
+      <Categorys categorys={categorys} defaultLocation="usedBook" />
       <DropDownWrapper>
         <Text bold fontSize="30px">
           중고장터

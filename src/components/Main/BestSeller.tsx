@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+import { FlexWrapper } from "src/pages/BookDetail/style";
 import styled from "styled-components";
 
 interface BestSellerProps {
@@ -7,36 +9,44 @@ interface BestSellerProps {
   bestRank: number;
   link: string;
   index: number;
+  isbn13: number;
+  isbn: number;
 }
 
-const BestSeller = ({ bestRank, categoryName, title, cover, link, index }: BestSellerProps) => {
+const BestSeller = ({ bestRank, categoryName, title, cover, link, index, isbn13, isbn }: BestSellerProps) => {
   if (index === 0) {
     return (
       <FisrtItemWrapper>
-        <a href={link} target="_blank" rel="noreferrer" className="BestSeller__first">
-          <div>
-            <div className="bestSeller__rank">{`0${bestRank}`}</div>
-            <div className="bestSeller__title">{title}</div>
-          </div>
-          <div className="bestSeller__img">
-            <img src={cover} alt={title} />
-          </div>
-        </a>
+        <Link to={`/book/${isbn13}`}>
+          <a className="BestSeller__first">
+            <div>
+              <div className="bestSeller__rank">{`0${bestRank}`}</div>
+              <div className="bestSeller__title">{title}</div>
+            </div>
+            <div className="bestSeller__img">
+              <img src={cover} alt={title} />
+            </div>
+          </a>
+        </Link>
       </FisrtItemWrapper>
     );
   }
 
   return (
     <ItemWrapper>
-      <a href={link} target="_blank" rel="noreferrer">
-        <TextArea>
-          <div className="bestSeller__rank">{`0${bestRank}`}</div>
-          <div className="bestSeller__title">{title}</div>
-        </TextArea>
-        <div className="bestSeller__img">
-          <img src={cover} alt={title} />
-        </div>
-      </a>
+      <Link to={`/book/${isbn13}`}>
+        <a rel="noreferrer">
+          <FlexWrapper>
+            <TextArea>
+              <div className="bestSeller__rank">{`0${bestRank}`}</div>
+              <div className="bestSeller__title">{title}</div>
+            </TextArea>
+            <div className="bestSeller__img">
+              <img src={cover} alt={title} />
+            </div>
+          </FlexWrapper>
+        </a>
+      </Link>
     </ItemWrapper>
   );
 };
@@ -139,7 +149,7 @@ const ItemWrapper = styled.div`
     height: 170px;
     width: 150px;
     img {
-      width: 100%;
+      width: 90px;
       height: 100%;
       border-radius: 5px;
     }
@@ -162,6 +172,7 @@ const ItemWrapper = styled.div`
   }
 
   .bestSeller__title {
+    width: 60px;
     height: 120px;
     display: -webkit-box;
     word-break: break-word;

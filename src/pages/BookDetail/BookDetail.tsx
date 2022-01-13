@@ -4,14 +4,15 @@ import { useBookDetail } from "src/hooks/useBookDetail";
 import BookDetailContent from "./BookDetailContent";
 import BookSideBar from "./BookSideBar";
 import { FlexColum, FlexWrapper } from "./style";
+import { BookDetailProps } from "./types";
 
-const BookDetail = () => {
-  // 임시 책 데이터
-  const itemId = 9791190938198;
+const BookDetail = ({ match }: BookDetailProps) => {
+  let { itemId } = match.params;
+  itemId = parseInt(itemId);
   const { bookContent } = useBookDetail(itemId);
 
   if (bookContent.length !== 0) {
-    const { author, categoryName, cover, title, fullDescription, fullDescription2, publisher, isbn13 } = bookContent[0];
+    const { author, categoryName, cover, title, fullDescription, fullDescription2, publisher } = bookContent[0];
 
     return (
       <>
