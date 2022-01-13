@@ -16,4 +16,5 @@ export interface CardProps {
   bookThumnail?: string;
   image?: string;
   smallImage?: any;
+  publisher: string;
 }

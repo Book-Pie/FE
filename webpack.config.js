@@ -176,10 +176,6 @@ module.exports = (_, argv) => {
           target: "http://3.34.100.122:8080",
           changeOrigin: true,
         },
-        "/ttb": {
-          target: "http://www.aladin.co.kr",
-          changeOrigin: true,
-        },
       },
     },
   };

@@ -1,7 +1,8 @@
 import React from "react";
-import { deleteComment } from "src/modules/Slices/comment/commentSlice";
+import { commentLike, commentUnLike, deleteComment } from "src/modules/Slices/comment/commentSlice";
 import { useDispatch } from "react-redux";
 import { Rating } from "@mui/material";
+import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import {
   ContentWrapper,
   ReviewContent,
@@ -12,44 +13,71 @@ import {
   ClickArea,
   ReviewContentTop,
   ReviewContentBottom,
+  ContentArea,
+  LikeButton,
 } from "./style";
 import { ReviewItemProps } from "./types";
 
 export const ReviewItem: React.FC<ReviewItemProps> = ({ key, content, myCommentId }) => {
   const dispatch = useDispatch();
-  const { id } = content;
+  const { reviewId, likeCheck, reviewLikeCount, reviewDate, nickname, userId, rating } = content;
 
-  const deleteReview = (id: number) => {
+  const deleteClick = () => {
+    if (window.confirm("댓글을 정말로 삭제하시겠습니까?") === true) {
+      deleteReview(reviewId);
+    }
+  };
+
+  const deleteReview = (reviewId: number) => {
     dispatch(
       deleteComment({
-        id,
+        id: reviewId,
       }),
     );
   };
 
-  const deleteClick = () => {
-    if (window.confirm("댓글을 정말로 삭제하시겠습니까?") === true) {
-      deleteReview(id);
+  const likeClick = () => {
+    if (likeCheck === false) {
+      dispatch(
+        commentLike({
+          reviewId,
+          userId: myCommentId,
+        }),
+      );
+    } else if (likeCheck === true) {
+      dispatch(
+        commentUnLike({
+          reviewId,
+          userId: myCommentId,
+        }),
+      );
     }
   };
 
   return (
     <ReviewItemWrapper>
-      <ClickArea>{content.userId === myCommentId && <Button onClick={deleteClick}>x</Button>}</ClickArea>
+      <ClickArea>{userId === myCommentId && <Button onClick={deleteClick}>x</Button>}</ClickArea>
       <ReviewContent>
         <ReviewContentTop>
-          <Rating name="read-only" precision={0.5} value={content.rating} size="small" readOnly />
-          <p>{content.nickname}</p>
+          <Rating name="read-only" precision={0.5} value={rating} size="small" readOnly />
+          <p>{nickname}</p>
           <ContentBottom>
-            <ReplyDate>{content.reviewDate}</ReplyDate>
+            <ReplyDate>{reviewDate}</ReplyDate>
           </ContentBottom>
         </ReviewContentTop>
         <ReviewContentBottom>
           <ContentWrapper>
-            <div dangerouslySetInnerHTML={{ __html: content.content }} />
+            <ContentArea dangerouslySetInnerHTML={{ __html: content.content }} />
+            <ClickArea>
+              <LikeButton onClick={likeClick}>
+                <ThumbUpIcon sx={{ fontSize: 12 }} />
+                좋아요
+                {likeCheck}
+                {reviewLikeCount}
+              </LikeButton>
+            </ClickArea>
           </ContentWrapper>
         </ReviewContentBottom>
-        {/* 좋아요 영역 */}
       </ReviewContent>
     </ReviewItemWrapper>
   );

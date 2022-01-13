@@ -58,7 +58,9 @@ const Header = () => {
           <span>
             <Link to="/usedBook">중고장터</Link>
           </span>
-          <span>리뷰</span>
+          <span>
+            <Link to="/book">리뷰</Link>
+          </span>
           <span>커뮤니티</span>
         </RouterWrapper>
       </NavWrapper>

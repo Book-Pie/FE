@@ -17,7 +17,6 @@ export const ReviewListEmptyWrapper = styled.div`
 export const ReviewListEmptyParagraph = styled.p`
   margin: 0;
   padding: 75px 0;
-  border-bottom: 1px solid #ced2d6;
   color: #808991;
   font-size: 15px;
   font-weight: 700;
@@ -78,3 +77,25 @@ export const ReviewsListTitle = styled.h4`
 `;
 
 export const ReviewsListWrapper = styled.div``;
+
+export const ContentArea = styled.div`
+  width: 560px;
+`;
+
+export const LikeButton = styled.button`
+  border-color: #d1d5d9;
+  background: #fff;
+  font-size: 13px;
+  border: 1px solid #d1d5d9;
+  border-radius: 4px;
+  font-weight: 400;
+  padding: 0 10px 0 5px;
+  height: 25px;
+  color: #7d8e9e;
+  padding-top: 2px;
+  width: 80px;
+
+  &:hover {
+    background-color: #f2f4f5;
+  }
+`;

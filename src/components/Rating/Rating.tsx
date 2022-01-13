@@ -22,7 +22,7 @@ export const SmallStarIcon = styled(StarIcon)`
   font-size: 0.5rem;
 `;
 
-export const HoverRating = ({ isMyReview, rating, handleChange }: HoverRatingProps) => {
+export const HoverRating = ({ isDisabled, rating, handleChange }: HoverRatingProps) => {
   const [hover, setHover] = useState(-1);
 
   return (
@@ -43,7 +43,7 @@ export const HoverRating = ({ isMyReview, rating, handleChange }: HoverRatingPro
         value={rating}
         precision={0.5}
         max={5}
-        readOnly={isMyReview}
+        readOnly={isDisabled}
         onChange={handleChange}
         onChangeActive={(event, newHover) => {
           setHover(newHover);

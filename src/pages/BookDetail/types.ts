@@ -36,3 +36,17 @@ export interface ExpanderProps {
   text: string;
   onClick: (e: React.SyntheticEvent<any>) => void;
 }
+
+export interface paramProps {
+  itemId: string | number;
+}
+
+export interface matchProps {
+  isExact: boolean;
+  params: paramProps;
+  url: string;
+}
+
+export interface BookDetailProps {
+  match: matchProps;
+}

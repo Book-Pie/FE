@@ -1,15 +1,5 @@
 import BasicCard from "./BasicCard";
-import {
-  Container,
-  BookTitle,
-  BookCategory,
-  AuthorName,
-  SmallBookCard,
-  SideBarImg,
-  SmallImg,
-  CardTitle,
-  CardContent,
-} from "./style";
+import { Container, BookTitle, BookCategory, SideBarImg, CardTitle, CardContent, SmallBookInfo } from "./style";
 import { CardProps } from "./types";
 
 function Card({
@@ -21,23 +11,21 @@ function Card({
   bookIntroText,
   authorIntroTitle,
   authorIntroText,
-  anotherBooks,
-  smallImage,
+  publisher,
 }: CardProps) {
   return (
     <BasicCard>
+      <BookCategory>{bookCategory}</BookCategory>
       <SideBarImg src={bookThumnail} />
       <BookTitle>{bookName}</BookTitle>
       <Container>
-        <BookCategory>{bookCategory}</BookCategory>
-        <AuthorName>{authorName}</AuthorName>
+        <SmallBookInfo>{publisher}</SmallBookInfo>
+      </Container>
+      <Container>
+        <SmallBookInfo>{authorName}</SmallBookInfo>
       </Container>
       <CardTitle>{bookIntroTitle || authorIntroTitle}</CardTitle>
       <CardContent>{bookIntroText || authorIntroText}</CardContent>
-      <SmallBookCard>
-        <CardTitle>{anotherBooks}</CardTitle>
-        <SmallImg src={smallImage} />
-      </SmallBookCard>
     </BasicCard>
   );
 }
