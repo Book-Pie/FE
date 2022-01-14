@@ -1,5 +1,4 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { AxiosError } from "axios";
 import { removeEmail, removeToken, setRememberEmail, setAccessToken, getAccessToken } from "utils/localStorageUtil";
 import { getMyProfile, getSignIn } from "src/api/signIn/signIn";
 import { addHyphenFormat } from "src/utils/formatUtil";
@@ -9,13 +8,11 @@ import { errorHandler } from "src/api/http";
 import {
   IAxiosResponse,
   IPayload,
-  MyProfileAsyncFail,
   MyProfileResponse,
   MyProfileSuccess,
   MyProfileThunkApi,
   NickNameUpdateParam,
   NickNameUpdateThunkApi,
-  SignInAsyncFail,
   SignInAsyncParam,
   SignInAsyncSuccess,
   ISignInReduce,
@@ -32,21 +29,9 @@ export const myProfileAsync = createAsyncThunk<MyProfileSuccess, string, MyProfi
     try {
       const { data } = await getMyProfile<MyProfileResponse>(token);
       return data;
-    } catch (err) {
-      const error = err as AxiosError<MyProfileAsyncFail>;
-
-      if (!error.response) throw err;
-
-      const rejectParams = error.response.data;
-
-      // 서버에서 에러를 핸들링 안 했을때
-      if (!error.response.data) {
-        const { status } = error.response;
-        rejectParams.error = error.message;
-        rejectParams.status = status;
-        rejectParams.path = "";
-      }
-      return rejectWithValue(rejectParams);
+    } catch (error: any) {
+      const { message } = error;
+      return rejectWithValue(message);
     }
   },
 );
@@ -67,25 +52,25 @@ export const signInAsync = createAsyncThunk<SignInAsyncSuccess, SignInAsyncParam
       const { history } = extra;
       history.push("/");
       return { ...data };
-    } catch (err) {
-      const error = err as AxiosError<SignInAsyncFail>;
+    } catch (error: any) {
       // axios 에러가 아닌 런타임 에러를 캐치하기 위한 용도입니다.
-      if (!error.response) throw err;
+      // if (!error.response) throw err;
 
-      const rejectParams = error.response.data;
+      // const rejectParams = error.response.data;
 
-      // 서버에서 에러를 핸들링 안 했을때
-      if (!error.response.data) {
-        const { status } = error.response;
-        rejectParams.error = {
-          status,
-          message: error.message,
-        };
-        rejectParams.data = null;
-        rejectParams.success = false;
-      }
+      // // 서버에서 에러를 핸들링 안 했을때
+      // if (!error.response.data) {
+      //   const { status } = error.response;
+      //   rejectParams.error = {
+      //     status,
+      //     message: error.message,
+      //   };
+      //   rejectParams.data = null;
+      //   rejectParams.success = false;
+      // }
 
-      return rejectWithValue(error.response.data);
+      const { message } = error;
+      return rejectWithValue(message);
     }
   },
 );
@@ -125,7 +110,7 @@ const signInSlice = createSlice({
       removeToken();
       alert("로그아웃 되었습니다.");
     },
-    setErrorReset: () => initialState,
+    errorReset: () => initialState,
   },
   extraReducers: builder => {
     builder.addCase(signInAsync.pending, state => {
@@ -139,59 +124,30 @@ const signInSlice = createSlice({
       setAccessToken(payload.data);
     });
     builder.addCase(signInAsync.rejected, (state, { payload }) => {
-      // 언디파인드가 아닐 때
-      if (payload) {
-        state.error = payload.error;
-      }
-
-      // 서버에서 응답이 없을 때
-      if (!payload) {
-        state.error = {
-          status: 500,
-          message: "서버에서 에러가 발생했습니다.",
-        };
-      }
+      state.error = payload ?? "로그인에 실패했습니다.";
       state.token = null;
       state.status = "idle";
     });
     builder.addCase(myProfileAsync.pending, state => {
-      state.isLoggedIn = true;
+      state.error = null;
+      state.status = "loading";
     });
     builder.addCase(myProfileAsync.fulfilled, (state, { payload }) => {
+      state.isLoggedIn = true;
       state.user = payload.data;
       if (payload.data.phone !== null) state.user.phone = addHyphenFormat(payload.data.phone);
       state.token = getAccessToken();
     });
     builder.addCase(myProfileAsync.rejected, (state, { payload }) => {
-      if (payload) {
-        if (payload.status === 403) {
-          removeToken();
-          state.error = {
-            message: "유효하지않는 토큰입니다. 다시 로그인해주세요.",
-            status: payload.status,
-          };
-        }
-        if (payload.status === 500) {
-          removeToken();
-          state.error = {
-            message: "서버에서 에러가 발생했습니다. 다시 로그인해주세요.",
-            status: payload.status,
-          };
-        }
-      }
-      removeToken();
       state.user = null;
       state.token = null;
       state.isLoggedIn = false;
       state.status = "idle";
-      state.error = {
-        message: "유효하지않는 토큰입니다. 다시 로그인해주세요.",
-        status: 404,
-      };
+      state.error = payload ?? "프로필 가져오기를 실패했습니다.";
     });
   },
 });
 
 export const signInSelector = (state: RootState) => state.signInReduce;
-export const { logout, setErrorReset } = signInSlice.actions;
+export const { logout, errorReset } = signInSlice.actions;
 export default signInSlice;
