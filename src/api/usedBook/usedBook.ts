@@ -9,3 +9,5 @@ export const getUsedBooks = <T>(page: number, query: ParsedQuery<string>) => {
   const queryStr = queryStirng.stringify(query) === "" ? "" : `&${queryStirng.stringify(query)}`;
   return http.get<T>(`/usedbook?page=${page}${queryStr}`);
 };
+
+export const getLatestUsedBook = () => http.get("/usedbook?limit=15");

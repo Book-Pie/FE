@@ -1,4 +1,4 @@
-import { myProfileAsync, signInSelector } from "modules/Slices/signIn/signInSlice";
+import { myInfoAsync, signInSelector } from "modules/Slices/signIn/signInSlice";
 import { ISignInReduce } from "modules/Slices/signIn/types";
 import { AppDispatch, useAppDispatch, useTypedSelector } from "modules/store";
 import { useCallback, useEffect } from "react";
@@ -20,7 +20,7 @@ const useSignIn = (): UseSignInReturnType => {
     const accessToken = getAccessToken();
 
     if (accessToken && isLoggedIn === false) {
-      dispatch(myProfileAsync(accessToken))
+      dispatch(myInfoAsync(accessToken))
         .unwrap()
         .catch(error => {
           if (error.status === 403) history.replace("signIn");

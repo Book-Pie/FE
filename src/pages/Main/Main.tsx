@@ -1,13 +1,11 @@
 import BestSeller from "src/components/Main/BestSeller";
-import ThumbnailSlider from "src/components/Main/ThumbnailSlider";
 import { useEffect, lazy, Suspense } from "react";
 import { useDispatch } from "react-redux";
 import { useTypedSelector } from "src/modules/store";
 import { getbookAPI, getBookSelector } from "src/modules/Slices/book/bookSlice";
-import Text from "src/elements/Text";
-import theme from "src/assets/style/styledTheme";
 import { Skeleton, Stack } from "@mui/material";
-import { BookContainer, BookWrapper, BestSellerWrapper } from "./style";
+import LatestSlider from "components/LatestSlider/LatestSlider";
+import { BookContainer, BookWrapper, MainBannerWrapper, Text } from "./style";
 
 const MainBanner = lazy(() => import("src/components/MainBanner/MainBanner"));
 
@@ -21,23 +19,20 @@ const Main = () => {
   }, [dispatch]);
 
   const skelatons = Array.from({ length: 9 }).map(() => ({
-    background: theme.colors.mainLightBrown,
+    background: "#edeae9",
     padding: "10px",
     margin: "0 10px",
   }));
 
   return (
-    <>
-      <div style={{ height: "376px" }}>
+    <div>
+      <MainBannerWrapper>
         <Suspense fallback={<Skeleton variant="rectangular" height="100%" width="100%" />}>
           <MainBanner />
         </Suspense>
-      </div>
+      </MainBannerWrapper>
 
-      {/* 베스트셀러 */}
-      <Text bold fontSize="30px" color={theme.colors.mainDarkBrown} margin="50px 0px 42px 0px">
-        베스트셀러
-      </Text>
+      <Text>베스트셀러</Text>
       <BookContainer>
         {item.length !== 0
           ? item.map((item, index) =>
@@ -76,14 +71,9 @@ const Main = () => {
             )}
       </BookContainer>
 
-      {/* 숫자로 보는 오늘 하루 북파이 */}
-      {/* <NumberBanner src={NumberBanner} /> */}
-      {/* 최신등록상품 */}
-      <Text bold fontSize="30px" color={theme.colors.mainDarkBrown} margin="50px 0px 42px 0px">
-        최신등록상품
-      </Text>
-      <ThumbnailSlider />
-    </>
+      <Text>최신등록상품</Text>
+      <LatestSlider />
+    </div>
   );
 };
 

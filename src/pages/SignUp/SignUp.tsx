@@ -1,4 +1,4 @@
-import SignUpForm from "components/SignUpForm/SignUpForm";
+import SignUpForm from "src/components/SignUpForm/SignUpForm";
 import { Container } from "./style";
 
 const SignUp = () => {

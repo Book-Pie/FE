@@ -23,8 +23,8 @@ import {
 const name = "signInReduce";
 
 // 내 프로필 가져오기
-export const myProfileAsync = createAsyncThunk<MyProfileSuccess, string, MyProfileThunkApi>(
-  `${name}/myProfileAsync`,
+export const myInfoAsync = createAsyncThunk<MyProfileSuccess, string, MyProfileThunkApi>(
+  `${name}/myInfoAsync`,
   async (token, { rejectWithValue }) => {
     try {
       const { data } = await getMyProfile<MyProfileResponse>(token);
@@ -48,27 +48,11 @@ export const signInAsync = createAsyncThunk<SignInAsyncSuccess, SignInAsyncParam
       const { data } = response;
       setRememberEmail(email);
       if (!isRemember) removeEmail();
-      dispatch(myProfileAsync(data.data));
+      dispatch(myInfoAsync(data.data));
       const { history } = extra;
       history.push("/");
       return { ...data };
     } catch (error: any) {
-      // axios 에러가 아닌 런타임 에러를 캐치하기 위한 용도입니다.
-      // if (!error.response) throw err;
-
-      // const rejectParams = error.response.data;
-
-      // // 서버에서 에러를 핸들링 안 했을때
-      // if (!error.response.data) {
-      //   const { status } = error.response;
-      //   rejectParams.error = {
-      //     status,
-      //     message: error.message,
-      //   };
-      //   rejectParams.data = null;
-      //   rejectParams.success = false;
-      // }
-
       const { message } = error;
       return rejectWithValue(message);
     }
@@ -80,7 +64,7 @@ export const nickNameUpdateAsync = createAsyncThunk<NickNameResponse, NickNameUp
   async ({ nickName, token }, { rejectWithValue, dispatch }) => {
     try {
       await getNickNameUpdate(nickName, token);
-      dispatch(myProfileAsync(token));
+      dispatch(myInfoAsync(token));
       return { message: "닉네임이 변경 되었습니다." };
     } catch (error) {
       const message = errorHandler(error);
@@ -128,17 +112,17 @@ const signInSlice = createSlice({
       state.token = null;
       state.status = "idle";
     });
-    builder.addCase(myProfileAsync.pending, state => {
+    builder.addCase(myInfoAsync.pending, state => {
       state.error = null;
       state.status = "loading";
     });
-    builder.addCase(myProfileAsync.fulfilled, (state, { payload }) => {
+    builder.addCase(myInfoAsync.fulfilled, (state, { payload }) => {
       state.isLoggedIn = true;
       state.user = payload.data;
       if (payload.data.phone !== null) state.user.phone = addHyphenFormat(payload.data.phone);
       state.token = getAccessToken();
     });
-    builder.addCase(myProfileAsync.rejected, (state, { payload }) => {
+    builder.addCase(myInfoAsync.rejected, (state, { payload }) => {
       state.user = null;
       state.token = null;
       state.isLoggedIn = false;

@@ -8,7 +8,7 @@ import { BookDetailProps } from "./types";
 
 const BookDetail = ({ match }: BookDetailProps) => {
   let { itemId } = match.params;
-  itemId = parseInt(itemId);
+  itemId = parseInt(String(itemId), 10);
   const { bookContent } = useBookDetail(itemId);
 
   if (bookContent.length !== 0) {

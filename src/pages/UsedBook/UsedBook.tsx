@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Popup from "components/Popup/Popup";
 import Categorys from "components/Categorys/Categorys";
 import UsedBookCard from "src/components/UsedBookCard/UsedBookCard";
-import DropDown from "components/DropDown/DropDown";
+import DropDown from "src/elements/DropDown";
 import { getCategory, getUsedBooks } from "src/api/usedBook/usedBook";
 import { errorHandler } from "src/api/http";
 import { Link } from "react-router-dom";
@@ -10,7 +10,6 @@ import { useLocation } from "react-router";
 import queryString from "query-string";
 import { makeNewQueryString, removeQueryString } from "utils/queryStringUtil";
 import noUsedBookCard from "assets/image/noComments.png";
-import Text from "src/elements/Text";
 import Loading from "src/elements/Loading";
 import { Skeleton, Stack } from "@mui/material";
 import useDelay from "src/hooks/useDelay";
@@ -33,13 +32,13 @@ const UsedBook = () => {
   const [isLoading, setIsLoading] = useState(false);
   const observerRef = useRef<IntersectionObserver>();
   const timerRef = useRef<NodeJS.Timeout | null>();
-  const [currentDropDownValue, setCurrentDropDownValue] = useState("정렬");
+  const [currentDropDownValue, setCurrentDropDownValue] = useState("전체");
   const { pages, pageCount, isEmpty } = usedBook;
   const { search, pathname } = location;
   const firstLoad = useRef(true);
   const delay = useDelay(600);
 
-  const currentQuery = useMemo(() => queryString.parse(search), [search]);
+  const query = useMemo(() => queryString.parse(search), [search]);
 
   // 무한스크롤
   const handleObserver = (node: HTMLDivElement) => {
@@ -75,30 +74,33 @@ const UsedBook = () => {
     observerRef.current.observe(node);
   };
 
-  const handleGetMoreUsedBooks = useCallback(async (param: RequestParam) => {
-    try {
-      const { nextPage, query = {} } = param;
-      const { data } = await getUsedBooks<UsedBooksResponse>(nextPage, query);
-      const { pageCount, pages } = data.data;
+  const handleGetMoreUsedBooks = useCallback(
+    async (param: RequestParam) => {
+      try {
+        const { nextPage, query = {} } = param;
+        const { data } = await getUsedBooks<UsedBooksResponse>(nextPage, query);
+        const { pageCount, pages } = data.data;
 
-      // 응답으로 넘어온 배열을 [[],[],[],[]] 이차원배열로 만들어준다.
-      const array = makeTwoDimensionalArray(pages);
+        // 응답으로 넘어온 배열을 [[],[],[],[]] 이차원배열로 만들어준다.
+        const array = makeTwoDimensionalArray(pages);
 
-      await delay();
-      setUsedBook(prev => ({
-        ...prev,
-        pageCount,
-        pages: prev.pages.length === 0 ? [...array] : [...prev.pages, ...array],
-        isEmpty: array.length === 0,
-      }));
-    } catch (error) {
-      const message = errorHandler(error);
-      setIsOpen(true);
-      setMessage(message);
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
+        await delay();
+        setUsedBook(prev => ({
+          ...prev,
+          pageCount,
+          pages: prev.pages.length === 0 ? [...array] : [...prev.pages, ...array],
+          isEmpty: array.length === 0,
+        }));
+      } catch (error) {
+        const message = errorHandler(error);
+        setIsOpen(true);
+        setMessage(message);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [delay],
+  );
 
   const handleLoadCategory = async () => {
     const { data } = await getCategory<CategorysResponse>();
@@ -137,18 +139,18 @@ const UsedBook = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    if (Object.keys(currentQuery).length === 0) {
+    if (Object.keys(query).length === 0) {
       // 첫 컴포넌트 마운트 됬을때
       handleGetMoreUsedBooks({ nextPage: 1 });
     }
 
-    if (Object.keys(currentQuery).length !== 0) {
+    if (Object.keys(query).length !== 0) {
       // 카테고리 및 정렬 선택 시
       setUsedBook(initialState);
       setCurrentPage(1);
-      handleGetMoreUsedBooks({ nextPage: 1, query: currentQuery });
+      handleGetMoreUsedBooks({ nextPage: 1, query });
     }
-  }, [handleGetMoreUsedBooks, currentQuery]);
+  }, [handleGetMoreUsedBooks, query]);
 
   useEffect(() => {
     if (currentPage !== 1)
@@ -168,20 +170,18 @@ const UsedBook = () => {
       )}
       <Categorys categorys={categorys} defaultLocation="usedBook" />
       <DropDownWrapper>
-        <Text bold fontSize="30px">
-          중고장터
-        </Text>
+        <p>중고장터</p>
         <DropDown defaultValue={currentDropDownValue} setSelectedId={setCurrentDropDownValue}>
           <li>
-            <Link to={removeQueryString(pathname, search, ["sort"])}>정렬</Link>
+            <Link to={removeQueryString(pathname, search, ["sort"])}>전체</Link>
           </li>
           <li>
-            <Link id="date" to={makeNewQueryString(pathname, currentQuery, { sort: "date" })}>
+            <Link id="date" to={makeNewQueryString(pathname, query, { sort: "date" })}>
               최신순
             </Link>
           </li>
           <li>
-            <Link id="view" to={makeNewQueryString(pathname, currentQuery, { sort: "view" })}>
+            <Link id="view" to={makeNewQueryString(pathname, query, { sort: "view" })}>
               조회순
             </Link>
           </li>

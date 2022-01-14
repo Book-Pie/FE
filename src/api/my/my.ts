@@ -49,8 +49,8 @@ export const getUsedbookLatest = (bookId: number) => {
   return http.put(`/usedbook/date/${bookId}`);
 };
 
-export const getWithDrawal = <T, P>(payload: P, token: string) => {
-  return http.delete<T>("/user/me", {
+export const getWithDrawal = <P>(payload: P, token: string) => {
+  return http.delete("/user/me", {
     data: payload,
     headers: { "X-AUTH-TOKEN": token },
   });
