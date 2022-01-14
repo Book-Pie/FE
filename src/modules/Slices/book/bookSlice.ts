@@ -126,7 +126,6 @@ export const getBookSlice = createSlice({
       state.status = "loading";
     });
     builder.addCase(getbookAPI.fulfilled, (state, { payload }) => {
-      console.log(payload);
       state.item = payload.data.item;
     });
     builder.addCase(getbookAPI.rejected, (state, { payload }) => {

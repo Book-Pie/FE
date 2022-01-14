@@ -202,7 +202,7 @@ const MyshopInsert = () => {
       const { price, title } = data;
       const [state] = Object.keys(usedBookState);
 
-      const toJSON = {
+      const payload = {
         title,
         content: editorValue,
         price,
@@ -215,7 +215,7 @@ const MyshopInsert = () => {
 
       const formData = new FormData();
       imgFiles.forEach(file => formData.append("images", file));
-      formData.append("usedBook", JSON.stringify(toJSON));
+      formData.append("usedBook", JSON.stringify(payload));
 
       getShopInsert(formData, token)
         .then(() => {

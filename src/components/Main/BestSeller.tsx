@@ -9,8 +9,8 @@ interface BestSellerProps {
   bestRank: number;
   link: string;
   index: number;
-  isbn13: number;
-  isbn: number;
+  isbn13: string;
+  isbn: string;
 }
 
 const BestSeller = ({ bestRank, categoryName, title, cover, link, index, isbn13, isbn }: BestSellerProps) => {
@@ -18,7 +18,7 @@ const BestSeller = ({ bestRank, categoryName, title, cover, link, index, isbn13,
     return (
       <FisrtItemWrapper>
         <Link to={`/book/${isbn13}`}>
-          <a className="BestSeller__first">
+          <div className="BestSeller__first">
             <div>
               <div className="bestSeller__rank">{`0${bestRank}`}</div>
               <div className="bestSeller__title">{title}</div>
@@ -26,7 +26,7 @@ const BestSeller = ({ bestRank, categoryName, title, cover, link, index, isbn13,
             <div className="bestSeller__img">
               <img src={cover} alt={title} />
             </div>
-          </a>
+          </div>
         </Link>
       </FisrtItemWrapper>
     );
@@ -35,17 +35,15 @@ const BestSeller = ({ bestRank, categoryName, title, cover, link, index, isbn13,
   return (
     <ItemWrapper>
       <Link to={`/book/${isbn13}`}>
-        <a rel="noreferrer">
-          <FlexWrapper>
-            <TextArea>
-              <div className="bestSeller__rank">{`0${bestRank}`}</div>
-              <div className="bestSeller__title">{title}</div>
-            </TextArea>
-            <div className="bestSeller__img">
-              <img src={cover} alt={title} />
-            </div>
-          </FlexWrapper>
-        </a>
+        <FlexWrapper>
+          <TextArea>
+            <div className="bestSeller__rank">{`0${bestRank}`}</div>
+            <div className="bestSeller__title">{title}</div>
+          </TextArea>
+          <div className="bestSeller__img">
+            <img src={cover} alt={title} />
+          </div>
+        </FlexWrapper>
       </Link>
     </ItemWrapper>
   );

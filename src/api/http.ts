@@ -9,6 +9,7 @@ const RESPONSE_STATUS_ENUM: ResponseEnumType = {
   400: "클라이언트에서 잘못된 요청을 보냈습니다.",
   403: "유효하지 않는 토큰값입니다. 다시 로그인해주세요.",
   500: "서버에서 문제가 발생했습니다.",
+  504: "타임 아웃이 발생했습니다.",
 };
 
 // import axios from "axios";
@@ -65,9 +66,9 @@ http.interceptors.response.use(
       let isHandling = false;
 
       Object.keys(response.data).forEach(key => {
-        if (key === "data" || key === "error" || key === "success") {
-          isHandling = true;
-        }
+        if (key === "data") isHandling = true;
+        if (key === "error") isHandling = true;
+        if (key === "success") isHandling = true;
       });
 
       if (response.status === 403) removeToken();
@@ -76,7 +77,7 @@ http.interceptors.response.use(
       if (isHandling) {
         const { error } = response.data;
         console.error("핸들링된 에러입니다.", error.status);
-        return Promise.reject(new Error(RESPONSE_STATUS_ENUM[error.status]));
+        return Promise.reject(new Error(error.message));
       }
       // 2. 서버에서 비핸들링된 응답
       if (!isHandling) {

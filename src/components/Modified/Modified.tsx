@@ -28,6 +28,7 @@ import Button from "@mui/material/Button";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Loading from "src/elements/Loading";
 import { Stack } from "@mui/material";
+import useDelay from "src/hooks/useDelay";
 import { ModifiedWrapper } from "./style";
 import { IAxiosPayload, IAxiosResponse, IModifiedConfirmForm, IModifiedForm, IMyProfileUpdatePayload } from "./types";
 
@@ -53,6 +54,7 @@ const Modified = () => {
   const { addressState, handleComplete } = useDaumPost();
   const debounce = useDebounce();
   const history = useHistory();
+  const delay = useDelay(600);
   const modifiedConfirmFormErrors = modifiedConfirmForm.formState.errors;
   const modifiedFormErrors = modifiedForm.formState.errors;
 
@@ -118,9 +120,7 @@ const Modified = () => {
         const formData = new FormData();
         formData.append("image", imgFile);
 
-        await new Promise(res => {
-          setTimeout(res, 600);
-        });
+        await delay();
         await getMyProfileImgUpload(formData, token);
         dispatch(myProfileAsync(token))
           .unwrap()

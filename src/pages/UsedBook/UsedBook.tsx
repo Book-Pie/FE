@@ -13,6 +13,7 @@ import noUsedBookCard from "assets/image/noComments.png";
 import Text from "src/elements/Text";
 import Loading from "src/elements/Loading";
 import { Skeleton, Stack } from "@mui/material";
+import useDelay from "src/hooks/useDelay";
 import { UsedBookState, ICategory, IUsedBook, UsedBooksResponse, CategorysResponse, RequestParam } from "./types";
 import { Wrapper, UsedBookCardWrapper, DropDownWrapper, UsedBookCardEmpty, UsedBookRow } from "./style";
 
@@ -36,6 +37,7 @@ const UsedBook = () => {
   const { pages, pageCount, isEmpty } = usedBook;
   const { search, pathname } = location;
   const firstLoad = useRef(true);
+  const delay = useDelay(600);
 
   const currentQuery = useMemo(() => queryString.parse(search), [search]);
 
@@ -82,10 +84,7 @@ const UsedBook = () => {
       // 응답으로 넘어온 배열을 [[],[],[],[]] 이차원배열로 만들어준다.
       const array = makeTwoDimensionalArray(pages);
 
-      await new Promise(res => {
-        setTimeout(res, 600);
-      });
-
+      await delay();
       setUsedBook(prev => ({
         ...prev,
         pageCount,

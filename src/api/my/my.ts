@@ -40,3 +40,11 @@ export const getShopInsert = (formData: FormData, token: string) => {
     },
   });
 };
+
+export const getShopList = <T>(query: string) => {
+  return http.get<T>(`usedbook/user?${query}`);
+};
+
+export const getUsedbookLatest = (bookId: number) => {
+  return http.put(`/usedbook/date/${bookId}`);
+};
