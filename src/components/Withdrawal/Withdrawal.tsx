@@ -9,9 +9,8 @@ import {
   makeOption,
 } from "src/utils/hookFormUtil";
 import ErrorMessage from "src/elements/ErrorMessage";
-import { passwordCheck } from "src/api/my/my";
+import { passwordCheck, getWithDrawal } from "src/api/my/my";
 import axios from "axios";
-import { withDrawal } from "src/api/withDrawal/withDrawal";
 import { logout } from "modules/Slices/signIn/signInSlice";
 import DropDown from "components/DropDown/DropDown";
 import { FormErrorMessages } from "components/SignUpForm/types";
@@ -91,7 +90,7 @@ const Withdrawal = () => {
         reason = editorValue;
       }
 
-      const response = await withDrawal<any, any>({ reason }, token);
+      const response = await getWithDrawal<any, any>({ reason }, token);
 
       const { data } = response;
       if (data.data) {

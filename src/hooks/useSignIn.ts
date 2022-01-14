@@ -5,12 +5,12 @@ import { useCallback, useEffect } from "react";
 import { getAccessToken } from "utils/localStorageUtil";
 import { useHistory } from "react-router";
 
-interface ReturnType {
+interface UseSignInReturnType {
   dispatch: AppDispatch;
   signIn: ISignInReduce;
 }
 
-const useSignIn = (): ReturnType => {
+const useSignIn = (): UseSignInReturnType => {
   const dispatch = useAppDispatch();
   const history = useHistory();
   const signIn = useTypedSelector(signInSelector);

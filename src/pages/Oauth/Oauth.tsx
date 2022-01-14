@@ -1,7 +1,7 @@
 import { useHistory, useParams } from "react-router";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import queryString from "query-string";
-import { kakaoOauth, kakaoOauthAccessToken, naverOauthAccessToken } from "src/api/oauth/oauth";
+import { kakaoOauth, kakaoOauthAccessToken, naverOauthAccessToken } from "src/api/oAuth/oAuth";
 import { myProfileAsync } from "src/modules/Slices/signIn/signInSlice";
 import { setAccessToken } from "utils/localStorageUtil";
 import { useDispatch } from "react-redux";

@@ -48,3 +48,16 @@ export const getShopList = <T>(query: string) => {
 export const getUsedbookLatest = (bookId: number) => {
   return http.put(`/usedbook/date/${bookId}`);
 };
+
+export const getWithDrawal = <T, P>(payload: P, token: string) => {
+  return http.delete<T>("/user/me", {
+    data: payload,
+    headers: { "X-AUTH-TOKEN": token },
+  });
+};
+
+export const getMyProfile = <T>(token: string) => {
+  return http.get<T>("/user/me", {
+    headers: { "X-AUTH-TOKEN": token },
+  });
+};
