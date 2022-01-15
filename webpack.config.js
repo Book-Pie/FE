@@ -145,7 +145,16 @@ module.exports = (_, argv) => {
       ],
     },
 
-    plugins: [new CleanWebpackPlugin(), new HtmlWebpackPlugin({ template: "./public/index.html" })],
+    plugins: [
+      new CleanWebpackPlugin(),
+      new HtmlWebpackPlugin({
+        template: "./public/index.ejs",
+        favicon: "./public/favicon.png",
+        templateParameters: {
+          title: mode === PRODUCTION ? "BookPie" : "개발용 서버",
+        },
+      }),
+    ],
 
     output: {
       path: getAbsolutePath("build"),

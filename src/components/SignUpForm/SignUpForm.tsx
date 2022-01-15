@@ -16,7 +16,7 @@ import { useEffect, useMemo, useState } from "react";
 import useDaumPost from "hooks/useDaumPost";
 import { errorHandler } from "src/api/http";
 import axios from "axios";
-import { getEmailDuplicateCheck, getNickNameDuplicateCheck, getSignUp } from "src/api/signUp/signUp";
+import { getEmailDuplicateCheck, getNickNameDuplicateCheck, getSignUp } from "src/api/oAuth/oAuth";
 import { useHistory } from "react-router";
 import Popup from "components/Popup/Popup";
 import { hyphenRemoveFormat } from "utils/formatUtil";
