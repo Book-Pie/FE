@@ -3,7 +3,7 @@ import { Link, useRouteMatch } from "react-router-dom";
 import queryString from "query-string";
 import { getShopList, getUsedbookLatest } from "src/api/my/my";
 import useSignIn from "src/hooks/useSignIn";
-import Popup from "src/components/Popup/Popup";
+import Popup from "src/elements/Popup";
 import { errorHandler } from "src/api/http";
 import noComments from "assets/image/noComments.png";
 import { AutocompleteChangeReason, SelectChangeEvent } from "@mui/material";
@@ -225,7 +225,7 @@ const MyShopList = () => {
             </Cell>
           ))}
         </TableHeader>
-        <TableBody>{content}</TableBody>
+        {content}
         {list.isEmpty || (
           <Stack mt={5} justifyContent="center" direction="row">
             <Pagination

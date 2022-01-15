@@ -46,9 +46,10 @@ export const signInAsync = createAsyncThunk<SignInAsyncSuccess, SignInAsyncParam
     try {
       const response = await getSignIn<IAxiosResponse, IPayload>({ email, password });
       const { data } = response;
+      const token = data.data;
       setRememberEmail(email);
       if (!isRemember) removeEmail();
-      dispatch(myInfoAsync(data.data));
+      dispatch(myInfoAsync(token));
       const { history } = extra;
       history.push("/");
       return { ...data };

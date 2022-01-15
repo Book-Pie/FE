@@ -31,7 +31,7 @@ export const Wrapper = styled.div`
     }
   }
 
-  .usedBookCard__cotent {
+  .usedBookCard__content {
     padding: 1rem;
     display: flex;
     flex-direction: column;
@@ -42,12 +42,17 @@ export const Wrapper = styled.div`
   }
 
   .usedBookCard__title {
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-    text-align: left;
-    text-align: center;
     font-weight: 900;
+    height: 50px;
+    font-size: 20px;
+    font-weight: bold;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    text-align: center;
+    line-height: 1.2;
+    color: ${props => props.theme.colors.mainDarkBrown};
   }
 
   .usedBookCard__price {

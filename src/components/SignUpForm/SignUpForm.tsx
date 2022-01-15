@@ -18,7 +18,7 @@ import { errorHandler } from "src/api/http";
 import axios from "axios";
 import { getEmailDuplicateCheck, getNickNameDuplicateCheck, getSignUp } from "src/api/oAuth/oAuth";
 import { useHistory } from "react-router";
-import Popup from "components/Popup/Popup";
+import Popup from "src/elements/Popup";
 import { hyphenRemoveFormat } from "utils/formatUtil";
 import Button from "@mui/material/Button";
 import naverImg from "assets/image/naver_oauth.png";

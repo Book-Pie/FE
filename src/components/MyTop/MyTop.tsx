@@ -7,7 +7,7 @@ import { useForm, Controller, RegisterOptions } from "react-hook-form";
 import { hookFormSpecialChractersCheck, makeOption } from "src/utils/hookFormUtil";
 import ErrorMessage from "src/elements/ErrorMessage";
 import { Skeleton } from "@mui/material";
-import Popup from "../Popup/Popup";
+import Popup from "src/elements/Popup";
 import { FormErrorMessages } from "../SignUpForm/types";
 import { ProfileImg, UserInfoMation, Wrapper, CustomInput } from "./style";
 import { NickNameForm } from "./type";

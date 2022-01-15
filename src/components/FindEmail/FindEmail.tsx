@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import Popup from "components/Popup/Popup";
+import Popup from "src/elements/Popup";
 import { errorHandler } from "src/api/http";
 import { getFindEmail } from "src/api/oAuth/oAuth";
 import useDebounce from "hooks/useDebounce";

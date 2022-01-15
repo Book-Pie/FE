@@ -32,6 +32,6 @@ export type StateEnumType = {
 export interface IContent {
   pages: IPage[];
   handleLatestClick: (id: number) => () => void;
-  titleFilter: string | undefined;
+  titleFilter: string | null;
   select: string;
 }

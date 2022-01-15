@@ -33,6 +33,7 @@ export const Info = styled.div`
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     text-align: center;
+    color: ${p => p.theme.colors.mainDarkBrown};
     line-height: 1.2;
   }
   .card__category {
@@ -49,7 +50,6 @@ export const Info = styled.div`
   .card__price {
     height: 24px;
     font-size: 20px;
-    font-weight: bold;
     font-stretch: normal;
     font-style: normal;
     line-height: normal;
@@ -66,7 +66,6 @@ export const Info = styled.div`
     line-height: normal;
     letter-spacing: -0.4px;
     text-align: center;
-    color: #4f3629;
   }
 `;
 export const SwipierWrapper = styled.div`

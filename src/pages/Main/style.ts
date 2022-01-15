@@ -19,7 +19,7 @@ export const BookWrapper = styled.div`
 `;
 
 export const MainBannerWrapper = styled.div`
-  height: "380px";
+  height: 380px;
 `;
 
 export const Text = styled.p`

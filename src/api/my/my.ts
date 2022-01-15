@@ -58,6 +58,9 @@ export const getWithDrawal = <P>(payload: P, token: string) => {
 
 export const getMyProfile = <T>(token: string) => {
   return http.get<T>("/user/me", {
-    headers: { "X-AUTH-TOKEN": token },
+    headers: {
+      "X-AUTH-TOKEN":
+        "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0MTRAbmF2ZXIuY29tIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY0MTkyMTk0OCwiZXhwIjoxNjQxOTIzNzQ4fQ.3hnzJ6e345qw_7izKZlGp__h0za9MNnyIHb43uCiYBI",
+    },
   });
 };

@@ -15,7 +15,7 @@ import { logout } from "modules/Slices/signIn/signInSlice";
 import DropDown from "src/elements/DropDown";
 import { FormErrorMessages } from "src/components/SignUpForm/types";
 import { errorHandler } from "src/api/http";
-import Popup from "components/Popup/Popup";
+import Popup from "src/elements/Popup";
 import { getKakaoUnlink } from "src/utils/oAuthUtil";
 import Editor from "../Editor/Editor";
 import { IAxiosRequsetPayload, IAxiosResponse, IWithdrawalForm } from "./types";

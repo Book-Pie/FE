@@ -16,6 +16,12 @@ const Oauth = lazy(() => import("pages/Oauth/Oauth"));
 const BookDetail = lazy(() => import("pages/BookDetail/BookDetail"));
 const BookReviewList = lazy(() => import("pages/BookReviewList/BookReviewList"));
 
+const FallBack = () => (
+  <div style={{ minHeight: "100vh" }}>
+    <Loading isLoading />
+  </div>
+);
+
 const Routers = () => {
   const { signIn, dispatch } = useSignIn();
   const { isLoggedIn } = signIn;
@@ -26,7 +32,7 @@ const Routers = () => {
   }, [dispatch]);
 
   return (
-    <Suspense fallback={<Loading isLoading />}>
+    <Suspense fallback={<FallBack />}>
       <Switch>
         <Route path="/" exact component={Main} />
         <PrivateRoute path="/signUp" component={SignUp} redirectPath="/" isLoggedIn={isLoggedIn} />

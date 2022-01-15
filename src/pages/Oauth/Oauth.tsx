@@ -6,7 +6,7 @@ import { myInfoAsync } from "src/modules/Slices/signIn/signInSlice";
 import { setAccessToken } from "utils/localStorageUtil";
 import { useDispatch } from "react-redux";
 import { errorHandler } from "src/api/http";
-import Popup from "components/Popup/Popup";
+import Popup from "src/elements/Popup";
 import { Link } from "react-router-dom";
 import Loading from "src/elements/Loading";
 import { Button } from "@mui/material";

@@ -16,7 +16,7 @@ import useDebounce from "hooks/useDebounce";
 import { errorHandler } from "src/api/http";
 import FormInput from "src/elements/FormInput";
 import { FormErrorMessages } from "src/components/SignUpForm/types";
-import Popup from "components/Popup/Popup";
+import Popup from "src/elements/Popup";
 import useDaumPost from "hooks/useDaumPost";
 import DaumPostcode from "react-daum-postcode";
 import { getMyProfileImgUpload, myProfileChange, passwordChange, passwordCheck } from "src/api/my/my";

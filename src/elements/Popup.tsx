@@ -1,6 +1,52 @@
 import { useEffect, useRef, useState } from "react";
-import { PopupWrapper } from "./style";
-import { PopUpProps } from "./types";
+import styled, { css } from "styled-components";
+
+type Colors = "green" | "red";
+
+export interface PopUpProps {
+  isOpen: boolean;
+  autoClose?: boolean;
+  openDelay?: number;
+  closeDelay?: number;
+  setIsOpen: (isOpen: boolean) => void;
+  children: React.ReactNode;
+  className?: Colors;
+}
+export interface PopupWrraperProps {
+  visible: boolean;
+}
+
+export const PopupWrraperOpenCss = css`
+  z-index: 20;
+  transform: rotateX(0deg);
+`;
+
+export const PopupWrraperCloseCss = css`
+  transition: transform 0.5s, z-index 1s ease-in;
+`;
+
+export const PopupWrapper = styled.div<PopupWrraperProps>`
+  position: fixed;
+  top: 5%;
+  color: white;
+  right: 5%;
+  cursor: pointer;
+  z-index: 0;
+  transition: transform 1s, z-index 0.25s ease-in;
+  transform: rotateX(90deg);
+  box-shadow: rgb(0 0 0 / 4%) 0px 4px 16px 0px;
+  padding: 1rem;
+  ${({ visible }) => visible && PopupWrraperOpenCss}
+  ${({ visible }) => !visible && PopupWrraperCloseCss} 
+
+
+  &.green {
+    background: rgb(18, 184, 134);
+  }
+  &.red {
+    background: #e74c3c;
+  }
+`;
 
 const Popup = ({ isOpen, closeDelay, openDelay, children, autoClose, className, setIsOpen }: PopUpProps) => {
   const [visible, setVisible] = useState<boolean>(false);

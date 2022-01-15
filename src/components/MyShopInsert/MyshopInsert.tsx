@@ -12,7 +12,7 @@ import { makeOption } from "src/utils/hookFormUtil";
 import { FormControl, FormGroup, InputLabel, MenuItem, Select, SelectChangeEvent } from "@mui/material";
 import { CategorysResponse, ICategory } from "src/pages/UsedBook/types";
 import { getCategory } from "src/api/usedBook/usedBook";
-import Popup from "src/components/Popup/Popup";
+import Popup from "src/elements/Popup";
 import Editor from "src/components/Editor/Editor";
 import useDebounce from "src/hooks/useDebounce";
 import { getShopInsert } from "src/api/my/my";
