@@ -65,9 +65,9 @@ http.interceptors.response.use(
     if (response) {
       let isHandling = false;
 
-      Object.keys(response.data).forEach(key => {
+      Object.entries(response.data).forEach(([key, value]) => {
         if (key === "data") isHandling = true;
-        if (key === "error") isHandling = true;
+        if (key === "error" && value instanceof Object) isHandling = true;
         if (key === "success") isHandling = true;
       });
 

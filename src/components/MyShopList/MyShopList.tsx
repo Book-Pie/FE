@@ -3,7 +3,7 @@ import { Link, useRouteMatch } from "react-router-dom";
 import queryString from "query-string";
 import { getShopList, getUsedbookLatest } from "src/api/my/my";
 import useSignIn from "src/hooks/useSignIn";
-import Popup from "src/components/Popup/Popup";
+import Popup from "src/elements/Popup";
 import { errorHandler } from "src/api/http";
 import noComments from "assets/image/noComments.png";
 import { AutocompleteChangeReason, SelectChangeEvent } from "@mui/material";
@@ -20,7 +20,7 @@ import Select from "@mui/material/Select";
 
 import useDelay from "src/hooks/useDelay";
 import { getShopPage, removeShopPage, setShopPage } from "src/utils/localStorageUtil";
-import { Wrapper, TableHeader, Cell, TableBody, Empty } from "./style";
+import { Wrapper, TableHeader, Cell, Empty } from "./style";
 import { AxioseReponse, IList, IPage } from "./type";
 import Skelaton from "./Skelaton";
 import Content from "./Content";
@@ -164,7 +164,6 @@ const MyShopList = () => {
       <Wrapper>
         <Stack direction="row" justifyContent="center" mb={2} spacing={2}>
           <Autocomplete
-            id="free-solo-demo"
             sx={{ width: 250 }}
             freeSolo
             onChange={handleTitlteFilterOnChange}
@@ -225,7 +224,7 @@ const MyShopList = () => {
             </Cell>
           ))}
         </TableHeader>
-        <TableBody>{content}</TableBody>
+        {content}
         {list.isEmpty || (
           <Stack mt={5} justifyContent="center" direction="row">
             <Pagination

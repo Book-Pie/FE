@@ -18,9 +18,13 @@ export const BookWrapper = styled.div`
   cursor: pointer;
 `;
 
-export const BestSellerWrapper = styled.div`
-  display: flex;
-  & > div:first-child {
-    width: 370px;
-  }
+export const MainBannerWrapper = styled.div`
+  height: 380px;
+`;
+
+export const Text = styled.p`
+  font-size: 30px;
+  font-weight: bold;
+  color: ${props => props.theme.colors.mainDarkBrown};
+  margin: 50px 0px 42px 0px;
 `;

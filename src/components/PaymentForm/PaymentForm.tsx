@@ -4,7 +4,7 @@ import styled from "styled-components";
 import FormInput from "src/elements/FormInput";
 import DaumPostcode from "react-daum-postcode";
 import { useEffect, useMemo, useState } from "react";
-import DropDown from "components/DropDown/DropDown";
+import Dropdown from "src/elements/DropDown";
 import { Link } from "react-router-dom";
 import useSignIn from "hooks/useSignIn";
 import { make1000UnitsCommaFormet } from "src/utils/formatUtil";
@@ -245,7 +245,7 @@ const PaymentForm = () => {
           <ErrorMessage message={errors.detailAddress?.message} />
         </div>
         <div className="paymentForm__dropDown_wrap">
-          <DropDown defaultValue={deliveryText}>
+          <Dropdown defaultValue={deliveryText}>
             <li>
               <StyledSpan>현관문 앞에 놓고 가세요.</StyledSpan>
             </li>
@@ -258,7 +258,7 @@ const PaymentForm = () => {
             <li>
               <StyledSpan>기타</StyledSpan>
             </li>
-          </DropDown>
+          </Dropdown>
           <div className="paymentForm__row">
             <ErrorMessage message={errors.delivery?.message} />
           </div>

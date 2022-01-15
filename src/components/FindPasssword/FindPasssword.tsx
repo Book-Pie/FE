@@ -1,6 +1,6 @@
 import { useHistory } from "react-router";
 import { useCallback, useState } from "react";
-import Popup from "components/Popup/Popup";
+import Popup from "src/elements/Popup";
 import { getFindPassword } from "src/api/oAuth/oAuth";
 import { errorHandler } from "src/api/http";
 import useDebounce from "hooks/useDebounce";

@@ -6,6 +6,7 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/free-mode";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { memo } from "react";
 import { BannerImage, Wrapper } from "./style";
 
 const MainBanner = () => {
@@ -22,4 +23,4 @@ const MainBanner = () => {
   );
 };
 
-export default MainBanner;
+export default memo(MainBanner);
