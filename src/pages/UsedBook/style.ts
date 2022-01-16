@@ -13,7 +13,7 @@ export const UsedBookCardWrapper = styled.div`
   flex-direction: column;
   border-radius: 5px;
   background-color: ${props => props.theme.colors.mainLightBrown};
-  ${props => props.theme.shadow[30]};
+  ${props => props.theme.shadow[10]};
 `;
 
 export const UsedBookRow = styled.div`

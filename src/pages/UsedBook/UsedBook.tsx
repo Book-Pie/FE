@@ -10,13 +10,11 @@ import queryString from "query-string";
 import { makeNewQueryString, removeQueryString } from "utils/queryStringUtil";
 import noUsedBookCard from "assets/image/noComments.png";
 import Loading from "src/elements/Loading";
-import Skeleton from "@mui/material/Skeleton";
-import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import useDelay from "src/hooks/useDelay";
 import Categorys from "src/components/Categorys/Categorys";
 import useDebounce from "src/hooks/useDebounce";
-import { UsedBookState, ICategory, IUsedBook, UsedBooksResponse, CategorysResponse, RequestParam } from "./types";
+import { UsedBookState, ICategory, IUsedBook, UsedBooksResponse, CategorysResponse } from "./types";
 import {
   Wrapper,
   UsedBookCardWrapper,
@@ -26,6 +24,7 @@ import {
   Filter,
   MenuWrapper,
 } from "./style";
+import Skeletons from "./Skeletons";
 
 const initialState: UsedBookState = {
   pages: [],
@@ -88,10 +87,11 @@ const UsedBook = () => {
   };
 
   const handleGetMoreUsedBooks = useCallback(
-    async (param: RequestParam) => {
+    async (page: number) => {
       try {
-        const { nextPage, query = {} } = param;
-        const { data } = await getUsedBooks<UsedBooksResponse>(nextPage, query);
+        setIsLoading(true);
+
+        const { data } = await getUsedBooks<UsedBooksResponse>(queryString.stringify({ ...query, page }));
         const { pageCount, pages } = data.data;
 
         // 응답으로 넘어온 배열을 [[],[],[],[]] 이차원배열로 만들어준다.
@@ -101,7 +101,7 @@ const UsedBook = () => {
         setUsedBook(prev => ({
           ...prev,
           pageCount,
-          pages: array,
+          pages: prev.pages.length === 0 ? array : [...prev.pages, ...array],
           isEmpty: array.length === 0,
         }));
       } catch (error) {
@@ -112,13 +112,8 @@ const UsedBook = () => {
         setIsLoading(false);
       }
     },
-    [delay],
+    [delay, query],
   );
-
-  const handleLoadCategory = useCallback(async () => {
-    const { data } = await getCategory<CategorysResponse>();
-    setCategorys(data.data);
-  }, []);
 
   const handleTitleOnChange = ({ target: { value } }: React.ChangeEvent<HTMLInputElement>) => {
     if (debounce.current) clearTimeout(debounce.current);
@@ -132,7 +127,7 @@ const UsedBook = () => {
     return 1;
   };
 
-  const cards = pages.map((cards, idx) => (
+  const usedBookCards = pages.map((cards, idx) => (
     <UsedBookRow key={idx} ref={pages.length - 2 === idx ? handleObserver : undefined}>
       {cards.map((card, idx) => (
         <UsedBookCard key={idx} card={card} />
@@ -140,48 +135,23 @@ const UsedBook = () => {
     </UsedBookRow>
   ));
 
-  const cardsSkeleton = useMemo(
-    () =>
-      Array.from({ length: 3 }).map((_, idx) => (
-        <UsedBookRow key={idx}>
-          {Array.from({ length: 5 }).map((_, idx) => (
-            <Stack spacing={0.5} key={idx} width="20%" sx={{ margin: "0.5rem" }}>
-              <Skeleton variant="rectangular" width="100%" height={200} animation="wave" sx={{ borderRadius: "5px" }} />
-              <Skeleton variant="text" width="100%" height={30} animation="wave" sx={{ borderRadius: "5px" }} />
-              <Skeleton variant="text" width="100%" height={30} animation="wave" sx={{ borderRadius: "5px" }} />
-            </Stack>
-          ))}
-        </UsedBookRow>
-      )),
-    [],
-  );
-
   // ============================================ useEffect ============================================
   useEffect(() => {
-    handleLoadCategory();
-  }, [handleLoadCategory]);
+    (async () => {
+      const { data } = await getCategory<CategorysResponse>();
+      setCategorys(data.data);
+    })();
+  }, []);
 
   useEffect(() => {
-    setIsLoading(true);
-    if (Object.keys(query).length === 0) {
-      // 첫 컴포넌트 마운트 됬을때
-      handleGetMoreUsedBooks({ nextPage: 1 });
-    }
-
-    if (Object.keys(query).length !== 0) {
-      // 카테고리 및 정렬 선택 시
-      setUsedBook(initialState);
-      setCurrentPage(1);
-      handleGetMoreUsedBooks({ nextPage: 1, query });
-    }
-  }, [handleGetMoreUsedBooks, query]);
+    setCurrentPage(1);
+    setUsedBook(initialState);
+    handleGetMoreUsedBooks(1);
+  }, [query, handleGetMoreUsedBooks]);
 
   useEffect(() => {
-    if (currentPage !== 1)
-      handleGetMoreUsedBooks({
-        nextPage: currentPage,
-      });
-  }, [currentPage, handleGetMoreUsedBooks]);
+    if (currentPage !== 1) handleGetMoreUsedBooks(currentPage);
+  }, [currentPage]);
   // ============================================ useEffect ============================================
 
   return (
@@ -243,9 +213,9 @@ const UsedBook = () => {
             </span>
           </UsedBookCardEmpty>
         ) : pages.length === 0 ? (
-          cardsSkeleton
+          <Skeletons />
         ) : (
-          cards
+          usedBookCards
         )}
       </UsedBookCardWrapper>
     </Wrapper>

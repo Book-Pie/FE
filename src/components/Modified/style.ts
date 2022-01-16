@@ -186,6 +186,9 @@ export const ModifiedWrapper = styled.div`
     button + button {
       margin-left: 10px;
     }
+    .modified__buttons--reset {
+      background-color: ${p => p.theme.colors.error};
+    }
   }
 
   .modified__errorbox {

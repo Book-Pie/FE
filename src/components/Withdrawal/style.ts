@@ -91,7 +91,7 @@ export const Wrapper = styled.div`
     button {
       height: 50px;
       width: 100px;
-      background-color: ${props => props.theme.colors.mainDarkBrown};
+      background-color: ${props => props.theme.colors.error};
       color: ${props => props.theme.colors.white};
     }
 
