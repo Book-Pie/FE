@@ -3,7 +3,7 @@ import styled, { css } from "styled-components";
 
 type Colors = "green" | "red";
 
-export interface PopUpProps {
+interface PopUpProps {
   isOpen: boolean;
   autoClose?: boolean;
   openDelay?: number;
@@ -12,20 +12,20 @@ export interface PopUpProps {
   children: React.ReactNode;
   className?: Colors;
 }
-export interface PopupWrraperProps {
+interface PopupWrraperProps {
   visible: boolean;
 }
 
-export const PopupWrraperOpenCss = css`
+const PopupWrraperOpenCss = css`
   z-index: 20;
   transform: rotateX(0deg);
 `;
 
-export const PopupWrraperCloseCss = css`
+const PopupWrraperCloseCss = css`
   transition: transform 0.5s, z-index 1s ease-in;
 `;
 
-export const PopupWrapper = styled.div<PopupWrraperProps>`
+const PopupWrapper = styled.div<PopupWrraperProps>`
   position: fixed;
   top: 5%;
   color: white;
@@ -95,6 +95,7 @@ Popup.defaultProps = {
   autoClose: false,
   openDelay: 500,
   closeDelay: 2000,
+  className: "red",
 };
 
 export default Popup;

@@ -1,7 +1,7 @@
 import { Skeleton } from "@mui/material";
 import { Cell } from "./style";
 
-const Skelaton = () => {
+const Skeletons = () => {
   return (
     <div>
       <Cell>
@@ -30,4 +30,4 @@ const Skelaton = () => {
   );
 };
 
-export default Skelaton;
+export default Skeletons;
