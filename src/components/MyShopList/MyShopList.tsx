@@ -20,7 +20,7 @@ import Select from "@mui/material/Select";
 
 import useDelay from "src/hooks/useDelay";
 import { getShopPage, removeShopPage, setShopPage } from "src/utils/localStorageUtil";
-import { Wrapper, TableHeader, Cell, Empty } from "./style";
+import { Wrapper, TableHeader, Cell, Empty, TableBody } from "./style";
 import { AxioseReponse, IList, IPage } from "./type";
 import Skelaton from "./Skelaton";
 import Content from "./Content";
@@ -113,6 +113,9 @@ const MyShopList = () => {
       if (value && typeof value !== "string") {
         setTitleFilter(value.title);
       }
+      if (value && typeof value === "string") {
+        setTitleFilter(value);
+      }
       if (reason === "clear") {
         setTitleFilter(null);
       }
@@ -151,7 +154,11 @@ const MyShopList = () => {
       </Link>
     </Empty>
   ) : (
-    Array.from({ length: limit }).map((_, idx) => <Skelaton key={idx} />)
+    Array.from({ length: limit }).map((_, idx) => (
+      <TableBody key={idx}>
+        <Skelaton />
+      </TableBody>
+    ))
   );
 
   return (
@@ -168,7 +175,7 @@ const MyShopList = () => {
             freeSolo
             onChange={handleTitlteFilterOnChange}
             options={pages}
-            getOptionLabel={option => option.title}
+            getOptionLabel={option => (option.title ? option.title : "")}
             renderOption={(props, option) => (
               <Box component="li" {...props} key={option.id}>
                 {option.title}

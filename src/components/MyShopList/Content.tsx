@@ -14,7 +14,7 @@ const STATE_ENUM: StateEnumType = {
 
 const Content = ({ pages, titleFilter, select, handleLatestClick }: IContent) => {
   const contetns = pages.filter(({ title, state }) => {
-    if (titleFilter !== null && titleFilter !== title) return false;
+    if (titleFilter !== null && title.match(titleFilter) === null) return false;
     if (select !== state && select !== "NONE") return false;
     return true;
   });
