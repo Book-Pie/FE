@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 import http from "src/api/http";
 import { RootState } from "src/modules/store";
+import { paramProps } from "src/pages/BookDetail/types";
 import { bookAsyncFail, bookAsyncSuccess } from "./types";
 
 const initialState = {
@@ -11,11 +12,24 @@ const initialState = {
   replyDate: "",
 };
 
-export const bookDetailAsync = createAsyncThunk<bookAsyncSuccess, number>(
-  `book/bookAsync`,
-  async (item, { rejectWithValue }) => {
+const name = "bookDetail";
+
+export const bookDetailAsync = createAsyncThunk<bookAsyncSuccess, paramProps>(
+  `${name}/bookAsync`,
+  async ({ id, itemId }, { rejectWithValue }) => {
     try {
-      const response = await http.get(`book/${item}`, item);
+      if (id === null) {
+        const response = await http.get(`book/${itemId}`, itemId);
+        const { data } = response;
+        const { success } = data;
+        if (!success) {
+          if (data.error.code === 200) {
+            return console.log(data);
+          }
+        }
+        return data;
+      }
+      const response = await http.get(`book/${itemId}?userId=${id}`, itemId, id);
       const { data } = response;
       const { success } = data;
 
@@ -42,7 +56,6 @@ const bookDetailSlice = createSlice({
       .addCase(bookDetailAsync.pending, state => {
         state.status = "loading";
       })
-
       .addCase(bookDetailAsync.fulfilled, (state, { payload }) => {
         state.status = "success";
         state.content = payload;

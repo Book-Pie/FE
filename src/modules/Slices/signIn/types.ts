@@ -16,7 +16,7 @@ export interface NickNameUpdateParam {
 
 // =========================== 썽크함수 성공 시 리턴 타입 ===========================
 export interface IUserPrfile {
-  id: number;
+  id: number | null;
   email: string;
   nickName: string;
   name: string;

@@ -43,8 +43,11 @@ const Routers = () => {
       <Route path="/oAuthTest" component={OauthTest} />
       <Route path="/oAuth/:name" component={Oauth} />
       <Route path="/materailUiExample" component={MaterailUiExample} />
-      <Route path="/book/:itemId" component={BookDetail} />
-      <Route path="/book" component={BookReviewList} />
+      <Switch>
+        <Route path="/book/:itemId" component={BookDetail} />
+        <Route path="/book/:itemId/userId:id" component={BookDetail} />
+        <Route path="/book" component={BookReviewList} />
+      </Switch>
       <Route path="*" render={() => <Redirect to="/" />} />
     </Switch>
   );

@@ -1,8 +1,11 @@
 import React from "react";
-import { commentLike, commentUnLike, deleteComment } from "src/modules/Slices/comment/commentSlice";
+import { commentLike, deleteComment } from "src/modules/Slices/comment/commentSlice";
 import { useDispatch } from "react-redux";
 import { Rating } from "@mui/material";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
+import { useTypedSelector } from "src/modules/store";
+import { signInSelector } from "src/modules/Slices/signIn/signInSlice";
+import { reviewDateFormat } from "src/utils/formatUtil";
 import {
   ContentWrapper,
   ReviewContent,
@@ -20,7 +23,14 @@ import { ReviewItemProps } from "./types";
 
 export const ReviewItem: React.FC<ReviewItemProps> = ({ key, content, myCommentId }) => {
   const dispatch = useDispatch();
-  const { reviewId, likeCheck, reviewLikeCount, reviewDate, nickname, userId, rating } = content;
+  const { reviewId, likeCheck, reviewLikeCount, reviewDate, nickName, rating, userId } = content;
+
+  const commentDate = reviewDateFormat(reviewDate);
+
+  const noId = -1;
+  const myUserStatus = useTypedSelector(signInSelector);
+  const { user } = myUserStatus ?? null;
+  const { id } = user ?? noId;
 
   const deleteClick = () => {
     if (window.confirm("댓글을 정말로 삭제하시겠습니까?") === true) {
@@ -37,32 +47,23 @@ export const ReviewItem: React.FC<ReviewItemProps> = ({ key, content, myCommentI
   };
 
   const likeClick = () => {
-    if (likeCheck === false) {
-      dispatch(
-        commentLike({
-          reviewId,
-          userId: myCommentId,
-        }),
-      );
-    } else if (likeCheck === true) {
-      dispatch(
-        commentUnLike({
-          reviewId,
-          userId: myCommentId,
-        }),
-      );
-    }
+    dispatch(
+      commentLike({
+        reviewId,
+        userId: myCommentId,
+      }),
+    );
   };
 
   return (
     <ReviewItemWrapper>
-      <ClickArea>{userId === myCommentId && <Button onClick={deleteClick}>x</Button>}</ClickArea>
+      <ClickArea>{id === userId && <Button onClick={deleteClick}>x</Button>}</ClickArea>
       <ReviewContent>
         <ReviewContentTop>
           <Rating name="read-only" precision={0.5} value={rating} size="small" readOnly />
-          <p>{nickname}</p>
+          <p>{nickName}</p>
           <ContentBottom>
-            <ReplyDate>{reviewDate}</ReplyDate>
+            <ReplyDate>{commentDate}</ReplyDate>
           </ContentBottom>
         </ReviewContentTop>
         <ReviewContentBottom>

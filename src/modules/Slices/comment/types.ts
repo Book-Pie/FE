@@ -31,7 +31,7 @@ export interface getCommentProps {
   userId: number;
   content: string;
   rating: number;
-  nickname: string;
+  nickName: string;
   reviewLikeCount: number;
   reviewDate: string;
   likeCheck: boolean;
@@ -56,6 +56,7 @@ export interface pageableProps {
 
 export interface commentData {
   content: getCommentProps[];
+  myCommentCheck: boolean;
   pageable: pageableProps;
   totalElements: number;
   totalPages: number;
@@ -69,16 +70,24 @@ export interface commentData {
 }
 
 export interface commentAsyncSuccess {
-  success: boolean;
   data: commentData;
   error: null;
+  success: boolean;
+}
+
+// 나의 댓글
+export interface myCommentAsyncSuccess {
+  data: getCommentProps;
+  error: null;
+  success: boolean;
 }
 
 // 리듀가 사용할 데이터 타입
 export interface commentReduceProps {
-  content: commentAsyncSuccess;
+  content: getCommentProps[];
   myCommentCheck: boolean;
   myComment: getCommentProps | null;
+  pageable: pageableProps;
   status: "loading" | "success" | "failed";
   error: null | ErrorHandling;
 }
@@ -99,10 +108,7 @@ export interface deleteCommentProps {
 
 export interface commentListProps {
   bookId: number;
-  myUserId: number;
 }
-
-export type myCommentAsyncSuccess = getCommentProps;
 
 export interface CommentId {
   reviewId: number;

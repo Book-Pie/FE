@@ -1,63 +1,52 @@
 import React, { useEffect } from "react";
 import { ReviewList } from "components/Reviews/ReviewList/ReviewList";
 import { ReviewWrite } from "components/Reviews/ReviewWrite";
-import useSignIn from "hooks/useSignIn";
-import {
-  comments,
-  myComment,
-  myReviewComment,
-  myCommentCheck,
-  reviewCommentList,
-} from "src/modules/Slices/comment/commentSlice";
+import { myReviewComment, reviewCommentList, commentsSelector } from "src/modules/Slices/comment/commentSlice";
 import { useTypedSelector } from "src/modules/store";
-import Box from "@mui/material/Box";
-import { Skeleton } from "@mui/material";
-import { FlexColum } from "src/pages/BookDetail/style";
-import { ReviewsProps } from "./types";
+import { useDispatch } from "react-redux";
+import { signInSelector } from "src/modules/Slices/signIn/signInSlice";
+import { useHistory } from "react-router";
+import { ReviewsParams } from "./types";
+import { ReviewListEmpty } from "../ReviewList/ReviewListEmpty";
 
-export const Reviews: React.FC<ReviewsProps> = ({ bookId }) => {
-  // const myReviewContent = useTypedSelector(myComment);
-  // const myReviewCheck = useTypedSelector(myCommentCheck);
-  const commentList = useTypedSelector(comments);
-  // const myComment = useTypedSelector(myId); // 나의 아이디 정보
-  const myUserId = 17; // 나의 아이디 임시 데이터
+export const Reviews: React.FC<ReviewsParams> = ({ bookId }) => {
+  const dispatch = useDispatch();
+  const history = useHistory();
 
-  const { dispatch } = useSignIn();
+  const signInStatus = useTypedSelector(signInSelector);
+  const { user, isLoggedIn } = signInStatus;
+  const { id } = user ?? -1;
+
+  const reviewSelector = useTypedSelector(commentsSelector);
+  const { myCommentCheck, content, myComment } = reviewSelector;
 
   useEffect(() => {
-    dispatch(reviewCommentList({ bookId, myUserId }));
-    // dispatch(myReviewComment(myUserId));
-  }, [bookId, dispatch]);
+    dispatch(reviewCommentList({ bookId, id }));
+    if (myCommentCheck === true) {
+      dispatch(myReviewComment({ bookId, id }));
+    }
+  }, [bookId, id, dispatch, myCommentCheck]);
 
-  if (commentList.length !== 0) {
-    const reviewContentList = commentList.data.content;
-    return (
-      <div className="Reviews">
-        {/* 정렬 부분 */}
-        {/* <ReviewListHeader bookId={bookId} />*/}
-        <ReviewList bookId={bookId} commentList={reviewContentList} myCommentId={myUserId} />
-        <ReviewWrite
-          bookId={bookId}
-          // myReviewCheck={myReviewCheck}
-          // myReviewContent={myReviewContent}
-          myCommentId={myUserId}
-        />
-      </div>
-    );
-  }
   return (
-    <FlexColum>
-      <Box sx={{ pt: 0, marginRight: 5, marginTop: 5 }}>
-        <Skeleton width="150px" variant="rectangular" />
-      </Box>
-      <Skeleton sx={{ marginTop: 2 }} variant="rectangular" width={700} height={220} />
-      <Box sx={{ pt: 0, marginLeft: 33, marginTop: 5 }}>
-        <Skeleton width="200px" height="50px" variant="rectangular" />
-      </Box>
-      <Skeleton sx={{ marginTop: 2 }} variant="rectangular" width={700} height={220} />
-      <Box sx={{ pt: 0, marginLeft: 71, marginTop: 3 }}>
-        <Skeleton width="130px" height="30px" variant="rectangular" />
-      </Box>
-    </FlexColum>
+    <div className="Reviews">
+      {/* 정렬 부분 */}
+      {/* <ReviewListHeader bookId={bookId} />*/}
+      {content.length ? <ReviewList bookId={bookId} commentList={content} myCommentId={id} /> : <ReviewListEmpty />}
+      <ReviewWrite
+        bookId={bookId}
+        myReviewCheck={myCommentCheck}
+        myComment={myComment}
+        myCommentId={id}
+        checkAuth={() => {
+          if (isLoggedIn) {
+            return true;
+          }
+          if (confirm("로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?")) {
+            history.replace("/signIn");
+          }
+          return false;
+        }}
+      />
+    </div>
   );
 };

@@ -8,8 +8,9 @@ export interface ReviewTextareaProps {
   isDisabled: boolean;
 }
 
-export interface ReviewsProps {
-  bookId: number;
+export interface ReviewsParams {
+  bookId: string;
+  id: number;
 }
 
 export interface ReviewFormProps {
@@ -18,8 +19,9 @@ export interface ReviewFormProps {
   onSubmit?: (reviewContent: string) => void;
   onCancel?: () => void;
   isDisabled?: boolean;
-  myReviewContent: getCommentProps;
+  myComment: getCommentProps | null;
   userId: number;
+  checkAuth: () => boolean;
 }
 
 export interface SubmitButtonProps {

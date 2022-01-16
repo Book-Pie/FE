@@ -3,43 +3,58 @@ import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import { addComment, editComment } from "src/modules/Slices/comment/commentSlice";
 import { HoverRating } from "src/components/Rating/Rating";
-import Editor from "src/components/Editor/Editor";
-import { CancelButton, ClickButton, SubmitButton } from "./SubmitButton";
-import { ButtonArea } from "./style";
+import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
+import { useTypedSelector } from "src/modules/store";
+import { signInSelector } from "src/modules/Slices/signIn/signInSlice";
+import { getMyReview, setMyReview } from "src/utils/localStorageUtil";
+import { reviewDateFormat } from "src/utils/formatUtil";
+import { ButtonArea, TextareaAutosize, TextWrapper, MyReviwContent } from "./style";
 import { ReviewFormProps } from "./types";
 
-export const ReviewForm: React.FC<ReviewFormProps> = ({ isbn, isMyReview, myReviewContent, userId }) => {
+export const ReviewForm: React.FC<ReviewFormProps> = ({ isbn, isMyReview, myComment, userId, checkAuth }) => {
   const { handleSubmit } = useForm({ defaultValues: { something: "anything" } });
+  const { reviewDate } = myComment ?? "";
+  const commentDate = reviewDateFormat(reviewDate);
 
-  const editStatus = false;
-  // let myCommentDefault: React.SetStateAction<string> | null = null;
+  const myUserStatus = useTypedSelector(signInSelector);
+  const { isLoggedIn } = myUserStatus ?? false;
 
-  // if (myReviewContent == null) {
-  //   editStatus = false;
-  //   myCommentDefault = "";
-  // } else {
-  //   editStatus = true;
-  //   myCommentDefault = myReviewContent.content;
-  // }
+  let editStatus = false;
+  let myCommentDefault = "";
+
+  if (myComment === null) {
+    editStatus = false;
+    myCommentDefault = "";
+  } else {
+    editStatus = true;
+    myCommentDefault = myComment.content;
+  }
 
   const dispatch = useDispatch();
-  const [reviewContent, setContent] = useState(""); // 리뷰 등록
-  // const [myContent, setMyContent] = useState(myCommentDefault); // 리뷰 수정
-  const [myContent, setMyContent] = useState(""); // 리뷰 수정
-
+  const [reviewContent, setContent] = useState(myCommentDefault); // 리뷰 등록
   const [ratingValue, setValue] = useState(3); // 별점 추가
   const [editDisabled, editEnabled] = useState(editStatus);
 
-  // useEffect(() => {
-  //   return setMyContent(myCommentDefault);
-  // }, [myCommentDefault]);
+  useEffect(() => {
+    if (isLoggedIn === true) {
+      setMyReview(myCommentDefault);
+      const saved = getMyReview();
+      if (saved !== null) {
+        setContent(saved);
+      }
+    }
+  }, [isLoggedIn, myCommentDefault, editEnabled]);
 
   const handleRatingChange = (event: any) => {
     setValue(event.target.value);
   };
 
+  const handleReviewChange = (event: any) => {
+    setContent(event.target.value);
+  };
+
   const addReview = () => {
-    // 로그인 시 리뷰 입력 기능 추가 필요
     dispatch(
       addComment({
         isbn,
@@ -54,8 +69,8 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({ isbn, isMyReview, myRevi
   const editReview = () => {
     dispatch(
       editComment({
-        // reviewId:myReviewContent.content.reviewId;
         userId,
+        reviewId: myComment.reviewId,
         content: reviewContent,
         rating: ratingValue,
       }),
@@ -65,63 +80,75 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({ isbn, isMyReview, myRevi
 
   const handleEdit = () => {
     editEnabled(prev => !prev);
-    if (editDisabled === false) {
-      setMyContent(reviewContent);
-    }
   };
 
   return isMyReview ? (
-    editDisabled ? (
-      <form onSubmit={handleSubmit(editReview)}>
-        <div className="ReviewForm">
-          <HoverRating isDisabled={editDisabled} rating={ratingValue} />
-          <Editor
-            setEditorValue={setContent}
-            value={myReviewContent.content}
+    <form onSubmit={handleSubmit(editReview)}>
+      <HoverRating isDisabled={editDisabled} rating={ratingValue} />
+      {editDisabled && (
+        <>
+          <TextWrapper>
+            <MyReviwContent>{commentDate}</MyReviwContent>
+            <MyReviwContent margin dangerouslySetInnerHTML={{ __html: reviewContent }} />
+          </TextWrapper>
+          <ButtonArea>
+            <Button variant="outlined" onClick={handleEdit}>
+              수정하기
+            </Button>
+          </ButtonArea>
+        </>
+      )}
+      {!editDisabled && (
+        <>
+          <TextareaAutosize
+            onChange={handleReviewChange}
+            value={reviewContent}
             limit={100}
             height={100}
             placeholder="리뷰 작성 시 10자 이상 작성해주세요."
             isDisabled={editDisabled}
           />
           <ButtonArea>
-            <ClickButton onClick={handleEdit}>수정하기</ClickButton>
+            <Stack spacing={2} direction="row" justifyContent="flex-end">
+              <Button variant="outlined" onClick={handleEdit}>
+                취소하기
+              </Button>
+              <Button variant="contained" type="submit" disabled={reviewContent.length < 10}>
+                수정완료
+              </Button>
+            </Stack>
           </ButtonArea>
-        </div>
-      </form>
-    ) : (
-      <form onSubmit={handleSubmit(editReview)}>
-        <div className="ReviewForm">
-          <HoverRating isDisabled={editDisabled} rating={ratingValue} handleChange={handleRatingChange} />
-          <Editor
-            setEditorValue={setContent}
-            value={myContent}
-            limit={100}
-            height={100}
-            placeholder="리뷰 작성 시 10자 이상 작성해주세요."
-            isDisabled={editDisabled}
-          />
-          <ButtonArea>
-            <CancelButton onClick={handleEdit}>취소하기</CancelButton>
-            <SubmitButton isDisabled={reviewContent.length < 10}>수정완료</SubmitButton>
-          </ButtonArea>
-        </div>
-      </form>
-    )
+        </>
+      )}
+    </form>
   ) : (
     <form onSubmit={handleSubmit(addReview)}>
       <div className="ReviewForm">
         <HoverRating isDisabled={editDisabled} rating={ratingValue} handleChange={handleRatingChange} />
-        <Editor
-          setEditorValue={setContent}
-          value={reviewContent}
-          limit={100}
-          height={100}
-          placeholder="리뷰 작성 시 10자 이상 작성해주세요."
-        />
+        {isLoggedIn ? (
+          <TextareaAutosize
+            onChange={handleReviewChange}
+            value={reviewContent}
+            limit={100}
+            height={100}
+            placeholder="리뷰 작성 시 10자 이상 작성해주세요."
+          />
+        ) : (
+          <TextareaAutosize
+            limit={100}
+            height={100}
+            placeholder="리뷰 작성 시 10자 이상 작성해주세요."
+            onClick={(event: React.ChangeEvent<any>) => {
+              if (!checkAuth()) {
+                event.preventDefault();
+              }
+            }}
+          />
+        )}
         <ButtonArea>
-          <SubmitButton isDisabled={reviewContent.length < 10} onClick={handleEdit}>
-            리뷰 등록
-          </SubmitButton>
+          <Button variant="outlined" type="submit" disabled={reviewContent.length < 10} onClick={handleEdit}>
+            리뷰등록
+          </Button>
         </ButtonArea>
       </div>
     </form>

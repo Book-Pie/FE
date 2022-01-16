@@ -7,9 +7,9 @@ import { FlexColum, FlexWrapper } from "./style";
 import { BookDetailProps } from "./types";
 
 const BookDetail = ({ match }: BookDetailProps) => {
-  let { itemId } = match.params;
-  itemId = parseInt(itemId);
-  const { bookContent } = useBookDetail(itemId);
+  const { itemId } = match.params;
+  const { id } = match.params;
+  const { bookContent } = useBookDetail({ itemId, id });
 
   if (bookContent.length !== 0) {
     const { author, categoryName, cover, title, fullDescription, fullDescription2, publisher } = bookContent[0];
@@ -17,7 +17,12 @@ const BookDetail = ({ match }: BookDetailProps) => {
     return (
       <>
         <BookSideBar author={author} cover={cover} title={title} categoryName={categoryName} publisher={publisher} />
-        <BookDetailContent bookIntroText={fullDescription} authorIntroText={fullDescription2} bookId={itemId} />
+        <BookDetailContent
+          bookIntroText={fullDescription}
+          authorIntroText={fullDescription2}
+          bookId={itemId}
+          myUserId={id}
+        />
       </>
     );
   }

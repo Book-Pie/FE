@@ -1,33 +1,49 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "src/modules/store";
 import http from "src/api/http";
+import { ReviewsParams } from "src/components/Reviews/ReviewForm/types";
 import {
-  getCommentProps,
   commentAsyncSuccess,
   myCommentAsyncSuccess,
   deleteCommentProps,
   CommentId,
   commentReduceProps,
-  commentListProps,
-  commentSuccess,
   addCommentProps,
   editCommentProps,
 } from "./types";
 
 const initialState: commentReduceProps = {
   content: [],
-  // myCommentCheck: false,
-  // myComment: null,
+  myCommentCheck: false,
+  myComment: null,
+  pageable: {
+    sort: {
+      empty: false,
+      sorted: true,
+      unsorted: false,
+    },
+    offset: 0,
+    pageNumber: 0,
+    pageSize: 4,
+    paged: true,
+    unpaged: false,
+  },
   status: "loading",
   error: null,
 };
 
+const name = "comments";
+
 // 댓글 리스트
-export const reviewCommentList = createAsyncThunk<commentAsyncSuccess, commentListProps>(
-  "comments/commentLoad",
-  async ({ bookId, myUserId }, { rejectWithValue }) => {
+export const reviewCommentList = createAsyncThunk<commentAsyncSuccess, ReviewsParams>(
+  `${name}/commentList`,
+  async ({ bookId, id }, { rejectWithValue }) => {
     try {
-      const response = await http.get(`/book-review/${bookId}?&userId=${myUserId}`);
+      if (id === undefined) {
+        const response = await http.get(`/book-review/${bookId}`);
+        return response.data;
+      }
+      const response = await http.get(`/book-review/${bookId}?userId=${id}`);
       return response.data;
     } catch (error: any) {
       console.log(error);
@@ -37,12 +53,11 @@ export const reviewCommentList = createAsyncThunk<commentAsyncSuccess, commentLi
 );
 
 // 댓글 작성
-export const addComment = createAsyncThunk<commentAsyncSuccess, addCommentProps>(
-  "/api/book-review/create",
+export const addComment = createAsyncThunk<myCommentAsyncSuccess, addCommentProps>(
+  `${name}/create`,
   async (data, { rejectWithValue }) => {
     try {
       const response = await http.post(`/book-review/`, data);
-
       return response.data;
     } catch (error: any) {
       if (error.response) {
@@ -70,9 +85,9 @@ export const addComment = createAsyncThunk<commentAsyncSuccess, addCommentProps>
 );
 
 // 댓글 삭제하기
-export const deleteComment = createAsyncThunk<commentSuccess, deleteCommentProps>(
-  "comment/delete",
-  async ({ id }, { rejectWithValue }) => {
+export const deleteComment = createAsyncThunk(
+  `${name}/delete`,
+  async ({ id }: deleteCommentProps, { rejectWithValue }) => {
     try {
       await http.delete(`/book-review/${id}`);
       // await axios.delete(`/api/book-review/delete/${id}`);
@@ -85,11 +100,10 @@ export const deleteComment = createAsyncThunk<commentSuccess, deleteCommentProps
 
 // 댓글 수정
 export const editComment = createAsyncThunk<myCommentAsyncSuccess, editCommentProps>(
-  "comment/edit",
+  `${name}/edit`,
   async (data, { rejectWithValue }) => {
     try {
-      const response = await http.patch(`/content/${data.userId}`, data);
-
+      const response = await http.put(`/book-review`, data);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response.data);
@@ -98,15 +112,11 @@ export const editComment = createAsyncThunk<myCommentAsyncSuccess, editCommentPr
 );
 
 // 나의 댓글
-export const myReviewComment = createAsyncThunk<commentAsyncSuccess, number>(
-  "comments/myComment",
-  async (myUserId, { rejectWithValue }) => {
+export const myReviewComment = createAsyncThunk<myCommentAsyncSuccess, ReviewsParams>(
+  `${name}/myComment`,
+  async ({ bookId, id }, { rejectWithValue }) => {
     try {
-      const response = await http.get(`/content?userId=${myUserId}`);
-
-      if (response.data.length > 0) {
-        return response.data[0];
-      }
+      const response = await http.get(`/book-review/my/${bookId}?userId=${id}`);
       return response.data;
     } catch (error: any) {
       console.log(error);
@@ -116,33 +126,15 @@ export const myReviewComment = createAsyncThunk<commentAsyncSuccess, number>(
 );
 
 // 댓글 좋아요 추가 및 삭제하기
-export const commentLike = createAsyncThunk<commentSuccess, CommentId>(
-  "/comments/like",
-  async (data, { rejectWithValue }) => {
-    try {
-      await http.post(`/book-review/like/${data}`, data);
-
-      return data;
-    } catch (error: any) {
-      console.error(error);
-      return rejectWithValue(error.response.data);
-    }
-  },
-);
-
-// 댓글 좋아요 취소하기
-export const commentUnLike = createAsyncThunk<commentSuccess, CommentId>(
-  "/comments/unlike",
-  async (data, { rejectWithValue }) => {
-    try {
-      await http.patch(`/content/${data}`, data);
-      return data;
-    } catch (error: any) {
-      console.error(error);
-      return rejectWithValue(error.response.data);
-    }
-  },
-);
+export const commentLike = createAsyncThunk<CommentId, CommentId>(`${name}/like`, async (data, { rejectWithValue }) => {
+  try {
+    await http.post(`/book-review/like/`, data);
+    return data;
+  } catch (error: any) {
+    console.error(error);
+    return rejectWithValue(error.response.data);
+  }
+});
 
 const commentSlice = createSlice({
   name: "commentReduce",
@@ -150,13 +142,14 @@ const commentSlice = createSlice({
   reducers: {},
   extraReducers: builder => {
     builder
-      // 포스트 불러오기
+      // 댓글 불러오기
       .addCase(reviewCommentList.pending, state => {
         state.status = "loading";
       })
       .addCase(reviewCommentList.fulfilled, (state, { payload }) => {
-        state.content = payload;
+        state.content = payload.data.content;
         state.status = "success";
+        state.myCommentCheck = payload.data.myCommentCheck;
       })
       .addCase(reviewCommentList.rejected, state => {
         state.status = "failed";
@@ -166,10 +159,9 @@ const commentSlice = createSlice({
         state.status = "loading";
       })
       .addCase(addComment.fulfilled, (state, { payload }) => {
-        state.content.data.content.push(payload.data);
+        state.content.push(payload.data);
         state.status = "success";
-        // state.myCommentCheck = true;
-        // state.myComment = payload;
+        state.myComment = payload.data;
       })
       .addCase(addComment.rejected, state => {
         state.status = "failed";
@@ -178,11 +170,11 @@ const commentSlice = createSlice({
       .addCase(deleteComment.pending, state => {
         state.status = "loading";
       })
-      .addCase(deleteComment.fulfilled, (state, action) => {
+      .addCase(deleteComment.fulfilled, (state, { payload }) => {
         state.status = "success";
-        state.content.data.content = state.content.data.content.filter(comment => comment.reviewId !== action.payload);
-        // state.myCommentCheck = false;
-        // state.myComment = state.content.filter((comment: { id: number }) => comment.id !== action.payload);
+        state.content = state.content.filter(comment => comment.reviewId !== payload);
+        state.myComment = null;
+        state.myCommentCheck = false;
       })
       .addCase(deleteComment.rejected, state => {
         state.status = "failed";
@@ -192,15 +184,13 @@ const commentSlice = createSlice({
         state.status = "loading";
       })
       .addCase(editComment.fulfilled, (state, { payload }) => {
-        state.myComment = payload;
+        const { data } = payload;
+        const { content, rating, reviewId, reviewDate } = data;
+        state.myComment = data;
         state.status = "success";
-        state.content = state.content.map((v: { id: number }) =>
-          v.id !== payload.id
-            ? v
-            : { ...v, content: payload.content, rating: payload.rating, reviewDate: payload.reviewDate },
-        );
+        state.content = state.content.map(v => (v.reviewId !== reviewId ? v : { ...v, content, rating, reviewDate }));
       })
-      .addCase(editComment.rejected, (state, action) => {
+      .addCase(editComment.rejected, state => {
         state.status = "failed";
       })
       // 나의 댓글
@@ -208,36 +198,23 @@ const commentSlice = createSlice({
         state.status = "loading";
       })
       .addCase(myReviewComment.fulfilled, (state, { payload }) => {
-        state.myComment = payload;
+        state.myComment = payload.data;
         state.status = "success";
       })
       .addCase(myReviewComment.rejected, state => {
         state.status = "failed";
       })
-      // 댓글 좋아요
+      // 댓글 좋아요 추가 및 취소
       .addCase(commentLike.pending, state => {
         state.status = "loading";
       })
       .addCase(commentLike.fulfilled, (state, { payload }) => {
         state.status = "success";
         state.content = state.content.map(v =>
-          v.id !== payload.id ? v : { ...v, reviewLikeCount: v.reviewLikeCount + 1, likeCheck: true },
+          v.reviewId !== payload.reviewId ? v : { ...v, reviewLikeCount: v.reviewLikeCount + 1, likeCheck: true },
         );
       })
       .addCase(commentLike.rejected, state => {
-        state.status = "failed";
-      })
-      // 댓글 좋아요 삭제
-      .addCase(commentUnLike.pending, state => {
-        state.status = "loading";
-      })
-      .addCase(commentUnLike.fulfilled, (state, { payload }) => {
-        state.status = "success";
-        state.content = state.content.map(v =>
-          v.id !== payload.id ? v : { ...v, reviewLikeCount: v.reviewLikeCount - 1, likeCheck: false },
-        );
-      })
-      .addCase(commentUnLike.rejected, state => {
         state.status = "failed";
       });
   },
@@ -246,7 +223,5 @@ const commentSlice = createSlice({
 export const commentsSelector = (state: RootState) => state.commentReduce;
 export const comments = (state: RootState) => state.commentReduce.content;
 export const myComment = (state: RootState) => state.commentReduce.myComment;
-export const likeCount = (state: RootState) => state.commentReduce.content.reviewLikeCount;
 export const myCommentCheck = (state: RootState) => state.commentReduce.myCommentCheck;
-
 export default commentSlice;

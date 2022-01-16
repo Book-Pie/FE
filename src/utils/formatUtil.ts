@@ -26,6 +26,13 @@ export const addHyphenFormat = (text: string) => {
   });
 };
 
+export const reviewDateFormat = (text: string) => {
+  if (text === undefined) {
+    return text;
+  }
+  return text.split("T", 1);
+};
+
 export function dateFormat(date: Date) {
   let month = date.getMonth() + 1;
   let day = date.getDate();
