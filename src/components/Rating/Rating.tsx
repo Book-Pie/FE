@@ -39,6 +39,7 @@ export const HoverRating = ({ isDisabled, rating, handleChange }: HoverRatingPro
       {rating !== null && <Box sx={{ ml: 2 }}>{labels[hover !== -1 ? hover : rating]}</Box>}
       <Rating
         name="hover-feedback"
+        defaultValue={3}
         size="large"
         value={rating}
         precision={0.5}

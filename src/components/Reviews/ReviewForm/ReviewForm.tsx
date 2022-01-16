@@ -22,18 +22,21 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({ isbn, isMyReview, myComm
 
   let editStatus = false;
   let myCommentDefault = "";
+  let myRatingDefault = 3;
 
   if (myComment === null) {
     editStatus = false;
     myCommentDefault = "";
+    // myRatingDefault = 3;
   } else {
     editStatus = true;
     myCommentDefault = myComment.content;
+    myRatingDefault = myComment.rating;
   }
 
   const dispatch = useDispatch();
   const [reviewContent, setContent] = useState(myCommentDefault); // 리뷰 등록
-  const [ratingValue, setValue] = useState(3); // 별점 추가
+  const [ratingValue, setValue] = useState(myRatingDefault); // 별점 추가
   const [editDisabled, editEnabled] = useState(editStatus);
 
   useEffect(() => {
@@ -84,7 +87,7 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({ isbn, isMyReview, myComm
 
   return isMyReview ? (
     <form onSubmit={handleSubmit(editReview)}>
-      <HoverRating isDisabled={editDisabled} rating={ratingValue} />
+      <HoverRating isDisabled={editDisabled} rating={ratingValue} handleChange={handleRatingChange} />
       {editDisabled && (
         <>
           <TextWrapper>
