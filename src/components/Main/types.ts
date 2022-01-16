@@ -7,6 +7,7 @@ export interface BestSellerProps {
   index: number;
   isbn13: number;
   isbn: number;
+  customerReviewRank: number;
 }
 
 export interface BestSellerSliderProps {

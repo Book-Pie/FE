@@ -77,6 +77,13 @@ export const DropDownWrapper = styled.div`
   }
 `;
 
+export const ReviewListTitleWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  width: 68rem;
+`;
+
 export const Filter = styled.div`
   display: flex;
   justify-content: center;

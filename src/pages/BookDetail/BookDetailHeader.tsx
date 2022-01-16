@@ -1,4 +1,4 @@
-import Rating from "@mui/material/Rating";
+import StarRating from "src/components/Rating/StarRating";
 import { bookInfoHeader } from "src/modules/Slices/bookDetail/types";
 import {
   BookCategory,
@@ -6,10 +6,7 @@ import {
   BookDetailImg,
   BookDetailTopContent,
   BookInfo,
-  BookRatingContent,
   BookTitle,
-  RatingContent,
-  RatingScore,
   SmallBookInfo,
 } from "./style";
 
@@ -23,13 +20,7 @@ const BookDetailHeader = ({ author, cover, title, categoryName, publisher, Revie
           <BookTitle>{title}</BookTitle>
           <SmallBookInfo>{author}</SmallBookInfo>
           <SmallBookInfo>{publisher}</SmallBookInfo>
-          <BookRatingContent>
-            <RatingContent>알라딘 평균</RatingContent>
-            <RatingContent>
-              <Rating name="read-only" precision={0.5} value={ReviewRank} size="small" readOnly />
-              <RatingScore>({ReviewRank})점</RatingScore>
-            </RatingContent>
-          </BookRatingContent>
+          <StarRating ReviewRank={ReviewRank} />
         </BookInfo>
       </BookDetailTopContent>
     </BookDetailHeaderWrapper>

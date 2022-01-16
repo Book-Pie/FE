@@ -18,7 +18,7 @@ export const bookDetailAsync = createAsyncThunk<bookAsyncSuccess, paramProps>(
   `${name}/bookAsync`,
   async ({ id, itemId }, { rejectWithValue }) => {
     try {
-      if (id === null) {
+      if (id === undefined) {
         const response = await http.get(`book/${itemId}`, itemId);
         const { data } = response;
         const { success } = data;

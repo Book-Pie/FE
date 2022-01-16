@@ -13,7 +13,7 @@ export const ButtonText = styled.span`
 `;
 
 export const RatingContent = styled.span`
-  margin-right: 10px;
+  margin-right: 5px;
 `;
 
 export const RatingScore = styled.span`
@@ -49,7 +49,9 @@ export const SmallBookInfo = styled.div`
   margin-bottom: 20px;
 `;
 
-export const BookRatingContent = styled.div``;
+export const BookRatingContent = styled.div`
+  padding-left: 10px;
+`;
 
 export const FlexWrapper = styled.div`
   display: flex;

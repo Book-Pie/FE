@@ -6,7 +6,7 @@ import { Link, useLocation } from "react-router-dom";
 import theme from "src/assets/style/styledTheme";
 import BookReviewItem from "src/components/BookReviewList/BookReviewItem";
 import Categorys from "src/components/Categorys/Categorys";
-import DropDown from "src/components/DropDown/DropDown";
+import DropDown from "src/elements/DropDown";
 import { getBookSelector, getCategoryBook } from "src/modules/Slices/book/bookSlice";
 import { useTypedSelector } from "src/modules/store";
 import styled from "styled-components";
@@ -14,7 +14,7 @@ import { makeNewQueryString, removeQueryString } from "src/utils/queryStringUtil
 import Text from "src/elements/Text";
 import queryString from "query-string";
 import { BookReviewListContainer } from "../Main/style";
-import { DropDownWrapper } from "../UsedBook/style";
+import { ReviewListTitleWrapper } from "../UsedBook/style";
 
 const BookReviewList = () => {
   const location = useLocation();
@@ -39,7 +39,7 @@ const BookReviewList = () => {
   return (
     <BookReviewContainer>
       {/* <Categorys categorys={categorys} defaultLocation="usedBook" /> */}
-      <DropDownWrapper>
+      <ReviewListTitleWrapper>
         <Text bold fontSize="30px" margin="0 0 0 20px">
           리뷰
         </Text>
@@ -58,7 +58,7 @@ const BookReviewList = () => {
             </Link>
           </li>
         </DropDown>
-      </DropDownWrapper>
+      </ReviewListTitleWrapper>
       <BookReviewListContainer>
         {item.length !== 0
           ? item.map((item, index) => (
