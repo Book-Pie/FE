@@ -1,20 +1,31 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import Popup from "components/Popup/Popup";
-import Categorys from "components/Categorys/Categorys";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import Popup from "src/elements/Popup";
 import UsedBookCard from "src/components/UsedBookCard/UsedBookCard";
-import DropDown from "components/DropDown/DropDown";
+import DropDown from "src/elements/DropDown";
 import { getCategory, getUsedBooks } from "src/api/usedBook/usedBook";
 import { errorHandler } from "src/api/http";
 import { Link } from "react-router-dom";
-import { useLocation } from "react-router";
+import { useHistory, useLocation } from "react-router";
 import queryString from "query-string";
 import { makeNewQueryString, removeQueryString } from "utils/queryStringUtil";
 import noUsedBookCard from "assets/image/noComments.png";
-import Text from "src/elements/Text";
 import Loading from "src/elements/Loading";
-import { Skeleton, Stack } from "@mui/material";
+import Skeleton from "@mui/material/Skeleton";
+import Stack from "@mui/material/Stack";
+import TextField from "@mui/material/TextField";
+import useDelay from "src/hooks/useDelay";
+import Categorys from "src/components/Categorys/Categorys";
+import useDebounce from "src/hooks/useDebounce";
 import { UsedBookState, ICategory, IUsedBook, UsedBooksResponse, CategorysResponse, RequestParam } from "./types";
-import { Wrapper, UsedBookCardWrapper, DropDownWrapper, UsedBookCardEmpty, UsedBookRow } from "./style";
+import {
+  Wrapper,
+  UsedBookCardWrapper,
+  DropDownWrapper,
+  UsedBookCardEmpty,
+  UsedBookRow,
+  Filter,
+  MenuWrapper,
+} from "./style";
 
 const initialState: UsedBookState = {
   pages: [],
@@ -31,13 +42,16 @@ const UsedBook = () => {
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const observerRef = useRef<IntersectionObserver>();
-  const timerRef = useRef<NodeJS.Timeout | null>();
-  const [currentDropDownValue, setCurrentDropDownValue] = useState("정렬");
+  const throttlingRef = useRef<NodeJS.Timeout | null>();
+  const debounce = useDebounce();
+  const [currentDropDownValue, setCurrentDropDownValue] = useState("전체");
   const { pages, pageCount, isEmpty } = usedBook;
   const { search, pathname } = location;
-  const firstLoad = useRef(true);
 
-  const currentQuery = useMemo(() => queryString.parse(search), [search]);
+  const history = useHistory();
+  const delay = useDelay(600);
+
+  const query = useMemo(() => queryString.parse(search), [search]);
 
   // 무한스크롤
   const handleObserver = (node: HTMLDivElement) => {
@@ -49,11 +63,11 @@ const UsedBook = () => {
       const { target } = entry;
       if (pageCount !== currentPage && isLoading === false) {
         if (entry.isIntersecting) {
-          if (timerRef.current) return;
+          if (throttlingRef.current) return;
           setIsLoading(true);
-          timerRef.current = setTimeout(() => {
+          throttlingRef.current = setTimeout(() => {
             setCurrentPage(currentPage + 1);
-            timerRef.current = null;
+            throttlingRef.current = null;
             setIsLoading(false);
           }, 500);
           observer.unobserve(target);
@@ -73,37 +87,49 @@ const UsedBook = () => {
     observerRef.current.observe(node);
   };
 
-  const handleGetMoreUsedBooks = useCallback(async (param: RequestParam) => {
-    try {
-      const { nextPage, query = {} } = param;
-      const { data } = await getUsedBooks<UsedBooksResponse>(nextPage, query);
-      const { pageCount, pages } = data.data;
+  const handleGetMoreUsedBooks = useCallback(
+    async (param: RequestParam) => {
+      try {
+        const { nextPage, query = {} } = param;
+        const { data } = await getUsedBooks<UsedBooksResponse>(nextPage, query);
+        const { pageCount, pages } = data.data;
 
-      // 응답으로 넘어온 배열을 [[],[],[],[]] 이차원배열로 만들어준다.
-      const array = makeTwoDimensionalArray(pages);
+        // 응답으로 넘어온 배열을 [[],[],[],[]] 이차원배열로 만들어준다.
+        const array = makeTwoDimensionalArray(pages);
 
-      await new Promise(res => {
-        setTimeout(res, 600);
-      });
+        await delay();
+        setUsedBook(prev => ({
+          ...prev,
+          pageCount,
+          pages: array,
+          isEmpty: array.length === 0,
+        }));
+      } catch (error) {
+        const message = errorHandler(error);
+        setIsOpen(true);
+        setMessage(message);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [delay],
+  );
 
-      setUsedBook(prev => ({
-        ...prev,
-        pageCount,
-        pages: prev.pages.length === 0 ? [...array] : [...prev.pages, ...array],
-        isEmpty: array.length === 0,
-      }));
-    } catch (error) {
-      const message = errorHandler(error);
-      setIsOpen(true);
-      setMessage(message);
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
-
-  const handleLoadCategory = async () => {
+  const handleLoadCategory = useCallback(async () => {
     const { data } = await getCategory<CategorysResponse>();
     setCategorys(data.data);
+  }, []);
+
+  const handleTitleOnChange = ({ target: { value } }: React.ChangeEvent<HTMLInputElement>) => {
+    if (debounce.current) clearTimeout(debounce.current);
+    debounce.current = setTimeout(() => {
+      if (value) {
+        history.replace(makeNewQueryString(pathname, query, { title: value }));
+        return;
+      }
+      history.replace(removeQueryString(pathname, search, ["title"]));
+    }, 500);
+    return 1;
   };
 
   const cards = pages.map((cards, idx) => (
@@ -133,23 +159,22 @@ const UsedBook = () => {
   // ============================================ useEffect ============================================
   useEffect(() => {
     handleLoadCategory();
-    firstLoad.current = false;
-  }, []);
+  }, [handleLoadCategory]);
 
   useEffect(() => {
     setIsLoading(true);
-    if (Object.keys(currentQuery).length === 0) {
+    if (Object.keys(query).length === 0) {
       // 첫 컴포넌트 마운트 됬을때
       handleGetMoreUsedBooks({ nextPage: 1 });
     }
 
-    if (Object.keys(currentQuery).length !== 0) {
+    if (Object.keys(query).length !== 0) {
       // 카테고리 및 정렬 선택 시
       setUsedBook(initialState);
       setCurrentPage(1);
-      handleGetMoreUsedBooks({ nextPage: 1, query: currentQuery });
+      handleGetMoreUsedBooks({ nextPage: 1, query });
     }
-  }, [handleGetMoreUsedBooks, currentQuery]);
+  }, [handleGetMoreUsedBooks, query]);
 
   useEffect(() => {
     if (currentPage !== 1)
@@ -167,27 +192,47 @@ const UsedBook = () => {
           {message}
         </Popup>
       )}
-      <Categorys categorys={categorys} />
-      <DropDownWrapper>
-        <Text bold fontSize="30px">
-          중고장터
-        </Text>
-        <DropDown defaultValue={currentDropDownValue} setSelectedId={setCurrentDropDownValue}>
-          <li>
-            <Link to={removeQueryString(pathname, search, ["sort"])}>정렬</Link>
-          </li>
-          <li>
-            <Link id="date" to={makeNewQueryString(pathname, currentQuery, { sort: "date" })}>
-              최신순
-            </Link>
-          </li>
-          <li>
-            <Link id="view" to={makeNewQueryString(pathname, currentQuery, { sort: "view" })}>
-              조회순
-            </Link>
-          </li>
-        </DropDown>
-      </DropDownWrapper>
+      <Filter>
+        {Object.entries(query).map(([key, value], idx) => (
+          <Link key={idx} to={removeQueryString(pathname, search, [key])}>
+            <span key={idx}>
+              {value === "date" || value === "view" ? (value === "view" ? "조회순" : "최신순") : value}
+            </span>
+          </Link>
+        ))}
+      </Filter>
+      <Categorys categorys={categorys} defaultLocation="usedBook" />
+      <MenuWrapper>
+        <div>
+          <p>중고장터</p>
+        </div>
+        <div>
+          <TextField
+            fullWidth
+            onChange={handleTitleOnChange}
+            type="text"
+            color="mainDarkBrown"
+            placeholder="중고도서 제목을 입력해주세요."
+          />
+        </div>
+        <DropDownWrapper>
+          <DropDown defaultValue={currentDropDownValue} setSelectedId={setCurrentDropDownValue}>
+            <li>
+              <Link to={removeQueryString(pathname, search, ["sort"])}>전체</Link>
+            </li>
+            <li>
+              <Link id="date" to={makeNewQueryString(pathname, query, { sort: "date" })}>
+                최신순
+              </Link>
+            </li>
+            <li>
+              <Link id="view" to={makeNewQueryString(pathname, query, { sort: "view" })}>
+                조회순
+              </Link>
+            </li>
+          </DropDown>
+        </DropDownWrapper>
+      </MenuWrapper>
       <UsedBookCardWrapper>
         {isEmpty ? (
           <UsedBookCardEmpty>

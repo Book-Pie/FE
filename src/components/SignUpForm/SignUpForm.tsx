@@ -16,13 +16,19 @@ import { useEffect, useMemo, useState } from "react";
 import useDaumPost from "hooks/useDaumPost";
 import { errorHandler } from "src/api/http";
 import axios from "axios";
-import { getEmailDuplicateCheck, getNickNameDuplicateCheck, getSignUp } from "src/api/signUp/signUp";
+import { getEmailDuplicateCheck, getNickNameDuplicateCheck, getSignUp } from "src/api/oAuth/oAuth";
 import { useHistory } from "react-router";
-import Popup from "components/Popup/Popup";
+import Popup from "src/elements/Popup";
 import { hyphenRemoveFormat } from "utils/formatUtil";
 import Button from "@mui/material/Button";
+import naverImg from "assets/image/naver_oauth.png";
+import kakaoImg from "assets/image/kakao_oauth.png";
+import { Link } from "react-router-dom";
 import { FormErrorMessages, IAxiosPostPayload, IRows, SignUpFormReponse, ISignUpForm } from "./types";
-import { InputWrapper, ButtonWrapper, SignUpWrapper, ErrorWrapper, DaumPostWrapper } from "./style";
+import { InputWrapper, ButtonWrapper, SignUpWrapper, ErrorWrapper, DaumPostWrapper, Oauths } from "./style";
+
+const kakaOauthUrl = process.env.KAKAO_OAUTH_URL;
+const naverOauthUrl = process.env.NAVER_OAUTH_URL;
 
 const signUpFormInit: ISignUpForm = {
   email: "",
@@ -37,10 +43,9 @@ const signUpFormInit: ISignUpForm = {
 };
 
 const SignUpForm = () => {
-  const { register, handleSubmit, reset, formState, setValue, watch, clearErrors, setFocus, setError } =
-    useForm<ISignUpForm>({
-      defaultValues: signUpFormInit,
-    });
+  const { register, handleSubmit, reset, formState, setValue, watch, clearErrors, setFocus } = useForm<ISignUpForm>({
+    defaultValues: signUpFormInit,
+  });
 
   const [isDaumPostOpen, setIsDaumPostOpen] = useState(false);
   const { addressState, handleComplete } = useDaumPost();
@@ -63,33 +68,23 @@ const SignUpForm = () => {
       const [emailDuplicate, nickNameDuplicate] = validationReponse;
 
       // 중복은 false
-      if (emailDuplicate.data.data === false) {
-        setError("email", { type: "duplicate", message: "이미 가입한 이메일입니다." });
-      }
-      if (nickNameDuplicate.data.data === false) {
-        setError("nickName", { type: "duplicate", message: "사용중인 닉네임입니다." });
-      }
+      if (emailDuplicate.data.data === false) throw new Error("이미 가입한 이메일입니다.");
+      if (nickNameDuplicate.data.data === false) throw new Error("사용중인 닉네임입니다.");
 
-      if (nickNameDuplicate.data.data && emailDuplicate.data.data) {
-        const payload: IAxiosPostPayload = {
-          password,
-          name,
-          phone: hyphenRemoveFormat(phone),
-          email,
-          nickName,
-          address: {
-            postalCode,
-            mainAddress,
-            detailAddress,
-          },
-        };
+      await getSignUp<SignUpFormReponse, IAxiosPostPayload>({
+        password,
+        name,
+        phone: hyphenRemoveFormat(phone),
+        email,
+        nickName,
+        address: {
+          postalCode,
+          mainAddress,
+          detailAddress,
+        },
+      });
 
-        const response = await getSignUp<SignUpFormReponse, IAxiosPostPayload>(payload);
-        const signUpData = response.data;
-        if (signUpData.success) {
-          history.push("/signIn");
-        }
-      }
+      history.replace("/signIn");
     } catch (error) {
       const message = errorHandler(error);
       setIsOpen(true);
@@ -288,11 +283,24 @@ const SignUpForm = () => {
               주소찾기
             </Button>
             <Button variant="contained" color="mainDarkBrown" type="submit">
-              회원가입
+              가입하기
             </Button>
             <Button variant="contained" color="mainDarkBrown" onClick={handleReset}>
               초기화
             </Button>
+            <Link to="/signIn">
+              <Button variant="contained" color="mainDarkBrown">
+                로그인하기
+              </Button>
+            </Link>
+            <Oauths>
+              <a href={naverOauthUrl}>
+                <img src={naverImg} alt="naver" />
+              </a>
+              <a href={kakaOauthUrl}>
+                <img src={kakaoImg} alt="kakao" />
+              </a>
+            </Oauths>
           </ButtonWrapper>
         </div>
       </form>

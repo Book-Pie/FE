@@ -3,7 +3,7 @@ const webpack = require("webpack");
 // 웹팩이 자동으로 html를 build 파일에 넣어주고
 // script, link 태그를 유저가 아닌 웹팩이 자동으로 넣어준다.
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
+// const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
 // 웹팩 build시 이전 build 내용물을 제거해준다.
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 // 웹팩 데브서버 핫 리로딩 시 필요한 플러그인
@@ -23,7 +23,7 @@ const NAVER_OAUTH_URL_DEV =
   "https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=qtbZhYGrYVHhLWesnRyJ&redirect_uri=http://localhost:3000/oAuth/naver&state=state";
 const NAVER_OAUTH_URL_PRO =
   "https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=qtbZhYGrYVHhLWesnRyJ&redirect_uri=http://www.react-dev.p-e.kr/oAuth/naver&state=state";
-const BASE_URL_DEV = "http://localhost:3000/api/";
+const BASE_URL_DEV = "http://localhost:3000/api";
 const BASE_URL_PRO = "http://3.34.100.122:8080/api";
 
 module.exports = (_, argv) => {
@@ -145,7 +145,16 @@ module.exports = (_, argv) => {
       ],
     },
 
-    plugins: [new CleanWebpackPlugin(), new HtmlWebpackPlugin({ template: "./public/index.html" })],
+    plugins: [
+      new CleanWebpackPlugin(),
+      new HtmlWebpackPlugin({
+        template: "./public/index.ejs",
+        favicon: "./public/favicon.png",
+        templateParameters: {
+          title: mode === PRODUCTION ? "BookPie" : "개발용 서버",
+        },
+      }),
+    ],
 
     output: {
       path: getAbsolutePath("build"),
@@ -176,15 +185,6 @@ module.exports = (_, argv) => {
           target: "http://3.34.100.122:8080",
           changeOrigin: true,
         },
-        "/ttb": {
-          target: "http://www.aladin.co.kr",
-          changeOrigin: true,
-        },
-        // "/ItemLookUp.aspx": {
-        //   target: "https://www.aladin.co.kr/ttb/api/ItemLookUp.aspx",
-        //   changeOrigin: true,
-        //   // pathRewrite: { "^/ItemLookUp.aspx": "" },
-        // },
       },
     },
   };

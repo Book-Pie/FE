@@ -13,12 +13,13 @@ export interface ReviewsProps {
 }
 
 export interface ReviewFormProps {
-  bookId: number;
+  isbn: number;
   isMyReview: boolean;
   onSubmit?: (reviewContent: string) => void;
   onCancel?: () => void;
   isDisabled?: boolean;
   myReviewContent: getCommentProps;
+  userId: number;
 }
 
 export interface SubmitButtonProps {

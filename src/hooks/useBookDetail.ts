@@ -1,24 +1,25 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { bookDetailAsync } from "src/modules/Slices/bookDetail/bookDetailSlice";
 import { useTypedSelector } from "src/modules/store";
+import { bookInfo } from "src/modules/Slices/bookDetail/types";
 
 export const useBookDetail = (itemId: number) => {
-  const [loading, setLoading] = useState<boolean>(true);
   const dispatch = useDispatch();
   const bookDetailContent = useTypedSelector(state => state.bookDetailReduce.content.data);
+  const [bookContent, setBookContent] = useState<bookInfo[]>([]);
 
-  if (itemId && bookDetailContent === undefined) {
+  useEffect(() => {
     dispatch(bookDetailAsync(itemId));
-  }
-  const bookDetailItem = bookDetailContent?.item[0];
+  }, [dispatch, itemId]);
 
-  setTimeout(() => {
-    setLoading(false);
-  }, 2000);
+  useEffect(() => {
+    if (bookDetailContent !== undefined) {
+      setBookContent(bookDetailContent.item);
+    }
+  }, [bookDetailContent]);
 
   return {
-    bookDetailItem,
-    loading,
+    bookContent,
   };
 };

@@ -1,22 +1,27 @@
 import { Redirect, Route, Switch } from "react-router";
-import Mainpage from "src/pages/Main/Mainpage";
-import SignUp from "src/pages/SignUp/SignUp";
-import Test from "src/pages/Test/Test";
-import SingIn from "pages/SignIn/SignIn";
-import MyProfile from "src/pages/MyProfile/MyProfile";
-import OauthTest from "src/pages/OauthTest/OauthTest";
-import Payment from "src/pages/Payment/Payment";
-import SearchResult from "src/pages/SearchResult/SearchResult";
-import Find from "src/pages/Find/Find";
-import UsedBook from "src/pages/UsedBook/UsedBook";
-import Oauth from "src/pages/Oauth/Oauth";
 import useSignIn from "src/hooks/useSignIn";
 import { logout } from "modules/Slices/signIn/signInSlice";
-import { useCallback } from "react";
-import MaterailUiExample from "src/pages/Test/MaterailUiExample";
-import BookDetail from "src/pages/BookDetail/BookDetail";
 import UsedBookDetail from "src/pages/UsedBookDetail/UsedBookDetail";
+import { useCallback, lazy, Suspense } from "react";
+import Loading from "src/elements/Loading";
 import PrivateRoute from "./PrivateRoute";
+
+const SignUp = lazy(() => import("pages/SignUp/SignUp"));
+const Main = lazy(() => import("pages/Main/Main"));
+const SignIn = lazy(() => import("pages/SignIn/SignIn"));
+const My = lazy(() => import("pages/My/My"));
+const Payment = lazy(() => import("pages/Payment/Payment"));
+const Find = lazy(() => import("pages/Find/Find"));
+const UsedBook = lazy(() => import("pages/UsedBook/UsedBook"));
+const Oauth = lazy(() => import("pages/Oauth/Oauth"));
+const BookDetail = lazy(() => import("pages/BookDetail/BookDetail"));
+const BookReviewList = lazy(() => import("pages/BookReviewList/BookReviewList"));
+
+const FallBack = () => (
+  <div style={{ minHeight: "100vh" }}>
+    <Loading isLoading />
+  </div>
+);
 
 const Routers = () => {
   const { signIn, dispatch } = useSignIn();
@@ -28,25 +33,23 @@ const Routers = () => {
   }, [dispatch]);
 
   return (
-    <Switch>
-      <Route path="/" exact component={Mainpage} />
-      <PrivateRoute path="/signUp" component={SignUp} redirectPath="/" isLoggedIn={isLoggedIn} />
-      <PrivateRoute path="/signIn" component={SingIn} redirectPath="/" isLoggedIn={isLoggedIn} />
-      <PrivateRoute path="/myProfile" component={MyProfile} redirectPath="/signIn" isLoggedIn={isLoggedIn} />
-      <PrivateRoute path="/oAuthTest" component={OauthTest} redirectPath="/signIn" isLoggedIn={isLoggedIn} />
-      <PrivateRoute path="/payment" component={Payment} redirectPath="/signIn" isLoggedIn={isLoggedIn} />
-      <Route path="/search" component={SearchResult} />
-      <Route path="/logout" render={handleLogout} />
-      <Route path="/find" component={Find} />
-      <Route path="/usedBook" component={UsedBook} />
-      <Route path="/test" component={Test} />
-      <Route path="/oAuthTest" component={OauthTest} />
-      <Route path="/oAuth/:name" component={Oauth} />
-      <Route path="/materailUiExample" component={MaterailUiExample} />
-      <Route path="/book/:id" component={BookDetail} />
-      <Route path="/usedBookDetail" component={UsedBookDetail} />
-      <Route path="*" render={() => <Redirect to="/" />} />
-    </Switch>
+    <Suspense fallback={<FallBack />}>
+      <Switch>
+        <Route path="/" exact component={Main} />
+        <PrivateRoute path="/signUp" component={SignUp} redirectPath="/" isLoggedIn={isLoggedIn} />
+        <PrivateRoute path="/signIn" component={SignIn} redirectPath="/" isLoggedIn={isLoggedIn} />
+        <PrivateRoute path="/my" component={My} redirectPath="/signIn" isLoggedIn={isLoggedIn} />
+        <PrivateRoute path="/payment" component={Payment} redirectPath="/signIn" isLoggedIn={isLoggedIn} />
+        <Route path="/logout" render={handleLogout} />
+        <Route path="/find" component={Find} />
+        <Route path="/usedBook/:id" component={UsedBookDetail} />
+        <Route path="/usedBook" component={UsedBook} />
+        <Route path="/oAuth/:name" component={Oauth} />
+        <Route path="/book/:itemId" component={BookDetail} />
+        <Route path="/book" component={BookReviewList} />
+        <Route path="*" render={() => <Redirect to="/" />} />
+      </Switch>
+    </Suspense>
   );
 };
 

@@ -7,11 +7,11 @@ import Select from "@mui/material/Select";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
-import { SelectChangeEvent } from "@mui/material";
+import { SelectChangeEvent, Skeleton } from "@mui/material";
 import { Wrapper, LinkWrapper } from "./style";
 import { CategorysProps } from "./types";
 
-const Categorys = ({ categorys }: CategorysProps) => {
+const Categorys = ({ categorys, defaultLocation }: CategorysProps) => {
   const location = useLocation();
   const { pathname, search } = location;
   const currentQuery = queryString.parse(search);
@@ -26,6 +26,23 @@ const Categorys = ({ categorys }: CategorysProps) => {
     [],
   );
 
+  if (Object.keys(categorys).length === 0) {
+    const height = 56;
+    const width = 150;
+    const sx = { margin: "8px" };
+    return (
+      <Wrapper>
+        <Skeleton width={width} height={height} sx={sx} animation="wave" variant="rectangular" />
+        <Skeleton width={width} height={height} sx={sx} animation="wave" variant="rectangular" />
+        <Skeleton width={width} height={height} sx={sx} animation="wave" variant="rectangular" />
+        <Skeleton width={width} height={height} sx={sx} animation="wave" variant="rectangular" />
+        <Skeleton width={width} height={height} sx={sx} animation="wave" variant="rectangular" />
+        <Skeleton width={width} height={height} sx={sx} animation="wave" variant="rectangular" />
+        <Skeleton width={width} height={height} sx={sx} animation="wave" variant="rectangular" />
+      </Wrapper>
+    );
+  }
+
   return (
     <Wrapper>
       {Object.entries(categorys).map(([first, second], idx) => (
@@ -39,7 +56,7 @@ const Categorys = ({ categorys }: CategorysProps) => {
           >
             <MenuItem value="">
               <LinkWrapper>
-                <Link to="/usedBook">취소</Link>
+                <Link to={`/${defaultLocation}`}>전체</Link>
               </LinkWrapper>
             </MenuItem>
             {second.map((value, i) => (

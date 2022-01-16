@@ -110,3 +110,19 @@ export const ErrorWrapper = styled.div<ErrorWrapperProps>`
     margin-top: 1rem;
   }
 `;
+
+export const Oauths = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  gap: 15px;
+  a {
+    height: 50px;
+    display: block;
+    ${props => props.theme.shadow[10]}
+  }
+  img {
+    height: 100%;
+    width: 100%;
+  }
+`;

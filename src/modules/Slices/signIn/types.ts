@@ -60,18 +60,6 @@ export interface ErrorHandlring {
   message: string;
 }
 
-export interface SignInAsyncFail {
-  success: boolean;
-  data: null;
-  error: ErrorHandlring;
-}
-
-export interface MyProfileAsyncFail {
-  status: number;
-  error: string;
-  path: string;
-}
-
 export interface IAxiosError {
   success: boolean;
   data: null;
@@ -101,11 +89,11 @@ export interface MyProfileResponse {
 export interface SignInThunkApi {
   dispatch: AppDispatch;
   extra: { history: History };
-  rejectValue: SignInAsyncFail;
+  rejectValue: string;
 }
 export interface MyProfileThunkApi {
   dispatch: AppDispatch;
-  rejectValue: MyProfileAsyncFail;
+  rejectValue: string;
 }
 
 export interface NickNameUpdateThunkApi {
@@ -120,5 +108,5 @@ export interface ISignInReduce {
   token: string | null;
   isLoggedIn: boolean;
   status: "loading" | "idle";
-  error: null | ErrorHandlring;
+  error: null | ErrorHandlring | string;
 }

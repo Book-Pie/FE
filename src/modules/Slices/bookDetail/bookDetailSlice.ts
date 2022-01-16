@@ -15,8 +15,6 @@ export const bookDetailAsync = createAsyncThunk<bookAsyncSuccess, number>(
   `book/bookAsync`,
   async (item, { rejectWithValue }) => {
     try {
-      console.log("bookDetailAsync 데이터 확인 : ", item);
-
       const response = await http.get(`book/${item}`, item);
       const { data } = response;
       const { success } = data;
@@ -41,18 +39,15 @@ const bookDetailSlice = createSlice({
   reducers: {},
   extraReducers: builder => {
     builder
-      .addCase(bookDetailAsync.pending, (state, action) => {
-        console.log("bookDetailAsync pending : ", action);
+      .addCase(bookDetailAsync.pending, state => {
         state.status = "loading";
       })
 
       .addCase(bookDetailAsync.fulfilled, (state, { payload }) => {
-        console.log("bookDetailAsync fulfilled : ", payload);
         state.status = "success";
         state.content = payload;
       })
-      .addCase(bookDetailAsync.rejected, (state, action) => {
-        console.log("bookDetailAsync rejected : ", action);
+      .addCase(bookDetailAsync.rejected, state => {
         state.status = "failed";
       });
   },

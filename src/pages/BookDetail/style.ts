@@ -1,5 +1,13 @@
 import styled from "styled-components";
 
+export const FlexWrapper = styled.div`
+  display: flex;
+`;
+
+export const FlexColum = styled.div`
+  flex-direction: column;
+`;
+
 export const CardTitle = styled.h2`
   font-size: 18px;
   font-weight: 700;

@@ -20,33 +20,35 @@ import { ReviewItemProps } from "./types";
 
 export const ReviewItem: React.FC<ReviewItemProps> = ({ key, content, myCommentId }) => {
   const dispatch = useDispatch();
-  const { id, likeCheck, reviewLikeCount, reviewDate, nickname, userId, rating } = content;
-
-  const deleteReview = (id: number) => {
-    dispatch(
-      deleteComment({
-        id,
-      }),
-    );
-  };
+  const { reviewId, likeCheck, reviewLikeCount, reviewDate, nickname, userId, rating } = content;
 
   const deleteClick = () => {
     if (window.confirm("댓글을 정말로 삭제하시겠습니까?") === true) {
-      deleteReview(id);
+      deleteReview(reviewId);
     }
+  };
+
+  const deleteReview = (reviewId: number) => {
+    dispatch(
+      deleteComment({
+        id: reviewId,
+      }),
+    );
   };
 
   const likeClick = () => {
     if (likeCheck === false) {
       dispatch(
         commentLike({
-          id,
+          reviewId,
+          userId: myCommentId,
         }),
       );
     } else if (likeCheck === true) {
       dispatch(
         commentUnLike({
-          id,
+          reviewId,
+          userId: myCommentId,
         }),
       );
     }

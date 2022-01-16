@@ -6,10 +6,10 @@ import {
   makeOption,
 } from "utils/hookFormUtil";
 import { useForm, Controller } from "react-hook-form";
-import { setErrorReset, signInAsync } from "modules/Slices/signIn/signInSlice";
+import { errorReset, signInAsync } from "modules/Slices/signIn/signInSlice";
 import { useCallback, useEffect, useState } from "react";
 import { getRememberEmail } from "utils/localStorageUtil";
-import Popup from "components/Popup/Popup";
+import Popup from "src/elements/Popup";
 import useSignIn from "hooks/useSignIn";
 import useDebounce from "hooks/useDebounce";
 import TextField from "@mui/material/TextField";
@@ -72,17 +72,16 @@ const SignInForm = ({ isRemember }: SignInFormProps) => {
   const handleError = useCallback(() => {
     if (error) setIsOpen(true);
     return () => {
-      if (error) dispatch(setErrorReset());
+      if (error) dispatch(errorReset());
     };
   }, [dispatch, error]);
 
   useEffect(handleError, [handleError]);
-
   return (
     <div>
       {isOpen && (
         <Popup isOpen={isOpen} setIsOpen={setIsOpen} className="red" autoClose>
-          {error?.message}
+          {error}
         </Popup>
       )}
       <Form onSubmit={handleSubmit(onSubmit)}>
