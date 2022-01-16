@@ -1,4 +1,4 @@
-import { errorReset, myInfoAsync, signInSelector } from "modules/Slices/signIn/signInSlice";
+import { myInfoAsync, signInSelector } from "modules/Slices/signIn/signInSlice";
 import { ISignInReduce } from "modules/Slices/signIn/types";
 import { AppDispatch, useAppDispatch, useTypedSelector } from "modules/store";
 import { useCallback, useEffect } from "react";
@@ -20,13 +20,9 @@ const useSignIn = (): UseSignInReturnType => {
     const accessToken = getAccessToken();
 
     if (accessToken && isLoggedIn === false) {
-      console.warn("호출");
-
       dispatch(myInfoAsync(accessToken))
         .unwrap()
         .catch(error => {
-          console.log("에러");
-
           if (error.status === 403) history.replace("signIn");
         });
     }

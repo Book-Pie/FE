@@ -69,6 +69,17 @@ const MyTop = () => {
     [token, dispatch, handlePopUpMessage],
   );
 
+  const getRating = useCallback((point: number) => {
+    let rating = "브론즈";
+    if (point >= 1000) {
+      rating = "실버";
+    }
+    if (point >= 10000) {
+      rating = "골드";
+    }
+    return rating;
+  }, []);
+
   return (
     <>
       {isOpen && (
@@ -90,10 +101,35 @@ const MyTop = () => {
             </ProfileImg>
             <UserInfoMation>
               <div>
-                <span>골드회원</span>
-                <Button color="mainDarkBrown" variant="contained">
-                  멤버등급 안내
-                </Button>
+                <span>{`${getRating(user.point.totalPoint)}회원`}</span>
+                <span>{`총 ${user.point.totalPoint}점`}</span>
+                <div className="point">
+                  <p>북파이 등급안내</p>
+                  <div>
+                    <span className="bronze">브론즈</span>
+                    <span>포인트 0점~ 100점</span>
+                  </div>
+                  <div>
+                    <span className="silver">실버</span>
+                    <span>포인트 100점~ 1000점</span>
+                  </div>
+                  <div>
+                    <span className="gold">골드</span>
+                    <span>포인트 10000점 ~ </span>
+                  </div>
+                  <div>
+                    <span>총 포인트</span>
+                    <span>{`${user.point.totalPoint}점`}</span>
+                  </div>
+                  <div>
+                    <span>사용한 포인트</span>
+                    <span>{`${user.point.usedPoint}점`}</span>
+                  </div>
+                  <div>
+                    <span>보유한 포인트</span>
+                    <span>{`${user.point.holdPoint}점`}</span>
+                  </div>
+                </div>
               </div>
               <div>
                 <span>{user.nickName}</span>
@@ -120,7 +156,10 @@ const MyTop = () => {
                 <span>회원가입일</span> <span>{user.createDate.split("T")[0].replaceAll("-", ".") ?? ""}</span>
               </div>
               <div>
-                <span>포인트 {`${user.point.totalPoint}원`}</span>
+                <span>남은 포인트</span>
+                <span>{`${user.point.holdPoint}점`}</span>
+              </div>
+              <div>
                 <Button color="mainDarkBrown" variant="contained">
                   포인트 충전
                 </Button>
