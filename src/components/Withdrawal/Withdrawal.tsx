@@ -9,14 +9,14 @@ import {
   makeOption,
 } from "src/utils/hookFormUtil";
 import ErrorMessage from "src/elements/ErrorMessage";
-import { passwordCheck } from "src/api/my/my";
+import { passwordCheck, getWithDrawal } from "src/api/my/my";
 import axios from "axios";
-import { withDrawal } from "src/api/withDrawal/withDrawal";
 import { logout } from "modules/Slices/signIn/signInSlice";
-import DropDown from "components/DropDown/DropDown";
-import { FormErrorMessages } from "components/SignUpForm/types";
+import DropDown from "src/elements/DropDown";
+import { FormErrorMessages } from "src/components/SignUpForm/types";
 import { errorHandler } from "src/api/http";
-import Popup from "components/Popup/Popup";
+import Popup from "src/elements/Popup";
+import { getKakaoUnlink } from "src/utils/oAuthUtil";
 import Editor from "../Editor/Editor";
 import { IAxiosRequsetPayload, IAxiosResponse, IWithdrawalForm } from "./types";
 import { Wrapper } from "./style";
@@ -66,6 +66,7 @@ const Withdrawal = () => {
     try {
       if (currentReason === currentReasonInit) throw new Error("탈퇴사유를 선택해주세요.");
       if (token === null) throw new Error("로그인을 부탁드립니다.");
+      if (user === null) throw new Error("로그인을 부탁드립니다.");
 
       const { confirmPassword, password } = formData;
 
@@ -77,22 +78,25 @@ const Withdrawal = () => {
         password: confirmPassword,
       };
 
-      const responses = await axios.all([
-        passwordCheck<IAxiosResponse, IAxiosRequsetPayload>(passwordPayload, token),
-        passwordCheck<IAxiosResponse, IAxiosRequsetPayload>(confirmPayload, token),
-      ]);
+      if (user.loginType === "LOCAL") {
+        const responses = await axios.all([
+          passwordCheck<IAxiosResponse, IAxiosRequsetPayload>(passwordPayload, token),
+          passwordCheck<IAxiosResponse, IAxiosRequsetPayload>(confirmPayload, token),
+        ]);
 
-      responses.forEach(({ data: { data } }) => {
-        if (!data) throw new Error("비밀번호가 틀립니다. 확인 부탁드립니다.");
-      });
+        responses.forEach(({ data: { data } }) => {
+          if (!data) throw new Error("비밀번호가 틀립니다. 확인 부탁드립니다.");
+        });
+      }
 
       let reason = currentReason;
       if (currentReason === "기타" && isOtherReasonsCheck) {
         reason = editorValue;
       }
 
-      const response = await withDrawal<any, any>({ reason }, token);
+      if (user.loginType === "KAKAO") getKakaoUnlink();
 
+      const response = await getWithDrawal<{ reason: string }>({ reason }, token);
       const { data } = response;
       if (data.data) {
         alert("회원 탈퇴가 완료되었습니다.");
@@ -173,24 +177,28 @@ const Withdrawal = () => {
                 <FormInput value={user?.email ?? ""} disabled />
               </div>
             </div>
-            <div className="withdrawal__row">
-              <div>
-                비밀번호<strong className="withdrawal__warning--red ">*</strong>
-              </div>
-              <div>
-                <FormInput type="password" register={register("password", passwordOpions)} />
-                <ErrorMessage message={errors.password?.message} />
-              </div>
-            </div>
-            <div className="withdrawal__row">
-              <div>
-                비밀번호확인<strong className="withdrawal__warning--red ">*</strong>
-              </div>
-              <div>
-                <FormInput type="password" register={register("confirmPassword", confirmPasswordOpions)} />
-                <ErrorMessage message={errors.confirmPassword?.message} />
-              </div>
-            </div>
+            {user?.loginType === "LOCAL" && (
+              <>
+                <div className="withdrawal__row">
+                  <div>
+                    비밀번호<strong className="withdrawal__warning--red ">*</strong>
+                  </div>
+                  <div>
+                    <FormInput type="password" register={register("password", passwordOpions)} />
+                    <ErrorMessage message={errors.password?.message} />
+                  </div>
+                </div>
+                <div className="withdrawal__row">
+                  <div>
+                    비밀번호확인<strong className="withdrawal__warning--red ">*</strong>
+                  </div>
+                  <div>
+                    <FormInput type="password" register={register("confirmPassword", confirmPasswordOpions)} />
+                    <ErrorMessage message={errors.confirmPassword?.message} />
+                  </div>
+                </div>
+              </>
+            )}
             <div className="withdrawal__buttons">
               <button type="submit">탈퇴</button>
             </div>

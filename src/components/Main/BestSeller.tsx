@@ -3,7 +3,7 @@ import { FlexWrapper } from "src/pages/BookDetail/style";
 import { FisrtItemWrapper, ItemWrapper, TextArea } from "./styles";
 import { BestSellerProps } from "./types";
 
-const BestSeller = ({ bestRank, title, cover, index, isbn13 }: BestSellerProps) => {
+const BestSeller = ({ bestRank, categoryName, title, cover, link, index, isbn13, isbn }: BestSellerProps) => {
   if (index === 0) {
     return (
       <FisrtItemWrapper>

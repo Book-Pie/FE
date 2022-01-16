@@ -40,3 +40,26 @@ export const getShopInsert = (formData: FormData, token: string) => {
     },
   });
 };
+
+export const getShopList = <T>(query: string) => {
+  return http.get<T>(`usedbook/user?${query}`);
+};
+
+export const getUsedbookLatest = (bookId: number) => {
+  return http.put(`/usedbook/date/${bookId}`);
+};
+
+export const getWithDrawal = <P>(payload: P, token: string) => {
+  return http.delete("/user/me", {
+    data: payload,
+    headers: { "X-AUTH-TOKEN": token },
+  });
+};
+
+export const getMyProfile = <T>(token: string) => {
+  return http.get<T>("/user/me", {
+    headers: {
+      "X-AUTH-TOKEN": token,
+    },
+  });
+};

@@ -15,12 +15,12 @@ import {
 import useDebounce from "hooks/useDebounce";
 import { errorHandler } from "src/api/http";
 import FormInput from "src/elements/FormInput";
-import { FormErrorMessages } from "components/SignUpForm/types";
-import Popup from "components/Popup/Popup";
+import { FormErrorMessages } from "src/components/SignUpForm/types";
+import Popup from "src/elements/Popup";
 import useDaumPost from "hooks/useDaumPost";
 import DaumPostcode from "react-daum-postcode";
 import { getMyProfileImgUpload, myProfileChange, passwordChange, passwordCheck } from "src/api/my/my";
-import { myProfileAsync } from "modules/Slices/signIn/signInSlice";
+import { myInfoAsync } from "modules/Slices/signIn/signInSlice";
 import { hyphenRemoveFormat } from "src/utils/formatUtil";
 import { useHistory } from "react-router";
 import Skeleton from "@mui/material/Skeleton";
@@ -28,6 +28,7 @@ import Button from "@mui/material/Button";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Loading from "src/elements/Loading";
 import { Stack } from "@mui/material";
+import useDelay from "src/hooks/useDelay";
 import { ModifiedWrapper } from "./style";
 import { IAxiosPayload, IAxiosResponse, IModifiedConfirmForm, IModifiedForm, IMyProfileUpdatePayload } from "./types";
 
@@ -53,6 +54,7 @@ const Modified = () => {
   const { addressState, handleComplete } = useDaumPost();
   const debounce = useDebounce();
   const history = useHistory();
+  const delay = useDelay(600);
   const modifiedConfirmFormErrors = modifiedConfirmForm.formState.errors;
   const modifiedFormErrors = modifiedForm.formState.errors;
 
@@ -118,11 +120,9 @@ const Modified = () => {
         const formData = new FormData();
         formData.append("image", imgFile);
 
-        await new Promise(res => {
-          setTimeout(res, 600);
-        });
+        await delay();
         await getMyProfileImgUpload(formData, token);
-        dispatch(myProfileAsync(token))
+        dispatch(myInfoAsync(token))
           .unwrap()
           .then(() => {
             handleFileDelete();
@@ -239,7 +239,7 @@ const Modified = () => {
           );
           if (!myProfileChangeResponse.data.data) throw new Error("프로필 변경에 실패 했습니다.");
           // 변경된 프로필 갱신
-          dispatch(myProfileAsync(token))
+          dispatch(myInfoAsync(token))
             .unwrap()
             .catch(error => handlePopUp(errorHandler(error), false));
           history.replace("/");
