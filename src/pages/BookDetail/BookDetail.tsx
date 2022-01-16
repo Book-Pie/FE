@@ -1,8 +1,7 @@
-import Box from "@mui/material/Box";
 import Skeleton from "@mui/material/Skeleton";
 import { useBookDetail } from "src/hooks/useBookDetail";
 import BookDetailContent from "./BookDetailContent";
-import BookSideBar from "./BookSideBar";
+import BookDetailHeader from "./BookDetailHeader";
 import { FlexColum, FlexWrapper } from "./style";
 import { BookDetailProps } from "./types";
 
@@ -12,11 +11,25 @@ const BookDetail = ({ match }: BookDetailProps) => {
   const { bookContent } = useBookDetail({ itemId, id });
 
   if (bookContent.length !== 0) {
-    const { author, categoryName, cover, title, fullDescription, fullDescription2, publisher } = bookContent[0];
+    const { author, categoryName, cover, title, fullDescription, fullDescription2, publisher, customerReviewRank } =
+      bookContent[0];
 
+    let ReviewRank = 0;
+    if (customerReviewRank > 0) {
+      ReviewRank = customerReviewRank / 2;
+    } else {
+      ReviewRank = 0;
+    }
     return (
       <>
-        <BookSideBar author={author} cover={cover} title={title} categoryName={categoryName} publisher={publisher} />
+        <BookDetailHeader
+          ReviewRank={ReviewRank}
+          title={title}
+          author={author}
+          cover={cover}
+          categoryName={categoryName}
+          publisher={publisher}
+        />
         <BookDetailContent
           bookIntroText={fullDescription}
           authorIntroText={fullDescription2}
@@ -30,15 +43,9 @@ const BookDetail = ({ match }: BookDetailProps) => {
   return (
     <FlexWrapper>
       <FlexColum>
-        <Skeleton sx={{ marginRight: 5, marginTop: 10 }} variant="rectangular" width={250} height={300} />
-        <Box sx={{ pt: 0, marginRight: 5 }}>
-          <Skeleton width="250px" />
-          <Skeleton width="150px" />
-        </Box>
-      </FlexColum>
-      <FlexColum>
-        <Skeleton sx={{ marginTop: 10 }} variant="rectangular" width={700} height={220} />
-        <Skeleton sx={{ marginTop: 5 }} variant="rectangular" width={700} height={220} />
+        <Skeleton variant="rectangular" width={1200} height={300} />
+        <Skeleton sx={{ marginTop: 10, marginLeft: 30 }} variant="rectangular" width={700} height={220} />
+        <Skeleton sx={{ marginTop: 5, marginLeft: 30 }} variant="rectangular" width={700} height={220} />
       </FlexColum>
     </FlexWrapper>
   );

@@ -31,7 +31,7 @@ export const Reviews: React.FC<ReviewsParams> = ({ bookId }) => {
     <div className="Reviews">
       {/* 정렬 부분 */}
       {/* <ReviewListHeader bookId={bookId} />*/}
-      {content.length ? <ReviewList bookId={bookId} commentList={content} myCommentId={id} /> : <ReviewListEmpty />}
+      {content.length ? <ReviewList commentList={content} myCommentId={id} /> : <ReviewListEmpty />}
       <ReviewWrite
         bookId={bookId}
         myReviewCheck={myCommentCheck}
@@ -41,7 +41,7 @@ export const Reviews: React.FC<ReviewsParams> = ({ bookId }) => {
           if (isLoggedIn) {
             return true;
           }
-          if (confirm("로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?")) {
+          if (window.confirm("로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?")) {
             history.replace("/signIn");
           }
           return false;

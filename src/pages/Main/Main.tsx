@@ -7,7 +7,7 @@ import { getBookAPI, getBookSelector } from "src/modules/Slices/book/bookSlice";
 import Text from "src/elements/Text";
 import theme from "src/assets/style/styledTheme";
 import { Skeleton, Stack } from "@mui/material";
-import { BookContainer, BookWrapper, BestSellerWrapper } from "./style";
+import { BookContainer, BookWrapper } from "./style";
 
 const MainBanner = lazy(() => import("src/components/MainBanner/MainBanner"));
 

@@ -9,7 +9,6 @@ export interface bookInfo {
   fullDescription: string;
   fullDescription2: string;
   isbn13: string;
-
   isbn: string;
   itemId: number;
   priceSales: number;
@@ -22,6 +21,15 @@ export interface bookInfo {
   adult: boolean;
   fixedPrice: boolean;
   customerReviewRank: number;
+}
+
+export interface bookInfoHeader {
+  ReviewRank: number;
+  title: string;
+  author: string;
+  cover: string;
+  categoryName: string;
+  publisher: string;
 }
 
 export interface bookDisplayData {
