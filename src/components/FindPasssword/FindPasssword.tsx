@@ -1,7 +1,7 @@
 import { useHistory } from "react-router";
 import { useCallback, useState } from "react";
 import Popup from "src/elements/Popup";
-import { getFindPassword } from "src/api/oAuth/oAuth";
+import { getFindPassword } from "src/api/oauth";
 import { errorHandler } from "src/api/http";
 import useDebounce from "hooks/useDebounce";
 import { hyphenRemoveFormat } from "src/utils/formatUtil";

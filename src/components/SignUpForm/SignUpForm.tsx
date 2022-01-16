@@ -16,7 +16,7 @@ import { useEffect, useMemo, useState } from "react";
 import useDaumPost from "hooks/useDaumPost";
 import { errorHandler } from "src/api/http";
 import axios from "axios";
-import { getEmailDuplicateCheck, getNickNameDuplicateCheck, getSignUp } from "src/api/oAuth/oAuth";
+import { getEmailDuplicateCheck, getNickNameDuplicateCheck, getSignUp } from "src/api/oauth";
 import { useHistory } from "react-router";
 import Popup from "src/elements/Popup";
 import { hyphenRemoveFormat } from "utils/formatUtil";
@@ -285,11 +285,11 @@ const SignUpForm = () => {
             <Button variant="contained" color="mainDarkBrown" type="submit">
               가입하기
             </Button>
-            <Button variant="contained" color="mainDarkBrown" onClick={handleReset}>
+            <Button variant="contained" color="error" onClick={handleReset}>
               초기화
             </Button>
             <Link to="/signIn">
-              <Button variant="contained" color="mainDarkBrown">
+              <Button variant="contained" color="info">
                 로그인하기
               </Button>
             </Link>
