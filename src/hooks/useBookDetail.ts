@@ -5,16 +5,16 @@ import { useTypedSelector } from "src/modules/store";
 import { bookInfo } from "src/modules/Slices/bookDetail/types";
 import { paramProps } from "src/pages/BookDetail/types";
 
-export const useBookDetail = ({ id, itemId }: paramProps) => {
-  itemId = parseInt(itemId);
+export const useBookDetail = ({ isbn13 }: paramProps) => {
+  isbn13 = parseInt(isbn13);
 
   const dispatch = useDispatch();
   const bookDetailContent = useTypedSelector(state => state.bookDetailReduce.content.data);
   const [bookContent, setBookContent] = useState<bookInfo[]>([]);
 
   useEffect(() => {
-    dispatch(bookDetailAsync({ itemId, id }));
-  }, [dispatch, id, itemId]);
+    dispatch(bookDetailAsync({ isbn13 }));
+  }, [dispatch, isbn13]);
 
   useEffect(() => {
     if (bookDetailContent !== undefined) {

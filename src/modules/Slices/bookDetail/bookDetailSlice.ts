@@ -16,22 +16,12 @@ const name = "bookDetail";
 
 export const bookDetailAsync = createAsyncThunk<bookAsyncSuccess, paramProps>(
   `${name}/bookAsync`,
-  async ({ id, itemId }, { rejectWithValue }) => {
+  async ({ isbn13 }, { rejectWithValue }) => {
     try {
-      if (id === undefined) {
-        const response = await http.get(`book/${itemId}`, itemId);
-        const { data } = response;
-        const { success } = data;
-        if (!success) {
-          if (data.error.code === 200) {
-            return console.log(data);
-          }
-        }
-        return data;
-      }
-      const response = await http.get(`book/${itemId}?userId=${id}`, itemId, id);
+      const response = await http.get(`book?isbn13=${isbn13}`);
       const { data } = response;
       const { success } = data;
+      console.log("bookDetailAsync response : ", response);
 
       if (!success) {
         if (data.error.code === 200) {

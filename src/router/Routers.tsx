@@ -44,11 +44,9 @@ const Routers = () => {
         <Route path="/usedBook/:id" render={() => <div>중고도서 상세 페이지</div>} />
         <Route path="/usedBook" component={UsedBook} />
         <Route path="/oAuth/:name" component={Oauth} />
-        <Route path="/book/:itemId" component={BookDetail} />
-        <Route path="/book" component={BookReviewList} />
         <Switch>
-          <Route path="/book/:itemId" component={BookDetail} />
-          <Route path="/book/:itemId/userId:id" component={BookDetail} />
+          <Route path="/book/:isbn/userId?:id" component={BookDetail} />
+          <Route path="/book/:isbn13" component={BookDetail} />
           <Route path="/book" component={BookReviewList} />
         </Switch>
         <Route path="*" render={() => <Redirect to="/" />} />

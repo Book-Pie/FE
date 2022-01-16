@@ -38,8 +38,8 @@ export interface ExpanderProps {
 }
 
 export interface paramProps {
-  itemId: number;
-  id: number;
+  isbn13: number;
+  id?: number;
 }
 
 export interface matchProps {

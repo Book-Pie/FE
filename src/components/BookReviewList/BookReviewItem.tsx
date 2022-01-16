@@ -6,7 +6,7 @@ import { BestSellerProps } from "../Main/types";
 import StarRating from "../Rating/StarRating";
 import { BookReviewBox, BookReviewTitle, ImageItem, ImgWrapper } from "./styles";
 
-const BookReviewItem = ({ title, cover, isbn13, customerReviewRank, isbn }: BestSellerProps) => {
+const BookReviewItem = ({ title, cover, customerReviewRank, isbn, isbn13 }: BestSellerProps) => {
   const { signIn } = useSignIn();
   const { user } = signIn;
 
@@ -21,7 +21,41 @@ const BookReviewItem = ({ title, cover, isbn13, customerReviewRank, isbn }: Best
     const { id } = user;
     return (
       <BookReviewBox>
-        <Link to={`/book/${isbn}/userId=${id}`}>
+        {isbn13 ? (
+          <Link to={`/book/${isbn13}/userId=${id}`}>
+            <FlexColum>
+              <ImgWrapper>
+                <ImageItem src={cover} alt={title} />
+              </ImgWrapper>
+              <BookReviewTitle>{title}</BookReviewTitle>
+              <StarRatingWrapper>
+                <StarRating ReviewRank={ReviewRank} />
+              </StarRatingWrapper>
+            </FlexColum>
+          </Link>
+        ) : (
+          <Link to={`/book/${isbn}/userId=${id}`}>
+            <FlexColum>
+              <ImgWrapper>
+                <ImageItem src={cover} alt={title} />
+              </ImgWrapper>
+              <BookReviewTitle>{title}</BookReviewTitle>
+              <StarRatingWrapper>
+                <StarRating ReviewRank={ReviewRank} />
+              </StarRatingWrapper>
+            </FlexColum>
+          </Link>
+        )}
+        )
+      </BookReviewBox>
+    );
+  }
+
+  return (
+    <BookReviewBox>
+      {isbn13 ? (
+        // <Link to={`/book/${isbn13}`}>
+        <Link to={`/book/${isbn13}`}>
           <FlexColum>
             <ImgWrapper>
               <ImageItem src={cover} alt={title} />
@@ -32,21 +66,20 @@ const BookReviewItem = ({ title, cover, isbn13, customerReviewRank, isbn }: Best
             </StarRatingWrapper>
           </FlexColum>
         </Link>
-      </BookReviewBox>
-    );
-  }
-
-  return (
-    <BookReviewBox>
-      <Link to={`/book/${isbn13}`}>
-        <FlexColum>
-          <ImgWrapper>
-            <ImageItem src={cover} alt={title} />
-          </ImgWrapper>
-          <BookReviewTitle>{title}</BookReviewTitle>
-          <StarRating ReviewRank={customerReviewRank} />
-        </FlexColum>
-      </Link>
+      ) : (
+        <Link to={`/book/${isbn}`}>
+          <FlexColum>
+            <ImgWrapper>
+              <ImageItem src={cover} alt={title} />
+            </ImgWrapper>
+            <BookReviewTitle>{title}</BookReviewTitle>
+            <StarRatingWrapper>
+              <StarRating ReviewRank={ReviewRank} />
+            </StarRatingWrapper>
+          </FlexColum>
+        </Link>
+      )}
+      )
     </BookReviewBox>
   );
 };
