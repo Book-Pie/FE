@@ -1,6 +1,7 @@
 import { Redirect, Route, Switch } from "react-router";
 import useSignIn from "src/hooks/useSignIn";
 import { logout } from "modules/Slices/signIn/signInSlice";
+import UsedBookDetail from "src/pages/UsedBookDetail/UsedBookDetail";
 import { useCallback, lazy, Suspense } from "react";
 import Fallback from "components/Fallback/Fallback";
 import PrivateRoute from "./PrivateRoute";
@@ -35,7 +36,7 @@ const Routers = () => {
         <PrivateRoute path="/payment" component={Payment} redirectPath="/signIn" isLoggedIn={isLoggedIn} />
         <Route path="/logout" render={handleLogout} />
         <Route path="/find" component={Find} />
-        <Route path="/usedBook/:id" render={() => <div>중고도서 상세 페이지</div>} />
+        <Route path="/usedBook/:id" component={UsedBookDetail} />
         <Route path="/usedBook" component={UsedBook} />
         <Route path="/oAuth/:name" component={Oauth} />
         <Route path="/book/:itemId" component={BookDetail} />
