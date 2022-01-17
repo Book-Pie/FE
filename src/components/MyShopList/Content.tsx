@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { ButtonGroup, Button } from "@mui/material";
-import { make1000UnitsCommaFormet } from "src/utils/formatUtil";
+import { dateFormat2, make1000UnitsCommaFormet } from "src/utils/formatUtil";
 import withLoading from "src/hoc/withLoading";
 import noComments from "assets/image/noComments.png";
 import { Cell, Image, State, Title, Price, Date, Like, Empty, TableBody } from "./style";
@@ -55,8 +55,8 @@ const Content = ({ pages, titleFilter, select, handleLatestClick }: IContent) =>
             </Cell>
             <Cell>
               <Date>
-                <span>{dateFormat(modifiedDate)[0]}</span>
-                <span>{dateFormat(modifiedDate)[1]}</span>
+                <span>{dateFormat2(modifiedDate)[0]}</span>
+                <span>{dateFormat2(modifiedDate)[1]}</span>
               </Date>
             </Cell>
             <Cell>
@@ -79,17 +79,6 @@ const Content = ({ pages, titleFilter, select, handleLatestClick }: IContent) =>
       )}
     </TableBody>
   );
-};
-
-const dateFormat = (date: string | null) => {
-  if (date) {
-    const [YMD, HMS] = date.split("T");
-    const [YYYY, MM, DD] = YMD.split("-");
-    const [hh, mm, ss] = HMS.split(":");
-    return [`${YYYY}년 ${MM}월 ${DD}일`, ` ${hh}시 ${mm}분 ${ss}초`];
-  }
-
-  return "";
 };
 
 export default withLoading(Content);

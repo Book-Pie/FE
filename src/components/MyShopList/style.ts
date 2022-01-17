@@ -24,6 +24,9 @@ export const Cell = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  a {
+    flex: 1;
+  }
 `;
 
 export const TableBody = styled.div`
@@ -35,7 +38,7 @@ export const TableBody = styled.div`
 `;
 export const Image = styled.div`
   height: 150px;
-  flex: 1;
+  width: 150px;
   img {
     height: 100%;
     width: 100%;

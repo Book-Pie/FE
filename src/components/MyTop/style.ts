@@ -64,7 +64,7 @@ export const UserInfoMation = styled.div`
     top: 100%;
     background-color: ${p => p.theme.colors.white};
     z-index: 1;
-    width: 100%;
+    width: 450px;
     transition: all 0.5s ease-in-out;
     opacity: 0;
     transform: translateY(-50%);

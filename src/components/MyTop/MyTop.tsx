@@ -8,6 +8,7 @@ import { hookFormSpecialChractersCheck, makeOption } from "src/utils/hookFormUti
 import ErrorMessage from "src/elements/ErrorMessage";
 import { Skeleton } from "@mui/material";
 import Popup from "src/elements/Popup";
+import { make1000UnitsCommaFormet } from "src/utils/formatUtil";
 import { FormErrorMessages } from "../SignUpForm/types";
 import { ProfileImg, UserInfoMation, Wrapper, CustomInput } from "./style";
 import { NickNameForm } from "./type";
@@ -48,6 +49,16 @@ const MyTop = () => {
     });
   }, []);
 
+  const handlePaymentPopUpOnClick = useCallback(() => {
+    const name = "북파이 결제페이지";
+    const url = "/payment";
+    const popupX = window.screen.width / 2 - 200 / 2;
+    const popupY = window.screen.height / 2 - 300 / 2;
+    const option = `width = 850, height = 600, top = ${popupY}, left = ${popupX}, screenX=${popupX} screenY=${popupY} resizable=no`;
+    const win = window.open(url, name, option);
+    win?.addEventListener("beforeunload", () => window.location.reload());
+  }, []);
+
   const handleNickNameUpdateOpen = useCallback(() => {
     setIsNickNameUpdateOpen(prev => !prev);
     clearErrors();
@@ -71,10 +82,10 @@ const MyTop = () => {
 
   const getRating = useCallback((point: number) => {
     let rating = "브론즈";
-    if (point >= 1000) {
+    if (point >= 100000) {
       rating = "실버";
     }
-    if (point >= 10000) {
+    if (point >= 1000000) {
       rating = "골드";
     }
     return rating;
@@ -102,32 +113,32 @@ const MyTop = () => {
             <UserInfoMation>
               <div>
                 <span>{`${getRating(user.point.totalPoint)}회원`}</span>
-                <span>{`총 ${user.point.totalPoint}점`}</span>
+                <span>{`총 ${make1000UnitsCommaFormet(String(user.point.totalPoint))}점`}</span>
                 <div className="point">
                   <p>북파이 등급안내</p>
                   <div>
                     <span className="bronze">브론즈</span>
-                    <span>포인트 0점~ 100점</span>
+                    <span>포인트 0점~ 100,000점</span>
                   </div>
                   <div>
                     <span className="silver">실버</span>
-                    <span>포인트 100점~ 1000점</span>
+                    <span>포인트 100,000점~ 1,000,000점</span>
                   </div>
                   <div>
                     <span className="gold">골드</span>
-                    <span>포인트 10000점 ~ </span>
+                    <span>포인트 1,000,000점 ~</span>
                   </div>
                   <div>
                     <span>총 포인트</span>
-                    <span>{`${user.point.totalPoint}점`}</span>
+                    <span>{`${make1000UnitsCommaFormet(String(user.point.totalPoint))}점`}</span>
                   </div>
                   <div>
                     <span>사용한 포인트</span>
-                    <span>{`${user.point.usedPoint}점`}</span>
+                    <span>{`${make1000UnitsCommaFormet(String(user.point.usedPoint))}점`}</span>
                   </div>
                   <div>
                     <span>보유한 포인트</span>
-                    <span>{`${user.point.holdPoint}점`}</span>
+                    <span>{`${make1000UnitsCommaFormet(String(user.point.holdPoint))}점`}</span>
                   </div>
                 </div>
               </div>
@@ -157,10 +168,10 @@ const MyTop = () => {
               </div>
               <div>
                 <span>남은 포인트</span>
-                <span>{`${user.point.holdPoint}점`}</span>
+                <span>{`${make1000UnitsCommaFormet(String(user.point.holdPoint))}점`}</span>
               </div>
               <div>
-                <Button color="mainDarkBrown" variant="contained">
+                <Button color="mainDarkBrown" variant="contained" onClick={handlePaymentPopUpOnClick}>
                   포인트 충전
                 </Button>
               </div>

@@ -2,7 +2,7 @@
 export const make1000UnitsCommaFormet = (text: string) => {
   const reversStr = text.split("").reverse();
   return reversStr.reduce((acc, cur, idx) => {
-    if (idx % 3 === 0) return `${cur},${acc}`;
+    if (idx % 3 === 0 && !cur.match("-")) return `${cur},${acc}`;
     return cur + acc;
   });
 };
@@ -79,3 +79,13 @@ export function dateFormat(date: Date) {
 
   return `${date.getFullYear()}-${month}-${day} ${hour}:${minute}`;
 }
+export const dateFormat2 = (date: string | null) => {
+  if (date) {
+    const [YMD, HMS] = date.split("T");
+    const [YYYY, MM, DD] = YMD.split("-");
+    const [hh, mm, ss] = HMS.split(":");
+    return [`${YYYY}년 ${MM}월 ${DD}일`, ` ${hh}시 ${mm}분 ${ss}초`];
+  }
+
+  return "";
+};
