@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 import Popup from "src/elements/Popup";
 import { errorHandler } from "src/api/http";
-import { getFindEmail } from "src/api/oAuth/oAuth";
+import { getFindEmail } from "src/api/oauth";
 import useDebounce from "hooks/useDebounce";
 import { hyphenRemoveFormat } from "src/utils/formatUtil";
 import useDelay from "src/hooks/useDelay";

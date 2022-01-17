@@ -6,10 +6,8 @@ import { paramProps } from "src/pages/BookDetail/types";
 import { bookAsyncFail, bookAsyncSuccess } from "./types";
 
 const initialState = {
-  user: 0,
   content: {} as bookAsyncSuccess,
   status: "loading",
-  replyDate: "",
 };
 
 const name = "bookDetail";
@@ -18,7 +16,7 @@ export const bookDetailAsync = createAsyncThunk<bookAsyncSuccess, paramProps>(
   `${name}/bookAsync`,
   async ({ isbn13 }, { rejectWithValue }) => {
     try {
-      const response = await http.get(`book?isbn13=${isbn13}`);
+      const response = await http.get(`book/${isbn13}`);
       const { data } = response;
       const { success } = data;
       console.log("bookDetailAsync response : ", response);

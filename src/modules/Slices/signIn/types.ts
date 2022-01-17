@@ -15,8 +15,8 @@ export interface NickNameUpdateParam {
 // =========================== 썽크함수 파라미터 타입 ===========================
 
 // =========================== 썽크함수 성공 시 리턴 타입 ===========================
-export interface IUserPrfile {
-  id: number | null;
+export interface IUserInfo {
+  id: number;
   email: string;
   nickName: string;
   name: string;
@@ -30,16 +30,16 @@ export interface IUserPrfile {
     detailAddress: string;
   } | null;
   point: {
-    totalPoint: 0;
-    usedPoint: 0;
-    holdPoint: 0;
+    totalPoint: number;
+    usedPoint: number;
+    holdPoint: number;
   };
   image: null | string;
   createDate: string;
 }
 export interface MyProfileSuccess {
   success: boolean;
-  data: IUserPrfile;
+  data: IUserInfo;
   error: null;
 }
 
@@ -79,7 +79,7 @@ export interface IAxiosResponse {
   error: null;
 }
 export interface MyProfileResponse {
-  data: IUserPrfile;
+  data: IUserInfo;
   error: null;
   success: boolean;
 }
@@ -104,7 +104,7 @@ export interface NickNameUpdateThunkApi {
 // =========================== ThunkApi 제네릭 ===========================
 // 리듀가 사용할 데이터 타입
 export interface ISignInReduce {
-  user: IUserPrfile | null;
+  user: IUserInfo | null;
   token: string | null;
   isLoggedIn: boolean;
   status: "loading" | "idle";

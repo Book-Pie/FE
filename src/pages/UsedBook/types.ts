@@ -1,4 +1,3 @@
-import { ParsedQuery } from "query-string";
 import { StateEnumType } from "src/components/UsedBookCard/types";
 
 export interface IUsedBook {
@@ -32,8 +31,4 @@ export interface UsedBooksResponse {
   };
   success: boolean;
   erorr: null;
-}
-export interface RequestParam {
-  query?: ParsedQuery<string>;
-  nextPage: number;
 }

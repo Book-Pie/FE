@@ -43,6 +43,74 @@ export const UserInfoMation = styled.div`
   background-color: ${props => props.theme.colors.mainLightBrown};
   border-radius: 5px;
   color: ${props => props.theme.colors.mainDarkBrown};
+  & > div {
+    position: relative;
+    cursor: pointer;
+  }
+
+  & > div:hover > .point {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0%);
+  }
+  .point {
+    display: flex;
+    gap: 20px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    visibility: hidden;
+    position: absolute;
+    top: 100%;
+    background-color: ${p => p.theme.colors.white};
+    z-index: 1;
+    width: 100%;
+    transition: all 0.5s ease-in-out;
+    opacity: 0;
+    transform: translateY(-50%);
+    border-radius: 5px;
+    ${p => p.theme.shadow[10]};
+    height: 300px;
+    color: ${p => p.theme.colors.mainDarkBrown};
+
+    div {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      padding-left: 20px;
+    }
+
+    .bronze,
+    .silver,
+    .gold {
+      display: inline-block;
+      font-size: 25px;
+      text-align: center;
+    }
+    .bronze {
+      color: #624637;
+    }
+    .silver {
+      color: #c0c0c0;
+    }
+    .gold {
+      color: #ffd700;
+    }
+    p {
+      font-size: 20px;
+      font-weight: 900;
+    }
+
+    span {
+      font-weight: 600;
+    }
+    span:first-child {
+      text-align: center;
+      width: 130px;
+    }
+    span + span {
+    }
+  }
 
   & > form,
   & > div {
@@ -58,6 +126,9 @@ export const UserInfoMation = styled.div`
         opacity: 0.5;
       }
     }
+    & > button:first-child {
+      width: 100%;
+    }
     & > div {
       width: 150px;
       height: 100%;
@@ -68,7 +139,7 @@ export const UserInfoMation = styled.div`
       font-size: 1.2rem;
       letter-spacing: 0.1rem;
     }
-    & > span:last-child {
+    & > span:nth-child(2) {
       font-size: 1.3rem;
     }
   }

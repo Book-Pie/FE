@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { removeEmail, removeToken, setRememberEmail, setAccessToken, getAccessToken } from "utils/localStorageUtil";
-import { getSignIn } from "src/api/oAuth/oAuth";
+import { getSignIn } from "src/api/oauth";
 import { addHyphenFormat } from "src/utils/formatUtil";
 import { RootState } from "modules/store";
 import { getNickNameUpdate, getMyProfile } from "src/api/my/my";
