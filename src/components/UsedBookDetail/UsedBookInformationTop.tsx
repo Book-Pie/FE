@@ -12,6 +12,7 @@ const UsedBookInformationTop = ({
   sndCategory,
   tags,
   images,
+  usedBookId,
 }: UsedBookDetailResponse) => {
   return (
     <>
@@ -20,7 +21,15 @@ const UsedBookInformationTop = ({
       </CategoryArea>
       <UsedBookDetailWrapper>
         <UsedBookImg src={`${process.env.BASE_URL}/image/${images}`} alt="latestImg" />
-        <UsedBookArea title={title} price={price} content={content} view={view} uploadDate={uploadDate} tags={tags} />
+        <UsedBookArea
+          usedBookId={usedBookId}
+          title={title}
+          price={price}
+          content={content}
+          view={view}
+          uploadDate={uploadDate}
+          tags={tags}
+        />
       </UsedBookDetailWrapper>
     </>
   );
