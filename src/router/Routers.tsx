@@ -14,6 +14,7 @@ const UsedBook = lazy(() => import("pages/UsedBook/UsedBook"));
 const Oauth = lazy(() => import("pages/Oauth/Oauth"));
 const BookDetail = lazy(() => import("pages/BookDetail/BookDetail"));
 const BookReviewList = lazy(() => import("pages/BookReviewList/BookReviewList"));
+const UsedBookDetail = lazy(() => import("pages/UsedBookDetail/UsedBookDetail"));
 const Point = lazy(() => import("pages/Point/Point"));
 
 const Routers = () => {
@@ -36,6 +37,7 @@ const Routers = () => {
       <Route path="/logout" render={handleLogout} />
       <Route path="/find" component={Find} />
       <Route path="/usedBook/:id" render={() => <div>중고도서 상세 페이지</div>} />
+      <Route path="/usedBook/:id" component={UsedBookDetail} />
       <Route path="/usedBook" component={UsedBook} />
       <Route path="/oAuth/:name" component={Oauth} />
       <Route path="/book/:itemId" component={BookDetail} />

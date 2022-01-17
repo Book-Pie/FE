@@ -5,14 +5,14 @@ import { RootState } from "src/modules/store";
 import { bookAsyncFail, bookAsyncSuccess } from "./types";
 
 const initialState = {
-  user: 0,
   content: {} as bookAsyncSuccess,
   status: "loading",
-  replyDate: "",
 };
 
+const name = "book";
+
 export const bookDetailAsync = createAsyncThunk<bookAsyncSuccess, number>(
-  `book/bookAsync`,
+  `${name}/bookAsync`,
   async (item, { rejectWithValue }) => {
     try {
       const response = await http.get(`book/${item}`, item);
