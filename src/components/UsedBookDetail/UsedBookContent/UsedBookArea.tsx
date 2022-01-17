@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { compareDateFormat, make1000UnitsCommaFormet } from "src/utils/formatUtil";
 import {
   BookPrice,
@@ -23,9 +24,10 @@ export interface UsedBookAreaProps {
   view: number;
   uploadDate: string;
   tags: string[];
+  usedBookId: number;
 }
 
-const UsedBookArea = ({ title, price, content, view, uploadDate, tags }: UsedBookAreaProps) => {
+const UsedBookArea = ({ usedBookId, title, price, content, view, uploadDate, tags }: UsedBookAreaProps) => {
   const like = 0;
   const date = compareDateFormat(uploadDate);
   const bookPrice = make1000UnitsCommaFormet(String(price));
@@ -74,7 +76,9 @@ const UsedBookArea = ({ title, price, content, view, uploadDate, tags }: UsedBoo
       <TagArea>{tags && tags.map((tag, index) => <TagContent key={index}>#{tag}</TagContent>)}</TagArea>
       <UsedBookDetailButton>좋아요</UsedBookDetailButton>
       <UsedBookDetailButton>1:1채팅 </UsedBookDetailButton>
-      <BuyButton>구매하기</BuyButton>
+      <Link to={`/order/${usedBookId}`}>
+        <BuyButton>구매하기</BuyButton>
+      </Link>
     </UsedBookWrapper>
   );
 };
