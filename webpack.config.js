@@ -15,6 +15,7 @@ const getAbsolutePath = pathDir => path.resolve(__dirname, pathDir);
 const PRODUCTION = "production";
 const KAKAO_CLIENT_ID = process.env.KAKAO_CLIENT_ID ?? "";
 const KAKAO_CLIENT_KEY = process.env.KAKAO_JDK_KEY ?? "";
+const PAYMENT_IMP_KEY = process.env.PAYMENT_IMP_KEY ?? "";
 const KAKAO_REDIRECT_PATH_DEV = "http://localhost:3000/oAuth/kakao";
 const KAKAO_REDIRECT_PATH_PRO = "http://www.react-dev.p-e.kr/oAuth/kakao";
 const KAKAO_OAUTH_URL_DEV = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_CLIENT_ID}&redirect_uri=${KAKAO_REDIRECT_PATH_DEV}&response_type=code`;
@@ -148,11 +149,9 @@ module.exports = (_, argv) => {
     plugins: [
       new CleanWebpackPlugin(),
       new HtmlWebpackPlugin({
-        template: "./public/index.ejs",
+        template: "./public/index.html",
         favicon: "./public/favicon.png",
-        templateParameters: {
-          title: mode === PRODUCTION ? "BookPie" : "개발용 서버",
-        },
+        title: mode === PRODUCTION ? "BookPie" : "개발용 서버",
       }),
     ],
 
@@ -201,6 +200,7 @@ module.exports = (_, argv) => {
         "process.env.KAKAO_CLIENT_ID": JSON.stringify(KAKAO_CLIENT_ID),
         "process.env.KAKAO_JDK_KEY": JSON.stringify(KAKAO_CLIENT_KEY),
         "process.env.KAKAO_REDIRECT_PATH": JSON.stringify(KAKAO_REDIRECT_PATH_PRO),
+        "process.env.PAYMENT_IMP_KEY": JSON.stringify(PAYMENT_IMP_KEY),
       }),
     );
   }
@@ -220,6 +220,7 @@ module.exports = (_, argv) => {
         "process.env.KAKAO_CLIENT_ID": JSON.stringify(KAKAO_CLIENT_ID),
         "process.env.KAKAO_JDK_KEY": JSON.stringify(KAKAO_CLIENT_KEY),
         "process.env.KAKAO_REDIRECT_PATH": JSON.stringify(KAKAO_REDIRECT_PATH_DEV),
+        "process.env.PAYMENT_IMP_KEY": JSON.stringify(PAYMENT_IMP_KEY),
       }),
     );
   }
