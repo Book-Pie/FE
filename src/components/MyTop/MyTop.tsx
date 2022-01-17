@@ -49,15 +49,15 @@ const MyTop = () => {
     });
   }, []);
 
-  const handlePointPopUpOnClick = () => {
+  const handlePaymentPopUpOnClick = useCallback(() => {
     const name = "북파이 결제페이지";
-    const url = "/point";
+    const url = "/payment";
     const popupX = window.screen.width / 2 - 200 / 2;
     const popupY = window.screen.height / 2 - 300 / 2;
     const option = `width = 850, height = 600, top = ${popupY}, left = ${popupX}, screenX=${popupX} screenY=${popupY} resizable=no`;
     const win = window.open(url, name, option);
     win?.addEventListener("beforeunload", () => window.location.reload());
-  };
+  }, []);
 
   const handleNickNameUpdateOpen = useCallback(() => {
     setIsNickNameUpdateOpen(prev => !prev);
@@ -171,7 +171,7 @@ const MyTop = () => {
                 <span>{`${make1000UnitsCommaFormet(String(user.point.holdPoint))}점`}</span>
               </div>
               <div>
-                <Button color="mainDarkBrown" variant="contained" onClick={handlePointPopUpOnClick}>
+                <Button color="mainDarkBrown" variant="contained" onClick={handlePaymentPopUpOnClick}>
                   포인트 충전
                 </Button>
               </div>

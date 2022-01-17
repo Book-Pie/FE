@@ -1,88 +1,175 @@
-import paymentImg from "assets/image/payment_img.jpg";
-import PaymentForm from "components/PaymentForm/PaymentForm";
-import styled from "styled-components";
+import React, { useEffect, useState } from "react";
+import http from "src/api/http";
+import Popup from "src/elements/Popup";
+import useSignIn from "src/hooks/useSignIn";
+import { make1000UnitsCommaFormet } from "src/utils/formatUtil";
+import TextField from "@mui/material/TextField";
+import logo from "assets/image/logo-removebg.png";
+import { Wrapper } from "./style";
 
-const Container = styled.div`
-  width: 700px;
-  margin: 0 auto;
-  box-shadow: rgb(0 0 0 / 20%) 0px 4px 16px 0px;
-  padding: 1rem 2rem;
-
-  .payment--center {
-    text-align: center;
-  }
-
-  .payment__main_title {
-    font-size: 2.5rem;
-    font-weight: 900;
-  }
-  .payment__title {
-    width: 250px;
-    font-size: 1.5rem;
-    font-weight: 900;
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-  }
-  .payment__details {
-    display: flex;
-    padding-bottom: 1rem;
-    border-bottom: 0.5rem solid rgba(149, 165, 166, 0.15);
-  }
-  .payment__img {
-    width: 200px;
-    padding-top: 150px;
-    position: relative;
-    & > img {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      top: 0;
-      bottom: 0;
-    }
-  }
-  .payment__state {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 1rem;
-    gap: 10px;
-  }
-  .payment__price {
-    display: inline-block;
-    & > span {
-      vertical-align: middle;
-      font-weight: 900;
-      font-size: 1.5rem;
-    }
-  }
-  .payment__cotent_title {
-    font-size: 1.1rem;
-    color: rgba(149, 165, 166, 1);
-    font-weight: bold;
-  }
-`;
+const { IMP } = window as any;
 
 const Payment = () => {
+  const { signIn } = useSignIn();
+  const [payment, setPayment] = useState<any>({
+    isSuccess: false,
+    result: "",
+  });
+  const [popUpState, setPopUpState] = useState({
+    isSuccess: false,
+    message: "",
+  });
+  const [isOpen, setIsOpen] = useState(false);
+  const [price, setPrice] = useState("");
+  const { user } = signIn;
+
+  const handlePopUp = (isSuccess: boolean, message: string) => {
+    setIsOpen(true);
+    setPopUpState({
+      isSuccess,
+      message,
+    });
+  };
+
+  const handleAdPriceOnClick = (price: number) => () => {
+    setPrice(prev => {
+      const totalPrice = String(Number(prev) + Number(price));
+      if (totalPrice.length > 10) return prev;
+      return totalPrice;
+    });
+  };
+
+  const handlePriceOnChange = ({ target: { value } }: React.ChangeEvent<HTMLInputElement>) => {
+    if (value.length === 0) setPrice("");
+    if (/[1-9](1)*/gi.test(value)) {
+      setPrice(prev => (value.length > 10 ? prev : value));
+    }
+  };
+  const handleCloseOnClick = () => window.close();
+  const handlePointPaymentOnClick = ({ currentTarget: { id } }: React.MouseEvent<HTMLButtonElement>) => {
+    if (user && Number(price) >= 1000) {
+      const { email, name, phone, address, id: userId } = user;
+
+      const data = {
+        pg: "kakaopay",
+        pay_method: "card",
+        merchant_uid: `merchant_${new Date().getTime()}`,
+        name: "북파이 포인트 결제", // 결제창에서 보여질 이름
+        amount: price, // 결제할 포인트
+        buyer_email: email,
+        buyer_name: name,
+        buyer_tel: phone,
+        buyer_addr: address?.detailAddress ?? "",
+        buyer_postcode: address?.postalCode ?? "",
+      };
+
+      if (id === "inicis") data.pg = "html5_inicis";
+
+      const callback = (response: any) => {
+        const amount = response.paid_amount;
+        const impUid = response.imp_uid;
+        const merchantUid = response.merchant_uid;
+
+        if (response.success) {
+          const data = {
+            amount,
+            impUid,
+            merchantUid,
+            userId,
+          };
+
+          http
+            .post("/point", data)
+            .then(() => {
+              handlePopUp(true, "결제에 성공하였습니다.");
+              setPayment({
+                isSuccess: true,
+                result: `${make1000UnitsCommaFormet(String(amount))}원`,
+              });
+            })
+            .catch(err => alert(err));
+        } else {
+          setIsOpen(true);
+          handlePopUp(false, `결제에 실패하였습니다. \n${response.error_msg}`);
+        }
+      };
+      IMP.request_pay(data, callback);
+    } else {
+      handlePopUp(false, "최소 1,000원이상 결제 가능합니다.");
+    }
+  };
+
+  useEffect(() => {
+    IMP.init(process.env.PAYMENT_IMP_KEY);
+  }, []);
+
   return (
-    <Container>
-      <div className="payment__main_title payment--center">결제 페이지</div>
-      <div className="payment__header">
-        <div className="payment__title">택배거래, 안전결제로 구매합니다.</div>
-        <div className="payment__details">
-          <div className="payment__img">
-            <img src={paymentImg} alt="paymentImg" />
-          </div>
-          <div className="payment__state">
-            <div className="payment__price">
-              <span>가격 : </span>
-              <span>15,0000원</span>
-            </div>
-            <div className="payment__cotent_title">[상태 : 최상] 책은 도끼다 팝니다.!!</div>
+    <Wrapper>
+      {isOpen && (
+        <Popup
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          className={popUpState.isSuccess ? "green" : "red"}
+          autoClose
+          closeDelay={4000}
+        >
+          {popUpState.message}
+        </Popup>
+      )}
+      <div className="payment">
+        <div className="payment__title">
+          <img src={logo} alt="logo" />
+          <h1> 결제하기</h1>
+        </div>
+        <p>원하시는 결제 수단을 선택해주세요.</p>
+        <div className="payment__totalPoint">총 : {`${make1000UnitsCommaFormet(price === "" ? "0" : price)}원`}</div>
+        <div className="payment__priceInput">
+          <TextField
+            type="number"
+            required
+            fullWidth
+            color="mainDarkBrown"
+            value={price}
+            onChange={handlePriceOnChange}
+          />
+        </div>
+        <div className="payment__priceButton">
+          <div>
+            <button type="button" onClick={handleAdPriceOnClick(1000)}>
+              1,000원 +
+            </button>
+            <button type="button" onClick={handleAdPriceOnClick(10000)}>
+              10,000원 +
+            </button>
+            <button type="button" onClick={handleAdPriceOnClick(50000)}>
+              50,000원 +
+            </button>
+            <button type="button" onClick={handleAdPriceOnClick(100000)}>
+              100,000원 +
+            </button>
           </div>
         </div>
-        <PaymentForm />
+        <div className="payment__buttons">
+          <div>
+            <button id="kakao" type="button" onClick={handlePointPaymentOnClick}>
+              카카오 간편결제
+            </button>
+            <button id="inicis" type="button" onClick={handlePointPaymentOnClick}>
+              이니시스 결제
+            </button>
+          </div>
+        </div>
+        {payment.isSuccess && (
+          <div className="payment__result">
+            <p>결제가 완료되었습니다.</p>
+            <div className="payment__price">{payment.result}</div>
+            <button id="close" type="button" onClick={handleCloseOnClick}>
+              닫기
+            </button>
+          </div>
+        )}
       </div>
-    </Container>
+    </Wrapper>
   );
 };
 

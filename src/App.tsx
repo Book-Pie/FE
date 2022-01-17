@@ -6,13 +6,13 @@ import Header from "./components/Header/Header";
 import Footer from "./components/Footer/Footer";
 import Fallback from "./components/Fallback/Fallback";
 
-const Point = lazy(() => import("pages/Point/Point"));
+const Payment = lazy(() => import("src/pages/Payment/Payment"));
 
 const App = () => {
   return (
     <Suspense fallback={<Fallback />}>
       <Switch>
-        <Route path="/point" component={Point} />
+        <Route path="/payment" component={Payment} />
         <Route path="/">
           <Header />
           <Container>

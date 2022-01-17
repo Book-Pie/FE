@@ -22,7 +22,7 @@ import useDelay from "src/hooks/useDelay";
 import { getShopPage, removeShopPage, setShopPage } from "src/utils/localStorageUtil";
 import { Wrapper, TableHeader, Cell, Empty, TableBody } from "./style";
 import { AxioseReponse, IList, IPage } from "./type";
-import Skeletons from "./Skeletons";
+import Skelaton from "./Skelaton";
 import Content from "./Content";
 
 const MyShopList = () => {
@@ -156,7 +156,7 @@ const MyShopList = () => {
   ) : (
     Array.from({ length: limit }).map((_, idx) => (
       <TableBody key={idx}>
-        <Skeletons />
+        <Skelaton />
       </TableBody>
     ))
   );
@@ -171,7 +171,7 @@ const MyShopList = () => {
       <Wrapper>
         <Stack direction="row" justifyContent="center" mb={2} spacing={2}>
           <Autocomplete
-            sx={{ width: 550 }}
+            sx={{ width: 250 }}
             freeSolo
             onChange={handleTitlteFilterOnChange}
             options={pages}
