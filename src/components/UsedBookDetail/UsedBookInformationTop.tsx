@@ -1,13 +1,26 @@
+import { UsedBookDetailResponse } from "src/modules/Slices/usedBookDetail/types";
 import { CategoryArea, UsedBookDetailWrapper, UsedBookImg } from "./style";
 import UsedBookArea from "./UsedBookContent/UsedBookArea";
 
-const UsedBookInformationTop = () => {
+const UsedBookInformationTop = ({
+  title,
+  price,
+  content,
+  view,
+  uploadDate,
+  fstCategory,
+  sndCategory,
+  tags,
+  images,
+}: UsedBookDetailResponse) => {
   return (
     <>
-      <CategoryArea> 중고장터 에세이</CategoryArea>
+      <CategoryArea>
+        {fstCategory} &gt; {sndCategory}
+      </CategoryArea>
       <UsedBookDetailWrapper>
-        <UsedBookImg />
-        <UsedBookArea />
+        <UsedBookImg src={`${process.env.BASE_URL}/image/${images}`} alt="latestImg" />
+        <UsedBookArea title={title} price={price} content={content} view={view} uploadDate={uploadDate} tags={tags} />
       </UsedBookDetailWrapper>
     </>
   );

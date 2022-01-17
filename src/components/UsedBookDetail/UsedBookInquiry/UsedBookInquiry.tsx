@@ -4,7 +4,7 @@ import { CountWrapper, ProductDetailTitle, UsedBookStoreInformationWrapper } fro
 
 const UsedBookInquiry = () => {
   const [myContent, setContent] = useState("");
-  const count = 5;
+  const count = 0;
 
   return (
     <UsedBookStoreInformationWrapper>

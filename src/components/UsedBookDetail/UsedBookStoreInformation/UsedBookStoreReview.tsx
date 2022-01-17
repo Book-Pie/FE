@@ -1,7 +1,7 @@
 import { CountWrapper, ProductDetailTitle, UsedBookStoreInformationWrapper } from "../style";
 
 const UsedBookStoreReview = () => {
-  const reviewCount = 10;
+  const reviewCount = 0;
 
   return (
     <UsedBookStoreInformationWrapper height="500px">

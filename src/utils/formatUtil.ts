@@ -26,6 +26,45 @@ export const addHyphenFormat = (text: string) => {
   });
 };
 
+export function dateTFormat(text: string) {
+  if (!text) {
+    return text;
+  }
+  return text.split("T", 1);
+}
+
+export function compareDateFormat(text: string) {
+  if (!text) {
+    return text;
+  }
+  const dateText = text.split("T", 1);
+  const dateArr: string[] = dateText[0].split("-");
+  const now = new Date();
+
+  const year = now.getFullYear();
+  const month = now.getMonth() + 1;
+  const day = now.getDate();
+
+  const stDate = new Date(dateArr[0], dateArr[1], dateArr[2]);
+  const endDate = new Date(year, month, day);
+
+  const btMs = endDate.getTime() - stDate.getTime();
+  const btDay = btMs / (1000 * 60 * 60 * 24);
+
+  return btDay;
+}
+
+export function dateFormatOne(now: Date) {
+  let month = now.getMonth() + 1;
+  let day = now.getDate();
+
+  const zero = 0;
+  month = month >= 10 ? month : zero + month;
+  day = day >= 10 ? day : zero + day;
+
+  return `${now.getFullYear()}-${month}-${day}`;
+}
+
 export function dateFormat(date: Date) {
   let month = date.getMonth() + 1;
   let day = date.getDate();

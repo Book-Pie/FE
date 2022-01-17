@@ -1,11 +1,12 @@
+import { UsedBookDetailResponse } from "src/modules/Slices/usedBookDetail/types";
 import { CardBoldTitle, CardSmallTitle, UsedStoreUserContentWrapper } from "../style";
 
-const UsedStoreUserContent = () => {
-  const nickname = "올리비아";
+const UsedStoreUserContent = ({ sellerId, sellerName }: UsedBookDetailResponse) => {
+  // 임시 데이터
   const tag1 = "#에세이";
   const tag2 = "#취미";
-  const goodsCount = 6;
-  const followCount = 5;
+  const goodsCount = 0;
+  const followCount = 0;
 
   return (
     <UsedStoreUserContentWrapper>
@@ -14,7 +15,7 @@ const UsedStoreUserContent = () => {
         <CardSmallTitle>취향</CardSmallTitle>
       </div>
       <div>
-        <CardBoldTitle>{nickname}</CardBoldTitle>
+        <CardBoldTitle>{sellerName}</CardBoldTitle>
         <CardBoldTitle>{tag1}</CardBoldTitle>
         <CardBoldTitle>{tag2}</CardBoldTitle>
       </div>

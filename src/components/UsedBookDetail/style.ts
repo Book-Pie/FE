@@ -31,7 +31,7 @@ export const CardBoldTitle = styled.span`
 `;
 
 export const CategoryArea = styled.div`
-  margin: 10px 27px 0px 0px;
+  margin: 20px 14px 0px 0px;
   text-align: right;
 `;
 
@@ -86,6 +86,11 @@ export const UsedBookDetailButton = styled.button`
   background-color: #fff;
   color: #4f3629;
   font-weight: 600;
+
+  &:hover {
+    background-color: #edeae9;
+    cursor: pointer;
+  }
 `;
 
 export const ProductDetailContent = styled.div`
@@ -132,7 +137,7 @@ export const UsedBookThumbnail = styled.div`
 export const RelatedUsedBookWrapper = styled.div`
   border-top: 1px solid #4f3629;
   width: 100%;
-  height: 600px;
+  height: 450px;
   margin: 10px auto 0 auto;
 `;
 
@@ -170,7 +175,7 @@ export const BookPrice = styled.div`
 `;
 
 export const UsedBookImg = styled.img`
-  width: 600px;
+  width: 570px;
   height: 700px;
   margin: 21px 28px 50px 0px;
   object-fit: contain;
@@ -194,6 +199,7 @@ export const TopInformationArea = styled.div`
 `;
 
 export const InteractionSpan = styled.span`
+  // color: rgb(204, 204, 204);
   margin-left: 14px;
 `;
 
@@ -210,6 +216,12 @@ export const BuyButton = styled.button`
   color: #fff;
   font-size: 17px;
   font-weight: 600;
+
+  &:hover {
+    background-color: #edeae9;
+    color: #4f3629;
+    cursor: pointer;
+  }
 `;
 
 export const UsedStoreUserContentWrapper = styled.div`

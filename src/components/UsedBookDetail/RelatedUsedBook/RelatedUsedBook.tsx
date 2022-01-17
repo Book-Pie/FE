@@ -5,7 +5,7 @@ const RelatedUsedBook = () => {
   return (
     <RelatedUsedBookWrapper>
       <NormalTitle>연관 상품</NormalTitle>
-      <RelatedUsedBookList />
+      {/* <RelatedUsedBookList /> */}
     </RelatedUsedBookWrapper>
   );
 };
