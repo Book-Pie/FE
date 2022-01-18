@@ -67,6 +67,13 @@ const Content = ({ pages, titleFilter, select, handleLatestClick }: IContent) =>
                 <Button color="primary" variant="contained">
                   수정하기
                 </Button>
+                {state === "TRADING" && (
+                  <Button color="mainDarkBrown" variant="contained">
+                    <Link to={`sale/${id}`} style={{ color: "white" }}>
+                      판매상세보기
+                    </Link>
+                  </Button>
+                )}
               </ButtonGroup>
             </Cell>
           </div>

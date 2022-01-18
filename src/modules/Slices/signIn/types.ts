@@ -1,5 +1,6 @@
 import { History } from "history";
-import { AppDispatch } from "modules/store";
+import { AppDispatch, RootState } from "modules/store";
+import { IOrderResult } from "src/components/OrderForm/type";
 // =========================== 썽크함수 파라미터 타입 ===========================
 // thunk 함수로 넘겨질 인자 타입
 
@@ -15,6 +16,7 @@ export interface NickNameUpdateParam {
 // =========================== 썽크함수 파라미터 타입 ===========================
 
 // =========================== 썽크함수 성공 시 리턴 타입 ===========================
+
 export interface IUserInfo {
   id: number;
   email: string;
@@ -100,6 +102,10 @@ export interface NickNameUpdateThunkApi {
   dispatch: AppDispatch;
   rejectValue: NickNameResponse;
 }
+export interface BuyThunkApi {
+  rejectValue: string;
+  state: RootState;
+}
 
 // =========================== ThunkApi 제네릭 ===========================
 // 리듀가 사용할 데이터 타입
@@ -109,4 +115,6 @@ export interface ISignInReduce {
   isLoggedIn: boolean;
   status: "loading" | "idle";
   error: null | ErrorHandlring | string;
+  saleInfos: IOrderResult[];
+  buyInfos: IOrderResult[];
 }

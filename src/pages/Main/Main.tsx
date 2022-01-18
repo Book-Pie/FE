@@ -15,8 +15,8 @@ const Main = () => {
   const { item } = bestsellerBooks;
 
   useEffect(() => {
-    dispatch(getbookAPI());
-  }, [dispatch]);
+    if (item.length === 0) dispatch(getbookAPI());
+  }, [item, dispatch]);
 
   const skelatons = Array.from({ length: 9 }).map(() => ({
     background: "#edeae9",

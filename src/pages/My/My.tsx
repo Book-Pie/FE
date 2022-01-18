@@ -4,48 +4,50 @@ import Withdrawal from "components/Withdrawal/Withdrawal";
 import MyProfileTop from "src/components/MyTop/MyTop";
 import { NavLink } from "react-router-dom";
 import { useMemo } from "react";
-import MyShopList from "src/components/MyShopList/MyShopList";
-import MyshopInsert from "src/components/MyShopInsert/MyshopInsert";
+import SaleList from "src/components/SaleList/SaleList";
+import SaleInsert from "src/components/SaleInsert/SaleInsert";
+import BuyInfo from "src/components/BuyInfo/BuyInfo";
+import SaleInfo from "src/components/SaleInfo/SaleInfo";
 import { Container, RouterWrapper, MyMenuWrapper } from "./style";
 
 const My = () => {
-  const match = useRouteMatch();
+  const { path } = useRouteMatch();
   const myMenus = useMemo(
     () => [
       {
         id: 1,
         text: "판매",
-        path: "shop",
+        endPoint: "sale",
       },
       {
         id: 2,
         text: "구매",
-        path: "b",
+        endPoint: "buy",
       },
       {
         id: 3,
         text: "찜",
-        path: "c",
+        endPoint: "c",
       },
       {
         id: 4,
         text: "거래 후기",
-        path: "d",
+        endPoint: "d",
       },
       {
         id: 5,
         text: "작성리뷰",
-        path: "e",
+        endPoint: "e",
       },
       {
         id: 6,
         text: "회원정보수정",
-        path: "modified",
+        endPoint: "modified",
       },
       {
         id: 7,
         text: "탈퇴하기",
-        path: "withdrawal",
+        endPoint: "withdrawal",
       },
     ],
     [],
@@ -55,9 +57,9 @@ const My = () => {
     <Container>
       <MyProfileTop />
       <MyMenuWrapper>
-        {myMenus.map(({ id, text, path }) => (
+        {myMenus.map(({ id, text, endPoint }) => (
           <span key={id}>
-            <NavLink to={`${match.path}/${path}`} activeClassName="my__link--active">
+            <NavLink to={`${path}/${endPoint}`} activeClassName="my__link--active">
               {text}
             </NavLink>
           </span>
@@ -65,14 +67,16 @@ const My = () => {
       </MyMenuWrapper>
       <RouterWrapper>
         <Switch>
-          <Route path={`${match.path}/shop`} exact component={MyShopList} />
-          <Route path={`${match.path}/shop/insert`} component={MyshopInsert} />
-          <Route path={`${match.path}/b`} render={() => <div />} />
-          <Route path={`${match.path}/c`} render={() => <div />} />
-          <Route path={`${match.path}/d`} render={() => <div />} />
-          <Route path={`${match.path}/e`} render={() => <div />} />
-          <Route path={`${match.path}/modified`} component={Modified} />
-          <Route path={`${match.path}/withdrawal`} component={Withdrawal} />
+          <Route path={`${path}/sale`} exact component={SaleList} />
+          <Route path={`${path}/sale/insert`} component={SaleInsert} />
+          <Route path={`${path}/sale/:bookId`} component={SaleInfo} />
+          <Route path={`${path}/buy`} render={() => <div />} exact />
+          <Route path={`${path}/buy/:orderId`} component={BuyInfo} />
+          <Route path={`${path}/c`} render={() => <div />} />
+          <Route path={`${path}/d`} render={() => <div />} />
+          <Route path={`${path}/e`} render={() => <div />} />
+          <Route path={`${path}/modified`} component={Modified} />
+          <Route path={`${path}/withdrawal`} component={Withdrawal} />
           <Route path="*" render={() => <Redirect to="/" />} />
         </Switch>
       </RouterWrapper>

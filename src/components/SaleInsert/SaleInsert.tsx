@@ -15,7 +15,7 @@ import { getCategory } from "src/api/usedBook/usedBook";
 import Popup from "src/elements/Popup";
 import Editor from "src/components/Editor/Editor";
 import useDebounce from "src/hooks/useDebounce";
-import { getShopInsert } from "src/api/my/my";
+import { getSaleInsert } from "src/api/my/my";
 import useSignIn from "src/hooks/useSignIn";
 import { errorHandler } from "src/api/http";
 import { useHistory } from "react-router";
@@ -31,7 +31,7 @@ import {
   ErrorMessageWrapper,
   TagBox,
 } from "./style";
-import { CheckBoxType, IMyInsertForm, KeyEvent, TagsType } from "./type";
+import { CheckBoxType, ISaleInsertForm, KeyEvent, TagsType } from "./type";
 
 const KEY_ENUM = {
   enter: "Enter",
@@ -39,7 +39,7 @@ const KEY_ENUM = {
   comma: "Comma",
 };
 
-const insertFormInit: IMyInsertForm = {
+const insertFormInit: ISaleInsertForm = {
   title: "",
   price: "",
 };
@@ -51,7 +51,7 @@ const popUpStateInit = {
 const TAGS_MAX_COUNT = 5;
 const TAGS_MAX_LENGTH = 20;
 
-const MyshopInsert = () => {
+const SaleInsert = () => {
   const [imgBase64, setImgBase64] = useState<string[]>([]);
   const [form, setForm] = useState<TagsType>({ tags: new Set<string>() });
   const [imgFiles, setImgFiles] = useState<File[]>([]);
@@ -76,7 +76,7 @@ const MyshopInsert = () => {
     formState: { errors },
     reset,
     control,
-  } = useForm<IMyInsertForm>({
+  } = useForm<ISaleInsertForm>({
     defaultValues: insertFormInit,
   });
 
@@ -196,7 +196,7 @@ const MyshopInsert = () => {
     [],
   );
 
-  const handleOnSubmit = (data: IMyInsertForm) => {
+  const handleOnSubmit = (data: ISaleInsertForm) => {
     if (signIn.token) {
       const { token } = signIn;
       const { price, title } = data;
@@ -217,9 +217,9 @@ const MyshopInsert = () => {
       imgFiles.forEach(file => formData.append("images", file));
       formData.append("usedBook", JSON.stringify(payload));
 
-      getShopInsert(formData, token)
+      getSaleInsert(formData, token)
         .then(() => {
-          history.replace("/my/shop");
+          history.replace("/my/sale");
         })
         .catch(error => {
           handlePopUp(errorHandler(error), false);
@@ -550,4 +550,4 @@ const MyshopInsert = () => {
   );
 };
 
-export default MyshopInsert;
+export default SaleInsert;
