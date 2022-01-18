@@ -21,6 +21,16 @@ export const getOrder = <P>(payload: P, token: string) => {
   });
 };
 
-export const getMyOrder = (orderId: number) => {
-  return http.get(`/order/${orderId}`);
+export const getMyOrder = (orderId: string, token: string) => {
+  return http.get(`/order/${orderId}`, {
+    headers: {
+      "X-AUTH-TOKEN": token,
+    },
+  });
+};
+
+export const getBuyer = (userId: number, token: string) => {
+  return http.get(`/order/buyer/${userId}`, {
+    headers: { "X-AUTH-TOKEN": token },
+  });
 };

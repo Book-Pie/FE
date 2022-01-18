@@ -46,6 +46,11 @@ const OrderForm = ({ usedBook }: OrderFormProps) => {
   const addressOptions: RegisterOptions = {
     required: makeOption<boolean>(true, FormErrorMessages.REQUIRED),
   };
+  const detailAddressOptions: RegisterOptions = {
+    required: makeOption<boolean>(true, FormErrorMessages.REQUIRED),
+    maxLength: makeOption<number>(35, FormErrorMessages.MAX_LENGTH),
+    minLength: makeOption<number>(5, FormErrorMessages.MIN_LENGTH),
+  };
 
   const handlePopUp = useCallback((isSuccess: boolean, message: string) => {
     setIsOpen(true);
@@ -88,6 +93,7 @@ const OrderForm = ({ usedBook }: OrderFormProps) => {
             mainAddress,
             postalCode,
           },
+          deliveryRequest: deliveryText,
         };
 
         const { data } = await getOrder<OrderRequest>(payload, signIn.token);
@@ -198,7 +204,7 @@ const OrderForm = ({ usedBook }: OrderFormProps) => {
             type="text"
             id="detailAddress"
             placeholder="상세주소"
-            register={register("detailAddress", addressOptions)}
+            register={register("detailAddress", detailAddressOptions)}
           />
         </Row>
         <Row>

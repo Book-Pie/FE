@@ -15,6 +15,7 @@ export interface OrderRequest {
     mainAddress: string;
     detailAddress: string;
   };
+  deliveryRequest: string;
 }
 
 export interface IOrderResult {
@@ -23,20 +24,24 @@ export interface IOrderResult {
   buyer: {
     userId: number;
     nickName: string;
+    name: string;
     address: {
       postalCode: string;
       mainAddress: string;
       detailAddress: string;
     } | null;
+    phone: string;
   };
   seller: {
     userId: number;
     nickName: string;
+    name: string;
     address: {
       postalCode: string;
       mainAddress: string;
       detailAddress: string;
     } | null;
+    phone: string;
   };
   book: {
     bookId: number;
@@ -44,4 +49,5 @@ export interface IOrderResult {
     price: number;
     image: string;
   };
+  deliveryRequest: string;
 }

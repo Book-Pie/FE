@@ -1,4 +1,4 @@
-export interface IMyInsertForm {
+export interface ISaleInsertForm {
   title: string;
   price: string;
 }

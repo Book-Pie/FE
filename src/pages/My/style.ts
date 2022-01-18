@@ -4,6 +4,7 @@ const activeBorderColor = "rgba(52, 73, 94, 1)";
 
 export const Container = styled.div`
   margin: 0 auto;
+  min-width: 1200px;
 `;
 
 export const RouterWrapper = styled.div`

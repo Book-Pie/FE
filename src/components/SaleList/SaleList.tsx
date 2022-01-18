@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Link, useRouteMatch } from "react-router-dom";
 import queryString from "query-string";
-import { getShopList, getUsedbookLatest } from "src/api/my/my";
+import { getSaleList, getUsedbookLatest } from "src/api/my/my";
 import useSignIn from "src/hooks/useSignIn";
 import Popup from "src/elements/Popup";
 import { errorHandler } from "src/api/http";
@@ -25,7 +25,7 @@ import { AxioseReponse, IList, IPage } from "./type";
 import Skelaton from "./Skelaton";
 import Content from "./Content";
 
-const MyShopList = () => {
+const SaleList = () => {
   const { signIn } = useSignIn();
   const { user } = signIn;
   const [list, setList] = useState<IList>({
@@ -64,7 +64,7 @@ const MyShopList = () => {
         try {
           setIsLoading(true);
           await delay();
-          const { data } = await getShopList<AxioseReponse>(query);
+          const { data } = await getSaleList<AxioseReponse>(query);
           const { pageCount, pages } = data.data;
           setList({
             pageCount,
@@ -263,4 +263,4 @@ const MyShopList = () => {
   );
 };
 
-export default MyShopList;
+export default SaleList;
