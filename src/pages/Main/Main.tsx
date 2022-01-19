@@ -2,21 +2,22 @@ import BestSeller from "src/components/Main/BestSeller";
 import { useEffect, lazy, Suspense } from "react";
 import { useDispatch } from "react-redux";
 import { useTypedSelector } from "src/modules/store";
-import { getBookAPI, getBookSelector } from "src/modules/Slices/book/bookSlice";
+import { getBestSeller, bestSellerItemSelector } from "src/modules/Slices/book/bookSlice";
 import { Skeleton, Stack } from "@mui/material";
 import LatestSlider from "components/LatestSlider/LatestSlider";
+import { removeFreeBoardPage } from "src/utils/localStorageUtil";
 import { BookContainer, BookWrapper, MainBannerWrapper, Text } from "./style";
 
 const MainBanner = lazy(() => import("src/components/MainBanner/MainBanner"));
 
 const Main = () => {
   const dispatch = useDispatch();
-  const bestsellerBooks = useTypedSelector(getBookSelector);
-  const { item } = bestsellerBooks;
+  const bestSellerItem = useTypedSelector(bestSellerItemSelector);
 
   useEffect(() => {
-    dispatch(getBookAPI());
-  }, [dispatch]);
+    if (bestSellerItem.length === 0) dispatch(getBestSeller());
+    removeFreeBoardPage();
+  }, [bestSellerItem, dispatch]);
 
   const skelatons = Array.from({ length: 9 }).map(() => ({
     background: "#edeae9",
@@ -34,8 +35,8 @@ const Main = () => {
 
       <Text>베스트셀러</Text>
       <BookContainer>
-        {item.length !== 0
-          ? item.map((item, index) =>
+        {bestSellerItem.length !== 0
+          ? bestSellerItem.map((item, index) =>
               index === 0 ? (
                 <div className="one" key={index}>
                   <BestSeller {...item} index={index} />

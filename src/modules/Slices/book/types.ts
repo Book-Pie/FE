@@ -32,12 +32,13 @@ interface BookItemProps {
 
 // 리듀가 사용할 데이터 타입
 export interface BookListReduceProps {
-  item: BookItemProps[];
+  bestSellerItem: BookItemProps[];
   status: "loading" | "idle";
   error: null | {
     code: number;
     message: string;
   };
+  item: BookItemProps[];
 }
 
 // 썽크함수 성공시 반환 타입

@@ -5,11 +5,14 @@ interface LoadingProps {
 }
 
 const Loading = ({ isLoading }: LoadingProps) => {
-  return (
-    <Backdrop sx={{ zIndex: 1, color: theme => theme.colors.mainLightBrown }} open={isLoading}>
-      <CircularProgress color="inherit" />
-    </Backdrop>
-  );
+  if (isLoading) {
+    return (
+      <Backdrop sx={{ zIndex: 1, color: theme => theme.colors.mainLightBrown }} open={isLoading}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
+    );
+  }
+  return null;
 };
 
 export default Loading;
