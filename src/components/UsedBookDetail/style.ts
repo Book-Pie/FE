@@ -318,3 +318,34 @@ export const InteractionArea1 = styled.div`
   width: 226px;
   height: 21px;
 `;
+
+export const SwiperWrapper = styled.div`
+  cursor: pointer;
+
+  .swiper-slide {
+    width: 190px;
+    color: ${props => props.theme.colors.darkGrey};
+  }
+
+  .swiper-pagination {
+    bottom: 2.5rem;
+  }
+  .swiper-pagination-bullet {
+    background: ${props => props.theme.colors.mainDarkBrown} !important;
+    width: 15px;
+    height: 15px;
+    box-sizing: content-box;
+  }
+  .swiper-pagination-bullet-active {
+    background: ${props => props.theme.colors.mainDarkBrown} !important;
+  }
+
+  .swiper-button-next {
+    border-color: ${props => props.theme.colors.mainDarkBrown} !important;
+    color: ${props => props.theme.colors.mainDarkBrown} !important;
+  }
+  .swiper-button-prev {
+    border-color: ${props => props.theme.colors.mainDarkBrown} !important;
+    color: ${props => props.theme.colors.mainDarkBrown} !important;
+  }
+`;

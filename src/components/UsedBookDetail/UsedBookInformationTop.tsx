@@ -2,7 +2,13 @@ import { useHistory } from "react-router";
 import { signInSelector } from "src/modules/Slices/signIn/signInSlice";
 import { UsedBookDetailResponse } from "src/modules/Slices/usedBookDetail/types";
 import { useTypedSelector } from "src/modules/store";
-import { CategoryArea, UsedBookDetailWrapper, UsedBookImg } from "./style";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/pagination";
+import "swiper/css/navigation";
+import { useMemo } from "react";
+import { Pagination } from "swiper";
+import { CategoryArea, UsedBookDetailWrapper, UsedBookImg, SwiperWrapper } from "./style";
 import UsedBookArea from "./UsedBookContent/UsedBookArea";
 
 const UsedBookInformationTop = ({
@@ -24,13 +30,32 @@ const UsedBookInformationTop = ({
   const history = useHistory();
   const { isLoggedIn } = useTypedSelector(signInSelector);
 
+  const swiperStyle = useMemo(
+    () => ({
+      paddingBottom: "50px",
+      width: "544px",
+      height: "700px",
+      margin: "21px 28px 50px 0px",
+    }),
+    [],
+  );
+
   return (
     <>
       <CategoryArea>
         {fstCategory} &gt; {sndCategory}
       </CategoryArea>
       <UsedBookDetailWrapper>
-        <UsedBookImg src={`${process.env.BASE_URL}/image/${images}`} alt="latestImg" />
+        <SwiperWrapper>
+          <Swiper modules={[Pagination]} spaceBetween={30} slidesPerView={5} style={swiperStyle} cssMode navigation>
+            {images &&
+              images.map((image, idx) => (
+                <SwiperSlide key={idx}>
+                  <UsedBookImg src={`${process.env.BASE_URL}/image/${image}`} alt={`image${idx}`} />
+                </SwiperSlide>
+              ))}
+          </Swiper>
+        </SwiperWrapper>
         <UsedBookArea
           title={title}
           price={price}
