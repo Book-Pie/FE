@@ -5,8 +5,6 @@ export interface UsedBookDetailThunk {
   rejectValue: string;
 }
 
-// =========================== 썽크함수 성공 시 리턴 타입 ===========================
-
 export interface deleteUsedBookDetailParam {
   id: number;
 }
@@ -104,6 +102,14 @@ export interface MyUsedBookAsyncSuccess {
     pageCount: number;
     pages: PagesResponse[];
   };
+  error: null;
+}
+
+// =========================== 썽크함수 성공 시 리턴 타입 ===========================
+
+export interface getUsedBookDetailLikeAsyncSuccess {
+  success: boolean;
+  data: PagesResponse[];
   error: null;
 }
 

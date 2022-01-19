@@ -43,21 +43,6 @@ export const getCategoryBook = createAsyncThunk<getBookAsyncSuccess>(
   },
 );
 
-// export const getBookAPItest = createAsyncThunk<getBookAsyncSucess, BookItemProps, ThunkApi>(
-//   `${name}/bookAsync`,
-//   async ({ itemId, title, categoryName, cover, bestRank }, { rejectWithValue }) => {
-//     try {
-//       const response = await api.get("/bestSeller");
-//       const { data } = response;
-//       return response.data;
-//     } catch (err) {
-//       const error = err as AxiosError<getBookAsyncFail>;
-//       if (!error.response) throw err; // 런타임 에러
-//       return rejectWithValue(error.response.data);
-//     }
-//   },
-// );
-
 // Slice
 export const getBookSlice = createSlice({
   name: "bookList",

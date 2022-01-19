@@ -8,4 +8,5 @@ export type StateEnumType = {
 
 export interface UsedBookCardProps {
   card: IUsedBook;
+  width?: number;
 }

@@ -10,11 +10,11 @@ const STATE_ENUM: StateEnumType = {
   TRADING: "거래 중",
 };
 
-const UsedBookCard = ({ card }: UsedBookCardProps) => {
+const UsedBookCard = ({ card, width }: UsedBookCardProps) => {
   const { id, image, price, title, state } = card;
 
   return Object.keys(card).length ? (
-    <Wrapper>
+    <Wrapper width={width}>
       <Link to={`/usedBook/${id}`}>
         <div className="usedBookCard__imgBox">
           <img src={`${process.env.BASE_URL}/image/${image}`} alt="usedBookImg" />
@@ -35,4 +35,7 @@ const UsedBookCard = ({ card }: UsedBookCardProps) => {
   );
 };
 
+UsedBookCard.defaultProps = {
+  width: 20,
+};
 export default memo(UsedBookCard);
