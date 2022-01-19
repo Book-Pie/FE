@@ -1,4 +1,35 @@
+import { AppDispatch } from "src/modules/store";
+
+export interface UsedBookDetailThunk {
+  dispatch: AppDispatch;
+  rejectValue: string;
+}
+
 // =========================== 썽크함수 성공 시 리턴 타입 ===========================
+
+export interface deleteUsedBookDetailParam {
+  id: number;
+}
+
+export interface addUsedBookDetailReplyParam {
+  usedBookId: number;
+  userId: number;
+  content: string;
+}
+
+export interface usedBookLikeParam {
+  usedBookId: number;
+}
+
+export interface usedBookDetailReplyResponse {
+  replyId: number;
+  parentReplyId: number;
+  usedBookId: number;
+  userId: number;
+  content: string;
+  replyDate: string;
+  nickName: string;
+}
 
 export interface PagesResponse {
   id: number;
@@ -14,7 +45,6 @@ export interface PagesResponse {
 
 export interface UsedBookDetailResponse {
   usedBookId: number;
-  isbn: number;
   sellerId: number;
   sellerName: string;
   price: number;
@@ -26,6 +56,8 @@ export interface UsedBookDetailResponse {
   saleState: string;
   fstCategory: string;
   sndCategory: string;
+  likeCount: string | number;
+  replyCount: number;
   tags: string[];
   images: string[];
 }
@@ -35,6 +67,35 @@ export interface UsedBookLikeGetResponse {
   title: string;
   price: number;
   image: string;
+}
+
+export interface usedBookDetailReplyListData {
+  content: usedBookDetailReplyResponse[];
+  pageable: {
+    sort: {
+      empty: boolean;
+      sorted: boolean;
+      unsorted: boolean;
+    };
+    offset: number;
+    pageNumber: number;
+    pageSize: number;
+    paged: boolean;
+    unpaged: boolean;
+  };
+  totalElements: number;
+  totalPages: number;
+  last: boolean;
+  number: number;
+  sort: {
+    empty: boolean;
+    sorted: boolean;
+    unsorted: boolean;
+  };
+  size: number;
+  numberOfElements: number;
+  first: boolean;
+  empty: boolean;
 }
 
 export interface MyUsedBookAsyncSuccess {
@@ -64,9 +125,21 @@ export interface UsedBookLikeAsyncSuccess {
   error: null;
 }
 
+export interface UsedBookViewAsyncSuccess {
+  success: boolean;
+  data: number;
+  error: null;
+}
+
 export interface UsedBookLikeGetAsyncSuccess {
   success: boolean;
   data: UsedBookLikeGetResponse[];
+  error: null;
+}
+
+export interface usedBookDetailReplyListAsyncSuccess {
+  success: boolean;
+  data: usedBookDetailReplyListData;
   error: null;
 }
 

@@ -12,7 +12,7 @@ const STATE_ENUM: StateEnumType = {
 const Card = ({ id, title, price, image, state }: CardProps) => {
   return (
     <Wrapper>
-      <Link to={`/usedBook/$${id}`}>
+      <Link to={`/usedBook/${id}`}>
         <Image>
           <img src={`${process.env.BASE_URL}/image/${image}`} alt="latestImg" />
         </Image>

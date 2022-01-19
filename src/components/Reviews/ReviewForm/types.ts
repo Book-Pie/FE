@@ -8,26 +8,18 @@ export interface ReviewTextareaProps {
   isDisabled: boolean;
 }
 
-export interface ReviewsProps {
-  bookId: number;
+export interface ReviewsParams {
+  bookId: string;
+  id: number;
 }
 
 export interface ReviewFormProps {
-  isbn: number;
+  isbn: string;
   isMyReview: boolean;
   onSubmit?: (reviewContent: string) => void;
   onCancel?: () => void;
   isDisabled?: boolean;
-  myReviewContent: getCommentProps;
+  myComment: getCommentProps | null;
   userId: number;
-}
-
-export interface SubmitButtonProps {
-  onClick?: () => void;
-  isDisabled?: boolean;
-}
-
-export interface CancelButtonProps {
-  isFullButton?: boolean;
-  onClick: () => void;
+  checkAuth: () => boolean;
 }

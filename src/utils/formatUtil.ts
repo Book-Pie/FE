@@ -26,12 +26,12 @@ export const addHyphenFormat = (text: string) => {
   });
 };
 
-export function dateTFormat(text: string) {
-  if (!text) {
+export const reviewDateFormat = (text: string) => {
+  if (text === undefined) {
     return text;
   }
   return text.split("T", 1);
-}
+};
 
 export function compareDateFormat(text: string) {
   if (!text) {
@@ -45,7 +45,8 @@ export function compareDateFormat(text: string) {
   const month = now.getMonth() + 1;
   const day = now.getDate();
 
-  const stDate = new Date(dateArr[0], dateArr[1], dateArr[2]);
+  const dateOneArr = dateArr.map(x => +x);
+  const stDate = new Date(dateOneArr[0], dateOneArr[1], dateOneArr[2]);
   const endDate = new Date(year, month, day);
 
   const btMs = endDate.getTime() - stDate.getTime();
@@ -86,6 +87,5 @@ export const dateFormat2 = (date: string | null) => {
     const [hh, mm, ss] = HMS.split(":");
     return [`${YYYY}년 ${MM}월 ${DD}일`, ` ${hh}시 ${mm}분 ${ss}초`];
   }
-
   return "";
 };

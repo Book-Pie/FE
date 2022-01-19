@@ -1,5 +1,58 @@
 import styled from "styled-components";
 
+export const BookDetailHeaderWrapper = styled.div`
+  height: 300px;
+  width: 100%;
+  background-color: #f8f8f8;
+  padding: 40px;
+  border-bottom: 1px solid #e5e5e5;
+`;
+
+export const ButtonText = styled.span`
+  color: #ef3b96;
+`;
+
+export const RatingContent = styled.span`
+  margin-right: 5px;
+`;
+
+export const RatingScore = styled.span`
+  color: #ef3b96;
+`;
+
+export const BookInfo = styled.div`
+  margin: 20px;
+`;
+
+export const BookTitle = styled.div`
+  color: #333;
+  font-size: 23px;
+  font-weight: 600;
+  margin-bottom: 20px;
+`;
+
+export const BookDetailTopContent = styled.div`
+  display: flex;
+  margin: 0 auto;
+  width: 700px;
+`;
+
+export const BookDetailImg = styled.img`
+  width: 127px;
+  height: 210px;
+`;
+export const BookCategory = styled.div`
+  margin-bottom: 20px;
+`;
+export const SmallBookInfo = styled.div`
+  color: #a2a2a2;
+  margin-bottom: 20px;
+`;
+
+export const BookRatingContent = styled.div`
+  padding-left: 10px;
+`;
+
 export const FlexWrapper = styled.div`
   display: flex;
 `;
@@ -28,9 +81,9 @@ export const A = styled.a`
 `;
 
 export const SideBar = styled.div`
-  position: fixed;
-  left: 30px;
-  width: 250px;
+  // position: fixed;
+  // left: 30px;
+  width: 100%;
   height: 200px;
 `;
 

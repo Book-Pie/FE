@@ -1,12 +1,13 @@
 import styled from "styled-components";
 
 export const CardBase = styled.div`
-  border-radius: 16px;
-  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.18);
+  // border-radius: 16px;
+  // box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.18);
   padding: 20px;
   margin: 0 auto;
   margin-top: 50px;
   overflow-y: hidden;
+  border-bottom: 2px solid #eeeeee;
 `;
 
 export const Container = styled.div`

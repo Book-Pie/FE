@@ -1,11 +1,11 @@
 import React from "react";
-import { Button } from "./style";
+import { Button, ButtonText } from "./style";
 import { ExpanderProps } from "./types";
 
 export const Expander: React.FC<ExpanderProps> = ({ text, onClick }) => {
   return (
     <Button onClick={onClick} className="BookDetail_ContentTruncButton">
-      {text}
+      <ButtonText>{text}</ButtonText>
       {/* <Icon name={isExpanded ? "up" : "down"} /> */}
     </Button>
   );
