@@ -78,5 +78,25 @@ export const Title = styled.h1`
 `;
 
 export const Empty = styled.div`
-  min-height: 100vh;
+  min-height: 310px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  p {
+    font-size: 30px;
+    font-weight: bold;
+    color: ${p => p.theme.colors.darkGrey};
+  }
+`;
+
+export const Search = styled.form`
+  & > div {
+    margin-top: 20px;
+    justify-content: center;
+    display: flex;
+    gap: 20px;
+  }
+  input {
+    width: 250px;
+  }
 `;

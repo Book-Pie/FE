@@ -1,25 +1,70 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { freeBoardSelector, incresePage, listAsync } from "src/modules/Slices/freeBoardSlice/freeBoardSlice";
+import {
+  freeBoardSelector,
+  incresePage,
+  listAsync,
+  listByTitleAsync,
+} from "src/modules/Slices/freeBoardSlice/freeBoardSlice";
+import range from "lodash/range";
 import { useTypedSelector } from "src/modules/store";
 import Pagination from "@mui/material/Pagination";
-import { Button, Stack } from "@mui/material";
+import { Button, Skeleton, Stack, TextField } from "@mui/material";
 import { dateFormat2 } from "src/utils/formatUtil";
 import Loading from "src/elements/Loading";
 import { getFreeBoardPage, setFreeBoardPage } from "src/utils/localStorageUtil";
 import { signInSelector } from "src/modules/Slices/signIn/signInSlice";
 import { Link } from "react-router-dom";
-import { Row, Title, Empty, Wrapper } from "./style";
+import { useForm, Controller, RegisterOptions } from "react-hook-form";
+import { makeOption } from "src/utils/hookFormUtil";
+import ErrorMessage from "src/elements/ErrorMessage";
+import useDebounce from "src/hooks/useDebounce";
+import { Row, Title, Empty, Wrapper, Search } from "./style";
+import { ISearchForm } from "./types";
+
+const init: ISearchForm = {
+  title: "",
+};
 
 const FreeBoardList = () => {
-  const [paginatoionPage, setPaginationPage] = useState(() => Number(getFreeBoardPage()));
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<ISearchForm>({
+    defaultValues: init,
+  });
+  const debounce = useDebounce();
   const { user } = useTypedSelector(signInSelector);
-  const { list, status } = useTypedSelector(freeBoardSelector);
+  const { list, status, keyWord } = useTypedSelector(freeBoardSelector);
   const dispatch = useDispatch();
   const isLoading = status === "loading";
 
+  const titleOptions: RegisterOptions = {
+    maxLength: makeOption<number>(50, "최대 50자 입니다."),
+  };
+
+  const onSubmit = (data: ISearchForm) => {
+    if (debounce.current) clearTimeout(debounce.current);
+
+    debounce.current = setTimeout(() => {
+      const { title } = data;
+      if (title !== "") {
+        dispatch(
+          listByTitleAsync({
+            keyWord: data.title,
+            page: 0,
+          }),
+        );
+        return;
+      }
+
+      dispatch(listAsync(0));
+    }, 1000);
+  };
+
   const handlePaginationOnChange = useCallback(
-    (_: React.ChangeEvent<unknown>, value: number) => {
+    (_, value: number) => {
       if (list === null) return;
 
       const { contents } = list;
@@ -27,110 +72,140 @@ const FreeBoardList = () => {
       const content = contents[page];
 
       dispatch(incresePage(page));
-      setPaginationPage(page);
-      if (!content) {
-        dispatch(listAsync(String(page)));
+
+      if (keyWord) {
+        dispatch(listByTitleAsync({ keyWord, page }));
+      } else if (!content) {
+        dispatch(listAsync(page));
       }
     },
-    [dispatch, list],
+    [dispatch, keyWord, list],
   );
 
   useEffect(() => {
-    if (!list) dispatch(listAsync(String(paginatoionPage)));
-    setFreeBoardPage(String(paginatoionPage));
-  }, [dispatch, list, paginatoionPage]);
-
-  if (list) {
-    const { contents, totalPages } = list;
-
-    const content = contents[paginatoionPage] ?? [];
-
-    if (status === "loading") {
-      return (
-        <Empty>
-          <Loading isLoading={isLoading} />
-        </Empty>
-      );
+    if (!list) {
+      dispatch(listAsync(getFreeBoardPage()));
     }
+  }, [dispatch, list]);
+
+  useEffect(() => {
+    if (list) setFreeBoardPage(list.page);
+  }, [list]);
+  if (list) {
+    const { contents, totalPages, page, empty } = list;
+    const content = contents[page] ?? [];
+
+    console.log(contents);
 
     return (
-      <Wrapper>
-        <Title>자유게시판</Title>
-        {user && (
-          <Stack mt={2} mb={2} direction="row" justifyContent="flex-end">
-            <Link to="freeboard/insert">
-              <Button variant="contained">게시글 등록</Button>
-            </Link>
-          </Stack>
-        )}
-        <Row>
-          <div className="header">
-            <span>번호</span>
-            <span>제목</span>
-            <span>작성자</span>
-            <span>조회수</span>
-            <span>등록일</span>
+      <>
+        {status === "loading" && <Loading isLoading={isLoading} />}
+        <Wrapper>
+          <Title>자유게시판</Title>
+          {user && (
+            <Stack mt={2} mb={2} direction="row" justifyContent="flex-end">
+              <Link to="freeboard/insert">
+                <Button variant="contained">게시글 등록</Button>
+              </Link>
+            </Stack>
+          )}
+          <Row>
+            <div className="header">
+              <span>번호</span>
+              <span>제목</span>
+              <span>작성자</span>
+              <span>조회수</span>
+              <span>등록일</span>
+            </div>
+            {status === "loading" ? (
+              range(0, 5).map(v => {
+                return (
+                  <div key={v}>
+                    <Skeleton variant="rectangular" height={20} animation="wave" sx={{ borderRadius: "5px" }} />
+                    <Skeleton variant="rectangular" height={20} animation="wave" sx={{ borderRadius: "5px" }} />
+                    <Skeleton variant="rectangular" height={20} animation="wave" sx={{ borderRadius: "5px" }} />
+                    <Skeleton variant="rectangular" height={20} animation="wave" sx={{ borderRadius: "5px" }} />
+                    <Skeleton variant="rectangular" height={20} animation="wave" sx={{ borderRadius: "5px" }} />
+                  </div>
+                );
+              })
+            ) : empty ? (
+              <Empty>
+                <p>결과가 없습니다.</p>
+              </Empty>
+            ) : (
+              content.map(value => {
+                const { boardDate, nickName, boardId, view, title } = value;
+                return (
+                  <div key={boardId}>
+                    <span>{boardId}</span>
+                    <span>
+                      <Link
+                        to={{
+                          pathname: `freeboard/${boardId}`,
+                          state: {
+                            paginatoionPage: page,
+                          },
+                        }}
+                      >
+                        {title}
+                      </Link>
+                    </span>
+                    <span>{nickName}</span>
+                    <span>{view}</span>
+                    <span>{dateFormat2(boardDate)[0]}</span>
+                  </div>
+                );
+              })
+            )}
+          </Row>
+          <div>
+            <Stack mt={5} justifyContent="center" direction="row">
+              <Pagination
+                count={totalPages}
+                page={page + 1}
+                onChange={handlePaginationOnChange}
+                variant="outlined"
+                shape="rounded"
+                size="large"
+                sx={{
+                  ".Mui-selected": {
+                    background: theme => theme.colors.mainDarkBrown,
+                    color: theme => theme.colors.white,
+                  },
+                }}
+              />
+            </Stack>
           </div>
-          {content.map(value => {
-            const { boardDate, nickName, boardId, view, title } = value;
-            return (
-              <div key={boardId}>
-                <span>{boardId}</span>
-                <span>
-                  <Link
-                    to={{
-                      pathname: `freeboard/${boardId}`,
-                      state: {
-                        paginatoionPage,
-                      },
-                    }}
-                  >
-                    {title}
-                  </Link>
-                </span>
-                <span>{nickName}</span>
-                <span>{view}</span>
-                <span>{dateFormat2(boardDate)[0]}</span>
-              </div>
-            );
-          })}
-        </Row>
-
-        <div>
-          <Stack mt={5} justifyContent="center" direction="row">
-            <Pagination
-              count={totalPages}
-              page={paginatoionPage + 1}
-              onChange={handlePaginationOnChange}
-              variant="outlined"
-              shape="rounded"
-              size="large"
-              sx={{
-                ".Mui-selected": {
-                  background: theme => theme.colors.mainDarkBrown,
-                  color: theme => theme.colors.white,
-                },
-                ".Mui-selected:hover": {
-                  background: theme => theme.colors.mainDarkBrown,
-                  color: theme => theme.colors.white,
-                },
-                ".MuiButtonBase-root:hover": {
-                  background: theme => theme.colors.mainDarkBrown,
-                  color: theme => theme.colors.white,
-                },
-              }}
-            />
-          </Stack>
-        </div>
-      </Wrapper>
+          <Search onSubmit={handleSubmit(onSubmit)}>
+            <div>
+              <Controller
+                name="title"
+                control={control}
+                rules={titleOptions}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    type="text"
+                    color="mainDarkBrown"
+                    placeholder="자유게시판 제목을 입력해주세요."
+                  />
+                )}
+              />
+              <Button variant="contained" color="mainDarkBrown" type="submit">
+                검색
+              </Button>
+            </div>
+            <div>
+              <ErrorMessage message={errors.title?.message} />
+            </div>
+          </Search>
+        </Wrapper>
+      </>
     );
   }
 
-  return (
-    <Empty>
-      <Loading isLoading={isLoading} />
-    </Empty>
-  );
+  return null;
 };
 
 export default FreeBoardList;

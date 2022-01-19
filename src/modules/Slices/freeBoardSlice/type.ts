@@ -82,4 +82,5 @@ export interface IFreeBoardReduce {
     size: number;
   } | null;
   info: Content | null;
+  keyWord: string | null;
 }
