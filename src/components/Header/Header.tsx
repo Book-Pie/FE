@@ -1,5 +1,3 @@
-import styled from "styled-components";
-
 import logo from "assets/image/logo.png";
 import search from "assets/image/search.png";
 import { Link } from "react-router-dom";
@@ -63,7 +61,9 @@ const Header = () => {
           <span>
             <Link to="/book">리뷰</Link>
           </span>
-          <span>커뮤니티</span>
+          <span>
+            <Link to="/community">커뮤니티</Link>
+          </span>
         </RouterWrapper>
       </NavWrapper>
     </HeaderContainer>

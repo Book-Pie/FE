@@ -7,22 +7,26 @@ import { BookListReduceProps, getBookAsyncFail, getBookAsyncSuccess } from "./ty
 const name = "bookReduce";
 
 const initialState: BookListReduceProps = {
-  item: [],
+  bestSellerItem: [],
   status: "loading",
   error: null,
+  item: [],
 };
 
 // 베스트셀러
-export const getBookAPI = createAsyncThunk<getBookAsyncSuccess>(`${name}/bookAsync`, async (_, { rejectWithValue }) => {
-  try {
-    const response = await http.get("/book/bestseller?page=1&size=9");
-    return response.data;
-  } catch (err) {
-    const error = err as AxiosError<getBookAsyncFail>;
-    if (!error.response) throw err;
-    return rejectWithValue(error.response.data);
-  }
-});
+export const getBestSeller = createAsyncThunk<getBookAsyncSuccess>(
+  `${name}/bookAsync`,
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await http.get("/book/bestseller?page=1&size=9");
+      return response.data;
+    } catch (err) {
+      const error = err as AxiosError<getBookAsyncFail>;
+      if (!error.response) throw err;
+      return rejectWithValue(error.response.data);
+    }
+  },
+);
 
 // 카테고리
 export const getCategoryBook = createAsyncThunk<getBookAsyncSuccess>(
@@ -62,15 +66,15 @@ export const getBookSlice = createSlice({
   extraReducers: builder => {
     builder
       // 베스트셀러
-      .addCase(getBookAPI.pending, state => {
+      .addCase(getBestSeller.pending, state => {
         state.error = null;
         state.status = "loading";
       })
-      .addCase(getBookAPI.fulfilled, (state, { payload }) => {
-        state.item = payload.data.item;
+      .addCase(getBestSeller.fulfilled, (state, { payload }) => {
+        state.bestSellerItem = payload.data.item;
         state.status = "idle";
       })
-      .addCase(getBookAPI.rejected, (state, { payload }) => {
+      .addCase(getBestSeller.rejected, (state, { payload }) => {
         console.log("error");
         state.status = "loading";
         // 에러핸들링
@@ -103,7 +107,7 @@ export const getBookSlice = createSlice({
       });
   },
 });
-
+export const bestSellerItemSelector = ({ bookListReduce }: RootState) => bookListReduce.bestSellerItem;
 export const getBookSelector = (state: RootState) => state.bookListReduce;
 export const getBookItemList = (state: RootState) => state.bookListReduce.item;
 

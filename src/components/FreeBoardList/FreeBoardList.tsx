@@ -9,7 +9,7 @@ import Loading from "src/elements/Loading";
 import { getFreeBoardPage, setFreeBoardPage } from "src/utils/localStorageUtil";
 import { signInSelector } from "src/modules/Slices/signIn/signInSlice";
 import { Link } from "react-router-dom";
-import { Wrapper, Row, Header, Title, Empty } from "./style";
+import { Row, Title, Empty, Wrapper } from "./style";
 
 const FreeBoardList = () => {
   const [paginatoionPage, setPaginationPage] = useState(() => Number(getFreeBoardPage()));
@@ -54,8 +54,8 @@ const FreeBoardList = () => {
     }
 
     return (
-      <div>
-        <Title>자유 게시판</Title>
+      <Wrapper>
+        <Title>자유게시판</Title>
         {user && (
           <Stack mt={2} mb={2} direction="row" justifyContent="flex-end">
             <Link to="freeboard/insert">
@@ -63,19 +63,18 @@ const FreeBoardList = () => {
             </Link>
           </Stack>
         )}
-        <Header>
-          <span>번호</span>
-          <span>제목</span>
-          <span>작성자</span>
-          <span>조회수</span>
-          <span>등록일</span>
-        </Header>
-        <Wrapper>
+        <Row>
+          <div className="header">
+            <span>번호</span>
+            <span>제목</span>
+            <span>작성자</span>
+            <span>조회수</span>
+            <span>등록일</span>
+          </div>
           {content.map(value => {
             const { boardDate, nickName, boardId, view, title } = value;
-
             return (
-              <Row key={boardId}>
+              <div key={boardId}>
                 <span>{boardId}</span>
                 <span>
                   <Link
@@ -92,10 +91,11 @@ const FreeBoardList = () => {
                 <span>{nickName}</span>
                 <span>{view}</span>
                 <span>{dateFormat2(boardDate)[0]}</span>
-              </Row>
+              </div>
             );
           })}
-        </Wrapper>
+        </Row>
+
         <div>
           <Stack mt={5} justifyContent="center" direction="row">
             <Pagination
@@ -122,7 +122,7 @@ const FreeBoardList = () => {
             />
           </Stack>
         </div>
-      </div>
+      </Wrapper>
     );
   }
 

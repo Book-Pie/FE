@@ -2,6 +2,7 @@ import { Button, TextField } from "@mui/material";
 import { useState } from "react";
 import { useForm, Controller, RegisterOptions } from "react-hook-form";
 import { Link } from "react-router-dom";
+import { errorHandler } from "src/api/http";
 import ErrorMessage from "src/elements/ErrorMessage";
 import Loading from "src/elements/Loading";
 import Popup from "src/elements/Popup";
@@ -25,16 +26,20 @@ const FreeBoardInsert = () => {
   });
   const { status } = useTypedSelector(freeBoardSelector);
   const [editorValue, setEditorValue] = useState("");
+  const [editorLength, setEditorLength] = useState(0);
   const isLoading = status === "loading";
-  const { dispatch, signIn } = useSignIn();
-  const { token, user } = signIn;
+  const {
+    dispatch,
+    signIn: { user },
+  } = useSignIn();
   const [isOpen, setIsOpen] = useState(false);
   const [popUpState, setPopUpState] = useState({
     isSuccess: false,
     message: "",
   });
 
-  const handlePopUp = (isSuccess: boolean, message: string) => {
+  const handlePopUp = (isSuccess: boolean, error: any) => {
+    const message = errorHandler(error);
     setIsOpen(true);
     setPopUpState({
       isSuccess,
@@ -49,23 +54,24 @@ const FreeBoardInsert = () => {
   };
 
   const onSumit = (formData: IFreeBoardInsertForm) => {
-    if (token && user) {
+    try {
+      if (!user) throw new Error("로그인이 필요합니다.");
+      if (editorLength === 0) throw new Error("게시글은 필수 입니다.");
       const { title } = formData;
-      if (editorValue === "") {
-        handlePopUp(false, "게시글은 필수 입니다.");
-        return;
-      }
+      const userId = user.id;
       const content = editorValue.replaceAll("<", "&lt;");
       dispatch(
         insertAsync({
           title,
           content,
+          userId,
           boardType: "FREE",
-          userId: user.id,
         }),
       )
         .unwrap()
-        .catch((message: string) => handlePopUp(false, message));
+        .catch(e => handlePopUp(false, e));
+    } catch (e) {
+      handlePopUp(false, e);
     }
   };
 
@@ -117,6 +123,7 @@ const FreeBoardInsert = () => {
                 limit={2000}
                 height={500}
                 setEditorValue={setEditorValue}
+                getEdiotrLength={setEditorLength}
               />
             </div>
           </EditorWrapper>

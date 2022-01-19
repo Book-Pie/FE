@@ -17,6 +17,13 @@ export interface IInsertRequest {
   userId: number;
 }
 
+export interface IUpdateRequest {
+  title: string;
+  content: string;
+  boardType: string;
+  boardId: string;
+}
+
 export interface Content {
   boardId: number;
   title: string;
@@ -60,9 +67,6 @@ export interface List {
 
 export interface Contents {
   [key: number]: Content[];
-}
-interface B {
-  [key: number]: Content;
 }
 
 export interface IFreeBoardReduce {

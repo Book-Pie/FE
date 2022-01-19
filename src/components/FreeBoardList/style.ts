@@ -4,89 +4,69 @@ const boardColor = "rgba(99, 110, 114,0.5)";
 
 export const Wrapper = styled.div`
   margin-top: 30px;
-  min-height: 300px;
-`;
-
-export const Header = styled.div`
-  width: 1200px;
-  display: flex;
-  align-items: center;
-  border-bottom: 1px solid ${boardColor};
-  border-top: 1px solid ${boardColor};
-  box-shadow: rgb(0 0 0 / 50%) 0px 0px 4px;
-  background-color: ${p => p.theme.colors.mainLightBrown};
-
-  span {
-    width: 100px;
-    margin: 15px 0;
-    text-align: center;
-    font-weight: bold;
-    font-size: 18px;
-    color: ${p => p.theme.colors.darkGrey};
-
-    &:nth-child(2) {
-      flex: 1;
-    }
-    &:nth-child(3) {
-      width: 200px;
-    }
-    &:nth-child(5) {
-      width: 250px;
-    }
-  }
-  span + span {
-    border-left: 1px solid ${boardColor};
-  }
+  min-height: 500px;
 `;
 
 export const Row = styled.div`
   width: 1200px;
-  display: flex;
-  align-items: center;
-  margin: 5px 0;
-  box-shadow: rgb(0 0 0 / 50%) 0px 0px 4px;
-  height: 50px;
-  cursor: pointer;
-  transition: background-color 0.5s ease;
-  :hover {
-    background-color: ${p => p.theme.colors.mainLightBrown};
-  }
+  & > div {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid ${boardColor};
+    box-shadow: rgb(0 0 0 / 50%) 0px 0px 4px;
+    cursor: pointer;
+    transition: background-color 0.5s ease;
 
-  a {
-    color: #1565c0;
-    display: block;
-  }
-  span {
-    width: 100px;
-    margin: 20px 0;
-    font-weight: 500;
-    text-align: center;
-    display: block;
-    font-size: 20px;
-    color: ${p => p.theme.colors.mainDarkBrown};
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    padding: 0 20px;
-    &:nth-child(1) {
-      font-weight: bold;
-    }
-    &:nth-child(2) {
-      flex: 1;
-      transition: transform 0.5s ease;
-      :hover {
-        transform: scale(1.02);
+    span {
+      width: 120px;
+      margin: 20px 0;
+      font-weight: 500;
+      text-align: center;
+      display: block;
+      font-size: 20px;
+      color: ${p => p.theme.colors.mainDarkBrown};
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      &:nth-child(1) {
+        font-weight: bold;
+      }
+      &:nth-child(2) {
+        flex: 1;
+        transition: transform 0.5s ease;
+      }
+      &:nth-child(3) {
+        width: 200px;
+      }
+      &:nth-child(5) {
+        width: 250px;
       }
     }
-    &:nth-child(3) {
-      width: 200px;
+
+    span + span {
+      border-left: 1px solid ${boardColor};
     }
-    &:nth-child(5) {
-      width: 250px;
+
+    &:not(.header) {
+      &:hover {
+        background-color: ${p => p.theme.colors.mainLightBrown};
+      }
+      & > span:nth-child(2) {
+        :hover {
+          transform: scale(1.02);
+        }
+      }
+      a {
+        color: #1565c0;
+      }
     }
   }
-  span + span {
-    border-left: 1px solid ${boardColor};
+
+  .header {
+    background-color: ${p => p.theme.colors.mainLightBrown};
+    span {
+      font-weight: bold;
+    }
   }
 `;
 

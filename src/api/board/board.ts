@@ -17,3 +17,7 @@ export const getBoard = (boardId: string) => {
 export const boardDelete = (boardId: string) => {
   return http.delete(`/board/${boardId}`);
 };
+
+export const boardUpdate = <P>(payload: P) => {
+  return http.put("/board", payload);
+};

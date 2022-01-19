@@ -1,10 +1,31 @@
 import { createAsyncThunk, createSlice, current } from "@reduxjs/toolkit";
-import { boardDelete, boardInsert, boardList, getBoard } from "src/api/board/board";
+import { boardDelete, boardInsert, boardList, boardUpdate, getBoard } from "src/api/board/board";
 import { errorHandler } from "src/api/http";
 import { RootState } from "src/modules/store";
-import { InsertThunkApi, IInsertRequest, IFreeBoardReduce, List, Content, Contents } from "./type";
+import { getFreeBoardPage } from "src/utils/localStorageUtil";
+import { InsertThunkApi, IInsertRequest, IUpdateRequest, IFreeBoardReduce, List, Content, Contents } from "./type";
 
 const name = "freeboardReduce";
+
+export const updateAsync = createAsyncThunk<void, IUpdateRequest, InsertThunkApi>(
+  `${name}/updateAsync`,
+  async (payload, { extra, rejectWithValue, dispatch, getState }) => {
+    const { history } = extra;
+    const { freeBoardReduce } = getState();
+    const { list } = freeBoardReduce;
+    try {
+      const page = list?.page ?? getFreeBoardPage() ?? 0;
+      const { data } = await boardUpdate<IUpdateRequest>(payload);
+      if (data.data.success === false) throw new Error("수정에 실패했습니다.");
+      dispatch(listAsync(String(page)));
+      history.replace("/community/freeboard");
+      return undefined;
+    } catch (error) {
+      const message = errorHandler(error);
+      return rejectWithValue(message);
+    }
+  },
+);
 
 export const insertAsync = createAsyncThunk<void, IInsertRequest, InsertThunkApi>(
   `${name}/insertAsync`,
@@ -16,14 +37,11 @@ export const insertAsync = createAsyncThunk<void, IInsertRequest, InsertThunkApi
       if (list) {
         const { page } = list;
         const { data } = await boardInsert<IInsertRequest>(payload);
-        console.log(data);
-
         if (data.data.success === false) throw new Error("등록에 실패했습니다.");
         dispatch(listAsync(String(page)));
         history.replace("/community/freeboard");
-        return data.data;
       }
-      return null;
+      return undefined;
     } catch (error) {
       const message = errorHandler(error);
       return rejectWithValue(message);
@@ -38,13 +56,11 @@ export const deleteAsync = createAsyncThunk<string, string, InsertThunkApi>(
     const { list } = freeBoardReduce;
     const { history } = extra;
     try {
-      if (list) {
-        const { page } = list;
-        const { data } = await boardDelete(boardId);
-        if (data.data.success === false) throw new Error("삭제에 실패했습니다.");
-        dispatch(listAsync(String(page)));
-        history.replace("/community/freeboard");
-      }
+      const page = list?.page ?? getFreeBoardPage() ?? 0;
+      const { data } = await boardDelete(boardId);
+      if (data.data.success === false) throw new Error("삭제에 실패했습니다.");
+      dispatch(listAsync(String(page)));
+      history.replace("/community/freeboard");
       return boardId;
     } catch (error) {
       const message = errorHandler(error);
@@ -200,16 +216,26 @@ const freeBoardSlice = createSlice({
       state.status = "idle";
       state.error = payload ?? "클라이언트에서 문제가 발생했습니다.";
     });
+    builder.addCase(updateAsync.pending, state => {
+      state.status = "loading";
+    });
+    builder.addCase(updateAsync.fulfilled, state => {
+      state.status = "idle";
+    });
+    builder.addCase(updateAsync.rejected, (state, { payload }) => {
+      state.status = "idle";
+      state.error = payload ?? "클라이언트에서 문제가 발생했습니다.";
+    });
   },
 });
 
-export const freeBoardContentSelector = (idx: number, boardId: number) => {
+export const contentSelector = (idx: number, boardId: number) => {
   return ({ freeBoardReduce: { list } }: RootState) => {
     if (list) return list.contents[idx].find(content => content.boardId === boardId);
     return undefined;
   };
 };
-export const freeBoardInfoSelector = ({ freeBoardReduce }: RootState) => freeBoardReduce.info;
+export const contentInfoSelector = ({ freeBoardReduce }: RootState) => freeBoardReduce.info;
 export const freeBoardSelector = ({ freeBoardReduce }: RootState) => freeBoardReduce;
 export const { incresePage } = freeBoardSlice.actions;
 export default freeBoardSlice;
