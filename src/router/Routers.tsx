@@ -37,8 +37,11 @@ const Routers = () => {
       <Route path="/usedBook/:id" component={UsedBookDetail} />
       <Route path="/usedBook" component={UsedBook} />
       <Route path="/oAuth/:name" component={Oauth} />
-      <Route path="/book/:itemId" component={BookDetail} />
-      <Route path="/book" component={BookReviewList} />
+      <Switch>
+        <Route path="/book/:isbn/userId?:id" component={BookDetail} />
+        <Route path="/book/:isbn13" component={BookDetail} />
+        <Route path="/book" component={BookReviewList} />
+      </Switch>
       <Route path="*" render={() => <Redirect to="/" />} />
     </Switch>
   );

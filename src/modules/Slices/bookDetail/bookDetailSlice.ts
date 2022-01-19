@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 import http from "src/api/http";
 import { RootState } from "src/modules/store";
+import { paramProps } from "src/pages/BookDetail/types";
 import { bookAsyncFail, bookAsyncSuccess } from "./types";
 
 const initialState = {
@@ -9,15 +10,16 @@ const initialState = {
   status: "loading",
 };
 
-const name = "book";
+const name = "bookDetail";
 
-export const bookDetailAsync = createAsyncThunk<bookAsyncSuccess, number>(
+export const bookDetailAsync = createAsyncThunk<bookAsyncSuccess, paramProps>(
   `${name}/bookAsync`,
-  async (item, { rejectWithValue }) => {
+  async ({ isbn13 }, { rejectWithValue }) => {
     try {
-      const response = await http.get(`book/${item}`, item);
+      const response = await http.get(`book/${isbn13}`);
       const { data } = response;
       const { success } = data;
+      console.log("bookDetailAsync response : ", response);
 
       if (!success) {
         if (data.error.code === 200) {
@@ -42,7 +44,6 @@ const bookDetailSlice = createSlice({
       .addCase(bookDetailAsync.pending, state => {
         state.status = "loading";
       })
-
       .addCase(bookDetailAsync.fulfilled, (state, { payload }) => {
         state.status = "success";
         state.content = payload;

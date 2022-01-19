@@ -1,3 +1,5 @@
+import { useDispatch } from "react-redux";
+import { usedBookLike } from "src/modules/Slices/usedBookDetail/usedBookDetailSlice";
 import { Link } from "react-router-dom";
 import { compareDateFormat, make1000UnitsCommaFormet } from "src/utils/formatUtil";
 import {
@@ -22,20 +24,39 @@ export interface UsedBookAreaProps {
   price: number;
   content: string;
   view: number;
-  uploadDate: string;
+  uploadDate: Date;
   tags: string[];
+  likeCount: number;
+  replyCount: number;
   usedBookId: number;
 }
 
-const UsedBookArea = ({ usedBookId, title, price, content, view, uploadDate, tags }: UsedBookAreaProps) => {
-  const like = 0;
+const UsedBookArea = ({
+  title,
+  price,
+  content,
+  view,
+  uploadDate,
+  tags,
+  likeCount,
+  replyCount,
+  usedBookId,
+}: UsedBookAreaProps) => {
   const date = compareDateFormat(uploadDate);
   const bookPrice = make1000UnitsCommaFormet(String(price));
+  const dispatch = useDispatch();
 
   let dayAgo = "일전";
   if (date === 0) {
     dayAgo = "오늘";
   }
+  const likeClick = () => {
+    dispatch(
+      usedBookLike({
+        usedBookId,
+      }),
+    );
+  };
 
   return (
     <UsedBookWrapper>
@@ -43,7 +64,7 @@ const UsedBookArea = ({ usedBookId, title, price, content, view, uploadDate, tag
         <div>{title}</div>
         <InteractionArea>
           <InteractionSpan>
-            좋아요 <RedContent>{like}</RedContent>
+            좋아요 <RedContent>{likeCount}</RedContent>
           </InteractionSpan>
           <InteractionSpan>
             조회수 <RedContent>{view}</RedContent>
@@ -74,7 +95,7 @@ const UsedBookArea = ({ usedBookId, title, price, content, view, uploadDate, tag
         <ProductDetailContent dangerouslySetInnerHTML={{ __html: content }} />
       </ProductDetail>
       <TagArea>{tags && tags.map((tag, index) => <TagContent key={index}>#{tag}</TagContent>)}</TagArea>
-      <UsedBookDetailButton>좋아요</UsedBookDetailButton>
+      <UsedBookDetailButton onClick={likeClick}>좋아요</UsedBookDetailButton>
       <UsedBookDetailButton>1:1채팅 </UsedBookDetailButton>
       <Link to={`/order/${usedBookId}`}>
         <BuyButton>구매하기</BuyButton>

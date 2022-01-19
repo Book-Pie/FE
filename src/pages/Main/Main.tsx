@@ -2,7 +2,7 @@ import BestSeller from "src/components/Main/BestSeller";
 import { useEffect, lazy, Suspense } from "react";
 import { useDispatch } from "react-redux";
 import { useTypedSelector } from "src/modules/store";
-import { getbookAPI, getBookSelector } from "src/modules/Slices/book/bookSlice";
+import { getBookAPI, getBookSelector } from "src/modules/Slices/book/bookSlice";
 import { Skeleton, Stack } from "@mui/material";
 import LatestSlider from "components/LatestSlider/LatestSlider";
 import { BookContainer, BookWrapper, MainBannerWrapper, Text } from "./style";
@@ -15,8 +15,8 @@ const Main = () => {
   const { item } = bestsellerBooks;
 
   useEffect(() => {
-    if (item.length === 0) dispatch(getbookAPI());
-  }, [item, dispatch]);
+    dispatch(getBookAPI());
+  }, [dispatch]);
 
   const skelatons = Array.from({ length: 9 }).map(() => ({
     background: "#edeae9",

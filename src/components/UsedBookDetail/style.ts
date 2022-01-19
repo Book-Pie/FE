@@ -1,8 +1,41 @@
 import styled from "styled-components";
 
+export const FlexBoxWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
+export const FlexBox = styled.div`
+  display: flex;
+`;
+
+export const PieImg = styled.img`
+  width: 45px;
+  height: 45px;
+`;
+
+export const BigPieImg = styled.img`
+  width: 71.3px;
+  height: 71.3px;
+`;
+
+export const ContentWrapper = styled.div`
+  padding-left: 20px;
+`;
+
+export const ProfileArea = styled.div`
+  width: 80px;
+  height: 80px;
+  margin: 0 10px 0 0;
+  padding: 16.5px 15.3px 16.5px 15.3px;
+  border-radius: 40px;
+  background-color: #f2f2f2;
+`;
+
 export const ProductDetailTitle = styled.div`
-  width: 100px;
-  height: 21px;
+  display: flex;
+  width: 100%;
+  height: 30px;
   margin: 20px 7px 16px 0px;
   font-size: 18px;
   font-weight: 600;
@@ -12,6 +45,37 @@ export const ProductDetailTitle = styled.div`
   letter-spacing: -0.45px;
   text-align: left;
   color: #4f3629;
+  justify-content: space-between;
+`;
+
+export const ReplyItemWrapper = styled.div`
+  // width: 100%;
+  height: 112px;
+  margin: 0 0 20px;
+  padding: 16px;
+  border: solid 1px #51382b;
+  border-radius: 10px;
+  background-color: #fff;
+`;
+
+export const ReplyItemNickName = styled.p`
+  margin: 5px 0 5px 0;
+  font-size: 18px;
+  font-weight: 600;
+`;
+
+export const ReplyItemContent = styled.p`
+  color: #51382b;
+`;
+
+export const ReviewListEmptyWrapper = styled.div`
+  width: 100%;
+  height: 160px;
+  margin: 0 0 20px;
+  padding: 16px;
+  border: solid 1px #d1d5d9;
+  background-color: #fff;
+  border-radius: 10px;
 `;
 
 export const CardSmallTitle = styled.span`
@@ -31,7 +95,7 @@ export const CardBoldTitle = styled.span`
 `;
 
 export const CategoryArea = styled.div`
-  margin: 20px 14px 0px 0px;
+  margin: 20px 30px 0px 0px;
   text-align: right;
 `;
 
@@ -89,6 +153,27 @@ export const UsedBookDetailButton = styled.button`
 
   &:hover {
     background-color: #edeae9;
+    cursor: pointer;
+  }
+`;
+
+export const BuyButton = styled.button`
+  width: 200px;
+  height: 53px;
+  margin: 0 0 0 10px;
+  border-radius: 5px;
+  background-color: #4f3629;
+  font-size: 15px;
+  font-weight: 600;
+  font-style: normal;
+  line-height: 1.5;
+  color: #fff;
+  font-size: 17px;
+  font-weight: 600;
+
+  &:hover {
+    background-color: #edeae9;
+    color: #4f3629;
     cursor: pointer;
   }
 `;
@@ -175,7 +260,7 @@ export const BookPrice = styled.div`
 `;
 
 export const UsedBookImg = styled.img`
-  width: 570px;
+  width: 544px;
   height: 700px;
   margin: 21px 28px 50px 0px;
   object-fit: contain;
@@ -189,7 +274,7 @@ export const UsedBookWrapper = styled.div`
 `;
 
 export const InteractionArea = styled.div`
-  width: 226px;
+  width: 240px;
   height: 21px;
 `;
 
@@ -201,27 +286,6 @@ export const TopInformationArea = styled.div`
 export const InteractionSpan = styled.span`
   // color: rgb(204, 204, 204);
   margin-left: 14px;
-`;
-
-export const BuyButton = styled.button`
-  width: 200px;
-  height: 53px;
-  margin: 0 0 0 10px;
-  border-radius: 5px;
-  background-color: #4f3629;
-  font-size: 15px;
-  font-weight: 600;
-  font-style: normal;
-  line-height: 1.5;
-  color: #fff;
-  font-size: 17px;
-  font-weight: 600;
-
-  &:hover {
-    background-color: #edeae9;
-    color: #4f3629;
-    cursor: pointer;
-  }
 `;
 
 export const UsedStoreUserContentWrapper = styled.div`
@@ -253,4 +317,35 @@ export const UsedBookDetailWrapper = styled.div`
 export const InteractionArea1 = styled.div`
   width: 226px;
   height: 21px;
+`;
+
+export const SwiperWrapper = styled.div`
+  cursor: pointer;
+
+  .swiper-slide {
+    width: 190px;
+    color: ${props => props.theme.colors.darkGrey};
+  }
+
+  .swiper-pagination {
+    bottom: 2.5rem;
+  }
+  .swiper-pagination-bullet {
+    background: ${props => props.theme.colors.mainDarkBrown} !important;
+    width: 15px;
+    height: 15px;
+    box-sizing: content-box;
+  }
+  .swiper-pagination-bullet-active {
+    background: ${props => props.theme.colors.mainDarkBrown} !important;
+  }
+
+  .swiper-button-next {
+    border-color: ${props => props.theme.colors.mainDarkBrown} !important;
+    color: ${props => props.theme.colors.mainDarkBrown} !important;
+  }
+  .swiper-button-prev {
+    border-color: ${props => props.theme.colors.mainDarkBrown} !important;
+    color: ${props => props.theme.colors.mainDarkBrown} !important;
+  }
 `;

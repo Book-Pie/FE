@@ -4,7 +4,7 @@ import { ReviewListEmpty } from "./ReviewListEmpty";
 import { CommentUl, ReviewsListTitle, ReviewsListWrapper } from "./style";
 import { ReviewListProps } from "./types";
 
-export const ReviewList: React.FC<ReviewListProps> = ({ bookId, commentList, myCommentId }) => {
+export const ReviewList: React.FC<ReviewListProps> = ({ commentList, myCommentId }) => {
   return (
     <ReviewsListWrapper>
       <ReviewsListTitle>회원 리뷰 ({commentList.length}건)</ReviewsListTitle>
@@ -15,7 +15,7 @@ export const ReviewList: React.FC<ReviewListProps> = ({ bookId, commentList, myC
           })}
         </CommentUl>
       ) : (
-        <ReviewListEmpty />
+        <ReviewListEmpty title="리뷰" />
       )}
     </ReviewsListWrapper>
   );

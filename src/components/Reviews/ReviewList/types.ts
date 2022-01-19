@@ -11,8 +11,6 @@ export interface Review {
 }
 
 export interface ReviewListProps {
-  key: number;
-  bookId: number;
   commentList: getCommentProps[];
   myCommentId: number;
 }
@@ -40,8 +38,9 @@ export interface TruncateProps {
 }
 
 export interface ReviewsWriteProps {
-  bookId: number;
+  bookId: string;
   myReviewCheck: boolean;
-  myReviewContent: getCommentProps;
-  myCommentId: number;
+  myComment?: getCommentProps;
+  myCommentId?: number;
+  checkAuth: () => boolean;
 }

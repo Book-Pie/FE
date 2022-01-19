@@ -198,6 +198,8 @@ const signInSlice = createSlice({
 });
 
 export const signInSelector = (state: RootState) => state.signInReduce;
+export const signInUser = (state: RootState) => state.signInReduce.user;
+export const isLoggedInSelector = (state: RootState) => state.signInReduce.isLoggedIn;
 export const saleInfoSelector =
   (bookId: number) =>
   ({ signInReduce }: RootState) =>
@@ -206,6 +208,5 @@ export const buyInfoSelector =
   (orderId: number) =>
   ({ signInReduce }: RootState) =>
     signInReduce.buyInfos.find(info => info.orderId === orderId);
-
 export const { logout, errorReset } = signInSlice.actions;
 export default signInSlice;

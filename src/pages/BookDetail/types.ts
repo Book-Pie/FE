@@ -38,7 +38,8 @@ export interface ExpanderProps {
 }
 
 export interface paramProps {
-  itemId: string | number;
+  isbn13: string;
+  id?: number;
 }
 
 export interface matchProps {
@@ -49,4 +50,11 @@ export interface matchProps {
 
 export interface BookDetailProps {
   match: matchProps;
+}
+
+export interface bookDetailContentProps {
+  bookIntroText: string;
+  authorIntroText: string;
+  bookId: number;
+  myUserId: number | null;
 }

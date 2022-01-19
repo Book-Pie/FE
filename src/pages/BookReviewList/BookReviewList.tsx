@@ -1,71 +1,92 @@
 import Skeleton from "@mui/material/Skeleton";
 import Stack from "@mui/material/Stack";
-import { useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
+import { Link, useLocation } from "react-router-dom";
 import theme from "src/assets/style/styledTheme";
+import BookReviewItem from "src/components/BookReviewList/BookReviewItem";
 import Categorys from "src/components/Categorys/Categorys";
-import BestSeller from "src/components/Main/BestSeller";
-import { getbookAPI, getBookSelector } from "src/modules/Slices/book/bookSlice";
+import DropDown from "src/elements/DropDown";
+import { getBookSelector, getCategoryBook } from "src/modules/Slices/book/bookSlice";
 import { useTypedSelector } from "src/modules/store";
-import { BookContainer, BookWrapper } from "../Main/style";
+import styled from "styled-components";
+import { makeNewQueryString, removeQueryString } from "src/utils/queryStringUtil";
+import Text from "src/elements/Text";
+import queryString from "query-string";
+import { BookReviewListContainer } from "../Main/style";
+import { ReviewListTitleWrapper } from "../UsedBook/style";
 
 const BookReviewList = () => {
-  const dispatch = useDispatch();
+  const location = useLocation();
 
-  const bestsellerBooks = useTypedSelector(getBookSelector);
-  const { item } = bestsellerBooks;
+  const dispatch = useDispatch();
+  const [currentDropDownValue, setCurrentDropDownValue] = useState("정렬");
+  const { search, pathname } = location;
+  const currentQuery = useMemo(() => queryString.parse(search), [search]);
+
+  const getBooks = useTypedSelector(getBookSelector);
+  const { item } = getBooks;
 
   useEffect(() => {
-    dispatch(getbookAPI());
+    dispatch(getCategoryBook());
   }, [dispatch]);
 
-  const skelatons = Array.from({ length: 9 }).map(() => ({
+  const skelatons = Array.from({ length: 20 }).map(() => ({
     background: theme.colors.mainLightBrown,
     padding: "10px",
     margin: "0 10px",
   }));
   return (
-    <>
+    <BookReviewContainer>
       {/* <Categorys categorys={categorys} defaultLocation="usedBook" /> */}
-      <BookContainer>
+      <ReviewListTitleWrapper>
+        <Text bold fontSize="30px" margin="0 0 0 20px">
+          리뷰
+        </Text>
+        <DropDown defaultValue={currentDropDownValue} setSelectedId={setCurrentDropDownValue}>
+          <li>
+            <Link to={removeQueryString(pathname, search, ["sort"])}>정렬</Link>
+          </li>
+          <li>
+            <Link id="date" to={makeNewQueryString(pathname, currentQuery, { sort: "date" })}>
+              최신순
+            </Link>
+          </li>
+          <li>
+            <Link id="view" to={makeNewQueryString(pathname, currentQuery, { sort: "view" })}>
+              조회순
+            </Link>
+          </li>
+        </DropDown>
+      </ReviewListTitleWrapper>
+      <BookReviewListContainer>
         {item.length !== 0
-          ? item.map((item, index) =>
-              index === 0 ? (
-                <div className="one" key={index}>
-                  <BestSeller {...item} index={index} />
-                </div>
-              ) : (
-                <BookWrapper key={index}>
-                  <BestSeller {...item} index={index} />
-                </BookWrapper>
-              ),
-            )
-          : skelatons.map((sx, idx) =>
-              idx === 0 ? (
-                <Stack spacing={1} key={idx} sx={sx} className="one" direction="row">
-                  <Stack direction="column" spacing={2} width="50%">
-                    <Skeleton variant="circular" height={75} width={75} />
-                    <Skeleton variant="rectangular" height="80%" width="100%" />
-                  </Stack>
-                  <Stack direction="column" spacing={2} width="50%">
-                    <Skeleton variant="rectangular" height="100%" width="100%" />
-                  </Stack>
+          ? item.map((item, index) => (
+              <span key={index}>
+                <BookReviewItem {...item} index={index} />
+              </span>
+            ))
+          : skelatons.map((sx, index) => (
+              <Stack spacing={1} key={index} sx={sx} direction="row">
+                <Stack direction="column" spacing={2} width="50%">
+                  <Skeleton variant="circular" height={50} width={50} />
+                  <Skeleton variant="rectangular" height="65%" width="100%" />
                 </Stack>
-              ) : (
-                <Stack spacing={1} key={idx} sx={sx} direction="row">
-                  <Stack direction="column" spacing={2} width="50%">
-                    <Skeleton variant="circular" height={50} width={50} />
-                    <Skeleton variant="rectangular" height="65%" width="100%" />
-                  </Stack>
-                  <Stack direction="column" spacing={2} width="50%">
-                    <Skeleton variant="rectangular" height="100%" width="100%" />
-                  </Stack>
+                <Stack direction="column" spacing={2} width="50%">
+                  <Skeleton variant="rectangular" height="100%" width="100%" />
                 </Stack>
-              ),
-            )}
-      </BookContainer>
-    </>
+              </Stack>
+            ))}
+      </BookReviewListContainer>
+    </BookReviewContainer>
   );
 };
+
+export const BookReviewContainer = styled.div`
+  display: grid;
+  justify-content: center;
+  margin: 0 auto;
+  min-height: 900px;
+`;
 
 export default BookReviewList;

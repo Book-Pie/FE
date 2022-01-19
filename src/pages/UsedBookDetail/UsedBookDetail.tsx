@@ -2,17 +2,14 @@ import UsedBookInformationTop from "components/UsedBookDetail/UsedBookInformatio
 import UsedBookStoreInformationBottom from "components/UsedBookDetail/UsedBookStoreInformationBottom";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { usedBookDetailAsync, usedBookSelector } from "src/modules/Slices/usedBookDetail/usedBookDetail";
+import { usedBookDetailAsync, usedBookSelector } from "src/modules/Slices/usedBookDetail/usedBookDetailSlice";
 import { useTypedSelector } from "src/modules/store";
 import { MatchProps } from "./types";
 
 const UsedBookDetail = ({ match }: MatchProps) => {
-  const { params } = match;
-  let { id } = params;
-  console.log("UsedBookDetail id : ", id);
-  id = parseInt(id);
-
   const dispatch = useDispatch();
+  const { params } = match;
+  const { id } = params;
   const usedBookContent = useTypedSelector(usedBookSelector);
 
   useEffect(() => {
@@ -21,7 +18,6 @@ const UsedBookDetail = ({ match }: MatchProps) => {
 
   const {
     usedBookId,
-    isbn,
     sellerId,
     sellerName,
     price,
@@ -35,13 +31,14 @@ const UsedBookDetail = ({ match }: MatchProps) => {
     title,
     uploadDate,
     view,
+    likeCount,
+    replyCount,
   } = usedBookContent.content;
 
   return (
     <>
       <UsedBookInformationTop
         usedBookId={usedBookId}
-        isbn={isbn}
         sellerId={sellerId}
         sellerName={sellerName}
         price={price}
@@ -55,6 +52,8 @@ const UsedBookDetail = ({ match }: MatchProps) => {
         sndCategory={sndCategory}
         tags={tags}
         images={images}
+        likeCount={likeCount}
+        replyCount={replyCount}
       />
       <UsedBookStoreInformationBottom />
     </>
