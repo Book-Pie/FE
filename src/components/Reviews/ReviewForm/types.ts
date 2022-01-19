@@ -14,7 +14,7 @@ export interface ReviewsParams {
 }
 
 export interface ReviewFormProps {
-  isbn: number;
+  isbn: string;
   isMyReview: boolean;
   onSubmit?: (reviewContent: string) => void;
   onCancel?: () => void;
@@ -22,14 +22,4 @@ export interface ReviewFormProps {
   myComment: getCommentProps | null;
   userId: number;
   checkAuth: () => boolean;
-}
-
-export interface SubmitButtonProps {
-  onClick?: () => void;
-  isDisabled?: boolean;
-}
-
-export interface CancelButtonProps {
-  isFullButton?: boolean;
-  onClick: () => void;
 }

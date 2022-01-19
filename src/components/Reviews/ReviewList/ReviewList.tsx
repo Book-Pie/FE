@@ -15,7 +15,7 @@ export const ReviewList: React.FC<ReviewListProps> = ({ commentList, myCommentId
           })}
         </CommentUl>
       ) : (
-        <ReviewListEmpty />
+        <ReviewListEmpty title="리뷰" />
       )}
     </ReviewsListWrapper>
   );

@@ -38,7 +38,7 @@ export interface ExpanderProps {
 }
 
 export interface paramProps {
-  isbn13: number;
+  isbn13: string;
   id?: number;
 }
 

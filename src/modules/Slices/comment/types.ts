@@ -10,7 +10,7 @@ export interface ErrorHandling {
 }
 
 export interface addCommentProps {
-  isbn: number;
+  isbn: string;
   userId: number;
   content: string;
   rating: number;
@@ -23,11 +23,11 @@ export interface editCommentProps {
   rating: number;
 }
 
-// 통신 성공 시 반환하는 타입 1
+// 통신 성공 시 반환하는 타입
 
 export interface getCommentProps {
   reviewId: number;
-  isbn: number;
+  isbn: string;
   userId: number;
   content: string;
   rating: number;
@@ -52,6 +52,26 @@ export interface pageableProps {
   unpaged: boolean;
 }
 
+export interface deleteCommentProps {
+  id: number;
+}
+
+export interface commentListProps {
+  bookId: number;
+}
+
+export interface CommentId {
+  reviewId: number;
+  userId: number;
+}
+
+export interface commentLikeResponse {
+  reviewLikeId: number;
+  reviewId: number;
+  userId: number;
+  check: boolean;
+}
+
 // 통신 성공 시 반환하는 타입 데이터
 
 export interface commentData {
@@ -69,6 +89,40 @@ export interface commentData {
   empty: boolean;
 }
 
+// 리듀가 사용할 데이터 타입
+export interface commentReduceProps {
+  content: getCommentProps[];
+  myCommentCheck: boolean;
+  myComment: getCommentProps | null;
+  pageable: pageableProps;
+  status: "loading" | "success" | "failed";
+  error: null | ErrorHandling;
+}
+
+// 실패 했을 때
+export interface commentAsyncFail {
+  status: number;
+  data: any;
+}
+
+export interface commentThunkApi {
+  dispatch: AppDispatch;
+  rejectValue: commentAsyncFail;
+}
+
+// 성공했을 때 반환 타입
+export interface commentLikeSuccess {
+  success: boolean;
+  data: commentLikeResponse;
+  error: null;
+}
+
+export interface commentSuccess {
+  success: boolean;
+  data: string;
+  error: null;
+}
+
 export interface commentAsyncSuccess {
   data: commentData;
   error: null;
@@ -80,43 +134,4 @@ export interface myCommentAsyncSuccess {
   data: getCommentProps;
   error: null;
   success: boolean;
-}
-
-// 리듀가 사용할 데이터 타입
-export interface commentReduceProps {
-  content: getCommentProps[];
-  myCommentCheck: boolean;
-  myComment: getCommentProps | null;
-  pageable: pageableProps;
-  status: "loading" | "success" | "failed";
-  error: null | ErrorHandling;
-}
-
-export interface commentAsyncFail {
-  status: number;
-  data: any;
-}
-
-export interface commentThunkApi {
-  dispatch: AppDispatch;
-  rejectValue: commentAsyncFail;
-}
-
-export interface deleteCommentProps {
-  id: number;
-}
-
-export interface commentListProps {
-  bookId: number;
-}
-
-export interface CommentId {
-  reviewId: number;
-  userId: number;
-}
-
-export interface commentSuccess {
-  success: boolean;
-  data: string;
-  error: null;
 }

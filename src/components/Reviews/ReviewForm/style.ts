@@ -25,8 +25,6 @@ export const TextWrapper = styled.div`
   margin-bottom: 10px;
 `;
 
-export const Button = styled.button``;
-
 export const ButtonArea = styled.div`
   text-align: right;
 `;

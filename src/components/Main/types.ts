@@ -5,8 +5,8 @@ export interface BestSellerProps {
   bestRank: number;
   link: string;
   index: number;
-  isbn13: number;
-  isbn: number;
+  isbn13: string;
+  isbn: string;
   customerReviewRank: number;
 }
 

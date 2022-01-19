@@ -31,7 +31,7 @@ export const Reviews: React.FC<ReviewsParams> = ({ bookId }) => {
     <div className="Reviews">
       {/* 정렬 부분 */}
       {/* <ReviewListHeader bookId={bookId} />*/}
-      {content.length ? <ReviewList commentList={content} myCommentId={id} /> : <ReviewListEmpty />}
+      {content.length ? <ReviewList commentList={content} myCommentId={id} /> : <ReviewListEmpty title="리뷰" />}
       <ReviewWrite
         bookId={bookId}
         myReviewCheck={myCommentCheck}

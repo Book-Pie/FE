@@ -3,7 +3,7 @@ import commentSlice from "./Slices/comment/commentSlice";
 import getBookSlice from "./Slices/book/bookSlice";
 import signInSlice from "./Slices/signIn/signInSlice";
 import bookDetailSlice from "./Slices/bookDetail/bookDetailSlice";
-import usedBookDetailSlice from "./Slices/usedBookDetail/usedBookDetail";
+import usedBookDetailSlice from "./Slices/usedBookDetail/usedBookDetailSlice";
 
 // 여러 리듀스를 합쳐서 하나로 만들어주는 역할
 export default combineReducers({

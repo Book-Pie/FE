@@ -21,16 +21,15 @@ import {
 } from "./style";
 import { ReviewItemProps } from "./types";
 
-export const ReviewItem: React.FC<ReviewItemProps> = ({ key, content, myCommentId }) => {
+export const ReviewItem: React.FC<ReviewItemProps> = ({ content, myCommentId }) => {
   const dispatch = useDispatch();
   const { reviewId, likeCheck, reviewLikeCount, reviewDate, nickName, rating, userId } = content;
 
   const commentDate = reviewDateFormat(reviewDate);
 
-  const noId = -1;
   const myUserStatus = useTypedSelector(signInSelector);
   const { user } = myUserStatus ?? null;
-  const { id } = user ?? noId;
+  const { id } = user ?? -1;
 
   const deleteClick = () => {
     if (window.confirm("댓글을 정말로 삭제하시겠습니까?") === true) {

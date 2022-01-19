@@ -10,6 +10,7 @@ import {
   commentReduceProps,
   addCommentProps,
   editCommentProps,
+  commentLikeSuccess,
 } from "./types";
 
 const initialState: commentReduceProps = {
@@ -90,7 +91,6 @@ export const deleteComment = createAsyncThunk(
   async ({ id }: deleteCommentProps, { rejectWithValue }) => {
     try {
       await http.delete(`/book-review/${id}`);
-      // await axios.delete(`/api/book-review/delete/${id}`);
       return id;
     } catch (error: any) {
       return rejectWithValue(error.response.data);
@@ -126,15 +126,18 @@ export const myReviewComment = createAsyncThunk<myCommentAsyncSuccess, ReviewsPa
 );
 
 // 댓글 좋아요 추가 및 삭제하기
-export const commentLike = createAsyncThunk<CommentId, CommentId>(`${name}/like`, async (data, { rejectWithValue }) => {
-  try {
-    await http.post(`/book-review/like/`, data);
-    return data;
-  } catch (error: any) {
-    console.error(error);
-    return rejectWithValue(error.response.data);
-  }
-});
+export const commentLike = createAsyncThunk<commentLikeSuccess, CommentId>(
+  `${name}/like`,
+  async (data, { rejectWithValue }) => {
+    try {
+      const response = await http.post(`/book-review/like`, data);
+      return response.data;
+    } catch (error: any) {
+      console.error(error);
+      return rejectWithValue(error.response.data);
+    }
+  },
+);
 
 const commentSlice = createSlice({
   name: "commentReduce",
@@ -211,7 +214,7 @@ const commentSlice = createSlice({
       .addCase(commentLike.fulfilled, (state, { payload }) => {
         state.status = "success";
         state.content = state.content.map(v =>
-          v.reviewId !== payload.reviewId ? v : { ...v, reviewLikeCount: v.reviewLikeCount + 1, likeCheck: true },
+          v.reviewId !== payload.data.reviewId ? v : { ...v, reviewLikeCount: v.reviewLikeCount, check: true },
         );
       })
       .addCase(commentLike.rejected, state => {

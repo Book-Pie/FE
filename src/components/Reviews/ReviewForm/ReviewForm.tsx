@@ -9,6 +9,7 @@ import { useTypedSelector } from "src/modules/store";
 import { signInSelector } from "src/modules/Slices/signIn/signInSlice";
 import { getMyReview, setMyReview } from "src/utils/localStorageUtil";
 import { reviewDateFormat } from "src/utils/formatUtil";
+import Textarea from "src/components/TextArea/Textarea";
 import { ButtonArea, TextareaAutosize, TextWrapper, MyReviwContent } from "./style";
 import { ReviewFormProps } from "./types";
 
@@ -27,7 +28,6 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({ isbn, isMyReview, myComm
   if (myComment === null) {
     editStatus = false;
     myCommentDefault = "";
-    // myRatingDefault = 3;
   } else {
     editStatus = true;
     myCommentDefault = myComment.content;
@@ -128,26 +128,15 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({ isbn, isMyReview, myComm
     <form onSubmit={handleSubmit(addReview)}>
       <div className="ReviewForm">
         <HoverRating isDisabled={editDisabled} rating={ratingValue} handleChange={handleRatingChange} />
-        {isLoggedIn ? (
-          <TextareaAutosize
-            onChange={handleReviewChange}
-            value={reviewContent}
-            limit={100}
-            height={100}
-            placeholder="리뷰 작성 시 10자 이상 작성해주세요."
-          />
-        ) : (
-          <TextareaAutosize
-            limit={100}
-            height={100}
-            placeholder="리뷰 작성 시 10자 이상 작성해주세요."
-            onClick={(event: React.ChangeEvent<any>) => {
-              if (!checkAuth()) {
-                event.preventDefault();
-              }
-            }}
-          />
-        )}
+        <Textarea
+          isLoggedIn={isLoggedIn}
+          onChange={handleReviewChange}
+          checkAuth={checkAuth}
+          value={reviewContent}
+          limit={100}
+          height={100}
+          placeholder="리뷰 작성 시 10자 이상 작성해주세요."
+        />
         <ButtonArea>
           <Button variant="outlined" type="submit" disabled={reviewContent.length < 10} onClick={handleEdit}>
             리뷰등록

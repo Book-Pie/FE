@@ -6,8 +6,6 @@ import { bookInfo } from "src/modules/Slices/bookDetail/types";
 import { paramProps } from "src/pages/BookDetail/types";
 
 export const useBookDetail = ({ isbn13 }: paramProps) => {
-  isbn13 = parseInt(isbn13);
-
   const dispatch = useDispatch();
   const bookDetailContent = useTypedSelector(state => state.bookDetailReduce.content.data);
   const [bookContent, setBookContent] = useState<bookInfo[]>([]);
