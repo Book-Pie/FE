@@ -1,5 +1,6 @@
 import { useDispatch } from "react-redux";
 import { usedBookLike } from "src/modules/Slices/usedBookDetail/usedBookDetailSlice";
+import { Link } from "react-router-dom";
 import { compareDateFormat, make1000UnitsCommaFormet } from "src/utils/formatUtil";
 import {
   BookPrice,
@@ -96,7 +97,9 @@ const UsedBookArea = ({
       <TagArea>{tags && tags.map((tag, index) => <TagContent key={index}>#{tag}</TagContent>)}</TagArea>
       <UsedBookDetailButton onClick={likeClick}>좋아요</UsedBookDetailButton>
       <UsedBookDetailButton>1:1채팅 </UsedBookDetailButton>
-      <BuyButton>구매하기</BuyButton>
+      <Link to={`/order/${usedBookId}`}>
+        <BuyButton>구매하기</BuyButton>
+      </Link>
     </UsedBookWrapper>
   );
 };

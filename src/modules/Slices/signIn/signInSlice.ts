@@ -5,6 +5,8 @@ import { addHyphenFormat } from "src/utils/formatUtil";
 import { RootState } from "modules/store";
 import { getNickNameUpdate, getMyProfile } from "src/api/my/my";
 import { errorHandler } from "src/api/http";
+import { getBuyer, getMyOrder } from "src/api/usedBook/usedBook";
+import { IOrderResult } from "src/components/OrderForm/type";
 import {
   IAxiosResponse,
   IPayload,
@@ -18,6 +20,7 @@ import {
   ISignInReduce,
   SignInThunkApi,
   NickNameResponse,
+  BuyThunkApi,
 } from "./types";
 
 const name = "signInReduce";
@@ -74,12 +77,46 @@ export const nickNameUpdateAsync = createAsyncThunk<NickNameResponse, NickNameUp
   },
 );
 
+export const buyInfoAsync = createAsyncThunk<IOrderResult, string, BuyThunkApi>(
+  `${name}/buyInfoAsync`,
+  async (orderId, { getState, rejectWithValue }) => {
+    const { signInReduce } = getState();
+    const { user, token } = signInReduce;
+    try {
+      if (!user || !token) throw new Error("로그인이 필요합니다.");
+      const { data } = await getMyOrder(orderId, token);
+      return data.data;
+    } catch (error) {
+      const message = errorHandler(error);
+      return rejectWithValue(message);
+    }
+  },
+);
+
+export const saleInfoAsync = createAsyncThunk<IOrderResult, string, BuyThunkApi>(
+  `${name}/saleInfoAsync`,
+  async (bookId, { getState, rejectWithValue }) => {
+    const { signInReduce } = getState();
+    const { user, token } = signInReduce;
+    try {
+      if (!user || !token) throw new Error("로그인이 필요합니다.");
+      const { data } = await getMyOrder(bookId, token);
+      return data.data;
+    } catch (error) {
+      const message = errorHandler(error);
+      return rejectWithValue(message);
+    }
+  },
+);
+
 const initialState: ISignInReduce = {
   user: null,
   token: null,
   isLoggedIn: false,
   error: null,
   status: "idle",
+  buyInfos: [],
+  saleInfos: [],
 };
 
 // docks패턴처럼 하나의 함수에 initialState action reduce를 정의 할 수 있다.
@@ -120,6 +157,7 @@ const signInSlice = createSlice({
     builder.addCase(myInfoAsync.fulfilled, (state, { payload }) => {
       state.isLoggedIn = true;
       state.user = payload.data;
+      state.status = "idle";
       if (payload.data.phone !== null) state.user.phone = addHyphenFormat(payload.data.phone);
       state.token = getAccessToken();
     });
@@ -130,11 +168,45 @@ const signInSlice = createSlice({
       state.status = "idle";
       state.error = payload ?? "프로필 가져오기를 실패했습니다.";
     });
+    builder.addCase(buyInfoAsync.pending, state => {
+      state.status = "loading";
+    });
+    builder.addCase(buyInfoAsync.fulfilled, (state, { payload }) => {
+      state.status = "idle";
+      if (state.buyInfos.find(({ orderId }) => orderId === payload.orderId) === undefined) {
+        state.buyInfos = [...state.buyInfos, payload];
+      }
+    });
+    builder.addCase(buyInfoAsync.rejected, (state, action) => {
+      state.status = "idle";
+      state.error = action.payload ?? "클라이언트에서 문제가 발생했습니다.";
+    });
+    builder.addCase(saleInfoAsync.pending, state => {
+      state.status = "loading";
+    });
+    builder.addCase(saleInfoAsync.fulfilled, (state, { payload }) => {
+      if (state.saleInfos.find(({ orderId }) => orderId === payload.orderId) === undefined) {
+        state.saleInfos = [...state.saleInfos, payload];
+      }
+      state.status = "idle";
+    });
+    builder.addCase(saleInfoAsync.rejected, (state, action) => {
+      state.status = "idle";
+      state.error = action.payload ?? "클라이언트에서 문제가 발생했습니다.";
+    });
   },
 });
 
 export const signInSelector = (state: RootState) => state.signInReduce;
 export const signInUser = (state: RootState) => state.signInReduce.user;
 export const isLoggedInSelector = (state: RootState) => state.signInReduce.isLoggedIn;
+export const saleInfoSelector =
+  (bookId: number) =>
+  ({ signInReduce }: RootState) =>
+    signInReduce.saleInfos.find(info => info.orderId === bookId);
+export const buyInfoSelector =
+  (orderId: number) =>
+  ({ signInReduce }: RootState) =>
+    signInReduce.buyInfos.find(info => info.orderId === orderId);
 export const { logout, errorReset } = signInSlice.actions;
 export default signInSlice;

@@ -5,6 +5,7 @@ const SAVE_EMAIL_KEY = "BOOK_PIE_SAVE_ID";
 const SECRET_KEY = "Secret key";
 const REVIEW_DATA = "REVIEW_DATA";
 const SHOP_KEY = "MY_SHOP_PAGE";
+const USED_BOOK_ORDER = "USED_BOOK_ORDER";
 
 export const setAccessToken = (token: string) => localStorage.setItem(TOKEN_KEY, token);
 export const getAccessToken = () => localStorage.getItem(TOKEN_KEY);
@@ -45,3 +46,15 @@ export const setShopPage = (defaultValue?: number) => {
 export const removeShopPage = () => {
   localStorage.removeItem(SHOP_KEY);
 };
+
+export const setUsedBookOrder = (text: string) => {
+  localStorage.setItem(USED_BOOK_ORDER, text);
+};
+export const getUsedBookOrder = () => {
+  const json = localStorage.getItem(USED_BOOK_ORDER);
+  if (json) {
+    return JSON.parse(json);
+  }
+  return "";
+};
+export const removeUsedBookOrder = () => localStorage.removeItem(USED_BOOK_ORDER);

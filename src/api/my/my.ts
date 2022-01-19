@@ -4,10 +4,6 @@ const makeAuthTokenHeader = (token: string) => ({
   headers: { "X-AUTH-TOKEN": token },
 });
 
-export const getMyShopList = (id: number) => {
-  return http.get(`/usedbook/user/${id}`);
-};
-
 export const passwordCheck = <T, P>(payload: P, token: string) => {
   return http.post<T>("/user/password", payload, makeAuthTokenHeader(token));
 };
@@ -33,7 +29,7 @@ export const getMyProfileImgUpload = (formData: FormData, token: string) => {
   });
 };
 
-export const getShopInsert = (formData: FormData, token: string) => {
+export const getSaleInsert = (formData: FormData, token: string) => {
   return http.post("/usedbook", formData, {
     headers: {
       "X-AUTH-TOKEN": token,
@@ -41,7 +37,7 @@ export const getShopInsert = (formData: FormData, token: string) => {
   });
 };
 
-export const getShopList = <T>(query: string) => {
+export const getSaleList = <T>(query: string) => {
   return http.get<T>(`usedbook/user?${query}`);
 };
 
