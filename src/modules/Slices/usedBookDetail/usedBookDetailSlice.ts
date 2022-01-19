@@ -5,6 +5,8 @@ import { RootState } from "src/modules/store";
 import {
   addUsedBookDetailReplyParam,
   deleteUsedBookDetailParam,
+  getUsedBookDetailLikeAsyncSuccess,
+  PagesResponse,
   UsedBookDetailAsyncSuccess,
   UsedBookDetailFail,
   usedBookDetailReplyListAsyncSuccess,
@@ -19,10 +21,12 @@ import {
 const initialState = {
   content: {} as UsedBookDetailResponse,
   replyList: [] as usedBookDetailReplyResponse[],
+  likeList: [] as PagesResponse[],
   category: {},
   status: "loading",
 };
 const name = "usedBookDetail";
+const myPage = "myPage";
 
 // 중고 상품 상세 페이지
 export const usedBookDetailAsync = createAsyncThunk<UsedBookDetailAsyncSuccess, string, UsedBookDetailThunk>(
@@ -53,8 +57,6 @@ export const usedBookLike = createAsyncThunk<UsedBookLikeAsyncSuccess, usedBookL
   `${name}/like`,
   async ({ usedBookId }, { rejectWithValue }) => {
     try {
-      console.log("usedBookLike usedBookId: ", usedBookId);
-
       const response = await http.post(`/usedbook/like/${usedBookId}`, usedBookId);
       return response.data;
     } catch (error: any) {
@@ -69,8 +71,6 @@ export const usedBookView = createAsyncThunk<UsedBookViewAsyncSuccess, string>(
   `${name}/view`,
   async (id, { rejectWithValue }) => {
     try {
-      console.log("usedBookView : ", id);
-
       const response = await http.post(`/usedbook/view/${id}`, id);
       return response.data;
     } catch (error: any) {
@@ -85,8 +85,6 @@ export const usedBookDetailReplyList = createAsyncThunk<usedBookDetailReplyListA
   `${name}/replyList`,
   async (id, { rejectWithValue }) => {
     try {
-      console.log("usedBookDetailReplyList usedBookId: ", id);
-
       const response = await http.get(`/reply/usedbook/${id}`);
       return response.data;
     } catch (error: any) {
@@ -101,11 +99,7 @@ export const addUsedBookDetailReply = createAsyncThunk<UsedBookLikeAsyncSuccess,
   `${name}/addReply`,
   async (data, { rejectWithValue }) => {
     try {
-      console.log("addUsedBookDetailReply data: ", data);
-
       const response = await http.post(`/reply/usedbook`, data);
-      console.log("addUsedBookDetailReply response : ", response);
-
       return response.data;
     } catch (error: any) {
       console.error(error);
@@ -119,11 +113,25 @@ export const deleteUsedBookDetailReply = createAsyncThunk(
   `${name}/deleteReply`,
   async ({ id }: deleteUsedBookDetailParam, { rejectWithValue }) => {
     try {
-      console.log("deleteUsedBookDetailReply data: ", id);
-
       await http.delete(`/reply/usedbook/${id}`);
-
       return id;
+    } catch (error: any) {
+      console.error(error);
+      return rejectWithValue(error.response.data);
+    }
+  },
+);
+
+// 마이페이지 - 중고장터 찜 목록
+export const getUsedBookDetailLike = createAsyncThunk<getUsedBookDetailLikeAsyncSuccess, string>(
+  `${myPage}/${name}/like/list`,
+  async (token, { rejectWithValue }) => {
+    try {
+      const response = await http.get(`/usedbook/like`, {
+        headers: { "X-AUTH-TOKEN": token },
+      });
+
+      return response.data;
     } catch (error: any) {
       console.error(error);
       return rejectWithValue(error.response.data);
@@ -181,7 +189,6 @@ const usedBookDetailSlice = createSlice({
       })
       .addCase(usedBookDetailReplyList.fulfilled, (state, { payload }) => {
         state.status = "success";
-        console.log("usedBookDetailReplyList payload : ", payload);
         state.replyList = payload.data.content;
       })
       .addCase(usedBookDetailReplyList.rejected, state => {
@@ -191,9 +198,8 @@ const usedBookDetailSlice = createSlice({
       .addCase(addUsedBookDetailReply.pending, state => {
         state.status = "loading";
       })
-      .addCase(addUsedBookDetailReply.fulfilled, (state, { payload }) => {
+      .addCase(addUsedBookDetailReply.fulfilled, state => {
         state.status = "success";
-        console.log("addUsedBookDetailReply payload : ", payload);
       })
       .addCase(addUsedBookDetailReply.rejected, state => {
         state.status = "failed";
@@ -204,10 +210,20 @@ const usedBookDetailSlice = createSlice({
       })
       .addCase(deleteUsedBookDetailReply.fulfilled, (state, { payload }) => {
         state.status = "success";
-        console.log("deleteUsedBookDetailReply payload : ", payload);
         state.replyList = state.replyList.filter(comment => comment.replyId !== payload);
       })
       .addCase(deleteUsedBookDetailReply.rejected, state => {
+        state.status = "failed";
+      })
+      // 마이페이지 - 중고장터 찜 목록
+      .addCase(getUsedBookDetailLike.pending, state => {
+        state.status = "loading";
+      })
+      .addCase(getUsedBookDetailLike.fulfilled, (state, { payload }) => {
+        state.status = "success";
+        state.likeList = payload.data;
+      })
+      .addCase(getUsedBookDetailLike.rejected, state => {
         state.status = "failed";
       });
   },

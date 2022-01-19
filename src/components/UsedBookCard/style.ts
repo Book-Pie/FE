@@ -1,8 +1,12 @@
 import styled from "styled-components";
 
-export const Wrapper = styled.div`
+interface WrapperProps {
+  width?: number;
+}
+
+export const Wrapper = styled.div<WrapperProps>`
   cursor: pointer;
-  width: 20%;
+  width: ${props => props.width}%;
   margin: 0.5rem;
   display: flex;
   flex-direction: column;

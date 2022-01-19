@@ -8,6 +8,7 @@ import SaleList from "src/components/SaleList/SaleList";
 import SaleInsert from "src/components/SaleInsert/SaleInsert";
 import BuyInfo from "src/components/BuyInfo/BuyInfo";
 import SaleInfo from "src/components/SaleInfo/SaleInfo";
+import BookLikeList from "src/components/UsedBookLike/BookLikeList";
 import { Container, RouterWrapper, MyMenuWrapper } from "./style";
 
 const My = () => {
@@ -27,7 +28,7 @@ const My = () => {
       {
         id: 3,
         text: "찜",
-        endPoint: "c",
+        endPoint: "like",
       },
       {
         id: 4,
@@ -72,7 +73,7 @@ const My = () => {
           <Route path={`${path}/sale/:bookId`} component={SaleInfo} />
           <Route path={`${path}/buy`} render={() => <div />} exact />
           <Route path={`${path}/buy/:orderId`} component={BuyInfo} />
-          <Route path={`${path}/c`} render={() => <div />} />
+          <Route path={`${path}/like`} component={BookLikeList} />
           <Route path={`${path}/d`} render={() => <div />} />
           <Route path={`${path}/e`} render={() => <div />} />
           <Route path={`${path}/modified`} component={Modified} />

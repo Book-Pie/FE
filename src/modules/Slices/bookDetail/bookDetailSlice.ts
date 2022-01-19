@@ -19,8 +19,6 @@ export const bookDetailAsync = createAsyncThunk<bookAsyncSuccess, paramProps>(
       const response = await http.get(`book/${isbn13}`);
       const { data } = response;
       const { success } = data;
-      console.log("bookDetailAsync response : ", response);
-
       if (!success) {
         if (data.error.code === 200) {
           return console.log(data);

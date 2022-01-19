@@ -105,17 +105,11 @@ const UsedBookArea = ({
       <TagArea>{tags && tags.map((tag, index) => <TagContent key={index}>#{tag}</TagContent>)}</TagArea>
       {id !== sellerId && (
         <>
-          <UsedBookDetailButton onClick={likeClick}>좋아요</UsedBookDetailButton>
-          {saleState === "TRADING" && (
-            <ButtonArea>
-              <DisabledButton>현재 거래중인 상품입니다.</DisabledButton>
-            </ButtonArea>
-          )}
-          {saleState === "SOLD_OUT" && (
-            <ButtonArea>
-              <DisabledButton>판매완료된 상품입니다.</DisabledButton>
-            </ButtonArea>
-          )}
+          <ButtonArea>
+            <UsedBookDetailButton onClick={likeClick}>좋아요</UsedBookDetailButton>
+            {saleState === "TRADING" && <DisabledButton>현재 거래중인 상품입니다.</DisabledButton>}
+            {saleState === "SOLD_OUT" && <DisabledButton>판매완료된 상품입니다.</DisabledButton>}
+          </ButtonArea>
           {saleState === "SALE" && (
             <>
               <UsedBookDetailButton>1:1채팅 </UsedBookDetailButton>
