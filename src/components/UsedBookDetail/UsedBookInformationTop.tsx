@@ -24,6 +24,8 @@ const UsedBookInformationTop = ({
   likeCount,
   replyCount,
   usedBookId,
+  sellerId,
+  sellerName,
   bookState,
   saleState,
 }: UsedBookDetailResponse) => {
@@ -59,6 +61,8 @@ const UsedBookInformationTop = ({
         <UsedBookArea
           title={title}
           price={price}
+          sellerId={sellerId}
+          saleState={saleState}
           content={content}
           view={view}
           uploadDate={uploadDate}
