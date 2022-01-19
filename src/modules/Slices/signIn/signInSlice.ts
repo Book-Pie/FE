@@ -5,7 +5,7 @@ import { addHyphenFormat } from "src/utils/formatUtil";
 import { RootState } from "modules/store";
 import { getNickNameUpdate, getMyProfile } from "src/api/my/my";
 import { errorHandler } from "src/api/http";
-import { getBuyer, getMyOrder } from "src/api/usedBook/usedBook";
+import { getMyOrder, getMyOrderByBookId } from "src/api/usedBook/usedBook";
 import { IOrderResult } from "src/components/OrderForm/type";
 import {
   IAxiosResponse,
@@ -100,7 +100,7 @@ export const saleInfoAsync = createAsyncThunk<IOrderResult, string, BuyThunkApi>
     const { user, token } = signInReduce;
     try {
       if (!user || !token) throw new Error("로그인이 필요합니다.");
-      const { data } = await getMyOrder(bookId, token);
+      const { data } = await getMyOrderByBookId(bookId, token);
       return data.data;
     } catch (error) {
       const message = errorHandler(error);
@@ -185,7 +185,7 @@ const signInSlice = createSlice({
       state.status = "loading";
     });
     builder.addCase(saleInfoAsync.fulfilled, (state, { payload }) => {
-      if (state.saleInfos.find(({ orderId }) => orderId === payload.orderId) === undefined) {
+      if (state.saleInfos.find(({ book }) => book.bookId === payload.book.bookId) === undefined) {
         state.saleInfos = [...state.saleInfos, payload];
       }
       state.status = "idle";
@@ -203,7 +203,7 @@ export const isLoggedInSelector = (state: RootState) => state.signInReduce.isLog
 export const saleInfoSelector =
   (bookId: number) =>
   ({ signInReduce }: RootState) =>
-    signInReduce.saleInfos.find(info => info.orderId === bookId);
+    signInReduce.saleInfos.find(info => info.book.bookId === bookId);
 export const buyInfoSelector =
   (orderId: number) =>
   ({ signInReduce }: RootState) =>

@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import ReactQuill from "react-quill";
 import * as Quill from "quill";
 import "react-quill/dist/quill.snow.css";
+import "react-quill/dist/quill.core.css";
 import { EditorProps } from "./types";
 import { ReactQuillWrapper } from "./style";
 /*
@@ -15,6 +16,7 @@ const Editor = ({
   limit = 50,
   value = "",
   isDisabled,
+  getEdiotrLength,
   setEditorValue,
 }: EditorProps) => {
   const quillRef = useRef<ReactQuill>();
@@ -77,10 +79,11 @@ const Editor = ({
         } else {
           setContents(html);
           setCurrentLimit(editor.getLength() - 1);
+          if (getEdiotrLength instanceof Function) getEdiotrLength(currentLength);
         }
       }
     },
-    [maxLength],
+    [maxLength, getEdiotrLength],
   );
 
   useEffect(() => {

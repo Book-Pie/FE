@@ -12,6 +12,7 @@ export interface EditorProps {
   value?: string;
   placeholder?: string;
   setEditorValue: (value: string) => void;
+  getEdiotrLength?: (langth: number) => void;
   isDisabled?: boolean;
 }
 

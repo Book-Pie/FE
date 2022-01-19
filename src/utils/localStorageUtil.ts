@@ -6,6 +6,7 @@ const SECRET_KEY = "Secret key";
 const REVIEW_DATA = "REVIEW_DATA";
 const SHOP_KEY = "MY_SHOP_PAGE";
 const USED_BOOK_ORDER = "USED_BOOK_ORDER";
+const FREE_BOARD_PAGE = "FREE_BOARD_PAGE";
 
 export const setAccessToken = (token: string) => localStorage.setItem(TOKEN_KEY, token);
 export const getAccessToken = () => localStorage.getItem(TOKEN_KEY);
@@ -58,3 +59,12 @@ export const getUsedBookOrder = () => {
   return "";
 };
 export const removeUsedBookOrder = () => localStorage.removeItem(USED_BOOK_ORDER);
+
+export const setFreeBoardPage = (page: string) => {
+  localStorage.setItem(FREE_BOARD_PAGE, page);
+};
+export const getFreeBoardPage = () => {
+  return localStorage.getItem(FREE_BOARD_PAGE) ?? 0;
+};
+
+export const removeFreeBoardPage = () => localStorage.removeItem(FREE_BOARD_PAGE);

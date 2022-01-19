@@ -29,6 +29,14 @@ export const getMyOrder = (orderId: string, token: string) => {
   });
 };
 
+export const getMyOrderByBookId = (bookId: string, token: string) => {
+  return http.get(`/order/book/${bookId}`, {
+    headers: {
+      "X-AUTH-TOKEN": token,
+    },
+  });
+};
+
 export const getBuyer = (userId: number, token: string) => {
   return http.get(`/order/buyer/${userId}`, {
     headers: { "X-AUTH-TOKEN": token },
