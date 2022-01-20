@@ -58,6 +58,7 @@ export const Row = styled.div`
       }
       a {
         color: #1565c0;
+        display: block;
       }
     }
   }

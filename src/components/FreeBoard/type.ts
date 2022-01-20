@@ -4,3 +4,8 @@ export interface IParam {
 export interface LocationState {
   paginatoionPage: number;
 }
+
+export interface CommentsProps {
+  boardId: string;
+  userId?: number;
+}

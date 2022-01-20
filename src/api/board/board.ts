@@ -22,9 +22,21 @@ export const boardUpdate = <P>(payload: P) => {
   return http.put("/board", payload);
 };
 
-// http://3.34.100.122:8080/api/board/search?keyWord=변&page=0&boardType=FREE
 export const boardListByTitle = (page: string | number, keyWord: string, size = 5) => {
   const query = qeuryString.stringify({ page, boardType: "FREE", size, keyWord });
-  console.log("서버로 보내는 query ===> ", query);
   return http.get(`/board/search?${query}`);
+};
+
+export const commentList = (boardId: string | number, page: number, size = 5) => {
+  const query = qeuryString.stringify({ page, size });
+  return http.get(`/reply/board/${boardId}?${query}`);
+};
+export const commentInsert = <P>(payload: P) => {
+  return http.post("/reply/board", payload);
+};
+export const commentDelet = (replyId: number) => {
+  return http.delete(`/reply/board/${replyId}`);
+};
+export const commentUpdate = <P>(payload: P) => {
+  return http.put("/reply/board", payload);
 };

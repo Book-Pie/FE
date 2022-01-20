@@ -22,6 +22,7 @@ import { FormErrorMessages, makeOption } from "src/utils/hookFormUtil";
 import Editor from "../Editor/Editor";
 import { Buttons, EditorWrapper } from "../FreeBoardInsert/style";
 import { IFreeBoardInsertForm } from "../FreeBoardInsert/type";
+import Comments from "./Comments";
 import { Empty, Main, Title, Top, Wrapper } from "./style";
 import { IParam, LocationState } from "./type";
 
@@ -228,6 +229,7 @@ const FreeBoard = () => {
             </Main>
           </div>
         )}
+        <Comments boardId={boardId} userId={user?.id} />
       </Wrapper>
     );
   }

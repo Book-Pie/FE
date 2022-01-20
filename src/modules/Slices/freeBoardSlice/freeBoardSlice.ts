@@ -1,13 +1,39 @@
 import { createAsyncThunk, createSlice, current } from "@reduxjs/toolkit";
-import { boardDelete, boardInsert, boardList, boardListByTitle, boardUpdate, getBoard } from "src/api/board/board";
+import {
+  boardDelete,
+  boardInsert,
+  boardList,
+  boardListByTitle,
+  boardUpdate,
+  commentDelet,
+  commentInsert,
+  commentList,
+  commentUpdate,
+  getBoard,
+} from "src/api/board/board";
 import { errorHandler } from "src/api/http";
 import { RootState } from "src/modules/store";
 import { getFreeBoardPage } from "src/utils/localStorageUtil";
-import { InsertThunkApi, IInsertRequest, IUpdateRequest, IFreeBoardReduce, List, Content, Contents } from "./type";
+import {
+  ThunkApi,
+  IInsertRequest,
+  IUpdateRequest,
+  IFreeBoardReduce,
+  List,
+  Content,
+  Contents,
+  IListByTitleRequest,
+  Comment,
+  Comments,
+  InsertPayload,
+  UpdatePayload,
+  ICommentListRequest,
+  DeletePayload,
+} from "./type";
 
 const name = "freeboardReduce";
 
-export const updateAsync = createAsyncThunk<void, IUpdateRequest, InsertThunkApi>(
+export const updateAsync = createAsyncThunk<void, IUpdateRequest, ThunkApi>(
   `${name}/updateAsync`,
   async (payload, { extra, rejectWithValue, dispatch, getState }) => {
     const { history } = extra;
@@ -27,7 +53,7 @@ export const updateAsync = createAsyncThunk<void, IUpdateRequest, InsertThunkApi
   },
 );
 
-export const insertAsync = createAsyncThunk<void, IInsertRequest, InsertThunkApi>(
+export const insertAsync = createAsyncThunk<void, IInsertRequest, ThunkApi>(
   `${name}/insertAsync`,
   async (payload, { extra, rejectWithValue, dispatch, getState }) => {
     const { history } = extra;
@@ -53,7 +79,7 @@ export const insertAsync = createAsyncThunk<void, IInsertRequest, InsertThunkApi
   },
 );
 
-export const deleteAsync = createAsyncThunk<string, string, InsertThunkApi>(
+export const deleteAsync = createAsyncThunk<string, string, ThunkApi>(
   `${name}/deleteAsync`,
   async (boardId, { extra, rejectWithValue, getState, dispatch }) => {
     const { freeBoardReduce } = getState();
@@ -87,12 +113,7 @@ export const deleteAsync = createAsyncThunk<string, string, InsertThunkApi>(
   },
 );
 
-interface A {
-  keyWord: string;
-  page: number | string;
-}
-
-export const listByTitleAsync = createAsyncThunk<List, A, InsertThunkApi>(
+export const listByTitleAsync = createAsyncThunk<List, IListByTitleRequest, ThunkApi>(
   `${name}/listByTitleAsync`,
   async ({ keyWord, page }, { rejectWithValue, dispatch }) => {
     try {
@@ -106,7 +127,7 @@ export const listByTitleAsync = createAsyncThunk<List, A, InsertThunkApi>(
   },
 );
 
-export const listAsync = createAsyncThunk<List, string | number, InsertThunkApi>(
+export const listAsync = createAsyncThunk<List, string | number, ThunkApi>(
   `${name}/listAsync`,
   async (page, { rejectWithValue }) => {
     try {
@@ -119,7 +140,7 @@ export const listAsync = createAsyncThunk<List, string | number, InsertThunkApi>
   },
 );
 
-export const infoAsync = createAsyncThunk<Content, string, InsertThunkApi>(
+export const infoAsync = createAsyncThunk<Content, string, ThunkApi>(
   `${name}/infoAsync`,
   async (boardId, { rejectWithValue }) => {
     try {
@@ -132,21 +153,83 @@ export const infoAsync = createAsyncThunk<Content, string, InsertThunkApi>(
   },
 );
 
+export const commentListAsync = createAsyncThunk<Comments, ICommentListRequest, ThunkApi>(
+  `${name}/commentListAsync`,
+  async ({ boardId, page, isReload }, { rejectWithValue }) => {
+    try {
+      const { data } = await commentList(boardId, page);
+      const comments = data.data;
+
+      return {
+        boardId: Number(boardId),
+        comments,
+        isReload,
+      };
+    } catch (error) {
+      const message = errorHandler(error);
+      return rejectWithValue(message);
+    }
+  },
+);
+
+export const commentInsertAsync = createAsyncThunk<void, InsertPayload, ThunkApi>(
+  `${name}/commentInsertAsync`,
+  async (payload, { rejectWithValue, dispatch }) => {
+    try {
+      const { data } = await commentInsert<InsertPayload>(payload);
+      const { boardId } = data.data;
+      dispatch(commentListAsync({ boardId, page: 0, isReload: true }));
+      return undefined;
+    } catch (error) {
+      const message = errorHandler(error);
+      return rejectWithValue(message);
+    }
+  },
+);
+export const commentDeleteAsync = createAsyncThunk<string, DeletePayload, ThunkApi>(
+  `${name}/commentDeleteAsync`,
+  async ({ replyId, boardId }, { rejectWithValue, dispatch }) => {
+    try {
+      await commentDelet(replyId);
+      dispatch(commentListAsync({ boardId, page: 0, isReload: true }));
+      return "삭제가 완료되었습니다.";
+    } catch (error) {
+      const message = errorHandler(error);
+      return rejectWithValue(message);
+    }
+  },
+);
+export const commentUpdateAsync = createAsyncThunk<string, UpdatePayload, ThunkApi>(
+  `${name}/commentDeleteAsync`,
+  async (payload, { rejectWithValue, dispatch }) => {
+    try {
+      const { data } = await commentUpdate<UpdatePayload>(payload);
+      const { boardId } = data.data;
+      dispatch(commentListAsync({ boardId, page: 0, isReload: true }));
+      return "업데이트가 되었습니다.";
+    } catch (error) {
+      const message = errorHandler(error);
+      return rejectWithValue(message);
+    }
+  },
+);
+
+const initialState: IFreeBoardReduce = {
+  status: "idle",
+  error: null,
+  list: null,
+  info: null,
+  keyWord: null,
+  coList: null,
+};
+
 const freeBoardSlice = createSlice({
   name,
-  initialState: {
-    status: "idle",
-    error: null,
-    list: null,
-    info: null,
-    keyWord: null,
-  } as IFreeBoardReduce,
+  initialState,
   reducers: {
-    incresePage: (state, action) => {
+    setPage: (state, action) => {
       const { list } = state;
-      if (list) {
-        list.page = action.payload;
-      }
+      if (list) list.page = action.payload;
     },
     setKeyWord: (state, action) => {
       state.keyWord = action.payload;
@@ -216,7 +299,7 @@ const freeBoardSlice = createSlice({
         pageable: { pageNumber },
       } = payload;
 
-      if (state.list !== null) {
+      if (state.list) {
         state.list.empty = empty;
         state.list.first = first;
         state.list.last = last;
@@ -226,9 +309,7 @@ const freeBoardSlice = createSlice({
           ...state.list.contents,
           [pageNumber]: content,
         };
-      }
-
-      if (state.list === null) {
+      } else {
         state.list = {
           empty,
           first,
@@ -287,8 +368,6 @@ const freeBoardSlice = createSlice({
             };
           }, {});
         list.contents = newContents;
-        console.log(newContents);
-
         const keys = Object.keys(newContents);
         list.totalPages = Number(keys[keys.length - 1]) + 1;
       }
@@ -308,6 +387,54 @@ const freeBoardSlice = createSlice({
       state.status = "idle";
       state.error = payload ?? "클라이언트에서 문제가 발생했습니다.";
     });
+    builder.addCase(commentListAsync.pending, state => {
+      state.status = "loading";
+    });
+    builder.addCase(commentListAsync.fulfilled, (state, { payload }) => {
+      const { boardId, comments, isReload } = payload;
+      const {
+        content,
+        empty,
+        first,
+        last,
+        size,
+        totalPages,
+        pageable: { pageNumber },
+      } = comments;
+
+      const comment: Comment = {
+        empty,
+        first,
+        last,
+        size,
+        totalPages,
+        page: pageNumber,
+        contents: [content],
+      };
+
+      if (state.coList) {
+        if (isReload) {
+          state.coList[boardId] = comment;
+        } else if (!state.coList[boardId]) {
+          state.coList = {
+            ...state.coList,
+            [boardId]: comment,
+          };
+        } else if (state.coList[boardId]) {
+          state.coList[boardId].contents[pageNumber] = content;
+        }
+      } else {
+        state.coList = {
+          [boardId]: comment,
+        };
+      }
+
+      state.status = "idle";
+    });
+    builder.addCase(commentListAsync.rejected, (state, { payload }) => {
+      state.status = "idle";
+      state.error = payload ?? "클라이언트에서 문제가 발생했습니다.";
+    });
   },
 });
 
@@ -317,7 +444,14 @@ export const contentSelector = (idx: number, boardId: number) => {
     return undefined;
   };
 };
+export const getCommentContentsSelector =
+  (boardId: number) =>
+  ({ freeBoardReduce }: RootState) => {
+    const { coList } = freeBoardReduce;
+    if (coList !== null) return coList[boardId];
+    return null;
+  };
 export const contentInfoSelector = ({ freeBoardReduce }: RootState) => freeBoardReduce.info;
 export const freeBoardSelector = ({ freeBoardReduce }: RootState) => freeBoardReduce;
-export const { incresePage, setKeyWord, setContentInit } = freeBoardSlice.actions;
+export const { setPage, setKeyWord, setContentInit } = freeBoardSlice.actions;
 export default freeBoardSlice;

@@ -2,7 +2,7 @@ import { useCallback, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import {
   freeBoardSelector,
-  incresePage,
+  setPage,
   listAsync,
   listByTitleAsync,
 } from "src/modules/Slices/freeBoardSlice/freeBoardSlice";
@@ -71,7 +71,7 @@ const FreeBoardList = () => {
       const page = value - 1;
       const content = contents[page];
 
-      dispatch(incresePage(page));
+      dispatch(setPage(page));
 
       if (keyWord) {
         dispatch(listByTitleAsync({ keyWord, page }));
@@ -94,8 +94,6 @@ const FreeBoardList = () => {
   if (list) {
     const { contents, totalPages, page, empty } = list;
     const content = contents[page] ?? [];
-
-    console.log(contents);
 
     return (
       <>
