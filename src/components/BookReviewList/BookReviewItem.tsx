@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { FlexColum } from "src/pages/BookDetail/style";
 import styled from "styled-components";
-import { BestSellerProps } from "../Main/types";
+import { BestSellerProps } from "./types";
 import StarRating from "../Rating/StarRating";
 import { BookReviewBox, BookReviewTitle, ImageItem, ImgWrapper } from "./styles";
 

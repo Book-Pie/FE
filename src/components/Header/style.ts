@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const HeaderContainer = styled.div`
-  max-width: 1200px;
+  width: 1200px;
   margin: 0 auto;
 `;
 
@@ -13,16 +13,16 @@ export const InfoWrapper = styled.div`
   div {
     display: flex;
     justify-content: flex-end;
-    span {
-      text-align: center;
-      width: 100px;
-      font-size: 1rem;
-      margin: 0.875rem 0 0.9375rem 0;
-      padding: 0 0.3125rem;
-    }
-    span + span {
-      border-left: 1px solid white;
-    }
+  }
+  span {
+    text-align: center;
+    width: 100px;
+    font-size: 1rem;
+    margin: 0.875rem 0 0.9375rem 0;
+    padding: 0 0.3125rem;
+  }
+  span + span {
+    border-left: 1px solid white;
   }
 `;
 
@@ -51,18 +51,29 @@ export const SearchWrapper = styled.div`
   input {
     border: none;
     background-color: ${props => props.theme.colors.mainLightBrown};
+    ${props => props.theme.shadow[0]};
     border-radius: 27px;
     flex: 1;
     height: 100%;
     padding: 1rem 3rem 1rem 1.5rem;
     font-size: 1rem;
+    letter-spacing: 0.09rem;
   }
   img {
     position: absolute;
     right: 0;
+    width: 20px;
     height: 20px;
     margin-right: 1rem;
     cursor: pointer;
+    padding: 5px;
+    box-sizing: content-box;
+    border-radius: 45%;
+    transition: transform 0.5s ease-in-out;
+    &:hover {
+      transform: scale(1.07);
+      ${props => props.theme.shadow[0]};
+    }
   }
 `;
 

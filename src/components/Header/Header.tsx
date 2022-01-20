@@ -1,34 +1,34 @@
 import logo from "assets/image/logo.png";
 import search from "assets/image/search.png";
 import { Link } from "react-router-dom";
-import useSignIn from "src/hooks/useSignIn";
 import { useMemo } from "react";
-import { HeaderContainer, InfoWrapper, NavWrapper, RouterWrapper, SearchWrapper } from "./style";
+import { useTypedSelector } from "src/modules/store";
+import { signInUser } from "src/modules/Slices/signIn/signInSlice";
+import * as Styled from "./style";
 
 const Header = () => {
-  const { signIn } = useSignIn();
-  const { user } = signIn;
+  const user = useTypedSelector(signInUser);
 
-  const info = useMemo(
+  const infos = useMemo(
     () =>
       user
         ? [
             {
-              path: "/my/modified",
+              endPoint: "/my/modified",
               text: "마이페이지",
             },
             {
-              path: "/logout",
+              endPoint: "/logout",
               text: "로그아웃",
             },
           ]
         : [
             {
-              path: "/signUp",
+              endPoint: "/signUp",
               text: "회원가입",
             },
             {
-              path: "/signIn",
+              endPoint: "/signIn",
               text: "로그인",
             },
           ],
@@ -36,25 +36,25 @@ const Header = () => {
   );
 
   return (
-    <HeaderContainer>
-      <InfoWrapper>
+    <Styled.HeaderContainer>
+      <Styled.InfoWrapper>
         <div>
-          {info.map((v, idx) => (
+          {infos.map(({ endPoint, text }, idx) => (
             <span key={idx}>
-              <Link to={v.path}>{v.text}</Link>
+              <Link to={endPoint}>{text}</Link>
             </span>
           ))}
         </div>
-      </InfoWrapper>
-      <NavWrapper>
+      </Styled.InfoWrapper>
+      <Styled.NavWrapper>
         <Link to="/">
           <img src={logo} alt="logo" />
         </Link>
-        <SearchWrapper>
+        <Styled.SearchWrapper>
           <input type="text" />
           <img src={search} alt="search" />
-        </SearchWrapper>
-        <RouterWrapper>
+        </Styled.SearchWrapper>
+        <Styled.RouterWrapper>
           <span>
             <Link to="/usedBook">중고장터</Link>
           </span>
@@ -64,9 +64,9 @@ const Header = () => {
           <span>
             <Link to="/community">커뮤니티</Link>
           </span>
-        </RouterWrapper>
-      </NavWrapper>
-    </HeaderContainer>
+        </Styled.RouterWrapper>
+      </Styled.NavWrapper>
+    </Styled.HeaderContainer>
   );
 };
 

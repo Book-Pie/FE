@@ -1,28 +1,32 @@
 import { make1000UnitsCommaFormet } from "src/utils/formatUtil";
 import { Link } from "react-router-dom";
-import { CardProps, StateEnumType } from "./type";
-import { Image, Info, Wrapper } from "./style";
+import { useMemo } from "react";
+import * as Types from "./types";
+import * as Styled from "./style";
 
-const STATE_ENUM: StateEnumType = {
-  SALE: "판매 중",
-  TRADING: "거래 중",
-  SOLE_OUT: "판매 완료",
-};
+const Card = ({ id, title, price, image, state }: Types.CardProps) => {
+  const STATE_ENUM: Types.StateEnumType = useMemo(
+    () => ({
+      SALE: "판매 중",
+      TRADING: "거래 중",
+      SOLD_OUT: "판매 완료",
+    }),
+    [],
+  );
 
-const Card = ({ id, title, price, image, state }: CardProps) => {
   return (
-    <Wrapper>
+    <Styled.Wrapper>
       <Link to={`/usedBook/${id}`}>
-        <Image>
+        <Styled.Image>
           <img src={`${process.env.BASE_URL}/image/${image}`} alt="latestImg" />
-        </Image>
-        <Info>
+        </Styled.Image>
+        <Styled.Info>
           <div className="card__title">{title}</div>
           <div className="card__price">{`${make1000UnitsCommaFormet(String(price))}원`}</div>
           <div className="card__state">{STATE_ENUM[state]}</div>
-        </Info>
+        </Styled.Info>
       </Link>
-    </Wrapper>
+    </Styled.Wrapper>
   );
 };
 
