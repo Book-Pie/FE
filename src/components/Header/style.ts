@@ -40,7 +40,7 @@ export const NavWrapper = styled.div`
   }
 `;
 
-export const SearchWrapper = styled.div`
+export const SearchWrapper = styled.form`
   position: relative;
   border-radius: 27px;
   display: flex;
@@ -74,6 +74,14 @@ export const SearchWrapper = styled.div`
       transform: scale(1.07);
       ${props => props.theme.shadow[0]};
     }
+  }
+  & > div {
+    position: absolute;
+    top: 115%;
+    z-index: 3;
+    left: 0;
+    right: 0;
+    ${props => props.theme.shadow[0]};
   }
 `;
 

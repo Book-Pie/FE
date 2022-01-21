@@ -8,7 +8,7 @@ import {
   commentListAsync,
   commentUpdateAsync,
   getCommentContentsSelector,
-} from "src/modules/Slices/freeBoardSlice/freeBoardSlice";
+} from "src/modules/Slices/freeBoard/freeBoardSlice";
 import { useAppDispatch, useTypedSelector } from "src/modules/store";
 import Pagination from "@mui/material/Pagination";
 import Editor from "../Editor/Editor";

@@ -1,11 +1,6 @@
 import { useCallback, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import {
-  freeBoardSelector,
-  setPage,
-  listAsync,
-  listByTitleAsync,
-} from "src/modules/Slices/freeBoardSlice/freeBoardSlice";
+import { freeBoardSelector, setPage, listAsync, listByTitleAsync } from "src/modules/Slices/freeBoard/freeBoardSlice";
 import range from "lodash/range";
 import { useTypedSelector } from "src/modules/store";
 import Pagination from "@mui/material/Pagination";

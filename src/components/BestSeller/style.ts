@@ -114,6 +114,7 @@ export const CardWrapper = styled.div`
   }
 
   .card__rank {
+    padding-right: 3px;
     width: 40px;
     margin: 0 auto;
     height: 40px;

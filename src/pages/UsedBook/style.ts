@@ -88,27 +88,7 @@ export const Filter = styled.div`
   display: flex;
   justify-content: center;
   margin: 20px 0;
-  height: 50px;
-  span {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    display: block;
-    width: 130px;
-    padding: 15px 20px;
-    text-align: center;
-    border-radius: 25px;
-    font-size: 18px;
-    font-weight: 900;
-    background-color: #edeae9;
-    color: ${p => p.theme.colors.mainDarkBrown};
-    ${p => p.theme.shadow[10]};
-    transition: all 0.25s ease-in;
-    cursor: pointer;
-    :hover {
-      transform: scale(1.03);
-    }
-  }
+
   a + a {
     margin-left: 15px;
   }

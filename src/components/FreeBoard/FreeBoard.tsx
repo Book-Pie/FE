@@ -14,7 +14,7 @@ import {
   contentInfoSelector,
   infoAsync,
   updateAsync,
-} from "src/modules/Slices/freeBoardSlice/freeBoardSlice";
+} from "src/modules/Slices/freeBoard/freeBoardSlice";
 import { signInSelector } from "src/modules/Slices/signIn/signInSlice";
 import { useAppDispatch, useTypedSelector } from "src/modules/store";
 import { dateFormat2 } from "src/utils/formatUtil";

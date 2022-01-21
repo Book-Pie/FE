@@ -29,6 +29,8 @@ export const mobileNumberPatternCheck = (value: string) => /^01([0|1|6|7|8|9])-(
 // 이메일 패턴 검사
 export const emailPatternCheck = (value: string) =>
   /^[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*\.(kr|com|net)$/gi.test(value);
+// html 패턴 검사
+export const htmlTagPatternCheck = (value: string) => /(<([^>]+)>)/g.test(value);
 
 // hook form validate는 retur값이 true면 유효성검사 통과입니다.
 // 특정 패턴에 걸렸을때 문자열을 리턴해주면 validation message로 등록됩니다.
@@ -71,4 +73,15 @@ export const hookFormMisMatchCheck = (target: string, source: string, errorMessa
     return errorMessage;
   }
   return true;
+};
+
+export const hookFormHtmlCheck = (value: string, errorMessage: string) => {
+  if (htmlTagPatternCheck(value)) {
+    return errorMessage;
+  }
+  return true;
+};
+
+export const stringEmptyCheck = (value: string) => {
+  return value === "";
 };
