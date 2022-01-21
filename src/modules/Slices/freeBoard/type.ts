@@ -1,7 +1,12 @@
 import { History } from "history";
 import { AppDispatch, RootState } from "src/modules/store";
 
-export interface InsertThunkApi {
+export interface IListByTitleRequest {
+  keyWord: string;
+  page: number | string;
+}
+
+export interface ThunkApi {
   dispatch: AppDispatch;
   state: RootState;
   extra: {
@@ -65,6 +70,47 @@ export interface List {
   empty: boolean;
 }
 
+export interface IComment {
+  replyId: number;
+  parentReplyId: number;
+  boardId: number;
+  userId: number;
+  content: string;
+  replyDate: string;
+  nickName: string;
+  subReply: any[];
+}
+
+export interface Comment {
+  page: number;
+  totalPages: number;
+  last: boolean;
+  first: boolean;
+  empty: boolean;
+  size: number;
+  contents: IComment[][];
+}
+
+export interface CommentReponse {
+  content: IComment[];
+  pageable: Pageable;
+  totalElements: number;
+  totalPages: number;
+  last: boolean;
+  number: number;
+  sort: Sort;
+  size: number;
+  numberOfElements: number;
+  first: boolean;
+  empty: boolean;
+}
+
+export interface Comments {
+  boardId: number;
+  comments: CommentReponse;
+  isReload?: boolean;
+}
+
 export interface Contents {
   [key: number]: Content[];
 }
@@ -82,4 +128,27 @@ export interface IFreeBoardReduce {
     size: number;
   } | null;
   info: Content | null;
+  keyWord: string | null;
+  coList: { [key: number]: Comment } | null;
+}
+
+export interface InsertPayload {
+  boardId: number | string;
+  content: string;
+  userId: number;
+}
+
+export interface UpdatePayload {
+  replyId: number | string;
+  userId: number;
+  content: string;
+}
+export interface ICommentListRequest {
+  boardId: string | number;
+  page: number;
+  isReload?: boolean;
+}
+export interface DeletePayload {
+  replyId: number;
+  boardId: number | string;
 }

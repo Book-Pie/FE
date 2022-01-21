@@ -17,11 +17,11 @@ import Pagination from "@mui/material/Pagination";
 import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
 import Select from "@mui/material/Select";
-
 import useDelay from "src/hooks/useDelay";
 import { getShopPage, removeShopPage, setShopPage } from "src/utils/localStorageUtil";
 import { Wrapper, TableHeader, Cell, Empty, TableBody } from "./style";
 import { AxioseReponse, IList, IPage } from "./type";
+
 import Skelaton from "./Skelaton";
 import Content from "./Content";
 
@@ -243,14 +243,6 @@ const SaleList = () => {
               size="large"
               sx={{
                 ".Mui-selected": {
-                  background: theme => theme.colors.mainDarkBrown,
-                  color: theme => theme.colors.white,
-                },
-                ".Mui-selected:hover": {
-                  background: theme => theme.colors.mainDarkBrown,
-                  color: theme => theme.colors.white,
-                },
-                ".MuiButtonBase-root:hover": {
                   background: theme => theme.colors.mainDarkBrown,
                   color: theme => theme.colors.white,
                 },

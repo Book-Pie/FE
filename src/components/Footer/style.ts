@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const FooterContainer = styled.footer`
-  margin: 151px 0 0;
+  margin: 51px 0 0;
   background-color: ${props => props.theme.colors.mainLightBrown};
   & > div:first-child {
     margin: 0 auto;

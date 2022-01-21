@@ -7,6 +7,7 @@ export const Wrapper = styled.div`
 export const Image = styled.div`
   width: 100%;
   height: 280px;
+  border-bottom: 1px solid rgba(99, 110, 114, 0.1);
   img {
     width: 100%;
     height: 100%;
@@ -68,12 +69,15 @@ export const Info = styled.div`
     text-align: center;
   }
 `;
-export const SwipierWrapper = styled.div`
-  margin-bottom: 100px;
+export const LatestSliderWrapper = styled.div`
   cursor: pointer;
-
+  .swiper {
+    padding-bottom: 50px;
+    width: 1200px;
+  }
   .swiper-slide {
     width: 190px;
+    ${props => props.theme.shadow[0]};
     color: ${props => props.theme.colors.darkGrey};
   }
 

@@ -1,5 +1,4 @@
 import ReactDOM from "react-dom";
-import { QueryClient, QueryClientProvider } from "react-query";
 import { Router } from "react-router";
 import { Provider } from "react-redux";
 import { ThemeProvider as StyledThemeProvider } from "styled-components";
