@@ -72,6 +72,10 @@ const Comments = ({ boardId, userId }: CommentsProps) => {
     [boardId, dispatch, updateEditorLength, updateEditorValue, userId],
   );
 
+  const handlePaginationOnChange = (_: any, value: number) => {
+    dispatch(commentListAsync({ boardId, page: value - 1 }));
+  };
+
   const handleCreateOnSumit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const { current } = debounce;
@@ -108,6 +112,7 @@ const Comments = ({ boardId, userId }: CommentsProps) => {
           variant="outlined"
           shape="rounded"
           size="large"
+          onChange={handlePaginationOnChange}
           sx={{
             ".Mui-selected": {
               background: theme => theme.colors.mainDarkBrown,

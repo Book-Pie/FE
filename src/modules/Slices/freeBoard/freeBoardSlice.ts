@@ -401,6 +401,7 @@ const freeBoardSlice = createSlice({
         totalPages,
         pageable: { pageNumber },
       } = comments;
+      console.log("pageNumber=======>", pageNumber);
 
       const comment: Comment = {
         empty,
@@ -421,7 +422,10 @@ const freeBoardSlice = createSlice({
             [boardId]: comment,
           };
         } else if (state.coList[boardId]) {
+          console.log("여기");
+
           state.coList[boardId].contents[pageNumber] = content;
+          state.coList[boardId].page = pageNumber;
         }
       } else {
         state.coList = {

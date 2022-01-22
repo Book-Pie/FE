@@ -106,8 +106,6 @@ const FreeBoard = () => {
   }, [clearErrors]);
 
   const handleDeleteOnClick = () => {
-    console.log(boardId);
-
     dispatch(deleteAsync(boardId));
   };
 
