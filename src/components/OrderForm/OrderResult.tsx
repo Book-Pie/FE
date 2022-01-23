@@ -5,21 +5,24 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getMyOrder } from "src/api/usedBook/usedBook";
 import { dateFormat2, make1000UnitsCommaFormet } from "src/utils/formatUtil";
+import { useTypedSelector } from "src/modules/store";
+import { signInSelector } from "src/modules/Slices/signIn/signInSlice";
 import { Result, Wrapper } from "./style";
-import { IOrderResult } from "./type";
+import * as Types from "./types";
 
 const OrderResult = () => {
   const { state } = useLocation<number>();
-  const [orderResult, setOrderResult] = useState<IOrderResult>();
+  const [orderResult, setOrderResult] = useState<Types.IOrderResult>();
+  const { token } = useTypedSelector(signInSelector);
   const history = useHistory();
 
   useEffect(() => {
-    if (state) {
-      getMyOrder(state).then(({ data }) => setOrderResult(data.data));
+    if (state && token) {
+      getMyOrder(String(state), token).then(({ data }) => setOrderResult(data.data));
     } else {
       history.replace("/");
     }
-  }, [state, history]);
+  }, [state, token, history]);
 
   if (!orderResult || !state) return null;
 

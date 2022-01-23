@@ -6,7 +6,7 @@ import { RootState } from "modules/store";
 import { getNickNameUpdate, getMyProfile } from "src/api/my/my";
 import { errorHandler } from "src/api/http";
 import { getMyOrder, getMyOrderByBookId } from "src/api/usedBook/usedBook";
-import { IOrderResult } from "src/components/OrderForm/type";
+import { IOrderResult } from "src/components/OrderForm/types";
 import {
   IAxiosResponse,
   IPayload,

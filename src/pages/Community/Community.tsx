@@ -5,7 +5,7 @@ import http from "src/api/http";
 import FreeBoard from "src/components/FreeBoard/FreeBoard";
 import FreeBoardInsert from "src/components/FreeBoardInsert/FreeBoardInsert";
 import FreeBoardList from "src/components/FreeBoardList/FreeBoardList";
-import { Content } from "src/modules/Slices/freeBoard/type";
+import { Content } from "src/modules/Slices/freeBoard/types";
 import { dateFormat2 } from "src/utils/formatUtil";
 import { Row } from "src/components/FreeBoardList/style";
 import { Wrapper, Title, List } from "./style";
