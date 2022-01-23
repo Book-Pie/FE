@@ -16,19 +16,17 @@ const useSignIn = (): UseSignInReturnType => {
   const signIn = useTypedSelector(signInSelector);
   const { isLoggedIn } = signIn;
 
-  const getMyInfo = useCallback(() => {
+  const fetcherMyInfo = useCallback(() => {
     const accessToken = getAccessToken();
 
     if (accessToken && isLoggedIn === false) {
       dispatch(myInfoAsync(accessToken))
         .unwrap()
-        .catch(error => {
-          if (error.status === 403) history.replace("signIn");
-        });
+        .catch(() => history.replace("signIn"));
     }
   }, [dispatch, isLoggedIn, history]);
 
-  useEffect(getMyInfo, [getMyInfo]);
+  useEffect(fetcherMyInfo, [fetcherMyInfo]);
 
   return {
     dispatch,

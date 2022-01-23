@@ -7,7 +7,7 @@ import ErrorMessage from "src/elements/ErrorMessage";
 import Loading from "src/elements/Loading";
 import Popup from "src/elements/Popup";
 import useSignIn from "src/hooks/useSignIn";
-import { freeBoardSelector, insertAsync } from "src/modules/Slices/freeBoardSlice/freeBoardSlice";
+import { freeBoardSelector, insertAsync } from "src/modules/Slices/freeBoard/freeBoardSlice";
 import { useTypedSelector } from "src/modules/store";
 import { FormErrorMessages, makeOption } from "src/utils/hookFormUtil";
 import Editor from "../Editor/Editor";

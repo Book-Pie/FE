@@ -14,7 +14,7 @@ import {
   contentInfoSelector,
   infoAsync,
   updateAsync,
-} from "src/modules/Slices/freeBoardSlice/freeBoardSlice";
+} from "src/modules/Slices/freeBoard/freeBoardSlice";
 import { signInSelector } from "src/modules/Slices/signIn/signInSlice";
 import { useAppDispatch, useTypedSelector } from "src/modules/store";
 import { dateFormat2 } from "src/utils/formatUtil";
@@ -22,6 +22,7 @@ import { FormErrorMessages, makeOption } from "src/utils/hookFormUtil";
 import Editor from "../Editor/Editor";
 import { Buttons, EditorWrapper } from "../FreeBoardInsert/style";
 import { IFreeBoardInsertForm } from "../FreeBoardInsert/type";
+import Comments from "./Comments";
 import { Empty, Main, Title, Top, Wrapper } from "./style";
 import { IParam, LocationState } from "./type";
 
@@ -105,8 +106,6 @@ const FreeBoard = () => {
   }, [clearErrors]);
 
   const handleDeleteOnClick = () => {
-    console.log(boardId);
-
     dispatch(deleteAsync(boardId));
   };
 
@@ -228,6 +227,7 @@ const FreeBoard = () => {
             </Main>
           </div>
         )}
+        <Comments boardId={boardId} userId={user?.id} />
       </Wrapper>
     );
   }

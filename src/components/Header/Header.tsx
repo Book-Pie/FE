@@ -1,34 +1,65 @@
 import logo from "assets/image/logo.png";
-import search from "assets/image/search.png";
+import searchImg from "assets/image/search.png";
 import { Link } from "react-router-dom";
-import useSignIn from "src/hooks/useSignIn";
 import { useMemo } from "react";
-import { HeaderContainer, InfoWrapper, NavWrapper, RouterWrapper, SearchWrapper } from "./style";
+import { useTypedSelector } from "src/modules/store";
+import { signInUser } from "src/modules/Slices/signIn/signInSlice";
+import { RegisterOptions, useForm } from "react-hook-form";
+import ErrorMessage from "src/elements/ErrorMessage";
+import { hookFormHtmlCheck, makeOption } from "src/utils/hookFormUtil";
+import { useHistory } from "react-router";
+import Tooltip from "@mui/material/Tooltip";
+import * as Styled from "./style";
+import * as Types from "./types";
 
 const Header = () => {
-  const { signIn } = useSignIn();
-  const { user } = signIn;
+  const user = useTypedSelector(signInUser);
+  const { handleSubmit, formState, register, setValue } = useForm<Types.SearchForm>({
+    defaultValues: { title: "" },
+  });
+  const history = useHistory();
+  const { errors } = formState;
 
-  const info = useMemo(
+  const titleOptions: RegisterOptions = useMemo(
+    () => ({
+      required: true,
+      maxLength: makeOption<number>(50, "최대 50자 입니다."),
+      minLength: makeOption<number>(1, "최소 1자 입니다."),
+      validate: {
+        html: value => hookFormHtmlCheck(value, "HTML태그는 검색이 불가합니다."),
+      },
+    }),
+    [],
+  );
+
+  const onSubmit = ({ title }: Types.SearchForm) => {
+    history.push({
+      pathname: "/search",
+      search: `title=${title}`,
+    });
+    setValue("title", "");
+  };
+
+  const infos = useMemo(
     () =>
       user
         ? [
             {
-              path: "/my/modified",
+              endPoint: "/my/modified",
               text: "마이페이지",
             },
             {
-              path: "/logout",
+              endPoint: "/logout",
               text: "로그아웃",
             },
           ]
         : [
             {
-              path: "/signUp",
+              endPoint: "/signUp",
               text: "회원가입",
             },
             {
-              path: "/signIn",
+              endPoint: "/signIn",
               text: "로그인",
             },
           ],
@@ -36,25 +67,28 @@ const Header = () => {
   );
 
   return (
-    <HeaderContainer>
-      <InfoWrapper>
+    <Styled.HeaderContainer>
+      <Styled.InfoWrapper>
         <div>
-          {info.map((v, idx) => (
+          {infos.map(({ endPoint, text }, idx) => (
             <span key={idx}>
-              <Link to={v.path}>{v.text}</Link>
+              <Link to={endPoint}>{text}</Link>
             </span>
           ))}
         </div>
-      </InfoWrapper>
-      <NavWrapper>
+      </Styled.InfoWrapper>
+      <Styled.NavWrapper>
         <Link to="/">
           <img src={logo} alt="logo" />
         </Link>
-        <SearchWrapper>
-          <input type="text" />
-          <img src={search} alt="search" />
-        </SearchWrapper>
-        <RouterWrapper>
+        <Styled.SearchWrapper onSubmit={handleSubmit(onSubmit)}>
+          <input type="text" id="title" {...register("title", titleOptions)} />
+          <Tooltip title="검색">
+            <img src={searchImg} alt="search" />
+          </Tooltip>
+          <ErrorMessage message={errors.title?.message} />
+        </Styled.SearchWrapper>
+        <Styled.RouterWrapper>
           <span>
             <Link to="/usedBook">중고장터</Link>
           </span>
@@ -64,9 +98,9 @@ const Header = () => {
           <span>
             <Link to="/community">커뮤니티</Link>
           </span>
-        </RouterWrapper>
-      </NavWrapper>
-    </HeaderContainer>
+        </Styled.RouterWrapper>
+      </Styled.NavWrapper>
+    </Styled.HeaderContainer>
   );
 };
 

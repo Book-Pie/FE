@@ -60,11 +60,11 @@ export const getUsedBookOrder = () => {
 };
 export const removeUsedBookOrder = () => localStorage.removeItem(USED_BOOK_ORDER);
 
-export const setFreeBoardPage = (page: string) => {
-  localStorage.setItem(FREE_BOARD_PAGE, page);
+export const setFreeBoardPage = (page: string | number) => {
+  localStorage.setItem(FREE_BOARD_PAGE, String(page));
 };
 export const getFreeBoardPage = () => {
-  return localStorage.getItem(FREE_BOARD_PAGE) ?? 0;
+  return localStorage.getItem(FREE_BOARD_PAGE) ?? "0";
 };
 
 export const removeFreeBoardPage = () => localStorage.removeItem(FREE_BOARD_PAGE);

@@ -19,6 +19,7 @@ const theme: DefaultTheme = {
     mobile: `@media screen and (max-width: ${Size.mobile})`,
   },
   shadow: {
+    0: "box-shadow: rgb(0 0 0 / 50%) 0px 0px 4px;",
     10: "box-shadow: rgb(0 0 0 / 10%) 0px 4px 16px 0px",
     30: "box-shadow: rgb(0 0 0 / 30%) 0px 4px 16px 0px",
     50: "box-shadow: rgb(0 0 0 / 50%) 0px 4px 16px 0px",

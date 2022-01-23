@@ -14,6 +14,8 @@ import TextField from "@mui/material/TextField";
 import useDelay from "src/hooks/useDelay";
 import Categorys from "src/components/Categorys/Categorys";
 import useDebounce from "src/hooks/useDebounce";
+import Chip from "@mui/material/Chip";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { UsedBookState, ICategory, IUsedBook, UsedBooksResponse, CategorysResponse } from "./types";
 import {
   Wrapper,
@@ -165,9 +167,13 @@ const UsedBook = () => {
       <Filter>
         {Object.entries(query).map(([key, value], idx) => (
           <Link key={idx} to={removeQueryString(pathname, search, [key])}>
-            <span key={idx}>
-              {value === "date" || value === "view" ? (value === "view" ? "조회순" : "최신순") : value}
-            </span>
+            <Chip
+              key={idx}
+              color="info"
+              variant="outlined"
+              icon={<AddCircleIcon />}
+              label={value === "date" || value === "view" ? (value === "view" ? "조회순" : "최신순") : value}
+            />
           </Link>
         ))}
       </Filter>
