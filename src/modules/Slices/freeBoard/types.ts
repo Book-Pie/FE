@@ -47,6 +47,16 @@ export interface Sort {
   unsorted: boolean;
 }
 
+export interface SubReply {
+  replyId: number;
+  parentReplyId: number;
+  userId: number;
+  content: string;
+  replyDate: string;
+  nickName: string;
+  secret: boolean;
+}
+
 export interface Pageable {
   sort: Sort;
   offset: number;
@@ -78,7 +88,7 @@ export interface IComment {
   content: string;
   replyDate: string;
   nickName: string;
-  subReply: any[];
+  subReply: SubReply[];
 }
 
 export interface Comment {
@@ -151,4 +161,34 @@ export interface ICommentListRequest {
 export interface DeletePayload {
   replyId: number;
   boardId: number | string;
+}
+
+export interface SubReplyInsertPayload {
+  userId: number | string;
+  parentReplyId: number;
+  content: string;
+}
+
+export interface SubReplyInsertParam {
+  boardId: string;
+  payload: {
+    userId: number | string;
+    parentReplyId: number;
+    content: string;
+  };
+}
+
+export interface SubReplyDeleteParam {
+  boardId: string;
+  subReplyId: number;
+}
+export interface SubReplyUpdatePayload {
+  userId: number | string;
+  content: string;
+  replyId: number;
+}
+
+export interface SubReplyUpdateParam {
+  boardId: string;
+  payload: SubReplyUpdatePayload;
 }

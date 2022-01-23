@@ -207,14 +207,14 @@ const FreeBoard = () => {
                   </Button>
                 )}
                 {user?.id === userId && (
-                  <Button variant="contained" color="success" onClick={handleUpdateOpne(title)}>
-                    수정하기
-                  </Button>
-                )}
-                {user?.id === userId && (
-                  <Button variant="contained" color="error" onClick={handleDeleteOnClick}>
-                    삭제
-                  </Button>
+                  <>
+                    <Button variant="contained" color="success" onClick={handleUpdateOpne(title)}>
+                      수정하기
+                    </Button>
+                    <Button variant="contained" color="error" onClick={handleDeleteOnClick}>
+                      삭제
+                    </Button>
+                  </>
                 )}
               </div>
             </Top>

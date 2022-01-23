@@ -77,13 +77,14 @@ export const NoComments = styled.div`
   padding: 20px;
   min-height: 200px;
   border: 1px solid rgba(99, 110, 114, 0.5);
-  box-shadow: rgb(0 0 0 / 50%) 0px 0px 4px;
+  ${p => p.theme.shadow[0]}
 `;
 export const CommentRow = styled.div`
   padding: 20px;
   border: 1px solid rgba(99, 110, 114, 0.5);
   border-radius: 5px;
-  box-shadow: rgb(0 0 0 / 50%) 0px 0px 4px;
+  ${p => p.theme.shadow[0]}
+
   transition: transform 0.25s, background-color 0.25s ease-in;
   &:hover {
     background-color: ${p => p.theme.colors.mainLightBrown};
@@ -93,7 +94,7 @@ export const CommentRow = styled.div`
     margin-top: 15px;
   }
 
-  & > div:first-child {
+  .comment__userinfo {
     display: flex;
     justify-content: space-between;
     span:first-child {
@@ -104,14 +105,30 @@ export const CommentRow = styled.div`
     span + span {
       margin-left: 15px;
     }
-    button {
-      margin-left: 15px;
+    svg + span {
+      font-size: 15px;
+      color: ${p => p.theme.colors.mainDarkBrown};
+      font-weight: bold;
     }
   }
 
-  & > div :nth-child(3) {
+  .comment__update {
     display: flex;
-
+    padding-top: 20px;
+    border-top: 1px solid rgba(99, 110, 114, 0.5);
+    display: block;
+    h1 {
+      font-size: 25px;
+      font-weight: bold;
+      color: ${p => p.theme.colors.mainDarkBrown};
+    }
+    & > h1 + div,
+    & > div + div {
+      margin-top: 15px;
+    }
+  }
+  .comment__subReply {
+    display: flex;
     padding-top: 20px;
     border-top: 1px solid rgba(99, 110, 114, 0.5);
     display: block;
@@ -155,6 +172,8 @@ export const CommentsTop = styled.div`
   .comments_form {
     display: flex;
     margin-top: 15px;
+    padding: 30px;
+    border-bottom: 1px solid rgba(99, 110, 114, 0.5);
     & > div:first-child {
       flex: 8;
     }
@@ -172,6 +191,16 @@ export const CommentsTop = styled.div`
 `;
 
 export const CommentsBottom = styled.div`
+  & > div + div {
+    margin-top: 15px;
+  }
+`;
+
+export const SubRely = styled.div`
+  & > div {
+    padding: 20px;
+    ${p => p.theme.shadow[0]}
+  }
   & > div + div {
     margin-top: 15px;
   }

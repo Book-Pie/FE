@@ -10,6 +10,9 @@ import {
   commentList,
   commentUpdate,
   getBoard,
+  subReplyDelete,
+  subReplyInsert,
+  subReplyUpdate,
 } from "src/api/board/board";
 import { errorHandler } from "src/api/http";
 import { RootState } from "src/modules/store";
@@ -190,6 +193,48 @@ export const commentUpdateAsync = createAsyncThunk<string, Types.UpdatePayload, 
     try {
       const { data } = await commentUpdate<Types.UpdatePayload>(payload);
       const { boardId } = data.data;
+      dispatch(commentListAsync({ boardId, page: 0, isReload: true }));
+      return "업데이트가 되었습니다.";
+    } catch (error) {
+      const message = errorHandler(error);
+      return rejectWithValue(message);
+    }
+  },
+);
+
+export const subReplyInsertAsync = createAsyncThunk<void, Types.SubReplyInsertParam, Types.ThunkApi>(
+  `${name}/subRelyInsertAsync`,
+  async ({ boardId, payload }, { rejectWithValue, dispatch }) => {
+    try {
+      await subReplyInsert<Types.SubReplyInsertPayload>(payload);
+      dispatch(commentListAsync({ boardId, page: 0, isReload: true }));
+      return undefined;
+    } catch (error) {
+      const message = errorHandler(error);
+      return rejectWithValue(message);
+    }
+  },
+);
+
+export const subReplyDeleteAsync = createAsyncThunk<string, Types.SubReplyDeleteParam, Types.ThunkApi>(
+  `${name}/subRelyInsertAsync`,
+  async ({ boardId, subReplyId }, { rejectWithValue, dispatch }) => {
+    try {
+      await subReplyDelete(subReplyId);
+      dispatch(commentListAsync({ boardId, page: 0, isReload: true }));
+      return "삭제가 되었습니다.";
+    } catch (error) {
+      const message = errorHandler(error);
+      return rejectWithValue(message);
+    }
+  },
+);
+
+export const subReplyUpdateAsync = createAsyncThunk<string, Types.SubReplyUpdateParam, Types.ThunkApi>(
+  `${name}/subRelyInsertAsync`,
+  async ({ boardId, payload }, { rejectWithValue, dispatch }) => {
+    try {
+      await subReplyUpdate<Types.SubReplyUpdatePayload>(payload);
       dispatch(commentListAsync({ boardId, page: 0, isReload: true }));
       return "업데이트가 되었습니다.";
     } catch (error) {
