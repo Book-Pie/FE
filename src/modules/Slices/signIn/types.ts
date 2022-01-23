@@ -1,6 +1,6 @@
 import { History } from "history";
 import { AppDispatch, RootState } from "modules/store";
-import { IOrderResult } from "src/components/OrderForm/type";
+import { IOrderResult } from "src/components/OrderForm/types";
 // =========================== 썽크함수 파라미터 타입 ===========================
 // thunk 함수로 넘겨질 인자 타입
 

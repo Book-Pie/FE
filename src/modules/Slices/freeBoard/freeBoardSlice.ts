@@ -14,26 +14,11 @@ import {
 import { errorHandler } from "src/api/http";
 import { RootState } from "src/modules/store";
 import { getFreeBoardPage } from "src/utils/localStorageUtil";
-import {
-  ThunkApi,
-  IInsertRequest,
-  IUpdateRequest,
-  IFreeBoardReduce,
-  List,
-  Content,
-  Contents,
-  IListByTitleRequest,
-  Comment,
-  Comments,
-  InsertPayload,
-  UpdatePayload,
-  ICommentListRequest,
-  DeletePayload,
-} from "./type";
+import * as Types from "./types";
 
 const name = "freeboardReduce";
 
-export const updateAsync = createAsyncThunk<void, IUpdateRequest, ThunkApi>(
+export const updateAsync = createAsyncThunk<void, Types.IUpdateRequest, Types.ThunkApi>(
   `${name}/updateAsync`,
   async (payload, { extra, rejectWithValue, dispatch, getState }) => {
     const { history } = extra;
@@ -41,7 +26,7 @@ export const updateAsync = createAsyncThunk<void, IUpdateRequest, ThunkApi>(
     const { list } = freeBoardReduce;
     try {
       const page = list?.page ?? getFreeBoardPage() ?? 0;
-      const { data } = await boardUpdate<IUpdateRequest>(payload);
+      const { data } = await boardUpdate<Types.IUpdateRequest>(payload);
       if (data.data.success === false) throw new Error("수정에 실패했습니다.");
       dispatch(listAsync(String(page)));
       history.replace("/community/freeboard");
@@ -53,7 +38,7 @@ export const updateAsync = createAsyncThunk<void, IUpdateRequest, ThunkApi>(
   },
 );
 
-export const insertAsync = createAsyncThunk<void, IInsertRequest, ThunkApi>(
+export const insertAsync = createAsyncThunk<void, Types.IInsertRequest, Types.ThunkApi>(
   `${name}/insertAsync`,
   async (payload, { extra, rejectWithValue, dispatch, getState }) => {
     const { history } = extra;
@@ -61,7 +46,7 @@ export const insertAsync = createAsyncThunk<void, IInsertRequest, ThunkApi>(
     const { list, keyWord } = freeBoardReduce;
     try {
       const page = list?.page ?? getFreeBoardPage() ?? 0;
-      const { data } = await boardInsert<IInsertRequest>(payload);
+      const { data } = await boardInsert<Types.IInsertRequest>(payload);
       if (data.data.success === false) throw new Error("등록에 실패했습니다.");
 
       dispatch(setContentInit());
@@ -79,7 +64,7 @@ export const insertAsync = createAsyncThunk<void, IInsertRequest, ThunkApi>(
   },
 );
 
-export const deleteAsync = createAsyncThunk<string, string, ThunkApi>(
+export const deleteAsync = createAsyncThunk<string, string, Types.ThunkApi>(
   `${name}/deleteAsync`,
   async (boardId, { extra, rejectWithValue, getState, dispatch }) => {
     const { freeBoardReduce } = getState();
@@ -113,7 +98,7 @@ export const deleteAsync = createAsyncThunk<string, string, ThunkApi>(
   },
 );
 
-export const listByTitleAsync = createAsyncThunk<List, IListByTitleRequest, ThunkApi>(
+export const listByTitleAsync = createAsyncThunk<Types.List, Types.IListByTitleRequest, Types.ThunkApi>(
   `${name}/listByTitleAsync`,
   async ({ keyWord, page }, { rejectWithValue, dispatch }) => {
     try {
@@ -127,7 +112,7 @@ export const listByTitleAsync = createAsyncThunk<List, IListByTitleRequest, Thun
   },
 );
 
-export const listAsync = createAsyncThunk<List, string | number, ThunkApi>(
+export const listAsync = createAsyncThunk<Types.List, string | number, Types.ThunkApi>(
   `${name}/listAsync`,
   async (page, { rejectWithValue }) => {
     try {
@@ -140,7 +125,7 @@ export const listAsync = createAsyncThunk<List, string | number, ThunkApi>(
   },
 );
 
-export const infoAsync = createAsyncThunk<Content, string, ThunkApi>(
+export const infoAsync = createAsyncThunk<Types.Content, string, Types.ThunkApi>(
   `${name}/infoAsync`,
   async (boardId, { rejectWithValue }) => {
     try {
@@ -153,7 +138,7 @@ export const infoAsync = createAsyncThunk<Content, string, ThunkApi>(
   },
 );
 
-export const commentListAsync = createAsyncThunk<Comments, ICommentListRequest, ThunkApi>(
+export const commentListAsync = createAsyncThunk<Types.Comments, Types.ICommentListRequest, Types.ThunkApi>(
   `${name}/commentListAsync`,
   async ({ boardId, page, isReload }, { rejectWithValue }) => {
     try {
@@ -172,11 +157,11 @@ export const commentListAsync = createAsyncThunk<Comments, ICommentListRequest, 
   },
 );
 
-export const commentInsertAsync = createAsyncThunk<void, InsertPayload, ThunkApi>(
+export const commentInsertAsync = createAsyncThunk<void, Types.InsertPayload, Types.ThunkApi>(
   `${name}/commentInsertAsync`,
   async (payload, { rejectWithValue, dispatch }) => {
     try {
-      const { data } = await commentInsert<InsertPayload>(payload);
+      const { data } = await commentInsert<Types.InsertPayload>(payload);
       const { boardId } = data.data;
       dispatch(commentListAsync({ boardId, page: 0, isReload: true }));
       return undefined;
@@ -186,7 +171,7 @@ export const commentInsertAsync = createAsyncThunk<void, InsertPayload, ThunkApi
     }
   },
 );
-export const commentDeleteAsync = createAsyncThunk<string, DeletePayload, ThunkApi>(
+export const commentDeleteAsync = createAsyncThunk<string, Types.DeletePayload, Types.ThunkApi>(
   `${name}/commentDeleteAsync`,
   async ({ replyId, boardId }, { rejectWithValue, dispatch }) => {
     try {
@@ -199,11 +184,11 @@ export const commentDeleteAsync = createAsyncThunk<string, DeletePayload, ThunkA
     }
   },
 );
-export const commentUpdateAsync = createAsyncThunk<string, UpdatePayload, ThunkApi>(
+export const commentUpdateAsync = createAsyncThunk<string, Types.UpdatePayload, Types.ThunkApi>(
   `${name}/commentDeleteAsync`,
   async (payload, { rejectWithValue, dispatch }) => {
     try {
-      const { data } = await commentUpdate<UpdatePayload>(payload);
+      const { data } = await commentUpdate<Types.UpdatePayload>(payload);
       const { boardId } = data.data;
       dispatch(commentListAsync({ boardId, page: 0, isReload: true }));
       return "업데이트가 되었습니다.";
@@ -214,7 +199,7 @@ export const commentUpdateAsync = createAsyncThunk<string, UpdatePayload, ThunkA
   },
 );
 
-const initialState: IFreeBoardReduce = {
+const initialState: Types.IFreeBoardReduce = {
   status: "idle",
   error: null,
   list: null,
@@ -348,7 +333,7 @@ const freeBoardSlice = createSlice({
       if (list) {
         const { size } = list;
         const contents = current(list.contents);
-        const array: Content[] = [];
+        const array: Types.Content[] = [];
         const key = Object.keys(contents)[0];
 
         Object.values(contents).forEach(value => array.push(...value));
@@ -356,7 +341,7 @@ const freeBoardSlice = createSlice({
 
         const newContents = array
           .filter(content => content.boardId !== Number(payload))
-          .reduce((acc: Contents, cur: Content, idx) => {
+          .reduce((acc: Types.Contents, cur: Types.Content, idx) => {
             if (idx !== 0 && idx % size === 0) index += 1;
             if (acc[index]) {
               acc[index].push(cur);
@@ -401,9 +386,8 @@ const freeBoardSlice = createSlice({
         totalPages,
         pageable: { pageNumber },
       } = comments;
-      console.log("pageNumber=======>", pageNumber);
 
-      const comment: Comment = {
+      const comment: Types.Comment = {
         empty,
         first,
         last,
@@ -422,8 +406,6 @@ const freeBoardSlice = createSlice({
             [boardId]: comment,
           };
         } else if (state.coList[boardId]) {
-          console.log("여기");
-
           state.coList[boardId].contents[pageNumber] = content;
           state.coList[boardId].page = pageNumber;
         }

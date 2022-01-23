@@ -14,9 +14,9 @@ import Pagination from "@mui/material/Pagination";
 import Editor from "../Editor/Editor";
 import Comment from "./Comment";
 import { NoComments, CommentsBottom, CommentsTop, CommentsWrapper } from "./style";
-import { CommentsProps } from "./type";
+import * as Types from "./types";
 
-const Comments = ({ boardId, userId }: CommentsProps) => {
+const Comments = ({ boardId, userId }: Types.CommentsProps) => {
   const [editorValue, setEditorValue] = useState<string>("");
   const [editorLength, setEditorLength] = useState<number>(0);
   const [currentUpdateReplyId, setCurrentUpdateReplyId] = useState<number>(0);
@@ -161,7 +161,7 @@ const Comments = ({ boardId, userId }: CommentsProps) => {
           coList.empty ? (
             <NoComments>댓글이 없습니다.</NoComments>
           ) : (
-            coList.contents[0].map(comment => {
+            coList.contents[coList.page].map(comment => {
               const { content, nickName, replyDate, replyId, userId: makeUserId } = comment;
               return (
                 <Comment
