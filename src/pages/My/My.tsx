@@ -9,6 +9,7 @@ import SaleInsert from "src/components/SaleInsert/SaleInsert";
 import BuyInfo from "src/components/BuyInfo/BuyInfo";
 import SaleInfo from "src/components/SaleInfo/SaleInfo";
 import BookLikeList from "src/components/UsedBookLike/BookLikeList";
+import BuyList from "src/components/BuyList/BuyList";
 import { Container, RouterWrapper, MyMenuWrapper } from "./style";
 
 const My = () => {
@@ -71,7 +72,7 @@ const My = () => {
           <Route path={`${path}/sale`} exact component={SaleList} />
           <Route path={`${path}/sale/insert`} component={SaleInsert} />
           <Route path={`${path}/sale/:bookId`} component={SaleInfo} />
-          <Route path={`${path}/buy`} render={() => <div />} exact />
+          <Route path={`${path}/buy`} component={BuyList} />
           <Route path={`${path}/buy/:orderId`} component={BuyInfo} />
           <Route path={`${path}/like`} component={BookLikeList} />
           <Route path={`${path}/d`} render={() => <div />} />

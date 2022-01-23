@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import useSignIn from "src/hooks/useSignIn";
-import { getUsedBookDetailLike, usedBookSelector } from "src/modules/Slices/usedBookDetail/usedBookDetailSlice";
+import { getUsedBookLikeList, usedBookSelector } from "src/modules/Slices/usedBookDetail/usedBookDetailSlice";
 import { useTypedSelector } from "src/modules/store";
 import UsedBookCard from "../UsedBookCard/UsedBookCard";
 import { CountWrapper } from "../UsedBookDetail/style";
@@ -16,7 +16,7 @@ const BookLikeList = () => {
     if (isLoggedIn) {
       const { token } = signIn;
       if (token) {
-        dispatch(getUsedBookDetailLike(token));
+        dispatch(getUsedBookLikeList(token));
       }
     }
   }, []);
