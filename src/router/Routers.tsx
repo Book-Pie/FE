@@ -17,6 +17,7 @@ const UsedBookDetail = lazy(() => import("pages/UsedBookDetail/UsedBookDetail"))
 const Order = lazy(() => import("pages/Order/Order"));
 const Community = lazy(() => import("pages/Community/Community"));
 const Search = lazy(() => import("pages/Search/Search"));
+const Aladin = lazy(() => import("components/SearchForm/Aladin"));
 
 const Routers = () => {
   const { signIn, dispatch } = useSignIn();
@@ -40,7 +41,8 @@ const Routers = () => {
       <Route path="/usedBook/:id" component={UsedBookDetail} />
       <Route path="/usedBook" component={UsedBook} />
       <Route path="/oAuth/:name" component={Oauth} />
-      <Route path="/search" component={Search} />
+      <Route path="/search" component={Search} exact />
+      <Route path="/search/aladin" component={Aladin} />
       <Switch>
         <Route path="/book/:isbn/userId?:id" component={BookDetail} />
         <Route path="/book/:isbn13" component={BookDetail} />

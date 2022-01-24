@@ -21,13 +21,14 @@ export const searchUsedBookListAsync = createAsyncThunk<T.UsedBookData, string, 
   },
 );
 
-export const searchAladinBookListAsync = createAsyncThunk<T.AladinData, string, T.ThunkApi>(
+export const searchAladinBookListAsync = createAsyncThunk<T.AladinBookSucess, T.AladinBookParam, T.ThunkApi>(
   `${name}/searchAladinListAsync`,
-  async (query, { rejectWithValue }) => {
+  async ({ query, isReload }, { rejectWithValue }) => {
     try {
       const { data } = await getSearchAladinBooks(query);
       return {
-        ...data.data,
+        data: data.data,
+        isReload,
       };
     } catch (error) {
       const message = errorHandler(error);
@@ -47,14 +48,21 @@ const initialState: T.ISearchReduce = {
     status: "idle",
     error: null,
     pages: null,
-    pageCount: 0,
+    pageCount: 1,
+    page: 1,
   },
 };
 
 const searchSlice = createSlice({
   name,
   initialState,
-  reducers: {},
+  reducers: {
+    reset: state => {
+      state.bookReview.pages = null;
+      state.bookReview.page = 1;
+      state.bookReview.pageCount = 1;
+    },
+  },
   extraReducers: builder => {
     builder.addCase(searchUsedBookListAsync.pending, state => {
       state.usedBook.status = "loading";
@@ -73,10 +81,44 @@ const searchSlice = createSlice({
       state.bookReview.status = "loading";
     });
     builder.addCase(searchAladinBookListAsync.fulfilled, (state, { payload }) => {
-      const { item, totalResults } = payload;
+      if (payload.data !== null) {
+        const { item, totalResults, startIndex } = payload.data;
+        if (payload.isReload === false) {
+          if (state.bookReview.pages) {
+            if (item && item.length) {
+              state.bookReview.pages = [...state.bookReview.pages, ...item];
+              state.bookReview.pageCount = totalResults;
+              state.bookReview.page = startIndex;
+            }
+
+            if (item.length === 0) {
+              state.bookReview.pageCount = totalResults;
+              state.bookReview.page = totalResults;
+            }
+            // 첫 통신
+          } else if (state.bookReview.pages === null) {
+            state.bookReview.pages = item.length ? item : null;
+            state.bookReview.pageCount = 1;
+            state.bookReview.page = 1;
+          }
+        } else if (payload.isReload) {
+          if (item.length) {
+            state.bookReview.pages = item;
+            state.bookReview.pageCount = totalResults;
+            state.bookReview.page = startIndex;
+          } else {
+            state.bookReview.pages = null;
+            state.bookReview.pageCount = totalResults;
+            state.bookReview.page = totalResults;
+          }
+        }
+      } else {
+        state.bookReview.pages = null;
+        state.bookReview.pageCount = 1;
+        state.bookReview.page = 1;
+      }
+
       state.bookReview.status = "idle";
-      state.bookReview.pages = item.length ? item : null;
-      state.bookReview.pageCount = totalResults;
     });
     builder.addCase(searchAladinBookListAsync.rejected, (state, { payload }) => {
       state.bookReview.status = "idle";
@@ -87,4 +129,5 @@ const searchSlice = createSlice({
 
 export const searchUsedBookSelector = ({ searchReduce }: RootState) => searchReduce.usedBook;
 export const searchAladinBookSelector = ({ searchReduce }: RootState) => searchReduce.bookReview;
+export const { reset } = searchSlice.actions;
 export default searchSlice;

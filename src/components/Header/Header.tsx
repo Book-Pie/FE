@@ -90,7 +90,7 @@ const Header = () => {
         </Styled.SearchWrapper>
         <Styled.RouterWrapper>
           <span>
-            <Link to="/usedBook">중고장터</Link>
+            <Link to="/usedBook">중고도서</Link>
           </span>
           <span>
             <Link to="/book">리뷰</Link>

@@ -6,5 +6,5 @@ export const getSearchUsedBooks = (query: string) => {
 };
 
 export const getSearchAladinBooks = (query: string) => {
-  return http.get<Types.AladinResponse>(`/book/search?${query}&size=8&QueryType=Title`);
+  return http.get<Types.AladinResponse>(`/book/search?${query}&size=8`);
 };
