@@ -7,3 +7,6 @@ export interface SearchUsedBookCardProp {
 export interface SearchReviewCardProp {
   page: Item | number;
 }
+export interface AladinFilterForm {
+  keyword: string;
+}
