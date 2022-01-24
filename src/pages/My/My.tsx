@@ -9,7 +9,8 @@ import SaleInsert from "src/components/SaleInsert/SaleInsert";
 import BuyInfo from "src/components/BuyInfo/BuyInfo";
 import SaleInfo from "src/components/SaleInfo/SaleInfo";
 import BookLikeList from "src/components/UsedBookLike/BookLikeList";
-import { Container, RouterWrapper, MyMenuWrapper } from "./style";
+import MyReview from "src/components/MyReview/MyReview";
+import * as Styled from "./style";
 
 const My = () => {
   const { path } = useRouteMatch();
@@ -38,7 +39,7 @@ const My = () => {
       {
         id: 5,
         text: "작성리뷰",
-        endPoint: "e",
+        endPoint: "review",
       },
       {
         id: 6,
@@ -55,9 +56,9 @@ const My = () => {
   );
 
   return (
-    <Container>
+    <Styled.Container>
       <MyProfileTop />
-      <MyMenuWrapper>
+      <Styled.MyMenuWrapper>
         {myMenus.map(({ id, text, endPoint }) => (
           <span key={id}>
             <NavLink to={`${path}/${endPoint}`} activeClassName="my__link--active">
@@ -65,8 +66,8 @@ const My = () => {
             </NavLink>
           </span>
         ))}
-      </MyMenuWrapper>
-      <RouterWrapper>
+      </Styled.MyMenuWrapper>
+      <Styled.RouterWrapper>
         <Switch>
           <Route path={`${path}/sale`} exact component={SaleList} />
           <Route path={`${path}/sale/insert`} component={SaleInsert} />
@@ -75,13 +76,13 @@ const My = () => {
           <Route path={`${path}/buy/:orderId`} component={BuyInfo} />
           <Route path={`${path}/like`} component={BookLikeList} />
           <Route path={`${path}/d`} render={() => <div />} />
-          <Route path={`${path}/e`} render={() => <div />} />
+          <Route path={`${path}/review`} component={MyReview} />
           <Route path={`${path}/modified`} component={Modified} />
           <Route path={`${path}/withdrawal`} component={Withdrawal} />
           <Route path="*" render={() => <Redirect to="/" />} />
         </Switch>
-      </RouterWrapper>
-    </Container>
+      </Styled.RouterWrapper>
+    </Styled.Container>
   );
 };
 

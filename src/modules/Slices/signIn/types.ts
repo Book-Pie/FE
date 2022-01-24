@@ -107,8 +107,55 @@ export interface BuyThunkApi {
   state: RootState;
 }
 
+export interface ThunkApi {
+  rejectValue: string;
+  dispatch: AppDispatch;
+  state: RootState;
+}
+
 // =========================== ThunkApi 제네릭 ===========================
-// 리듀가 사용할 데이터 타입
+
+export interface Content {
+  reviewId: number;
+  isbn: string;
+  userId: number;
+  content: string;
+  rating: number;
+  nickName: string;
+  reviewLikeCount: number;
+  reviewDate: string;
+  likeCheck: boolean;
+}
+
+export interface Sort {
+  empty: boolean;
+  sorted: boolean;
+  unsorted: boolean;
+}
+
+export interface Pageable {
+  sort: Sort;
+  offset: number;
+  pageNumber: number;
+  pageSize: number;
+  paged: boolean;
+  unpaged: boolean;
+}
+
+export interface ReviewListData {
+  content: Content[];
+  pageable: Pageable;
+  totalElements: number;
+  totalPages: number;
+  last: boolean;
+  number: number;
+  sort: Sort;
+  size: number;
+  numberOfElements: number;
+  first: boolean;
+  empty: boolean;
+}
+
 export interface ISignInReduce {
   user: IUserInfo | null;
   token: string | null;
@@ -117,4 +164,13 @@ export interface ISignInReduce {
   error: null | ErrorHandlring | string;
   saleInfos: IOrderResult[];
   buyInfos: IOrderResult[];
+  reviews: {
+    page: number;
+    pageCount: number;
+    contents: Content[][] | null;
+    empty: boolean;
+    size: number;
+    status: "loading" | "idle";
+    error: string | null;
+  };
 }
