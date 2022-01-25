@@ -1,20 +1,10 @@
-import Button from "@mui/material/Button";
 import { useCallback, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import queryString from "query-string";
 import useSignIn from "src/hooks/useSignIn";
 import noComments from "assets/image/noComments.png";
-import { Empty } from "src/components/SaleList/style";
-import {
-  buyListSelector,
-  getUsedBookBuyList,
-  usedBookBuyConfirm,
-} from "src/modules/Slices/usedBookDetail/usedBookDetailSlice";
-import { useTypedSelector } from "src/modules/store";
-import { userReviewSelector } from "src/modules/Slices/userReview/userReviewSlice";
-import { useDispatch } from "react-redux";
 import { usedBookBuyListResponse } from "src/modules/Slices/usedBookDetail/types";
 import TextField from "@mui/material/TextField";
-import Autocomplete from "@mui/material/Autocomplete";
+import Autocomplete, { AutocompleteChangeReason } from "@mui/material/Autocomplete";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import FormControl from "@mui/material/FormControl";
@@ -22,18 +12,16 @@ import InputLabel from "@mui/material/InputLabel";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import Pagination from "@mui/material/Pagination";
+import useDelay from "src/hooks/useDelay";
+import { errorHandler } from "src/api/http";
+import { getShopPage, removeShopPage, setShopPage } from "src/utils/localStorageUtil";
+import { getBuyList } from "src/api/my/my";
+import { Empty } from "src/components/SaleList/style";
+import ContentList from "./ContentList";
+import MyPageSkeleton from "./MyPageSkeleton";
 import { ReviewListEmptyParagraph, ReviewListEmptyWrapper } from "../Reviews/ReviewList/style";
-import {
-  ButtonArea,
-  BuyContent,
-  BuyTitleContent,
-  ContentText,
-  ContentWrapper,
-  HeaderTitle,
-  HeaderWrapper,
-  ImgContent,
-} from "./styles";
-import Modal from "./Modal";
+import { FlexBox, HeaderTitle, HeaderWrapper } from "./styles";
+import { BuyListAxiosResponse, BuyListResponse, MyBuyList } from "./types";
 
 export interface buyConfirmSubmitParam {
   orderId: string;
@@ -44,62 +32,99 @@ export interface BuyList {
 }
 
 const BuyList = () => {
-  const dispatch = useDispatch();
   const { signIn } = useSignIn();
-  const { isLoggedIn } = signIn;
-  const buyList = useTypedSelector(buyListSelector);
+  const { user } = signIn;
   const [headers] = useState<string[]>(["사진", "거래상태", "상품명", "가격", "구매일", "기능"]);
-  const [open, setOpen] = useState(false);
-  const review = useTypedSelector(userReviewSelector);
   const [select, setSelect] = useState<string>("NONE");
-  const [selectedItem, setSelectedItem] = useState<usedBookBuyListResponse | null>(null);
-  const [limit, setLimit] = useState(10);
+  const [limit, setLimit] = useState(5);
+  const [titleFilter, setTitleFilter] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [open, setOpen] = useState(false);
 
-  const expandModal = (item: usedBookBuyListResponse) => {
-    setSelectedItem(item);
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
+  const [list, setList] = useState<MyBuyList>({
+    page: getShopPage(1),
+    pageCount: 0,
+    pages: [],
+    isEmpty: false,
+  });
+  const { pages, page, pageCount } = list;
+  const delay = useDelay(500);
   const handleSelectOnChange = (e: SelectChangeEvent<string>) => setSelect(e.target.value);
 
-  const buyConfirmSubmit = (e: any) => {
-    e.preventDefault();
-    const orderId: string = e.target[1].value;
-    if (window.confirm("구매확정 하시겠습니까?")) {
-      const { token } = signIn;
-      if (token) {
-        return dispatch(usedBookBuyConfirm({ orderId, token }));
+  const handleHasMoreList = useCallback(
+    async (page: number, limit: number) => {
+      if (user) {
+        const query = queryString.stringify({ id: user.id, page, limit });
+        try {
+          setIsLoading(true);
+          await delay();
+          const { token } = signIn;
+          if (token) {
+            const { data } = await getBuyList<BuyListAxiosResponse>(query);
+            const { pageCount, pages } = data.data;
+            setList({
+              pageCount,
+              pages,
+              page,
+              isEmpty: pages.length === 0 ? true : false,
+            });
+          }
+        } catch (error: any) {
+          alert(errorHandler(error));
+        } finally {
+          setIsLoading(false);
+        }
       }
-      return alert("재로그인 후 다시 시도하세요.");
-    }
-    return false;
-  };
+    },
+    [user, delay, signIn],
+  );
 
-  const handleLimitOnChange = useCallback((e: SelectChangeEvent<number>) => {
-    const limit = e.target.value;
-    setSelect("NONE");
-    setLimit(Number(limit));
-  }, []);
+  const handlePaginationOnChange = useCallback(
+    (_: React.ChangeEvent<unknown>, value: number) => handleHasMoreList(value, limit),
+    [handleHasMoreList, limit],
+  );
+
+  const handleLimitOnChange = useCallback(
+    (e: SelectChangeEvent<number>) => {
+      const limit = e.target.value;
+      setSelect("NONE");
+      setTitleFilter(null);
+      setLimit(Number(limit));
+      handleHasMoreList(1, Number(limit));
+    },
+    [handleHasMoreList],
+  );
+
+  const handleTitlteFilterOnChange = useCallback(
+    (
+      _: React.SyntheticEvent<Element, Event>,
+      value: string | null | BuyListResponse,
+      reason: AutocompleteChangeReason,
+    ) => {
+      if (value && typeof value !== "string") {
+        setTitleFilter(value.title);
+      }
+      if (value && typeof value === "string") {
+        setTitleFilter(value);
+      }
+      if (reason === "clear") {
+        setTitleFilter(null);
+      }
+    },
+    [],
+  );
 
   useEffect(() => {
-    if (review.status === "success") {
-      setOpen(false);
-    }
-  }, [dispatch, review.status]);
+    const { pages, pageCount, isEmpty, page } = list;
+    if (pages.length === 0 && pageCount === 0 && !isEmpty) handleHasMoreList(page, limit);
+  }, [handleHasMoreList, list, limit, open, setOpen]);
 
   useEffect(() => {
-    if (isLoggedIn) {
-      const { token, user } = signIn;
-      if (token) {
-        const { id } = user;
-        dispatch(getUsedBookBuyList({ token, id }));
-      }
-    }
-  }, [dispatch, isLoggedIn, signIn, open, setOpen]);
+    if (getShopPage() === 0) setShopPage(page);
+    return () => {
+      removeShopPage();
+    };
+  });
 
   const headerList = headers.map((header, idx) => (
     <div key={idx}>
@@ -108,64 +133,28 @@ const BuyList = () => {
   ));
 
   const contentList =
-    buyList.length !== 0 ? (
-      buyList.map((item, idx) => {
-        return (
-          <ContentWrapper key={idx}>
-            <BuyContent>
-              <Link to={`/usedBook/${item.bookId}`}>
-                {item.image.length !== 0 && (
-                  <ImgContent src={`${process.env.BASE_URL}/image/${item.image}`} alt="usedBookImg" />
-                )}
-              </Link>
-            </BuyContent>
-            <BuyContent>
-              <ContentText>
-                {item.state === "SALE" && "거래취소"}
-                {item.state === "TRADING" && "거래중"}
-                {item.state === "SOLD_OUT" && "거래완료"}
-              </ContentText>
-            </BuyContent>
-            <BuyTitleContent>
-              <ContentText>{item.title}</ContentText>
-            </BuyTitleContent>
-            <BuyContent>
-              <ContentText>{item.price}</ContentText>
-            </BuyContent>
-            <BuyContent>
-              <ContentText>{item.orderDate.split("T", 1)}</ContentText>
-            </BuyContent>
-            <BuyContent>
-              <ButtonArea>
-                {item.state === "TRADING" ? (
-                  <form onSubmit={buyConfirmSubmit}>
-                    <Button variant="outlined" type="submit">
-                      구매확정
-                      <input type="hidden" value={item.orderId} />
-                    </Button>
-                  </form>
-                ) : item.state === "SOLD_OUT" ? (
-                  item.reviewId ? (
-                    <Button disabled>리뷰작성완료</Button>
-                  ) : (
-                    <Button variant="contained" onClick={() => expandModal(item)} type="button">
-                      리뷰작성
-                    </Button>
-                  )
-                ) : null}
-              </ButtonArea>
-            </BuyContent>
-            {open ? <Modal open={open} handleClose={handleClose} item={selectedItem} /> : null}
-          </ContentWrapper>
-        );
-      })
-    ) : (
+    pages.length !== 0 ? (
+      <ContentList
+        // isLoading={isLoading}
+        pages={pages}
+        titleFilter={titleFilter}
+        select={select}
+        setOpen={setOpen}
+        open={open}
+      />
+    ) : list.isEmpty ? (
       <Empty>
         <ReviewListEmptyWrapper>
           <ReviewListEmptyParagraph>구매한 상품이 존재하지 않습니다.</ReviewListEmptyParagraph>
           <img src={noComments} alt="noComments" />
         </ReviewListEmptyWrapper>
       </Empty>
+    ) : (
+      Array.from({ length: limit }).map((_, idx) => (
+        <FlexBox key={idx}>
+          <MyPageSkeleton />
+        </FlexBox>
+      ))
     );
   return (
     <div>
@@ -173,7 +162,8 @@ const BuyList = () => {
         <Autocomplete
           sx={{ width: 250 }}
           freeSolo
-          options={buyList}
+          onChange={handleTitlteFilterOnChange}
+          options={pages}
           getOptionLabel={option => (option.title ? option.title : "")}
           renderOption={(props, option) => (
             <Box component="li" {...props} key={option.orderId}>
@@ -212,6 +202,7 @@ const BuyList = () => {
               fontWeight: 900,
             }}
           >
+            <MenuItem value={5}>5개</MenuItem>
             <MenuItem value={10}>10개</MenuItem>
             <MenuItem value={20}>20개</MenuItem>
             <MenuItem value={50}>50개</MenuItem>
@@ -220,6 +211,24 @@ const BuyList = () => {
       </Stack>
       <HeaderWrapper>{headerList}</HeaderWrapper>
       <div>{contentList}</div>
+      {list.isEmpty || (
+        <Stack mt={5} justifyContent="center" direction="row">
+          <Pagination
+            count={pageCount || limit}
+            page={page}
+            onChange={handlePaginationOnChange}
+            variant="outlined"
+            shape="rounded"
+            size="large"
+            sx={{
+              ".Mui-selected": {
+                background: theme => theme.colors.mainDarkBrown,
+                color: theme => theme.colors.white,
+              },
+            }}
+          />
+        </Stack>
+      )}
     </div>
   );
 };

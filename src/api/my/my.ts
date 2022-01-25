@@ -59,3 +59,25 @@ export const getMyProfile = <T>(token: string) => {
     },
   });
 };
+
+export const getBuyList = <T>(query: string) => {
+  return http.get<T>(`order/buyer?${query}`);
+};
+
+export const getReceivedReviewList = <T>(query: string, token: string) => {
+  const response = http.get<T>(`/userreview/to-me?${query}`, {
+    headers: {
+      "X-AUTH-TOKEN": token,
+    },
+  });
+  return response;
+};
+
+export const getWrittedReviewList = <T>(query: string, token: string) => {
+  const response = http.get<T>(`/userreview/me?${query}`, {
+    headers: {
+      "X-AUTH-TOKEN": token,
+    },
+  });
+  return response;
+};

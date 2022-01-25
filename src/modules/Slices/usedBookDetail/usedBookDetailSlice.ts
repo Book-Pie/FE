@@ -162,11 +162,13 @@ export const getUsedBookBuyList = createAsyncThunk<getUsedBookBuyListAsyncSucces
 // 마이페이지 - 중고장터 구매확정
 export const usedBookBuyConfirm = createAsyncThunk<string, getUsedBookBuyConfirmParam>(
   `${myPage}/${name}/buy/confirm`,
-  async ({ token, orderId }, { rejectWithValue }) => {
+  async ({ token, orderId }, { rejectWithValue, extra }) => {
+    const { history } = extra;
     try {
       await http.post(`/order/end/${orderId}`, {
         headers: { "X-AUTH-TOKEN": token },
       });
+      history.replace("/my/buy");
       return orderId;
     } catch (error: any) {
       console.error(error);
@@ -273,13 +275,11 @@ const usedBookDetailSlice = createSlice({
       .addCase(getUsedBookBuyList.rejected, state => {
         state.status = "failed";
       })
-      // 마이페이지 - 중고장터 구매 목록 확정
+      // 마이페이지 - 중고장터 구매확정
       .addCase(usedBookBuyConfirm.pending, state => {
         state.status = "loading";
       })
       .addCase(usedBookBuyConfirm.fulfilled, (state, { payload }) => {
-        console.log("usedBookBuyConfirm payload : ", payload);
-
         state.status = "success";
         state.buyList.map(v => (v.orderId !== payload ? v : { ...v, state: "SOLD_OUT" }));
       })

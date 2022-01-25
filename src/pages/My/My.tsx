@@ -10,6 +10,7 @@ import BuyInfo from "src/components/BuyInfo/BuyInfo";
 import SaleInfo from "src/components/SaleInfo/SaleInfo";
 import BookLikeList from "src/components/UsedBookLike/BookLikeList";
 import BuyList from "src/components/BuyList/BuyList";
+import UserReview from "src/components/UserReview/UserReview";
 import { Container, RouterWrapper, MyMenuWrapper } from "./style";
 
 const My = () => {
@@ -34,7 +35,7 @@ const My = () => {
       {
         id: 4,
         text: "거래 후기",
-        endPoint: "d",
+        endPoint: "userReview",
       },
       {
         id: 5,
@@ -75,7 +76,7 @@ const My = () => {
           <Route path={`${path}/buy`} component={BuyList} />
           <Route path={`${path}/buy/:orderId`} component={BuyInfo} />
           <Route path={`${path}/like`} component={BookLikeList} />
-          <Route path={`${path}/d`} render={() => <div />} />
+          <Route path={`${path}/userReview`} component={UserReview} />
           <Route path={`${path}/e`} render={() => <div />} />
           <Route path={`${path}/modified`} component={Modified} />
           <Route path={`${path}/withdrawal`} component={Withdrawal} />

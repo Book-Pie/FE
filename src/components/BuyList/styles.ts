@@ -4,6 +4,10 @@ export const HeaderWrapper = styled.div`
   display: flex;
 `;
 
+export const ColorContent = styled.div`
+  color: #52a4c3;
+`;
+
 export const HeaderTitle = styled.div`
   font-size: 18px;
   padding: 20px;
@@ -89,4 +93,32 @@ export const CancelButton = styled.button`
   color: #555;
   background-color: white;
   cursor: pointer;
+
+  &:hover {
+    background-color: #fafafa;
+  }
+`;
+
+export const UserReviewButtonArea = styled.div`
+  display: flex;
+  width: 300px;
+  margin-bottom: 40px;
+`;
+
+export const UserReviewHeaderWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const ContentItem = styled.div`
+  font-size: 18px;
+  text-align: center;
+  padding: 20px;
+  width: 180px;
+  height: 170px;
+`;
+
+export const TitleContentItem = styled(ContentItem)`
+  color: #52a4c3;
 `;

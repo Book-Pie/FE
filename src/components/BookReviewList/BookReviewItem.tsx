@@ -40,7 +40,6 @@ const BookReviewItem = ({ title, cover, customerReviewRank, isbn, isbn13 }: Best
           </FlexColum>
         </Link>
       )}
-      )
     </BookReviewBox>
   );
 };

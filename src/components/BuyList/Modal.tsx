@@ -26,14 +26,17 @@ const Modal = (props: userReviewModalProps) => {
   const { signIn } = useSignIn();
   const { isLoggedIn } = signIn;
   const { open, handleClose, item } = props;
-  const { handleSubmit, register } = useForm<addUserReviewSubmitParam>();
-  const [ratingValue, setValue] = useState<number>(0);
+  const { handleSubmit, register, setValue } = useForm<addUserReviewSubmitParam>();
+  const [ratingValue, setRatingValue] = useState<number>(0);
 
   if (!item) throw new Error("거래상품이 존재하지 않습니다.");
-  const { bookId, buyerNickName, image, orderDate, orderId, price, reviewId, sellerNickName, state, title } = item;
+  const { bookId, buyerNickName, image, orderDate, orderId, price, sellerNickName, state, title } = item;
 
-  const handleRatingChange = (e: any) => {
-    setValue(e.target.value);
+  const handleRatingChange = (e: React.SyntheticEvent<Element, Event>, value: number | null) => {
+    if (value !== null) {
+      setRatingValue(value);
+      setValue("rating", value);
+    }
   };
 
   const onSubmit = (data: addUserReviewSubmitParam) => {
