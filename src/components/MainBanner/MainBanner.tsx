@@ -15,7 +15,7 @@ const BannerImage = lazy(() => import("./BannerImage"));
 const MainBanner = () => {
   return (
     <Styled.MainBannerContainer>
-      <Styled.Wrapper>
+      <Styled.MainBannerWrapper>
         <Swiper modules={[Navigation, Autoplay]} slidesPerView={1} navigation freeMode autoplay>
           <Suspense fallback={<Skeleton variant="rectangular" height="100%" width="100%" />}>
             {range(0, 3).map((_, idx) => (
@@ -25,7 +25,7 @@ const MainBanner = () => {
             ))}
           </Suspense>
         </Swiper>
-      </Styled.Wrapper>
+      </Styled.MainBannerWrapper>
     </Styled.MainBannerContainer>
   );
 };

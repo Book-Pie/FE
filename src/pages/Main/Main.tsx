@@ -5,13 +5,15 @@ import * as Styled from "./style";
 
 const Main = () => {
   return (
-    <Styled.Wrapper>
+    <main>
       <MainBanner />
-      <Styled.Text>베스트셀러</Styled.Text>
-      <BestSeller />
-      <Styled.Text>최신등록상품</Styled.Text>
-      <LatestSlider />
-    </Styled.Wrapper>
+      <Styled.MainSection>
+        <Styled.Text>베스트셀러</Styled.Text>
+        <BestSeller />
+        <Styled.Text>최신등록상품</Styled.Text>
+        <LatestSlider />
+      </Styled.MainSection>
+    </main>
   );
 };
 

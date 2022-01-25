@@ -8,8 +8,8 @@ import "swiper/css/free-mode";
 import { Pagination, Autoplay } from "swiper";
 import { getLatestUsedBook } from "src/api/usedBook/usedBook";
 import * as Styled from "./style";
-import Card from "./Card";
 import * as Types from "./types";
+import Card from "./Card";
 
 const LatestSlider = () => {
   const [pages, setPages] = useState<Types.IPage[]>([]);
@@ -23,15 +23,22 @@ const LatestSlider = () => {
   }, []);
 
   return (
-    <Styled.LatestSliderWrapper>
-      <Swiper modules={[Pagination, Autoplay]} slidesPerView={5} spaceBetween={20} freeMode autoplay={{ delay: 3000 }}>
+    <Styled.LatestSliderContainer>
+      <Swiper
+        modules={[Pagination, Autoplay]}
+        slidesPerView={5}
+        spaceBetween={20}
+        freeMode
+        autoplay={{ delay: 3000 }}
+        loop
+      >
         {pages.map(({ id, title, price, image, state }, index) => (
           <SwiperSlide key={index}>
             <Card id={id} title={title} price={price} image={image} state={state} />
           </SwiperSlide>
         ))}
       </Swiper>
-    </Styled.LatestSliderWrapper>
+    </Styled.LatestSliderContainer>
   );
 };
 
