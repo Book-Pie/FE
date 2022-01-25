@@ -34,7 +34,7 @@ const UserReview = () => {
   const [limit, setLimit] = useState(5);
   const { list } = useTypedSelector(userReviewSelector);
 
-  const { pages, pageCount, isEmpty } = list;
+  const { pages, pageCount } = list;
   const delay = useDelay(500);
 
   const receivedReviewClick = () => {

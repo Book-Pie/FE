@@ -69,7 +69,10 @@ export interface EditUserReviewParam {
 // 성공 데이터
 export interface AddUserReviewAsyncSuccess {
   success: boolean;
-  data: number;
+  data: {
+    orderId: number;
+    reviewId: number;
+  };
   error: string;
 }
 
@@ -92,4 +95,9 @@ export interface DeleteUserReviewAsyncSuccess {
   success: boolean;
   data: number;
   error: string;
+}
+
+export interface getUserReviewListParam {
+  query: string;
+  token: string;
 }

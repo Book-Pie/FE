@@ -15,40 +15,37 @@ import Pagination from "@mui/material/Pagination";
 import useDelay from "src/hooks/useDelay";
 import { errorHandler } from "src/api/http";
 import { getShopPage, removeShopPage, setShopPage } from "src/utils/localStorageUtil";
-import { getBuyList } from "src/api/my/my";
 import { Empty } from "src/components/SaleList/style";
+import { getUsedBookBuyList, usedBookSelector } from "src/modules/Slices/usedBookDetail/usedBookDetailSlice";
+import { useTypedSelector } from "src/modules/store";
 import ContentList from "./ContentList";
 import MyPageSkeleton from "./MyPageSkeleton";
 import { ReviewListEmptyParagraph, ReviewListEmptyWrapper } from "../Reviews/ReviewList/style";
 import { FlexBox, HeaderTitle, HeaderWrapper } from "./styles";
-import { BuyListAxiosResponse, BuyListResponse, MyBuyList } from "./types";
+import { BuyListResponse } from "./types";
 
 export interface buyConfirmSubmitParam {
   orderId: string;
 }
-
 export interface BuyList {
   pages: usedBookBuyListResponse[];
 }
 
 const BuyList = () => {
-  const { signIn } = useSignIn();
+  const { signIn, dispatch } = useSignIn();
   const { user } = signIn;
   const [headers] = useState<string[]>(["사진", "거래상태", "상품명", "가격", "구매일", "기능"]);
   const [select, setSelect] = useState<string>("NONE");
   const [limit, setLimit] = useState(5);
   const [titleFilter, setTitleFilter] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [page, setPage] = useState(getShopPage(1));
+  const { list } = useTypedSelector(usedBookSelector);
   const [open, setOpen] = useState(false);
 
-  const [list, setList] = useState<MyBuyList>({
-    page: getShopPage(1),
-    pageCount: 0,
-    pages: [],
-    isEmpty: false,
-  });
-  const { pages, page, pageCount } = list;
+  const { pages, pageCount } = list;
   const delay = useDelay(500);
+
   const handleSelectOnChange = (e: SelectChangeEvent<string>) => setSelect(e.target.value);
 
   const handleHasMoreList = useCallback(
@@ -60,14 +57,7 @@ const BuyList = () => {
           await delay();
           const { token } = signIn;
           if (token) {
-            const { data } = await getBuyList<BuyListAxiosResponse>(query);
-            const { pageCount, pages } = data.data;
-            setList({
-              pageCount,
-              pages,
-              page,
-              isEmpty: pages.length === 0 ? true : false,
-            });
+            dispatch(getUsedBookBuyList({ query, token }));
           }
         } catch (error: any) {
           alert(errorHandler(error));
@@ -76,11 +66,18 @@ const BuyList = () => {
         }
       }
     },
-    [user, delay, signIn],
+    [user, delay, signIn, dispatch],
   );
 
+  useEffect(() => {
+    handleHasMoreList(page, limit);
+  }, [handleHasMoreList, page, limit, open]);
+
   const handlePaginationOnChange = useCallback(
-    (_: React.ChangeEvent<unknown>, value: number) => handleHasMoreList(value, limit),
+    (_: React.ChangeEvent<unknown>, value: number) => {
+      handleHasMoreList(value, limit);
+      setPage(value);
+    },
     [handleHasMoreList, limit],
   );
 
@@ -134,14 +131,7 @@ const BuyList = () => {
 
   const contentList =
     pages.length !== 0 ? (
-      <ContentList
-        // isLoading={isLoading}
-        pages={pages}
-        titleFilter={titleFilter}
-        select={select}
-        setOpen={setOpen}
-        open={open}
-      />
+      <ContentList pages={pages} titleFilter={titleFilter} select={select} setOpen={setOpen} open={open} />
     ) : list.isEmpty ? (
       <Empty>
         <ReviewListEmptyWrapper>

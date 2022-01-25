@@ -73,6 +73,13 @@ export interface usedBookDetailReplyResponse {
   nickName: string;
 }
 
+export interface BuyBookList {
+  pageCount: number;
+  pages: usedBookBuyListResponse[];
+  page: number;
+  isEmpty: boolean;
+}
+
 export interface PagesResponse {
   id: number;
   title: string;
@@ -195,7 +202,10 @@ export interface usedBookDetailReplyListAsyncSuccess {
 
 export interface getUsedBookBuyListAsyncSuccess {
   success: boolean;
-  data: usedBookBuyListResponse[];
+  data: {
+    pageCount: number;
+    pages: usedBookBuyListResponse[];
+  };
   error: null;
 }
 

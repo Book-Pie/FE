@@ -10,6 +10,7 @@ import {
   EditUserReviewAsyncSuccess,
   GetUserReceivedReviewListData,
   GetUserReviewListAsyncSuccess,
+  getUserReviewListParam,
 } from "./types";
 
 const initialState = {
@@ -24,11 +25,6 @@ const initialState = {
   status: "loading",
 };
 const name = "userReview";
-
-export interface getUserReviewListParam {
-  query: string;
-  token: string;
-}
 
 // 마이페이지 - 회원리뷰 작성
 export const addUserReview = createAsyncThunk<AddUserReviewAsyncSuccess, AddUserReviewParam>(

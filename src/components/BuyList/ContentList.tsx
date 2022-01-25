@@ -9,11 +9,10 @@ import { useTypedSelector } from "src/modules/store";
 import { userReviewSelector } from "src/modules/Slices/userReview/userReviewSlice";
 import Modal from "./Modal";
 import { BuyContent, BuyTitleContent, ContentText, ContentWrapper, ImgContent, ButtonArea } from "./styles";
-import { BuyListResponse } from "./types";
 import { Empty } from "../SaleList/style";
 
 export interface IContent {
-  pages: BuyListResponse[];
+  pages: usedBookBuyListResponse[];
   titleFilter: string | null;
   select: string;
   open: boolean;

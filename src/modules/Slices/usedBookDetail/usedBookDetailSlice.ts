@@ -2,12 +2,13 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 import http from "src/api/http";
 import { RootState } from "src/modules/store";
+import { AddUserReviewAsyncSuccess, AddUserReviewParam, getUserReviewListParam } from "../userReview/types";
 import {
   addUsedBookDetailReplyParam,
+  BuyBookList,
   deleteUsedBookDetailParam,
   getUsedBookBuyConfirmParam,
   getUsedBookBuyListAsyncSuccess,
-  getUsedBookBuyListParam,
   getUsedBookLikeListAsyncSuccess,
   PagesResponse,
   usedBookBuyListResponse,
@@ -27,6 +28,12 @@ const initialState = {
   replyList: [] as usedBookDetailReplyResponse[],
   likeList: [] as PagesResponse[],
   buyList: [] as usedBookBuyListResponse[],
+  list: {
+    page: 1,
+    pageCount: 0,
+    pages: [],
+    isEmpty: false,
+  } as BuyBookList,
   category: {},
   status: "loading",
 };
@@ -144,11 +151,11 @@ export const getUsedBookLikeList = createAsyncThunk<getUsedBookLikeListAsyncSucc
 );
 
 // 마이페이지 - 중고장터 구매 목록
-export const getUsedBookBuyList = createAsyncThunk<getUsedBookBuyListAsyncSuccess, getUsedBookBuyListParam>(
+export const getUsedBookBuyList = createAsyncThunk<getUsedBookBuyListAsyncSuccess, getUserReviewListParam>(
   `${myPage}/${name}/buy/list`,
-  async ({ token, id }, { rejectWithValue }) => {
+  async ({ query, token }, { rejectWithValue }) => {
     try {
-      const response = await http.get(`/order/buyer/${id}`, {
+      const response = await http.get(`/order/buyer?${query}`, {
         headers: { "X-AUTH-TOKEN": token },
       });
       return response.data;
@@ -162,14 +169,28 @@ export const getUsedBookBuyList = createAsyncThunk<getUsedBookBuyListAsyncSucces
 // 마이페이지 - 중고장터 구매확정
 export const usedBookBuyConfirm = createAsyncThunk<string, getUsedBookBuyConfirmParam>(
   `${myPage}/${name}/buy/confirm`,
-  async ({ token, orderId }, { rejectWithValue, extra }) => {
-    const { history } = extra;
+  async ({ token, orderId }, { rejectWithValue }) => {
     try {
       await http.post(`/order/end/${orderId}`, {
         headers: { "X-AUTH-TOKEN": token },
       });
-      history.replace("/my/buy");
       return orderId;
+    } catch (error: any) {
+      console.error(error);
+      return rejectWithValue(error.response.data);
+    }
+  },
+);
+
+// 마이페이지 - 회원리뷰 작성
+export const addUserReview = createAsyncThunk<AddUserReviewAsyncSuccess, AddUserReviewParam>(
+  `${name}/add`,
+  async ({ data, token }, { rejectWithValue }) => {
+    try {
+      const response = await http.post(`/userreview`, data, {
+        headers: { "X-AUTH-TOKEN": token },
+      });
+      return response.data;
     } catch (error: any) {
       console.error(error);
       return rejectWithValue(error.response.data);
@@ -201,10 +222,10 @@ const usedBookDetailSlice = createSlice({
       .addCase(usedBookLike.fulfilled, (state, { payload }) => {
         state.status = "success";
         if (payload.data === "created") {
-          state.content.likeCount = parseInt(state.content.likeCount, 10) + 1;
+          state.content.likeCount = Number(state.content.likeCount) + 1;
         }
         if (payload.data === "deleted") {
-          state.content.likeCount = parseInt(state.content.likeCount, 10) - 1;
+          state.content.likeCount = Number(state.content.likeCount) - 1;
         }
       })
       .addCase(usedBookLike.rejected, state => {
@@ -270,7 +291,13 @@ const usedBookDetailSlice = createSlice({
       })
       .addCase(getUsedBookBuyList.fulfilled, (state, { payload }) => {
         state.status = "success";
-        state.buyList = payload.data;
+        state.list.pageCount = payload.data.pageCount;
+        state.list.pages = payload.data.pages;
+        if (state.list.pages.length === 0) {
+          state.list.isEmpty = true;
+        } else {
+          state.list.isEmpty = false;
+        }
       })
       .addCase(getUsedBookBuyList.rejected, state => {
         state.status = "failed";
@@ -281,10 +308,28 @@ const usedBookDetailSlice = createSlice({
       })
       .addCase(usedBookBuyConfirm.fulfilled, (state, { payload }) => {
         state.status = "success";
-        state.buyList.map(v => (v.orderId !== payload ? v : { ...v, state: "SOLD_OUT" }));
+        state.list.pages.map(v => (v.orderId !== payload ? v : { ...v, state: "SOLD_OUT" }));
+        alert("구매확정이 완료되었습니다.");
       })
       .addCase(usedBookBuyConfirm.rejected, state => {
         state.status = "failed";
+      })
+      // 회원 리뷰 작성
+      .addCase(addUserReview.pending, state => {
+        state.status = "loading";
+      })
+      .addCase(addUserReview.fulfilled, (state, { payload }) => {
+        state.status = "success";
+        const { data } = payload;
+        const { orderId } = data;
+        state.list.pages = state.list.pages.map(v =>
+          v.orderId !== String(orderId) ? v : { ...v, reviewId: data.reviewId },
+        );
+        alert("중고거래 리뷰를 작성해주셔서 감사합니다.");
+      })
+      .addCase(addUserReview.rejected, state => {
+        state.status = "failed";
+        alert("리뷰 작성에 실패했습니다. 다시 한번 등록해주세요.");
       });
   },
 });
