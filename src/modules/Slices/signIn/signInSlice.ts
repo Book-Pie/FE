@@ -4,9 +4,9 @@ import { getSignIn } from "src/api/oauth";
 import { addHyphenFormat } from "src/utils/formatUtil";
 import { RootState } from "modules/store";
 import { getNickNameUpdate, getMyProfile } from "src/api/my/my";
-import { errorHandler } from "src/api/http";
+import http, { errorHandler } from "src/api/http";
 import { getMyOrder, getMyOrderByBookId } from "src/api/usedBook/usedBook";
-import { IOrderResult } from "src/components/OrderForm/type";
+import { IOrderResult } from "src/components/OrderForm/types";
 import {
   IAxiosResponse,
   IPayload,
@@ -21,6 +21,8 @@ import {
   SignInThunkApi,
   NickNameResponse,
   BuyThunkApi,
+  ThunkApi,
+  ReviewListData,
 } from "./types";
 
 const name = "signInReduce";
@@ -109,6 +111,19 @@ export const saleInfoAsync = createAsyncThunk<IOrderResult, string, BuyThunkApi>
   },
 );
 
+export const reviewListAsync = createAsyncThunk<ReviewListData, string, ThunkApi>(
+  `${name}/reviewListAsync`,
+  async (query, { rejectWithValue }) => {
+    try {
+      const { data } = await http.get(`/book-review/my?${query}`);
+      return data.data;
+    } catch (error) {
+      const message = errorHandler(error);
+      return rejectWithValue(message);
+    }
+  },
+);
+
 const initialState: ISignInReduce = {
   user: null,
   token: null,
@@ -117,9 +132,17 @@ const initialState: ISignInReduce = {
   status: "idle",
   buyInfos: [],
   saleInfos: [],
+  reviews: {
+    contents: null,
+    empty: false,
+    page: 0,
+    pageCount: 0,
+    size: 10,
+    status: "idle",
+    error: null,
+  },
 };
 
-// docks패턴처럼 하나의 함수에 initialState action reduce를 정의 할 수 있다.
 const signInSlice = createSlice({
   name,
   initialState,
@@ -133,6 +156,9 @@ const signInSlice = createSlice({
       alert("로그아웃 되었습니다.");
     },
     errorReset: () => initialState,
+    setReviewPage: (state, action) => {
+      state.reviews.page = action.payload;
+    },
   },
   extraReducers: builder => {
     builder.addCase(signInAsync.pending, state => {
@@ -194,6 +220,37 @@ const signInSlice = createSlice({
       state.status = "idle";
       state.error = action.payload ?? "클라이언트에서 문제가 발생했습니다.";
     });
+    builder.addCase(reviewListAsync.pending, state => {
+      state.reviews.status = "loading";
+      state.reviews.error = null;
+    });
+    builder.addCase(reviewListAsync.fulfilled, (state, { payload }) => {
+      const {
+        content,
+        empty,
+        size,
+        totalPages,
+        pageable: { pageNumber },
+      } = payload;
+
+      if (state.reviews.contents) {
+        state.reviews.contents[pageNumber] = content;
+        state.reviews.page = pageNumber;
+        state.reviews.pageCount = totalPages;
+      } else {
+        state.reviews.contents = [content];
+        state.reviews.empty = empty;
+        state.reviews.size = size;
+        state.reviews.page = pageNumber;
+        state.reviews.pageCount = totalPages;
+      }
+
+      state.reviews.status = "idle";
+    });
+    builder.addCase(reviewListAsync.rejected, (state, action) => {
+      state.status = "idle";
+      state.error = action.payload ?? "클라이언트에서 문제가 발생했습니다.";
+    });
   },
 });
 
@@ -208,5 +265,6 @@ export const buyInfoSelector =
   (orderId: number) =>
   ({ signInReduce }: RootState) =>
     signInReduce.buyInfos.find(info => info.orderId === orderId);
-export const { logout, errorReset } = signInSlice.actions;
+export const reviewsSelector = ({ signInReduce }: RootState) => signInReduce.reviews;
+export const { logout, errorReset, setReviewPage } = signInSlice.actions;
 export default signInSlice;

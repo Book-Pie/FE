@@ -1,4 +1,5 @@
 import { Grid, Skeleton, Stack } from "@mui/material";
+import { memo } from "react";
 import { Link } from "react-router-dom";
 import { make1000UnitsCommaFormet } from "src/utils/formatUtil";
 import * as Styled from "./style";
@@ -46,4 +47,4 @@ const SearchReviewCard = ({ page }: Types.SearchReviewCardProp) => {
   );
 };
 
-export default SearchReviewCard;
+export default memo(SearchReviewCard);

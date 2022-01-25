@@ -1,4 +1,4 @@
-import { IUsedBook } from "src/pages/Order/type";
+import { IUsedBook } from "src/pages/Order/types";
 
 export interface OrderFormProps {
   usedBook: IUsedBook;

@@ -8,68 +8,75 @@ import {
   commentListAsync,
   commentUpdateAsync,
   getCommentContentsSelector,
+  subReplyInsertAsync,
 } from "src/modules/Slices/freeBoard/freeBoardSlice";
 import { useAppDispatch, useTypedSelector } from "src/modules/store";
 import Pagination from "@mui/material/Pagination";
 import Editor from "../Editor/Editor";
 import Comment from "./Comment";
 import { NoComments, CommentsBottom, CommentsTop, CommentsWrapper } from "./style";
-import { CommentsProps } from "./type";
+import * as Types from "./types";
 
-const Comments = ({ boardId, userId }: CommentsProps) => {
+const Comments = ({ boardId, userId }: Types.CommentsProps) => {
   const [editorValue, setEditorValue] = useState<string>("");
   const [editorLength, setEditorLength] = useState<number>(0);
   const [currentUpdateReplyId, setCurrentUpdateReplyId] = useState<number>(0);
-  const [updateEditorValue, setUpdateEditorValue] = useState<string>("");
-  const [updateEditorLength, setUpdateEditorLength] = useState<number>(0);
   const coList = useTypedSelector(getCommentContentsSelector(Number(boardId)));
   const debounce = useDebounce();
   const dispatch = useAppDispatch();
 
-  const handleReplyUpdateOnChange = (param: string | number) => {
-    if (typeof param === "number") {
-      setUpdateEditorLength(param);
-    } else {
-      setUpdateEditorValue(param);
-    }
-  };
-
   const handleReplyOnClick = useCallback(
-    (replyId: number, type: "update" | "delete" | "replyUpdate") => () => {
-      if (type === "update") {
-        setCurrentUpdateReplyId(prev => (replyId === prev ? 0 : replyId));
-      }
-
-      if (type === "delete") {
-        dispatch(commentDeleteAsync({ replyId, boardId }))
-          .unwrap()
-          .then(message => alert(message));
-      }
-
-      if (type === "replyUpdate") {
+    (replyId: number, type: "update" | "delete" | "replyUpdate" | "subRely", value?: string, valeuLength?: number) =>
+      () => {
         try {
-          if (updateEditorLength === 0) throw new Error("수정 댓글 내용은 필수입니다.");
           if (!userId) throw new Error("로그인은 필수입니다.");
-          const content = updateEditorValue.replaceAll("<", "&lt;");
-          dispatch(
-            commentUpdateAsync({
-              userId,
-              replyId,
+          if (type === "update") setCurrentUpdateReplyId(prev => (replyId === prev ? 0 : replyId));
+          if (type === "delete") {
+            dispatch(commentDeleteAsync({ replyId, boardId }))
+              .unwrap()
+              .then(message => alert(message));
+          }
+
+          if (type === "replyUpdate" && value) {
+            if (valeuLength === 0) throw new Error("수정 댓글 내용은 필수입니다.");
+
+            const content = value.replaceAll("<", "&lt;");
+            dispatch(
+              commentUpdateAsync({
+                userId,
+                replyId,
+                content,
+              }),
+            )
+              .unwrap()
+              .then(message => {
+                setCurrentUpdateReplyId(0);
+                alert(message);
+              });
+          }
+          if (type === "subRely" && value) {
+            if (valeuLength === 0) throw new Error("댓글 내용은 필수입니다.");
+            const content = value.replaceAll("<", "&lt;");
+            const payload = {
               content,
-            }),
-          )
-            .unwrap()
-            .then(message => {
-              setCurrentUpdateReplyId(0);
-              alert(message);
-            });
+              parentReplyId: replyId,
+              userId,
+            };
+
+            dispatch(
+              subReplyInsertAsync({
+                boardId,
+                payload,
+              }),
+            );
+          }
         } catch (error) {
           const message = errorHandler(error);
           alert(message);
         }
-      }
-    },
-    [boardId, dispatch, updateEditorLength, updateEditorValue, userId],
+      },
+
+    [boardId, dispatch, userId],
   );
 
   const handlePaginationOnChange = (_: any, value: number) => {
@@ -161,8 +168,9 @@ const Comments = ({ boardId, userId }: CommentsProps) => {
           coList.empty ? (
             <NoComments>댓글이 없습니다.</NoComments>
           ) : (
-            coList.contents[0].map(comment => {
-              const { content, nickName, replyDate, replyId, userId: makeUserId } = comment;
+            coList.contents[coList.page].map(comment => {
+              const { content, nickName, replyDate, replyId, userId: makeUserId, subReply } = comment;
+
               return (
                 <Comment
                   key={replyId}
@@ -170,10 +178,10 @@ const Comments = ({ boardId, userId }: CommentsProps) => {
                   nickName={nickName}
                   replyDate={replyDate}
                   replyId={replyId}
-                  makeUserId={makeUserId}
+                  subReply={subReply}
+                  isMakeUser={makeUserId === userId}
                   userId={userId}
                   currentUpdateReplyId={currentUpdateReplyId}
-                  handleReplyUpdateOnChange={handleReplyUpdateOnChange}
                   handleReplyOnClick={handleReplyOnClick}
                 />
               );

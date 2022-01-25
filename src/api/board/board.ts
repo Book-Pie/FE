@@ -40,3 +40,13 @@ export const commentDelet = (replyId: number) => {
 export const commentUpdate = <P>(payload: P) => {
   return http.put("/reply/board", payload);
 };
+
+export const subReplyInsert = <P>(payload: P) => {
+  return http.post("/reply", payload);
+};
+export const subReplyDelete = (subReplyId: number) => {
+  return http.delete(`/reply/${subReplyId}`);
+};
+export const subReplyUpdate = <P>(payload: P) => {
+  return http.put("/reply", payload);
+};

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useLocation } from "react-router";
 import { searchAladinBookListAsync, searchAladinBookSelector } from "src/modules/Slices/search/searchSlice";
 import { useAppDispatch, useTypedSelector } from "src/modules/store";
@@ -17,18 +17,31 @@ const SearchBookReview = () => {
   const { pageCount, pages, status } = useTypedSelector(searchAladinBookSelector);
   const loading = status === "loading";
   const pageArray = loading ? range(0, 8) : pages;
+  const query = useMemo(() => queryString.parse(search), [search]);
 
   useEffect(() => {
-    const query = queryString.parse(search);
-    dispatch(searchAladinBookListAsync(queryString.stringify({ keyword: query.title })));
-  }, [search, dispatch]);
+    const newQuery = queryString.stringify({ keyword: query.title, QueryType: "Title" });
+    dispatch(
+      searchAladinBookListAsync({
+        query: newQuery,
+        isReload: true,
+      }),
+    );
+  }, [search, query, dispatch]);
 
   return (
     <Styled.SearchContainer>
       <Typography variant="h5" mt={2} fontWeight="bold">
         알라딘 검색 결과
+        {pageCount > 1 && (
+          <>
+            (총<span>{pageCount * 8}개</span>)
+          </>
+        )}
       </Typography>
-      <Styled.SearchAddMore>{pageCount > 1 && <Link to={`/usedBook${search}`}>더보기</Link>}</Styled.SearchAddMore>
+      <Styled.SearchAddMore>
+        {pageCount > 1 && <Link to={`/search/aladin?QueryType=Title&keyword=${query.title}`}>더보기</Link>}
+      </Styled.SearchAddMore>
       <Grid container spacing={2}>
         {pageArray ? (
           pageArray.map((page, idx) => <SearchReviewCard key={idx} page={page} />)

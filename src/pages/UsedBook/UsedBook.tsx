@@ -180,7 +180,7 @@ const UsedBook = () => {
       <Categorys categorys={categorys} defaultLocation="usedBook" />
       <MenuWrapper>
         <div>
-          <p>중고장터</p>
+          <p>중고도서</p>
         </div>
         <div>
           <TextField

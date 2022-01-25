@@ -11,11 +11,11 @@ import { Link } from "react-router-dom";
 import Loading from "src/elements/Loading";
 import { Button } from "@mui/material";
 import { getKakaoUnlink, setKakaoAccessToken } from "src/utils/oAuthUtil";
-import { IKakaoRequest, IParam } from "./type";
+import * as Types from "./types";
 import { Wrapper } from "./style";
 
 const Oauth = () => {
-  const param = useParams<IParam>();
+  const param = useParams<Types.IParam>();
   const query = useMemo(() => queryString.parse(window.location.search), []);
   const [popUpState, setPopUpstate] = useState({
     isSuccess: true,
@@ -46,7 +46,7 @@ const Oauth = () => {
           const response = await naverOauthAccessToken(queryString.stringify(query));
           handleMyInfo(response.data.data);
         } else if (name === "kakao") {
-          const kakaoRequestData: IKakaoRequest = {
+          const kakaoRequestData: Types.IKakaoRequest = {
             grant_type: "authorization_code",
             client_id: process.env.KAKAO_CLIENT_ID ?? "",
             redirect_uri: process.env.KAKAO_REDIRECT_PATH ?? "",

@@ -81,5 +81,16 @@ export interface ISearchReduce {
     error: Error;
     pages: Item[] | null;
     pageCount: number;
+    page: number;
   };
+}
+
+export interface AladinBookParam {
+  query: string;
+  isReload: boolean;
+}
+
+export interface AladinBookSucess {
+  isReload: boolean;
+  data: AladinData | null;
 }

@@ -21,10 +21,10 @@ import { dateFormat2 } from "src/utils/formatUtil";
 import { FormErrorMessages, makeOption } from "src/utils/hookFormUtil";
 import Editor from "../Editor/Editor";
 import { Buttons, EditorWrapper } from "../FreeBoardInsert/style";
-import { IFreeBoardInsertForm } from "../FreeBoardInsert/type";
+import { IFreeBoardInsertForm } from "../FreeBoardInsert/types";
 import Comments from "./Comments";
 import { Empty, Main, Title, Top, Wrapper } from "./style";
-import { IParam, LocationState } from "./type";
+import * as Types from "./types";
 
 const init: IFreeBoardInsertForm = {
   title: "",
@@ -35,9 +35,9 @@ const FreeBoard = () => {
     defaultValues: init,
   });
   const { errors } = formState;
-  let { boardId } = useParams<IParam>();
+  let { boardId } = useParams<Types.IParam>();
   const [isUpdate, setIsUpdate] = useState(false);
-  const { state } = useLocation<LocationState>();
+  const { state } = useLocation<Types.LocationState>();
   // param으로 쓰레기값(string)이 넘어왔을때 서버로 요청보내는걸 방지
   if (isNaN(Number(boardId))) boardId = "0";
   const paginatoionPage = state?.paginatoionPage ?? 0;
@@ -207,14 +207,14 @@ const FreeBoard = () => {
                   </Button>
                 )}
                 {user?.id === userId && (
-                  <Button variant="contained" color="success" onClick={handleUpdateOpne(title)}>
-                    수정하기
-                  </Button>
-                )}
-                {user?.id === userId && (
-                  <Button variant="contained" color="error" onClick={handleDeleteOnClick}>
-                    삭제
-                  </Button>
+                  <>
+                    <Button variant="contained" color="success" onClick={handleUpdateOpne(title)}>
+                      수정하기
+                    </Button>
+                    <Button variant="contained" color="error" onClick={handleDeleteOnClick}>
+                      삭제
+                    </Button>
+                  </>
                 )}
               </div>
             </Top>

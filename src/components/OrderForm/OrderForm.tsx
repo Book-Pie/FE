@@ -16,9 +16,9 @@ import Loading from "src/elements/Loading";
 import useDelay from "src/hooks/useDelay";
 import { FormErrorMessages } from "../SignUpForm/types";
 import { Wrapper, Fixed, Row, DropdownWrapper, Text, Payment } from "./style";
-import { IOrderForm, OrderFormProps, OrderRequest } from "./type";
+import * as Types from "./types";
 
-const OrderForm = ({ usedBook }: OrderFormProps) => {
+const OrderForm = ({ usedBook }: Types.OrderFormProps) => {
   const [popUpState, setPopUpState] = useState({
     isSuccess: false,
     message: "",
@@ -27,7 +27,7 @@ const OrderForm = ({ usedBook }: OrderFormProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const deliveryTextInit = useMemo(() => "배송요청사항을 선택해주세요.", []);
   const { addressState, handleComplete } = useDaumPost();
-  const { formState, register, handleSubmit, setValue, clearErrors, setFocus, reset } = useForm<IOrderForm>();
+  const { formState, register, handleSubmit, setValue, clearErrors, setFocus, reset } = useForm<Types.IOrderForm>();
   const deliveryTexts = useMemo(
     () => ["현관문 앞에 놓고 가세요.", "배송 전 전화 부탁드립니다.", "경비실에 맡겨주세요."],
     [],
@@ -72,7 +72,7 @@ const OrderForm = ({ usedBook }: OrderFormProps) => {
     win?.addEventListener("beforeunload", () => window.location.reload());
   }, []);
 
-  const onSumit = async (formData: IOrderForm) => {
+  const onSumit = async (formData: Types.IOrderForm) => {
     try {
       setIsLoading(true);
       if (user && signIn.token) {
@@ -86,7 +86,7 @@ const OrderForm = ({ usedBook }: OrderFormProps) => {
           return;
         }
 
-        const payload: OrderRequest = {
+        const payload: Types.OrderRequest = {
           usedBookId: usedBook.usedBookId,
           address: {
             detailAddress,
@@ -96,7 +96,7 @@ const OrderForm = ({ usedBook }: OrderFormProps) => {
           deliveryRequest: deliveryText,
         };
 
-        const { data } = await getOrder<OrderRequest>(payload, signIn.token);
+        const { data } = await getOrder<Types.OrderRequest>(payload, signIn.token);
         await delay();
         history.replace({
           pathname: `/order/${usedBook.usedBookId}/result`,

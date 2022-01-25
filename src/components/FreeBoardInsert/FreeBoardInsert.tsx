@@ -12,14 +12,14 @@ import { useTypedSelector } from "src/modules/store";
 import { FormErrorMessages, makeOption } from "src/utils/hookFormUtil";
 import Editor from "../Editor/Editor";
 import { Buttons, EditorWrapper, Title } from "./style";
-import { IFreeBoardInsertForm } from "./type";
+import * as Types from "./types";
 
 const FreeBoardInsert = () => {
   const {
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm<IFreeBoardInsertForm>({
+  } = useForm<Types.IFreeBoardInsertForm>({
     defaultValues: {
       title: "",
     },
@@ -53,7 +53,7 @@ const FreeBoardInsert = () => {
     minLength: makeOption<number>(1, "최소 1자 입니다."),
   };
 
-  const onSumit = (formData: IFreeBoardInsertForm) => {
+  const onSumit = (formData: Types.IFreeBoardInsertForm) => {
     try {
       if (!user) throw new Error("로그인이 필요합니다.");
       if (editorLength === 0) throw new Error("게시글은 필수 입니다.");

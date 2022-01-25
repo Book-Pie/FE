@@ -8,9 +8,9 @@ import { make1000UnitsCommaFormet } from "src/utils/formatUtil";
 import { getUsedBookOrder, removeUsedBookOrder, setUsedBookOrder } from "src/utils/localStorageUtil";
 import useSignIn from "src/hooks/useSignIn";
 import { Empty, Header, Wrapper } from "./style";
-import { AxiosResponse, IParam, IUsedBook } from "./type";
+import * as Types from "./types";
 
-const init: IUsedBook = {
+const init: Types.IUsedBook = {
   bookState: "",
   content: "",
   fstCategory: "",
@@ -29,8 +29,8 @@ const init: IUsedBook = {
 };
 
 const Order = () => {
-  const { id } = useParams<IParam>();
-  const [usedBook, setUsedBook] = useState<IUsedBook>(() => {
+  const { id } = useParams<Types.IParam>();
+  const [usedBook, setUsedBook] = useState<Types.IUsedBook>(() => {
     const info = getUsedBookOrder();
     if (info) return info;
     return init;
@@ -42,7 +42,7 @@ const Order = () => {
   const { images, price, title, saleState } = usedBook;
 
   const handleUsedBookLoad = useCallback(async () => {
-    const { data } = await getUsedBook<AxiosResponse>(id);
+    const { data } = await getUsedBook<Types.AxiosResponse>(id);
     setUsedBookOrder(JSON.stringify(data.data));
     setUsedBook(data.data);
   }, [id]);

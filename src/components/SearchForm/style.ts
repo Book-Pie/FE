@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css, keyframes } from "styled-components";
 
 export const SearchContainer = styled.div`
   display: flex;
@@ -116,5 +116,50 @@ export const SearchEmpty = styled.div`
   }
   p {
     padding: 15px;
+  }
+`;
+
+const buttonUpDownKeyFrames = keyframes`
+  0% {
+   transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+ 
+`;
+
+export const SearchTopButtonWrapper = styled.div<{
+  isVisible: boolean;
+}>`
+  position: fixed;
+  right: 10%;
+  bottom: 0;
+  transform: translateY(500px);
+  transition: transform 0.5s ease-in-out;
+
+  ${props => {
+    return (
+      props.isVisible &&
+      css`
+        transform: translateY(-100px);
+      `
+    );
+  }}
+
+  button {
+    display: flex;
+    padding: 15px;
+    border-radius: 50%;
+    border: none;
+    ${p => p.theme.shadow[0]}
+    background-color: ${p => p.theme.colors.mainDarkBrown};
+    cursor: pointer;
+    :hover {
+      animation: ${buttonUpDownKeyFrames} 1.5s 0.2s infinite linear alternate;
+    }
   }
 `;
