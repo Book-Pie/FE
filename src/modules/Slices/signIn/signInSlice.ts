@@ -155,7 +155,7 @@ const signInSlice = createSlice({
       removeToken();
       alert("로그아웃 되었습니다.");
     },
-    errorReset: () => initialState,
+    clearError: () => initialState,
     setReviewPage: (state, action) => {
       state.reviews.page = action.payload;
     },
@@ -266,5 +266,5 @@ export const buyInfoSelector =
   ({ signInReduce }: RootState) =>
     signInReduce.buyInfos.find(info => info.orderId === orderId);
 export const reviewsSelector = ({ signInReduce }: RootState) => signInReduce.reviews;
-export const { logout, errorReset, setReviewPage } = signInSlice.actions;
+export const { logout, clearError, setReviewPage } = signInSlice.actions;
 export default signInSlice;
