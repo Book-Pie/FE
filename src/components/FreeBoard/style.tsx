@@ -38,7 +38,7 @@ export const Top = styled.div`
     border-left: 1px solid ${boardColor};
   }
 
-  & > div :first-child {
+  & > div:first-child {
     flex: 6;
 
     &:first-child {
