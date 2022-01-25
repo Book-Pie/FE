@@ -1,10 +1,10 @@
 import logo from "assets/image/logo-removebg.png";
-import { FooterContainer } from "./style";
+import * as Styled from "./style";
 
 const Footer = () => {
   return (
-    <FooterContainer>
-      <div>
+    <Styled.FooterContainer>
+      <Styled.FooterWrapper>
         <div>
           <div>
             <img src={logo} alt="logo" />
@@ -42,8 +42,8 @@ const Footer = () => {
             <p>개인정보처리방침</p>
           </div>
         </div>
-      </div>
-    </FooterContainer>
+      </Styled.FooterWrapper>
+    </Styled.FooterContainer>
   );
 };
 

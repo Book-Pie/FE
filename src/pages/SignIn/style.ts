@@ -17,7 +17,6 @@ export const SignInContainer = styled.main`
 
   ${p => p.theme.media.mobile} {
     padding: 2rem 1rem 1rem 1rem;
-    margin: 0;
     & > div:nth-child(2) {
       padding: 1rem 0;
     }

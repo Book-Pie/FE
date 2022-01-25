@@ -18,8 +18,8 @@ const App = () => {
       <Switch>
         <PrivateRoute path="/payment" component={Payment} redirectPath="/" />
         <Route path="/">
-          <Header />
           <Container>
+            <Header />
             <Routers />
           </Container>
           <Footer />
