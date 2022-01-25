@@ -6,7 +6,13 @@ export interface addUserReviewData {
   rating: number;
 }
 
-export interface deleteUserReviewParam {
+export interface EditUserReviewSubmitData {
+  userReviewId: number;
+  content: string;
+  rating: number;
+}
+
+export interface DeleteUserReviewParam {
   userReviewId: number;
   token: string;
 }
@@ -22,7 +28,7 @@ export interface getUserReviewListData {
   reviewDate: string;
 }
 
-export interface getUserReceivedReviewListData {
+export interface GetUserReceivedReviewListData {
   userReviewId: number;
   sellerId: number;
   sellerName: string;
@@ -35,29 +41,55 @@ export interface getUserReceivedReviewListData {
   reviewDate: string;
 }
 
-// 성공 데이터
-export interface addUserReviewParam {
+export interface UserReviewData {
+  userReviewId: number;
+  sellerId: number;
+  sellerName: string;
+  buyerId: number;
+  buyerName: string;
+  usedBookId: number;
+  usedBookTitle: string;
+  content: string;
+  rating: number;
+  reviewDate: string;
+  image: string;
+  price: number;
+}
+
+export interface AddUserReviewParam {
   data: addUserReviewSubmitParam;
   token: string;
 }
 
-export interface addUserReviewAsyncSuccess {
+export interface EditUserReviewParam {
+  data: EditUserReviewSubmitData;
+  token: string;
+}
+
+// 성공 데이터
+export interface AddUserReviewAsyncSuccess {
   success: boolean;
   data: number;
   error: string;
 }
 
-export interface getUserReviewListAsyncSuccess {
+export interface EditUserReviewAsyncSuccess {
+  success: boolean;
+  data: UserReviewData;
+  error: string;
+}
+
+export interface GetUserReviewListAsyncSuccess {
   success: boolean;
   data: {
     pageCount: number;
-    pages: getUserReceivedReviewListData[];
+    pages: GetUserReceivedReviewListData[];
   };
   error: string;
 }
 
-export interface deleteUserReviewAsyncSuccess {
+export interface DeleteUserReviewAsyncSuccess {
   success: boolean;
-  data: boolean;
+  data: number;
   error: string;
 }

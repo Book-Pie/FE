@@ -7,14 +7,19 @@ import Stack from "@mui/material/Stack";
 import Pagination from "@mui/material/Pagination";
 import { getShopPage, removeShopPage, setShopPage } from "src/utils/localStorageUtil";
 import useDelay from "src/hooks/useDelay";
-import { getReceivedReviewList, getWrittedReviewList } from "src/api/my/my";
 import { errorHandler } from "src/api/http";
-import { CancelButton, HeaderTitle, UserReviewButtonArea, UserReviewHeaderWrapper } from "../BuyList/styles";
+import { useTypedSelector } from "src/modules/store";
+import {
+  getMyReceivedUserReviewList,
+  getUserReviewList,
+  userReviewSelector,
+} from "src/modules/Slices/userReview/userReviewSlice";
+import { CancelButton, FlexBox, HeaderTitle, UserReviewButtonArea, UserReviewHeaderWrapper } from "../BuyList/styles";
 import { ReviewListEmptyParagraph, ReviewListEmptyWrapper } from "../Reviews/ReviewList/style";
 import { Empty } from "../SaleList/style";
 import WrittedReviewList from "./WrittedReviewList";
 import ReceivedReviewContent from "./ReceivedReviewContent";
-import { ReceivedReviewList, ReceivedReviewListAxiosResponse } from "./types";
+import MyPageSkeleton from "../BuyList/MyPageSkeleton";
 
 const UserReview = () => {
   const dispatch = useDispatch();
@@ -25,14 +30,11 @@ const UserReview = () => {
   const receivedReviewHeader = ["별점", "구매자명", "상품명", "내용", "작성일"];
   const writtedReviewHeader = ["별점", "판매자명", "상품명", "내용", "작성일", "기능"];
   const [headers, setHeader] = useState<string[]>(receivedReviewHeader);
+  const [page, setPage] = useState(getShopPage(1));
   const [limit, setLimit] = useState(5);
-  const [list, setList] = useState<ReceivedReviewList>({
-    page: getShopPage(1),
-    pageCount: 0,
-    pages: [],
-    isEmpty: false,
-  });
-  const { pages, page, pageCount } = list;
+  const { list } = useTypedSelector(userReviewSelector);
+
+  const { pages, pageCount, isEmpty } = list;
   const delay = useDelay(500);
 
   const receivedReviewClick = () => {
@@ -55,23 +57,9 @@ const UserReview = () => {
           const { token } = signIn;
           if (token) {
             if (receivedReview) {
-              const { data } = await getReceivedReviewList<ReceivedReviewListAxiosResponse>(query, token);
-              const { pageCount, pages } = data.data;
-              setList({
-                pageCount,
-                pages,
-                page,
-                isEmpty: pages.length === 0 ? true : false,
-              });
+              dispatch(getMyReceivedUserReviewList({ query, token }));
             } else if (!receivedReview) {
-              const { data } = await getWrittedReviewList<ReceivedReviewListAxiosResponse>(query, token);
-              const { pageCount, pages } = data.data;
-              setList({
-                pageCount,
-                pages,
-                page,
-                isEmpty: pages.length === 0 ? true : false,
-              });
+              dispatch(getUserReviewList({ query, token }));
             }
           }
         } catch (error: any) {
@@ -81,7 +69,7 @@ const UserReview = () => {
         }
       }
     },
-    [user, delay, signIn, receivedReview],
+    [user, delay, signIn, receivedReview, dispatch],
   );
 
   useEffect(() => {
@@ -89,7 +77,10 @@ const UserReview = () => {
   }, [receivedReview, handleHasMoreList, page, limit]);
 
   const handlePaginationOnChange = useCallback(
-    (_: React.ChangeEvent<unknown>, value: number) => handleHasMoreList(value, limit),
+    (_: React.ChangeEvent<unknown>, value: number) => {
+      handleHasMoreList(value, limit);
+      setPage(value);
+    },
     [handleHasMoreList, limit],
   );
 
@@ -113,24 +104,36 @@ const UserReview = () => {
 
   const writtedReviewList = pages.length ? (
     <WrittedReviewList contents={pages} dispatch={dispatch} signIn={signIn} />
-  ) : (
+  ) : list.isEmpty ? (
     <Empty>
       <ReviewListEmptyWrapper>
         <ReviewListEmptyParagraph>작성한 거래후기가 존재하지 않습니다.</ReviewListEmptyParagraph>
         <img src={noComments} alt="noComments" />
       </ReviewListEmptyWrapper>
     </Empty>
+  ) : (
+    Array.from({ length: limit }).map((_, idx) => (
+      <FlexBox key={idx}>
+        <MyPageSkeleton />
+      </FlexBox>
+    ))
   );
 
   const receivedMyReviewList = pages.length ? (
     <ReceivedReviewContent contents={pages} />
-  ) : (
+  ) : list.isEmpty ? (
     <Empty>
       <ReviewListEmptyWrapper>
         <ReviewListEmptyParagraph>받은 거래후기가 존재하지 않습니다.</ReviewListEmptyParagraph>
         <img src={noComments} alt="noComments" />
       </ReviewListEmptyWrapper>
     </Empty>
+  ) : (
+    Array.from({ length: limit }).map((_, idx) => (
+      <FlexBox key={idx}>
+        <MyPageSkeleton />
+      </FlexBox>
+    ))
   );
 
   return (
@@ -144,7 +147,7 @@ const UserReview = () => {
       {list.isEmpty || (
         <Stack mt={5} justifyContent="center" direction="row">
           <Pagination
-            count={pageCount || limit}
+            count={pageCount}
             page={page}
             onChange={handlePaginationOnChange}
             variant="outlined"

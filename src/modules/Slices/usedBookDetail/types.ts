@@ -42,6 +42,27 @@ export interface usedBookBuyListResponse {
   buyerNickName: string;
 }
 
+export interface ModalItemParam {
+  orderId: string;
+  bookId?: number;
+  reviewId: number;
+  title: string;
+  image: string;
+  price: number;
+  state: string;
+  orderDate: string;
+  sellerNickName: string;
+  buyerNickName: string;
+  // 추가
+  userReviewId: number;
+  buyerName: string;
+  sellerName: string;
+  content: string;
+  rating: number;
+  reviewDate: string;
+  usedBookTitle: string;
+}
+
 export interface usedBookDetailReplyResponse {
   replyId: number;
   parentReplyId: number;

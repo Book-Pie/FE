@@ -1,5 +1,6 @@
 export interface addUserReviewSubmitParam {
-  orderId: string;
+  orderId?: string;
+  userReviewId?: string;
   content: string;
   rating: number;
   token: string;

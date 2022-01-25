@@ -7,8 +7,8 @@ import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { Link, useHistory } from "react-router-dom";
 import useSignIn from "src/hooks/useSignIn";
-import { usedBookBuyListResponse } from "src/modules/Slices/usedBookDetail/types";
-import { addUserReview } from "src/modules/Slices/userReview/userReviewSlice";
+import { ModalItemParam } from "src/modules/Slices/usedBookDetail/types";
+import { addUserReview, editUserReview } from "src/modules/Slices/userReview/userReviewSlice";
 import { RegisterButton, TextReviewArea } from "src/pages/Review/styles";
 import { HoverRating } from "../Rating/Rating";
 import { ButtonArea, CancelButton, ModalContent, BuyContent, FlexWrapper, ImgContent, Text } from "./styles";
@@ -16,7 +16,7 @@ import { addUserReviewSubmitParam } from "./types";
 
 export interface userReviewModalProps {
   open: boolean;
-  item: usedBookBuyListResponse | null;
+  item: ModalItemParam | null;
   handleClose: () => void;
 }
 
@@ -25,12 +25,34 @@ const Modal = (props: userReviewModalProps) => {
   const dispatch = useDispatch();
   const { signIn } = useSignIn();
   const { isLoggedIn } = signIn;
-  const { open, handleClose, item } = props;
   const { handleSubmit, register, setValue } = useForm<addUserReviewSubmitParam>();
-  const [ratingValue, setRatingValue] = useState<number>(0);
 
+  const { open, handleClose, item } = props;
   if (!item) throw new Error("거래상품이 존재하지 않습니다.");
-  const { bookId, buyerNickName, image, orderDate, orderId, price, sellerNickName, state, title } = item;
+  const {
+    bookId,
+    reviewDate,
+    usedBookTitle,
+    image,
+    orderDate,
+    orderId,
+    price,
+    sellerNickName,
+    sellerName,
+    title,
+    userReviewId,
+  } = item;
+  let { rating, content } = item;
+
+  if (rating === undefined) {
+    rating = 0;
+  }
+  if (content === undefined) {
+    content = "";
+  }
+
+  const [ratingValue, setRatingValue] = useState<number>(rating);
+  const [reviewContent, setReviewContent] = useState<string>(content);
 
   const handleRatingChange = (e: React.SyntheticEvent<Element, Event>, value: number | null) => {
     if (value !== null) {
@@ -46,9 +68,19 @@ const Modal = (props: userReviewModalProps) => {
       }
       return false;
     }
-    const { token } = signIn;
-    if (token) {
-      return dispatch(addUserReview({ data, token }));
+    if (orderId) {
+      const { token } = signIn;
+      if (token) {
+        dispatch(addUserReview({ data, token }));
+        return handleClose();
+      }
+    } else if (userReviewId) {
+      const { token } = signIn;
+      if (token) {
+        dispatch(editUserReview({ data, token }));
+        return handleClose();
+      }
+      return false;
     }
     return false;
   };
@@ -56,32 +88,60 @@ const Modal = (props: userReviewModalProps) => {
   return (
     <Dialog open={open} onClose={handleClose} sx={{ "& .MuiDialog-paper": { width: "80%", height: 700 } }}>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <DialogTitle>중고거래 리뷰 작성</DialogTitle>
+        <DialogTitle>
+          중고거래 리뷰
+          {orderDate && " 작성"}
+          {reviewDate && " 수정"}
+        </DialogTitle>
         <DialogContent>
-          <DialogContentText>리뷰를 작성 해주세요.</DialogContentText>
+          <DialogContentText>
+            리뷰를 {orderDate && "작성"}
+            {reviewDate && "수정"} 해주세요.
+          </DialogContentText>
           <FlexWrapper>
             <BuyContent>
               <Link to={`/usedBook/${bookId}`}>
-                {image.length !== 0 && <ImgContent src={`${process.env.BASE_URL}/image/${image}`} alt="usedBookImg" />}
+                <ImgContent src={`${process.env.BASE_URL}/image/${image}`} alt="usedBookImg" />
               </Link>
             </BuyContent>
             <BuyContent>
-              <ModalContent color="#bbb">{orderDate.split("T", 1)}</ModalContent>
-              <ModalContent color="#bbb">{sellerNickName}</ModalContent>
-              <ModalContent color="#52a4c3">{title}</ModalContent>
+              <ModalContent color="#bbb">
+                {orderDate && orderDate.split("T", 1)}
+                {reviewDate && reviewDate.split("T", 1)}
+              </ModalContent>
+              <ModalContent color="#bbb">
+                {sellerNickName && sellerNickName}
+                {sellerName && sellerName}
+              </ModalContent>
+              <ModalContent color="#52a4c3">
+                {title && title}
+                {usedBookTitle && usedBookTitle}
+              </ModalContent>
               <ModalContent>가격 {price}</ModalContent>
-              <input type="hidden" value={orderId} {...register("orderId")} />
+              {orderId && <input type="hidden" value={orderId} {...register("orderId")} />}
+              {userReviewId && <input type="hidden" value={userReviewId} {...register("userReviewId")} />}
             </BuyContent>
           </FlexWrapper>
           <HoverRating rating={ratingValue} handleChange={handleRatingChange} />
           <input type="hidden" value={ratingValue} {...register("rating")} />
           <TextReviewArea>
-            <Text placeholder="중고거래에 대한 솔직한 후기를 남겨주세요." {...register("content")} />
+            <Text
+              placeholder="중고거래에 대한 솔직한 후기를 남겨주세요."
+              value={reviewContent}
+              {...register("content", {
+                onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+                  setReviewContent(e.target.value);
+                },
+              })}
+            />
           </TextReviewArea>
           <div>
             <ButtonArea>
               <CancelButton onClick={handleClose}>취소</CancelButton>
-              <RegisterButton type="submit">등록</RegisterButton>
+              <RegisterButton type="submit">
+                {orderDate && "등록"}
+                {reviewDate && "수정"}
+              </RegisterButton>
             </ButtonArea>
           </div>
         </DialogContent>

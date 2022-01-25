@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom";
-import { getUserReceivedReviewListData } from "src/modules/Slices/userReview/types";
+import { GetUserReceivedReviewListData } from "src/modules/Slices/userReview/types";
 import { RatingContent, RatingScore } from "src/pages/BookDetail/style";
 import Rating from "@mui/material/Rating";
 import { ColorContent, ContentItem, ContentWrapper, TitleContentItem } from "../BuyList/styles";
 
 export interface UserReviewContentProps {
-  contents: getUserReceivedReviewListData[];
+  contents: GetUserReceivedReviewListData[];
 }
 
 const ReceivedReviewContent = ({ contents }: UserReviewContentProps) => {
