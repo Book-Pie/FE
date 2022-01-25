@@ -5,6 +5,16 @@ export interface UsedBookDetailThunk {
   rejectValue: string;
 }
 
+export interface getUsedBookBuyConfirmParam {
+  orderId: string;
+  token: string;
+}
+
+export interface getUsedBookBuyListParam {
+  id: number;
+  token: string;
+}
+
 export interface deleteUsedBookDetailParam {
   id: number;
 }
@@ -19,6 +29,40 @@ export interface usedBookLikeParam {
   usedBookId: number;
 }
 
+export interface usedBookBuyListResponse {
+  orderId: string;
+  bookId?: number;
+  reviewId: number;
+  title: string;
+  image: string;
+  price: number;
+  state: string;
+  orderDate: string;
+  sellerNickName: string;
+  buyerNickName: string;
+}
+
+export interface ModalItemParam {
+  orderId: string;
+  bookId?: number;
+  reviewId: number;
+  title: string;
+  image: string;
+  price: number;
+  state: string;
+  orderDate: string;
+  sellerNickName: string;
+  buyerNickName: string;
+  // 추가
+  userReviewId: number;
+  buyerName: string;
+  sellerName: string;
+  content: string;
+  rating: number;
+  reviewDate: string;
+  usedBookTitle: string;
+}
+
 export interface usedBookDetailReplyResponse {
   replyId: number;
   parentReplyId: number;
@@ -27,6 +71,13 @@ export interface usedBookDetailReplyResponse {
   content: string;
   replyDate: string;
   nickName: string;
+}
+
+export interface BuyBookList {
+  pageCount: number;
+  pages: usedBookBuyListResponse[];
+  page: number;
+  isEmpty: boolean;
 }
 
 export interface PagesResponse {
@@ -107,7 +158,7 @@ export interface MyUsedBookAsyncSuccess {
 
 // =========================== 썽크함수 성공 시 리턴 타입 ===========================
 
-export interface getUsedBookDetailLikeAsyncSuccess {
+export interface getUsedBookLikeListAsyncSuccess {
   success: boolean;
   data: PagesResponse[];
   error: null;
@@ -146,6 +197,15 @@ export interface UsedBookLikeGetAsyncSuccess {
 export interface usedBookDetailReplyListAsyncSuccess {
   success: boolean;
   data: usedBookDetailReplyListData;
+  error: null;
+}
+
+export interface getUsedBookBuyListAsyncSuccess {
+  success: boolean;
+  data: {
+    pageCount: number;
+    pages: usedBookBuyListResponse[];
+  };
   error: null;
 }
 

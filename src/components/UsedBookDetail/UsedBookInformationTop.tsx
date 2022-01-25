@@ -25,8 +25,6 @@ const UsedBookInformationTop = ({
   replyCount,
   usedBookId,
   sellerId,
-  sellerName,
-  bookState,
   saleState,
 }: UsedBookDetailResponse) => {
   const history = useHistory();
