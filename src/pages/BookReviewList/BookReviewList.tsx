@@ -9,12 +9,12 @@ import Categorys from "src/components/Categorys/Categorys";
 import DropDown from "src/elements/DropDown";
 import { getBookSelector, getCategoryBook } from "src/modules/Slices/book/bookSlice";
 import { useTypedSelector } from "src/modules/store";
-import styled from "styled-components";
 import { makeNewQueryString, removeQueryString } from "src/utils/queryStringUtil";
 import Text from "src/elements/Text";
 import queryString from "query-string";
 import { BookReviewListContainer } from "../Main/style";
 import { ReviewListTitleWrapper } from "../UsedBook/style";
+import { BookReviewContainer } from "./styles";
 
 const BookReviewList = () => {
   const location = useLocation();
@@ -81,12 +81,5 @@ const BookReviewList = () => {
     </BookReviewContainer>
   );
 };
-
-export const BookReviewContainer = styled.div`
-  display: grid;
-  justify-content: center;
-  margin: 0 auto;
-  min-height: 900px;
-`;
 
 export default BookReviewList;

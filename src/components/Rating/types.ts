@@ -1,5 +1,5 @@
 export interface HoverRatingProps {
-  isDisabled: boolean;
+  isDisabled?: boolean;
   rating: number;
-  handleChange?: (event: React.SyntheticEvent<Element, Event>, value: number | null) => void;
+  handleChange: (event: React.SyntheticEvent<Element, Event>, value: number | null) => void;
 }
