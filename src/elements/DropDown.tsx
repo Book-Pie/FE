@@ -17,6 +17,7 @@ const DropDown = ({ children, defaultValue, setSelectedId, setSelectedText }: Dr
   const [visible, setVisible] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState(false);
   const isClosed = useRef<boolean>(false);
+  const el = useRef<HTMLDivElement>(null);
 
   const dropDorwnOpen = useCallback(() => setIsOpen(true), []);
 
@@ -41,6 +42,21 @@ const DropDown = ({ children, defaultValue, setSelectedId, setSelectedText }: Dr
     [setSelectedId, setSelectedText],
   );
 
+  const handleDropDownClose = useCallback(
+    (e: any) => {
+      if (isOpen && (!el.current || !el.current.contains(e.target))) {
+        setVisible(false);
+        isClosed.current = true;
+      }
+    },
+    [isOpen],
+  );
+
+  useEffect(() => {
+    window.addEventListener("click", handleDropDownClose);
+    return () => window.removeEventListener("click", handleDropDownClose);
+  }, [handleDropDownClose]);
+
   useEffect(() => {
     if (!visible && isOpen && !isClosed.current) {
       // 드롭다운 컴포넌트 생성되는 시간
@@ -53,7 +69,7 @@ const DropDown = ({ children, defaultValue, setSelectedId, setSelectedText }: Dr
   }, [visible, isOpen, setIsOpen]);
 
   return (
-    <Wrapper>
+    <Wrapper ref={el}>
       <SelectBox onClick={dropDorwnOpen}>
         {selected}
         <svg
@@ -105,10 +121,9 @@ export const SelectBox = styled.div`
   padding-left: 0.5rem;
   padding-right: 0.5rem;
   height: 100%;
-  font-weight: 600;
-  color: rgb(73, 80, 87);
+  color: ${({ theme }) => theme.colors.darkGrey};
   font-size: 0.875rem;
-  box-shadow: rgb(0 0 0 / 50%) 0px 0px 4px;
+  ${({ theme }) => theme.shadow[0]}
   cursor: pointer;
 
   .dropDown__svg {
@@ -147,6 +162,9 @@ export const SelectList = styled.ul<UlProps>`
   }
   li:hover {
     background: rgb(248, 249, 250);
+  }
+  a:hover {
+    font-weight: bold;
   }
 `;
 

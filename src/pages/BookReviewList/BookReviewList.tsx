@@ -5,7 +5,6 @@ import { useDispatch } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import theme from "src/assets/style/styledTheme";
 import BookReviewItem from "src/components/BookReviewList/BookReviewItem";
-import Categorys from "src/components/Categorys/Categorys";
 import DropDown from "src/elements/DropDown";
 import { getBookSelector, getCategoryBook } from "src/modules/Slices/book/bookSlice";
 import { useTypedSelector } from "src/modules/store";
@@ -13,8 +12,7 @@ import { makeNewQueryString, removeQueryString } from "src/utils/queryStringUtil
 import Text from "src/elements/Text";
 import queryString from "query-string";
 import { BookReviewListContainer } from "../Main/style";
-import { ReviewListTitleWrapper } from "../UsedBook/style";
-import { BookReviewContainer } from "./styles";
+import { ReviewListTitleWrapper, BookReviewContainer } from "./styles";
 
 const BookReviewList = () => {
   const location = useLocation();
@@ -38,7 +36,6 @@ const BookReviewList = () => {
   }));
   return (
     <BookReviewContainer>
-      {/* <Categorys categorys={categorys} defaultLocation="usedBook" /> */}
       <ReviewListTitleWrapper>
         <Text bold fontSize="30px" margin="0 0 0 20px">
           리뷰
