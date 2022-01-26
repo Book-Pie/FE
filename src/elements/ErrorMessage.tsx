@@ -15,7 +15,7 @@ const ErrorMessageContainer = styled.div`
 const ErrorMessage = ({ message }: ErrorMessageProps) => {
   if (message) {
     return (
-      <ErrorMessageContainer>
+      <ErrorMessageContainer className="errorMessage">
         <span>{message}</span>
       </ErrorMessageContainer>
     );

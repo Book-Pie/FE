@@ -2,18 +2,24 @@ import styled from "styled-components";
 
 const activeBorderColor = "rgba(52, 73, 94, 1)";
 
-export const Container = styled.div`
-  margin: 0 auto;
-  min-width: 1200px;
+export const MyContainer = styled.main`
+  margin: 2rem 0;
+
+  ${({ theme }) => theme.media.mobile} {
+    padding: 0 0.6rem;
+    margin: 0;
+  }
 `;
 
-export const RouterWrapper = styled.div`
-  margin-top: 3rem;
-  margin-bottom: 3rem;
+export const MyRouterWrapper = styled.div`
   min-height: 400px;
   display: flex;
   justify-content: center;
   align-items: center;
+
+  ${({ theme }) => theme.media.mobile} {
+    min-height: 200px;
+  }
 `;
 
 export const MyMenuWrapper = styled.div`
