@@ -9,14 +9,7 @@ export const BookItemWrapper = styled.div`
 export const BookReviewListContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 280px);
-  grid-template-rows: repeat(2, 230px);
-  grid-auto-rows: minmax(100px, auto);
   row-gap: 20px;
-
-  .one {
-    grid-column: 1 / 3;
-    grid-row: 1/3;
-  }
 `;
 
 export const Text = styled.p`

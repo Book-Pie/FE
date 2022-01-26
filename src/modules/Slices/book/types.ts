@@ -1,5 +1,5 @@
 // initialState로 사용할 객체의 data
-interface BookItemProps {
+export interface BookItemProps {
   author: string;
   isbn: string;
   link: string;
@@ -39,6 +39,12 @@ export interface BookListReduceProps {
     message: string;
   };
   item: BookItemProps[];
+
+  list: {
+    pages: BookItemProps[][];
+    pageCount: number;
+    isEmpty: boolean;
+  };
 }
 
 // 썽크함수 성공시 반환 타입

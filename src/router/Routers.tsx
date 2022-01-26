@@ -41,11 +41,8 @@ const Routers = () => {
       <Route path="/usedBook" component={UsedBook} />
       <Route path="/search" component={Search} />
       <Route path="/search/aladin" component={Aladin} />
-      <Switch>
-        <Route path="/book/:isbn/userId?:id" component={BookDetail} />
-        <Route path="/book/:isbn13" component={BookDetail} />
-        <Route path="/book" component={BookReviewList} />
-      </Switch>
+      <Route path="/book/:isbn13" component={BookDetail} />
+      <Route path="/book" component={BookReviewList} />
       <Route path="*" render={() => <Redirect to="/" />} />
     </Switch>
   );
