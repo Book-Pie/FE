@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { removeEmail, removeToken, setRememberEmail, setAccessToken, getAccessToken } from "utils/localStorageUtil";
 import { getSignIn } from "src/api/oauth";
-import { addHyphenFormat } from "src/utils/formatUtil";
+import { hyphenFormat } from "src/utils/formatUtil";
 import { RootState } from "modules/store";
 import { getNickNameUpdate, getMyProfile } from "src/api/my/my";
 import http, { errorHandler } from "src/api/http";
@@ -155,7 +155,7 @@ const signInSlice = createSlice({
       removeToken();
       alert("로그아웃 되었습니다.");
     },
-    errorReset: () => initialState,
+    clearError: () => initialState,
     setReviewPage: (state, action) => {
       state.reviews.page = action.payload;
     },
@@ -184,7 +184,7 @@ const signInSlice = createSlice({
       state.isLoggedIn = true;
       state.user = payload.data;
       state.status = "idle";
-      if (payload.data.phone !== null) state.user.phone = addHyphenFormat(payload.data.phone);
+      if (payload.data.phone !== null) state.user.phone = hyphenFormat(payload.data.phone);
       state.token = getAccessToken();
     });
     builder.addCase(myInfoAsync.rejected, (state, { payload }) => {
@@ -266,5 +266,5 @@ export const buyInfoSelector =
   ({ signInReduce }: RootState) =>
     signInReduce.buyInfos.find(info => info.orderId === orderId);
 export const reviewsSelector = ({ signInReduce }: RootState) => signInReduce.reviews;
-export const { logout, errorReset, setReviewPage } = signInSlice.actions;
+export const { logout, clearError, setReviewPage } = signInSlice.actions;
 export default signInSlice;

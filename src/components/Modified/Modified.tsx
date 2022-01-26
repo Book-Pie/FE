@@ -11,11 +11,11 @@ import {
   hookFormSpecialChractersCheck,
   hookFormWhiteSpaceCheck,
   makeOption,
+  FormErrorMessages,
 } from "utils/hookFormUtil";
 import useDebounce from "hooks/useDebounce";
 import { errorHandler } from "src/api/http";
 import FormInput from "src/elements/FormInput";
-import { FormErrorMessages } from "src/components/SignUpForm/types";
 import Popup from "src/elements/Popup";
 import useDaumPost from "hooks/useDaumPost";
 import DaumPostcode from "react-daum-postcode";

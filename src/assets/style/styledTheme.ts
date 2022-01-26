@@ -12,6 +12,7 @@ const theme: DefaultTheme = {
     mainLightBrown: Colors.MAINLIGHT_BROWN,
     white: Colors.WHITE,
     darkGrey: Colors.DARK_GREY,
+    info: Colors.INFO,
     error: Colors.ERROR,
   },
   media: {

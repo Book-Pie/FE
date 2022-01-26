@@ -1,7 +1,7 @@
-import logo from "assets/image/logo.png";
+import logo from "assets/image/logo-removebg.png";
 import searchImg from "assets/image/search.png";
 import { Link } from "react-router-dom";
-import { useMemo } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTypedSelector } from "src/modules/store";
 import { signInUser } from "src/modules/Slices/signIn/signInSlice";
 import { RegisterOptions, useForm } from "react-hook-form";
@@ -9,14 +9,18 @@ import ErrorMessage from "src/elements/ErrorMessage";
 import { hookFormHtmlCheck, makeOption } from "src/utils/hookFormUtil";
 import { useHistory } from "react-router";
 import Tooltip from "@mui/material/Tooltip";
+import MenuIcon from "@mui/icons-material/Menu";
 import * as Styled from "./style";
 import * as Types from "./types";
 
 const Header = () => {
   const user = useTypedSelector(signInUser);
+  const el = useRef<HTMLDivElement>(null);
+
   const { handleSubmit, formState, register, setValue } = useForm<Types.SearchForm>({
     defaultValues: { title: "" },
   });
+  const [isVisible, setIsVisible] = useState<boolean>(false);
   const history = useHistory();
   const { errors } = formState;
 
@@ -66,6 +70,24 @@ const Header = () => {
     [user],
   );
 
+  const handleCloseHamburger = useCallback(
+    (e: any) => {
+      if (isVisible && (!el.current || !el.current.contains(e.target))) setIsVisible(false);
+    },
+    [isVisible],
+  );
+
+  const handleOpneHamburger = useCallback(() => {
+    setIsVisible(prev => !prev);
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener("click", handleCloseHamburger);
+    return () => {
+      window.removeEventListener("click", handleCloseHamburger);
+    };
+  }, [handleCloseHamburger]);
+
   return (
     <Styled.HeaderContainer>
       <Styled.InfoWrapper>
@@ -77,6 +99,18 @@ const Header = () => {
           ))}
         </div>
       </Styled.InfoWrapper>
+      <Styled.HamburgerWrapper isVisible={isVisible} ref={el}>
+        <span onClick={handleOpneHamburger}>
+          <MenuIcon fontSize="large" />
+        </span>
+        <ul>
+          {infos.map(({ endPoint, text }, idx) => (
+            <li key={idx}>
+              <Link to={endPoint}>{text}</Link>
+            </li>
+          ))}
+        </ul>
+      </Styled.HamburgerWrapper>
       <Styled.NavWrapper>
         <Link to="/">
           <img src={logo} alt="logo" />

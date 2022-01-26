@@ -12,7 +12,7 @@ interface PopUpProps {
   children: React.ReactNode;
   className?: Colors;
 }
-interface PopupWrraperProps {
+interface PopupContainerProps {
   visible: boolean;
 }
 
@@ -25,11 +25,11 @@ const PopupWrraperCloseCss = css`
   transition: transform 0.5s, z-index 1s ease-in;
 `;
 
-const PopupWrapper = styled.div<PopupWrraperProps>`
+const PopupContainer = styled.div<PopupContainerProps>`
   position: fixed;
   top: 5%;
-  color: white;
   right: 5%;
+  color: white;
   cursor: pointer;
   z-index: 0;
   transition: transform 1s, z-index 0.25s ease-in;
@@ -39,12 +39,16 @@ const PopupWrapper = styled.div<PopupWrraperProps>`
   ${({ visible }) => visible && PopupWrraperOpenCss}
   ${({ visible }) => !visible && PopupWrraperCloseCss} 
 
-
   &.green {
     background: rgb(18, 184, 134);
   }
   &.red {
     background: #e74c3c;
+  }
+  ${({ theme }) => theme.media.mobile} {
+    top: 0;
+    right: 0;
+    width: 100%;
   }
 `;
 
@@ -52,7 +56,7 @@ const Popup = ({ isOpen, closeDelay, openDelay, children, autoClose, className, 
   const [visible, setVisible] = useState<boolean>(false);
   const isClosed = useRef<boolean>(false);
 
-  const popUpCloase = () => {
+  const popUpClose = () => {
     setVisible(false);
     isClosed.current = true;
   };
@@ -75,7 +79,7 @@ const Popup = ({ isOpen, closeDelay, openDelay, children, autoClose, className, 
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
-    if (autoClose) timer = setTimeout(() => popUpCloase(), closeDelay);
+    if (autoClose) timer = setTimeout(() => popUpClose(), closeDelay);
 
     const cleanUp = () => {
       if (autoClose) clearTimeout(timer);
@@ -85,9 +89,9 @@ const Popup = ({ isOpen, closeDelay, openDelay, children, autoClose, className, 
   }, [closeDelay, autoClose]);
 
   return (
-    <PopupWrapper onClick={popUpCloase} visible={visible} className={className}>
+    <PopupContainer onClick={popUpClose} visible={visible} className={className}>
       {children}
-    </PopupWrapper>
+    </PopupContainer>
   );
 };
 

@@ -1,11 +1,15 @@
+import { Typography } from "@mui/material";
 import SignUpForm from "src/components/SignUpForm/SignUpForm";
-import { Container } from "./style";
+import * as Styled from "./style";
 
 const SignUp = () => {
   return (
-    <Container>
+    <Styled.SignUpContainer>
+      <Typography variant="h3" fontWeight="bold">
+        회원가입
+      </Typography>
       <SignUpForm />
-    </Container>
+    </Styled.SignUpContainer>
   );
 };
 

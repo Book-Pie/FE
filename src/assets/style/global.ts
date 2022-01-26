@@ -39,7 +39,7 @@ body {
 
   // 모바일 환경 폰트사이즈
   ${props => props.theme.media.mobile}{
-    font-size:20px;
+    font-size:25px;
   }
 }
 body::-webkit-scrollbar {
@@ -97,6 +97,7 @@ img{
 export const Container = styled.div`
   max-width: 1200px;
   margin: 0 auto;
+  min-width: 375px;
 `;
 
 export const Colors = {
@@ -104,6 +105,7 @@ export const Colors = {
   MAINLIGHT_BROWN: "#edeae9",
   WHITE: "#ffffff",
   DARK_GREY: "#434343",
+  INFO: "#1565c0",
   ERROR: "rgba(225, 112, 85, 1)",
 };
 

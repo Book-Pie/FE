@@ -1,37 +1,36 @@
 import ErrorMessage from "src/elements/ErrorMessage";
 import {
+  FormErrorMessages,
   hookFormEmailPatternCheck,
   hookFormKoreaChractersCheck,
   hookFormWhiteSpaceCheck,
   makeOption,
 } from "utils/hookFormUtil";
 import { useForm, Controller } from "react-hook-form";
-import { errorReset, signInAsync } from "modules/Slices/signIn/signInSlice";
+import { clearError, signInAsync, signInSelector } from "modules/Slices/signIn/signInSlice";
 import { useCallback, useEffect, useState } from "react";
 import { getRememberEmail } from "utils/localStorageUtil";
 import Popup from "src/elements/Popup";
-import useSignIn from "hooks/useSignIn";
 import useDebounce from "hooks/useDebounce";
 import TextField from "@mui/material/TextField";
-import { Form, FullSizeButton } from "./style";
-import { IRows, ISignInForm, FormErrorMessages, SignInFormProps } from "./types";
+import { useAppDispatch, useTypedSelector } from "src/modules/store";
+import * as Styled from "./style";
+import * as Types from "./types";
 
-const initialState: ISignInForm = {
-  email: getRememberEmail(),
-  password: "",
-};
-
-const SignInForm = ({ isRemember }: SignInFormProps) => {
-  const { handleSubmit, control, formState } = useForm<ISignInForm>({
-    defaultValues: initialState,
+const SignInForm = ({ isRemember }: Types.SignInFormProps) => {
+  const { handleSubmit, control, formState } = useForm<Types.SignInForm>({
+    defaultValues: {
+      email: getRememberEmail(),
+      password: "",
+    },
   });
   const debouncdRef = useDebounce();
-  const { dispatch, signIn } = useSignIn();
+  const dispatch = useAppDispatch();
+  const { error } = useTypedSelector(signInSelector);
   const [isOpen, setIsOpen] = useState(false);
   const { errors } = formState;
-  const { error } = signIn;
 
-  const onSubmit = (data: ISignInForm) => {
+  const onSubmit = (data: Types.SignInForm) => {
     const { email, password } = data;
     if (debouncdRef.current) clearTimeout(debouncdRef.current);
     debouncdRef.current = setTimeout(() => {
@@ -39,7 +38,7 @@ const SignInForm = ({ isRemember }: SignInFormProps) => {
     }, 1000);
   };
 
-  const inputs: IRows[] = [
+  const inputs: Types.Rows[] = [
     {
       id: "email",
       type: "text",
@@ -72,11 +71,12 @@ const SignInForm = ({ isRemember }: SignInFormProps) => {
   const handleError = useCallback(() => {
     if (error) setIsOpen(true);
     return () => {
-      if (error) dispatch(errorReset());
+      if (error) dispatch(clearError());
     };
   }, [dispatch, error]);
 
   useEffect(handleError, [handleError]);
+
   return (
     <div>
       {isOpen && (
@@ -84,8 +84,8 @@ const SignInForm = ({ isRemember }: SignInFormProps) => {
           {error}
         </Popup>
       )}
-      <Form onSubmit={handleSubmit(onSubmit)}>
-        <div>
+      <Styled.Form onSubmit={handleSubmit(onSubmit)}>
+        <Styled.Input>
           {inputs.map((input, idx) => {
             const { id, options, type } = input;
             const isError = errors[`${id}`] ? true : false;
@@ -103,11 +103,11 @@ const SignInForm = ({ isRemember }: SignInFormProps) => {
               </div>
             );
           })}
-        </div>
-        <div>
-          <FullSizeButton type="submit">로그인</FullSizeButton>
-        </div>
-      </Form>
+        </Styled.Input>
+        <Styled.Submit>
+          <Styled.Button type="submit">로그인</Styled.Button>
+        </Styled.Submit>
+      </Styled.Form>
     </div>
   );
 };

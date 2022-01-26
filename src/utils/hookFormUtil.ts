@@ -10,6 +10,14 @@ export const FormErrorMessages = {
   MOBILE_NUMBER: "휴대번호 형식에 맞지 않습니다.",
   EMAIL: "이메일 형식에 맞지 않습니다.",
   PASSWORD_MISMATCH: "비밀번호가 서로 틀립니다.",
+  EMAIL_REQUIRED: "이메일은 필수입니다.",
+  NICKNAME_REQUIRED: "닉네임은 필수입니다.",
+  PASSWORD_REQUIRED: "비밀번호는 필수입니다.",
+  NAME_REQUIRED: "이름은 필수입니다.",
+  PHONE_REQUIRED: "휴대번호는 필수입니다.",
+  POST_REQUIRED: "우편번호는 필수입니다.",
+  MAINADRRESS_REQUIRED: "주소는 필수입니다.",
+  DETAILADRRESS_REQUIRED: "상세주소는 필수입니다.",
 };
 
 export const makeOption = <T extends ValidationValue>(validationValue: T, errorMessage: string): ValidationRule<T> => ({

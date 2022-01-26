@@ -4,12 +4,11 @@ import { useState, useCallback, useMemo } from "react";
 import useSignIn from "src/hooks/useSignIn";
 import { nickNameUpdateAsync } from "src/modules/Slices/signIn/signInSlice";
 import { useForm, Controller, RegisterOptions } from "react-hook-form";
-import { hookFormSpecialChractersCheck, makeOption } from "src/utils/hookFormUtil";
+import { hookFormSpecialChractersCheck, makeOption, FormErrorMessages } from "src/utils/hookFormUtil";
 import ErrorMessage from "src/elements/ErrorMessage";
 import { Skeleton } from "@mui/material";
 import Popup from "src/elements/Popup";
 import { make1000UnitsCommaFormet } from "src/utils/formatUtil";
-import { FormErrorMessages } from "../SignUpForm/types";
 import { ProfileImg, UserInfoMation, Wrapper, CustomInput } from "./style";
 import { NickNameForm } from "./type";
 

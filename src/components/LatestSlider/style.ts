@@ -1,82 +1,19 @@
 import styled from "styled-components";
 
-export const Wrapper = styled.div`
-  border: 1px solid ${props => props.theme.colors.mainLightBrown};
-`;
+export const LatestSliderContainer = styled.div`
+  cursor: pointer;
 
-export const Image = styled.div`
-  width: 100%;
-  height: 280px;
-  border-bottom: 1px solid rgba(99, 110, 114, 0.1);
   img {
     width: 100%;
     height: 100%;
   }
-`;
 
-export const Info = styled.div`
-  width: 200px;
-  height: 116px;
-  margin: 0 auto;
-  margin-bottom: 20px;
-  margin-top: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  align-items: center;
-  .card__title {
-    width: 150px;
-    height: 50px;
-    font-size: 20px;
-    font-weight: bold;
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    text-align: center;
-    color: ${p => p.theme.colors.mainDarkBrown};
-    line-height: 1.2;
-  }
-  .card__category {
-    font-size: 18px;
-    font-weight: normal;
-    font-stretch: normal;
-    font-style: normal;
-    line-height: normal;
-    letter-spacing: -0.36px;
-    text-align: center;
-    word-wrap: break-word;
-    color: #434343;
-  }
-  .card__price {
-    height: 24px;
-    font-size: 20px;
-    font-stretch: normal;
-    font-style: normal;
-    line-height: normal;
-    letter-spacing: -0.4px;
-    text-align: center;
-    color: #1565c0;
-  }
-  .card__state {
-    height: 24px;
-    font-size: 25px;
-    font-weight: bold;
-    font-stretch: normal;
-    font-style: normal;
-    line-height: normal;
-    letter-spacing: -0.4px;
-    text-align: center;
-  }
-`;
-export const LatestSliderWrapper = styled.div`
-  cursor: pointer;
   .swiper {
-    padding-bottom: 50px;
+    padding-bottom: 2.5rem;
     width: 1200px;
+    margin-left: -1rem;
   }
   .swiper-slide {
-    width: 190px;
     ${props => props.theme.shadow[0]};
     color: ${props => props.theme.colors.darkGrey};
   }
@@ -101,5 +38,97 @@ export const LatestSliderWrapper = styled.div`
   .swiper-button-prev {
     border-color: ${props => props.theme.colors.mainDarkBrown} !important;
     color: ${props => props.theme.colors.mainDarkBrown} !important;
+  }
+  ${({ theme }) => theme.media.mobile} {
+    margin: 0 -1rem;
+    .swiper {
+      padding-bottom: 0;
+      width: 900px;
+    }
+    .swiper-slide {
+      margin-right: 10px !important;
+    }
+  }
+`;
+
+export const LatestSliderCardWrapper = styled.div`
+  border: 1px solid ${props => props.theme.colors.mainLightBrown};
+  height: 400px;
+  ${({ theme }) => theme.media.mobile} {
+    height: 300px;
+  }
+`;
+
+export const LatestSliderCardImage = styled.div`
+  border-bottom: 1px solid rgba(99, 110, 114, 0.1);
+  height: 65%;
+
+  ${({ theme }) => theme.media.mobile} {
+    height: 60%;
+  }
+`;
+
+export const LatestSliderCardInfo = styled.div`
+  height: 35%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  .card__title {
+    padding: 0 1rem;
+    font-size: 1.3rem;
+    margin-top: 0.5rem;
+    min-height: 38px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    line-height: 1.2;
+    color: ${p => p.theme.colors.darkGrey};
+  }
+  .card__price {
+    letter-spacing: -0.4px;
+    color: ${p => p.theme.colors.info};
+    span:nth-child(1) {
+      font-size: 1.4rem;
+    }
+    span:nth-child(2) {
+      font-size: 1.2rem;
+    }
+  }
+  .card__state {
+    font-size: 1.3rem;
+    line-height: normal;
+    letter-spacing: -0.4px;
+    color: ${p => p.theme.colors.darkGrey};
+  }
+  .red {
+    font-weight: bold;
+    color: ${p => p.theme.colors.error};
+  }
+
+  ${({ theme }) => theme.media.mobile} {
+    height: 40%;
+    gap: 0.3rem;
+
+    .card__title {
+      margin-top: 0.2rem;
+      font-size: 0.7rem;
+      padding: 0 0.5rem;
+      min-height: 1.4rem;
+    }
+    .card__price {
+      span:nth-child(1) {
+        font-size: 0.7rem;
+      }
+      span:nth-child(2) {
+        font-size: 0.6rem;
+      }
+    }
+    .card__state {
+      font-size: 0.6rem;
+      font-weight: bold;
+    }
   }
 `;
