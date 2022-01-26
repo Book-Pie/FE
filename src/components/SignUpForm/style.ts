@@ -76,6 +76,7 @@ export const ErrorWrapper = styled.div<{ isError: boolean }>`
   border: 1px solid ${({ theme }) => theme.colors.darkGrey};
   background-color: rgba(178, 190, 195, 0.3);
   border-radius: 5px;
+  margin-bottom: 1rem;
   ${({ isError }) =>
     isError &&
     css`

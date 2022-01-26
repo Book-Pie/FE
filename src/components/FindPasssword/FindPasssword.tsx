@@ -6,9 +6,9 @@ import { errorHandler } from "src/api/http";
 import useDebounce from "hooks/useDebounce";
 import { hyphenRemoveFormat } from "src/utils/formatUtil";
 import useDelay from "src/hooks/useDelay";
-import { IFindPassword } from "./types";
+import * as Types from "./types";
 import Form from "./Form";
-import { Title } from "./style";
+import * as Styled from "./style";
 
 const FindPasssword = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -18,9 +18,10 @@ const FindPasssword = () => {
     isSuccess: false,
     message: "",
   });
+  const { isSuccess, message } = popUpState;
   const history = useHistory();
   const debounce = useDebounce();
-  const delay = useDelay(600);
+  const delay = useDelay(300);
 
   const handlePopUp = useCallback((message: string, isSuccess: boolean) => {
     setPopUpState({
@@ -30,13 +31,13 @@ const FindPasssword = () => {
     setIsOpen(true);
   }, []);
 
-  const onSubmit = (FormData: IFindPassword) => {
+  const onSubmit = (FormData: Types.FindPasswordForm) => {
     if (debounce.current) clearTimeout(debounce.current);
     debounce.current = setTimeout(async () => {
       try {
         const { email, phone, password, name } = FormData;
         setIsLoading(true);
-        getFindPassword<IFindPassword>({
+        getFindPassword<Types.FindPasswordForm>({
           email,
           name,
           phone: hyphenRemoveFormat(phone),
@@ -55,15 +56,15 @@ const FindPasssword = () => {
   };
 
   return (
-    <>
+    <section>
       {isOpen && (
-        <Popup isOpen={isOpen} setIsOpen={setIsOpen} className={popUpState.isSuccess ? "green" : "red"} autoClose>
-          <div>{popUpState.message}</div>
+        <Popup isOpen={isOpen} setIsOpen={setIsOpen} className={isSuccess ? "green" : "red"} autoClose>
+          <div>{message}</div>
         </Popup>
       )}
-      <Title>비밀번호 변경</Title>
+      <Styled.Title>비밀번호 변경</Styled.Title>
       <Form isLoading={isLoading} onSubmit={onSubmit} />
-    </>
+    </section>
   );
 };
 
