@@ -1,9 +1,17 @@
 import styled from "styled-components";
 
-export const Container = styled.div`
-  padding: 1rem;
+export const SignUpContainer = styled.main`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem 1rem;
   margin: 2rem 0;
-  background-color: ${props => props.theme.colors.mainLightBrown};
-  text-align: center;
-  ${props => props.theme.shadow[30]};
+  ${({ theme }) => theme.shadow[0]};
+
+  h3 {
+    color: ${({ theme }) => theme.colors.darkGrey};
+  }
+  ${({ theme }) => theme.media.mobile} {
+    margin: 0;
+  }
 `;

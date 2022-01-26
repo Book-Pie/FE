@@ -14,7 +14,8 @@ import { getOrder } from "src/api/usedBook/usedBook";
 import { useHistory } from "react-router";
 import Loading from "src/elements/Loading";
 import useDelay from "src/hooks/useDelay";
-import { FormErrorMessages } from "../SignUpForm/types";
+import { FormErrorMessages } from "utils/hookFormUtil";
+import useWindowFiexd from "src/hooks/useWindowFiexd";
 import { Wrapper, Fixed, Row, DropdownWrapper, Text, Payment } from "./style";
 import * as Types from "./types";
 
@@ -36,6 +37,7 @@ const OrderForm = ({ usedBook }: Types.OrderFormProps) => {
   const [isDaumPostcodeOpen, setIsDaumPostcodeOpen] = useState(false);
   const [deliveryText, setDeliveryText] = useState(deliveryTextInit);
   const { signIn } = useSignIn();
+  useWindowFiexd(isDaumPostcodeOpen);
   const { user } = signIn;
 
   const { price } = usedBook;
@@ -134,21 +136,6 @@ const OrderForm = ({ usedBook }: Types.OrderFormProps) => {
       setValue("detailAddress", detailAddress);
     }
   }, [user, setValue]);
-
-  useEffect(() => {
-    if (isDaumPostcodeOpen) {
-      document.body.style.cssText = `
-      position: fixed; 
-      top: -${window.scrollY}px;
-      overflow-y: scroll;
-      width: 100%;`;
-    }
-    return () => {
-      const scrollY = document.body.style.top;
-      document.body.style.cssText = "";
-      window.scrollTo(0, parseInt(scrollY || "0", 10) * -1);
-    };
-  }, [isDaumPostcodeOpen]);
 
   if (user === null) return null;
 

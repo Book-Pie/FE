@@ -6,7 +6,7 @@ import Loading from "src/elements/Loading";
 import useSignIn from "src/hooks/useSignIn";
 import { saleInfoAsync, saleInfoSelector } from "src/modules/Slices/signIn/signInSlice";
 import { useTypedSelector } from "src/modules/store";
-import { addHyphenFormat, dateFormat2, make1000UnitsCommaFormet } from "src/utils/formatUtil";
+import { hyphenFormat, dateFormat2, make1000UnitsCommaFormet } from "src/utils/formatUtil";
 import { Wrapper, Empty } from "./style";
 
 const SaleInfo = () => {
@@ -85,7 +85,7 @@ const SaleInfo = () => {
           </div>
           <div>
             <span>연락처</span>
-            <p>{addHyphenFormat(buyer.phone)}</p>
+            <p>{hyphenFormat(buyer.phone)}</p>
           </div>
           <div>
             <span>받는주소</span>

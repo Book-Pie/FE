@@ -7,6 +7,7 @@ import {
   hookFormMobileNumberPatternCheck,
   hookFormEmailPatternCheck,
   hookFormMisMatchCheck,
+  FormErrorMessages,
 } from "utils/hookFormUtil";
 import FormInput from "src/elements/FormInput";
 import ErrorMessage from "src/elements/ErrorMessage";
@@ -24,13 +25,14 @@ import Button from "@mui/material/Button";
 import naverImg from "assets/image/naver_oauth.png";
 import kakaoImg from "assets/image/kakao_oauth.png";
 import { Link } from "react-router-dom";
-import { FormErrorMessages, IAxiosPostPayload, IRows, SignUpFormReponse, ISignUpForm } from "./types";
-import { InputWrapper, ButtonWrapper, SignUpWrapper, ErrorWrapper, DaumPostWrapper, Oauths } from "./style";
+import useWindowFiexd from "src/hooks/useWindowFiexd";
+import * as Types from "./types";
+import * as Styled from "./style";
 
 const kakaOauthUrl = process.env.KAKAO_OAUTH_URL;
 const naverOauthUrl = process.env.NAVER_OAUTH_URL;
 
-const signUpFormInit: ISignUpForm = {
+const init: Types.SignUpForm = {
   email: "",
   name: "",
   password: "",
@@ -43,9 +45,10 @@ const signUpFormInit: ISignUpForm = {
 };
 
 const SignUpForm = () => {
-  const { register, handleSubmit, reset, formState, setValue, watch, clearErrors, setFocus } = useForm<ISignUpForm>({
-    defaultValues: signUpFormInit,
-  });
+  const { register, handleSubmit, reset, formState, setValue, watch, clearErrors, setFocus } =
+    useForm<Types.SignUpForm>({
+      defaultValues: init,
+    });
 
   const [isDaumPostOpen, setIsDaumPostOpen] = useState(false);
   const { addressState, handleComplete } = useDaumPost();
@@ -53,15 +56,16 @@ const SignUpForm = () => {
   const { errors } = formState;
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState("");
+  useWindowFiexd(isDaumPostOpen);
   const history = useHistory();
 
-  const onSubmit = async (data: ISignUpForm) => {
+  const onSubmit = async (data: Types.SignUpForm) => {
     try {
       const { mainAddress, detailAddress, email, phone, nickName, password, postalCode, name } = data;
 
       const validationReponse = await axios.all([
-        getEmailDuplicateCheck<SignUpFormReponse>(email),
-        getNickNameDuplicateCheck<SignUpFormReponse>(nickName),
+        getEmailDuplicateCheck<Types.Reponse>(email),
+        getNickNameDuplicateCheck<Types.Reponse>(nickName),
       ]);
 
       // validation 모두 성공했을때 요청을 한다.
@@ -71,7 +75,7 @@ const SignUpForm = () => {
       if (emailDuplicate.data.data === false) throw new Error("이미 가입한 이메일입니다.");
       if (nickNameDuplicate.data.data === false) throw new Error("사용중인 닉네임입니다.");
 
-      await getSignUp<SignUpFormReponse, IAxiosPostPayload>({
+      await getSignUp<Types.RequestPayload>({
         password,
         name,
         phone: hyphenRemoveFormat(phone),
@@ -92,10 +96,10 @@ const SignUpForm = () => {
     }
   };
 
-  const handleReset = () => reset(signUpFormInit);
+  const handleReset = () => reset(init);
   const handleDaumPostOpne = () => setIsDaumPostOpen(prve => !prve);
 
-  const rows = useMemo((): IRows[] => {
+  const inputOptions = useMemo((): Types.Row[] => {
     return [
       {
         id: "email",
@@ -213,18 +217,18 @@ const SignUpForm = () => {
     ];
   }, [confirmPassword, password]);
 
-  const rowsEl = rows.map((row, idx) => {
-    const { id, text, options } = row;
+  const rows = inputOptions.map((input, idx) => {
+    const { id, text, options } = input;
     const isError = errors[`${id}`] ? true : false;
     return (
-      <InputWrapper key={idx} isError={isError}>
+      <Styled.InputWrapper key={idx} isError={isError}>
         <div>
           <FormLabel id={id} text={text} />
         </div>
         <div>
-          <FormInput {...row} register={register(id, options)} />
+          <FormInput {...input} register={register(id, options)} />
         </div>
-      </InputWrapper>
+      </Styled.InputWrapper>
     );
   });
 
@@ -244,29 +248,26 @@ const SignUpForm = () => {
   }, [addressState, errors, setValue, setIsDaumPostOpen, clearErrors, setFocus]);
 
   return (
-    <SignUpWrapper>
+    <Styled.SignUpWrapper>
       {isOpen && (
         <Popup isOpen={isOpen} setIsOpen={setIsOpen} autoClose className="red">
           {message}
         </Popup>
       )}
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <Styled.DaumPostWrapper isVisible={isDaumPostOpen}>
         <div>
-          {rowsEl}
-          {isDaumPostOpen && (
-            <DaumPostWrapper>
-              <div>
-                <DaumPostCode autoClose={false} onComplete={handleComplete} style={{ width: "400px" }} />
-                <Button variant="contained" color="mainDarkBrown" onClick={handleDaumPostOpne}>
-                  닫기
-                </Button>
-              </div>
-            </DaumPostWrapper>
-          )}
+          <p>주소찾기</p>
+          <DaumPostCode autoClose={false} onComplete={handleComplete} />
+          <Button variant="contained" color="mainDarkBrown" onClick={handleDaumPostOpne}>
+            닫기
+          </Button>
         </div>
+      </Styled.DaumPostWrapper>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div>{rows}</div>
         <div>
           {Object.keys(errors).length !== 0 && (
-            <ErrorWrapper isError={Object.keys(errors).length !== 0}>
+            <Styled.ErrorWrapper isError={Object.keys(errors).length !== 0}>
               <ErrorMessage message={errors.email?.message} />
               <ErrorMessage message={errors.nickName?.message} />
               <ErrorMessage message={errors.password?.message} />
@@ -276,9 +277,9 @@ const SignUpForm = () => {
               <ErrorMessage message={errors.postalCode?.message} />
               <ErrorMessage message={errors.mainAddress?.message} />
               <ErrorMessage message={errors.detailAddress?.message} />
-            </ErrorWrapper>
+            </Styled.ErrorWrapper>
           )}
-          <ButtonWrapper>
+          <Styled.ButtonWrapper>
             <Button variant="contained" color="mainDarkBrown" onClick={handleDaumPostOpne}>
               주소찾기
             </Button>
@@ -293,18 +294,18 @@ const SignUpForm = () => {
                 로그인하기
               </Button>
             </Link>
-            <Oauths>
+            <Styled.Oauths>
               <a href={naverOauthUrl}>
                 <img src={naverImg} alt="naver" />
               </a>
               <a href={kakaOauthUrl}>
                 <img src={kakaoImg} alt="kakao" />
               </a>
-            </Oauths>
-          </ButtonWrapper>
+            </Styled.Oauths>
+          </Styled.ButtonWrapper>
         </div>
       </form>
-    </SignUpWrapper>
+    </Styled.SignUpWrapper>
   );
 };
 

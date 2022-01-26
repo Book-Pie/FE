@@ -4,8 +4,8 @@ import { useCallback, lazy } from "react";
 import { useAppDispatch } from "src/modules/store";
 import PrivateRoute from "./PrivateRoute";
 
-const SignUp = lazy(() => import("pages/SignUp/SignUp"));
 const Main = lazy(() => import("pages/Main/Main"));
+const SignUp = lazy(() => import("pages/SignUp/SignUp"));
 const SignIn = lazy(() => import("pages/SignIn/SignIn"));
 const My = lazy(() => import("pages/My/My"));
 const Find = lazy(() => import("pages/Find/Find"));

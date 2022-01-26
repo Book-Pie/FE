@@ -27,8 +27,8 @@ export const getEmailDuplicateCheck = <T>(email: string) => {
   return http.get<T>(`/user/email/${email}`);
 };
 
-export const getSignUp = <T, P>(payload: P) => {
-  return http.post<T>("/user/signup", payload);
+export const getSignUp = <P>(payload: P) => {
+  return http.post("/user/signup", payload);
 };
 
 export const getFindEmail = <P>(payload: P) => {

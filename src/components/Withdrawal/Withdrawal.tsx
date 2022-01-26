@@ -7,13 +7,13 @@ import {
   hookFormMisMatchCheck,
   hookFormWhiteSpaceCheck,
   makeOption,
+  FormErrorMessages,
 } from "src/utils/hookFormUtil";
 import ErrorMessage from "src/elements/ErrorMessage";
 import { passwordCheck, getWithDrawal } from "src/api/my/my";
 import axios from "axios";
 import { logout } from "modules/Slices/signIn/signInSlice";
 import DropDown from "src/elements/DropDown";
-import { FormErrorMessages } from "src/components/SignUpForm/types";
 import { errorHandler } from "src/api/http";
 import Popup from "src/elements/Popup";
 import { getKakaoUnlink } from "src/utils/oAuthUtil";

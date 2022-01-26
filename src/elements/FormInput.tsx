@@ -34,7 +34,6 @@ const Input = styled.input<InputProps>`
 
   &::placeholder {
     color: rgb(122, 110, 110);
-    font-weight: bold;
   }
 `;
 
