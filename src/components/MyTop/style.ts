@@ -127,7 +127,7 @@ export const MyTopPointInfo = styled.div`
 `;
 
 export const MyTopUserInfo = styled.div`
-  flex: 5;
+  flex: 6;
   padding: 1rem;
   display: flex;
   flex-direction: column;

@@ -1,14 +1,14 @@
-export interface IWithdrawalForm {
+export interface WithdrawalForm {
   password: string;
   confirmPassword: string;
 }
 
-export interface IAxiosResponse {
+export interface Response {
   data: boolean;
   error: null;
   success: boolean;
 }
 
-export interface IAxiosRequsetPayload {
+export interface Requset {
   password: string;
 }

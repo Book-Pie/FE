@@ -19,6 +19,7 @@ export const ModifiedWrapper = styled.div`
   .modified__title {
     font-size: 2.5rem;
     font-weight: 900;
+    margin-top: 2rem;
     color: ${({ theme }) => theme.colors.darkGrey};
   }
 
@@ -144,10 +145,10 @@ export const ModifiedWrapper = styled.div`
     border-bottom: 1px solid rgba(149, 165, 166, 0.6);
     border-right: 1px solid rgba(149, 165, 166, 0.6);
     padding: 0.7rem 1rem 4rem 1.5rem;
-    flex-direction: column;
     box-sizing: border-box;
     display: flex;
     align-items: flex-start;
+    flex-direction: column;
     justify-content: center;
     gap: 15px;
 
