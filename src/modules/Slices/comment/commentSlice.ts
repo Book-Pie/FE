@@ -17,6 +17,8 @@ const initialState: commentReduceProps = {
   content: [],
   myCommentCheck: false,
   myComment: null,
+  last: false,
+  totalPages: 0,
   pageable: {
     sort: {
       empty: false,
@@ -29,6 +31,9 @@ const initialState: commentReduceProps = {
     paged: true,
     unpaged: false,
   },
+  first: false,
+  totalElements: 0,
+  empty: false,
   status: "loading",
   error: null,
 };
@@ -38,13 +43,13 @@ const name = "comments";
 // 댓글 리스트
 export const reviewCommentList = createAsyncThunk<commentAsyncSuccess, ReviewsParams>(
   `${name}/commentList`,
-  async ({ bookId, id }, { rejectWithValue }) => {
+  async ({ bookId, query, id }, { rejectWithValue }) => {
     try {
       if (id === undefined) {
-        const response = await http.get(`/book-review/${bookId}`);
+        const response = await http.get(`/book-review/${bookId}?&${query}`);
         return response.data;
       }
-      const response = await http.get(`/book-review/${bookId}?userId=${id}`);
+      const response = await http.get(`/book-review/${bookId}?userId=${id}&${query}`);
       return response.data;
     } catch (error: any) {
       console.log(error);
@@ -150,9 +155,17 @@ const commentSlice = createSlice({
         state.status = "loading";
       })
       .addCase(reviewCommentList.fulfilled, (state, { payload }) => {
-        state.content = payload.data.content;
+        const { data } = payload;
+        const { content, empty, first, last, myCommentCheck, pageable, totalPages, totalElements } = data;
+        state.content = content;
+        state.totalPages = totalPages;
+        state.totalElements = totalElements;
+        state.pageable = pageable;
+        state.first = first;
+        state.last = last;
+        state.empty = empty;
         state.status = "success";
-        state.myCommentCheck = payload.data.myCommentCheck;
+        state.myCommentCheck = myCommentCheck;
       })
       .addCase(reviewCommentList.rejected, state => {
         state.status = "failed";
@@ -162,7 +175,7 @@ const commentSlice = createSlice({
         state.status = "loading";
       })
       .addCase(addComment.fulfilled, (state, { payload }) => {
-        state.content.push(payload.data);
+        state.content.unshift(payload.data);
         state.status = "success";
         state.myComment = payload.data;
       })

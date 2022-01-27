@@ -11,6 +11,7 @@ export interface ReviewTextareaProps {
 export interface ReviewsParams {
   bookId: string;
   id: number;
+  query?: string;
 }
 
 export interface ReviewFormProps {

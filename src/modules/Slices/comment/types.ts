@@ -75,26 +75,27 @@ export interface commentLikeResponse {
 // 통신 성공 시 반환하는 타입 데이터
 
 export interface commentData {
-  content: getCommentProps[];
   myCommentCheck: boolean;
-  pageable: pageableProps;
-  totalElements: number;
-  totalPages: number;
   last: boolean;
-  number: number;
-  sort: sortProps;
-  size: number;
-  numberOfElements: number;
+  totalPages: number;
+  pageable: pageableProps;
+  content: getCommentProps[];
   first: boolean;
+  totalElements: number;
   empty: boolean;
 }
 
 // 리듀가 사용할 데이터 타입
 export interface commentReduceProps {
-  content: getCommentProps[];
   myCommentCheck: boolean;
   myComment: getCommentProps | null;
+  last: boolean;
+  totalPages: number;
   pageable: pageableProps;
+  content: getCommentProps[];
+  first: boolean;
+  totalElements: number;
+  empty: boolean;
   status: "loading" | "success" | "failed";
   error: null | ErrorHandling;
 }
@@ -124,9 +125,9 @@ export interface commentSuccess {
 }
 
 export interface commentAsyncSuccess {
+  success: boolean;
   data: commentData;
   error: null;
-  success: boolean;
 }
 
 // 나의 댓글
