@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
-import useSignIn from "hooks/useSignIn";
 import FormLabel from "src/elements/FormLabel";
 import { RegisterOptions, useForm } from "react-hook-form";
 import ErrorMessage from "src/elements/ErrorMessage";
@@ -19,7 +18,7 @@ import FormInput from "src/elements/FormInput";
 import Popup from "src/elements/Popup";
 import useDaumPost from "hooks/useDaumPost";
 import { myProfileImgUpload, myInfoChange, passwordChange, passwordCheck } from "src/api/my/my";
-import { myInfoAsync } from "modules/Slices/signIn/signInSlice";
+import { myInfoAsync, signInSelector } from "modules/Slices/signIn/signInSlice";
 import { hyphenRemoveFormat } from "src/utils/formatUtil";
 import { useHistory } from "react-router";
 import Skeleton from "@mui/material/Skeleton";
@@ -29,12 +28,14 @@ import Loading from "src/elements/Loading";
 import { Stack } from "@mui/material";
 import useDelay from "src/hooks/useDelay";
 import DaumPostModal from "src/elements/DaumPostModal";
+import { useAppDispatch, useTypedSelector } from "src/modules/store";
 import * as Styled from "./style";
 import * as Types from "./types";
 
 const Modified = () => {
-  const { signIn, dispatch } = useSignIn();
-  const { user } = signIn;
+  const signIn = useTypedSelector(signInSelector);
+  const dispatch = useAppDispatch();
+  const { user, token } = signIn;
 
   const [isDaumPostOpen, setIsDaumPostOpen] = useState(false);
   const modifiedConfirmForm = useForm<Types.ModifiedConfirmForm>();
@@ -112,7 +113,6 @@ const Modified = () => {
   };
 
   const handleFileUpload = async () => {
-    const { token } = signIn;
     try {
       if (!imgFile) throw new Error("사진을 업로드해주세요");
       if (imgFile && token) {
@@ -195,7 +195,6 @@ const Modified = () => {
     if (debounce.current) clearTimeout(debounce.current);
     debounce.current = setTimeout(async () => {
       try {
-        const { token } = signIn;
         if (user && token) {
           const { password } = data;
           await handlePasswordCheck(password, token);
@@ -212,7 +211,6 @@ const Modified = () => {
     if (debounce.current) clearTimeout(debounce.current);
     debounce.current = setTimeout(async () => {
       try {
-        const { token } = signIn;
         if (user && token) {
           // 썽크함수 호출
           const { currentPassword } = formData;

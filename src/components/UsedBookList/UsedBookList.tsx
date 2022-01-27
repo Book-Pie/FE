@@ -15,10 +15,12 @@ import useDelay from "src/hooks/useDelay";
 import useDebounce from "src/hooks/useDebounce";
 import Chip from "@mui/material/Chip";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import { Typography, useTheme } from "@mui/material";
+import { Button, Typography, useTheme } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { FormErrorMessages, htmlTagPatternCheck } from "src/utils/hookFormUtil";
 import ErrorMessage from "src/elements/ErrorMessage";
+import { useTypedSelector } from "src/modules/store";
+import { isLoggedInSelector } from "src/modules/Slices/signIn/signInSlice";
 import UsedBookCategory from "./UsedBookCategory";
 import * as Types from "./types";
 import * as Styled from "./style";
@@ -46,6 +48,7 @@ const UsedBookList = () => {
   const { formState, setError, clearErrors } = useForm<{ title: string }>();
   const { pages, pageCount, isEmpty } = usedBook;
   const { search, pathname } = location;
+  const isLoggedIn = useTypedSelector(isLoggedInSelector);
 
   const history = useHistory();
   const delay = useDelay(600);
@@ -207,23 +210,32 @@ const UsedBookList = () => {
         <div>
           <p>중고도서</p>
         </div>
-        <Styled.DropDownWrapper>
-          <DropDown defaultValue={currentDropDownValue} setSelectedId={setCurrentDropDownValue}>
-            <li>
-              <Link to={removeQueryString(pathname, search, ["sort"])}>전체</Link>
-            </li>
-            <li>
-              <Link id="date" to={makeNewQueryString(pathname, query, { sort: "date" })}>
-                최신순
-              </Link>
-            </li>
-            <li>
-              <Link id="view" to={makeNewQueryString(pathname, query, { sort: "view" })}>
-                조회순
-              </Link>
-            </li>
-          </DropDown>
-        </Styled.DropDownWrapper>
+        <div>
+          {isLoggedIn && (
+            <Link to="/my/sale/insert">
+              <Button variant="contained" color="mainDarkBrown">
+                게시글 작성하기
+              </Button>
+            </Link>
+          )}
+          <Styled.DropDownWrapper>
+            <DropDown defaultValue={currentDropDownValue} setSelectedId={setCurrentDropDownValue}>
+              <li>
+                <Link to={removeQueryString(pathname, search, ["sort"])}>전체</Link>
+              </li>
+              <li>
+                <Link id="date" to={makeNewQueryString(pathname, query, { sort: "date" })}>
+                  최신순
+                </Link>
+              </li>
+              <li>
+                <Link id="view" to={makeNewQueryString(pathname, query, { sort: "view" })}>
+                  조회순
+                </Link>
+              </li>
+            </DropDown>
+          </Styled.DropDownWrapper>
+        </div>
       </Styled.UsedBookMenuWrapper>
       <Styled.UsedBookCardsWrapper>
         {isEmpty ? (

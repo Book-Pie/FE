@@ -1,4 +1,4 @@
-export interface ISaleInsertForm {
+export interface SaleInsertForm {
   title: string;
   price: string;
 }

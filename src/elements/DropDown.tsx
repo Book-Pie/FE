@@ -8,10 +8,6 @@ export interface DropDownProps {
   setSelectedText?: (text: string) => void;
 }
 
-export interface UlProps {
-  visible: boolean;
-}
-
 const DropDown = ({ children, defaultValue, setSelectedId, setSelectedText }: DropDownProps) => {
   const [selected, setSelected] = useState(defaultValue);
   const [visible, setVisible] = useState<boolean>(false);
@@ -69,8 +65,8 @@ const DropDown = ({ children, defaultValue, setSelectedId, setSelectedText }: Dr
   }, [visible, isOpen, setIsOpen]);
 
   return (
-    <Wrapper ref={el}>
-      <SelectBox onClick={dropDorwnOpen}>
+    <DropDownWrapper ref={el}>
+      <SelectWrapper onClick={dropDorwnOpen}>
         {selected}
         <svg
           stroke="currentColor"
@@ -84,13 +80,13 @@ const DropDown = ({ children, defaultValue, setSelectedId, setSelectedText }: Dr
         >
           <path d="M7 10l5 5 5-5z" />
         </svg>
-      </SelectBox>
+      </SelectWrapper>
       {isOpen && (
         <SelectList visible={visible} onClick={dropDownClose}>
           {children}
         </SelectList>
       )}
-    </Wrapper>
+    </DropDownWrapper>
   );
 };
 
@@ -107,23 +103,22 @@ const CloseCss = css`
   transition: opacity 0.35s, transform 0.5s, z-index 0.2s ease-in;
 `;
 
-export const Wrapper = styled.div`
+export const DropDownWrapper = styled.div`
   position: relative;
   display: inline-block;
 `;
 
-export const SelectBox = styled.div`
+export const SelectWrapper = styled.div`
   display: flex;
   background: white;
   border-radius: 4px;
   justify-content: space-between;
   align-items: center;
-  padding-left: 0.5rem;
-  padding-right: 0.5rem;
+  padding: 0 0.5rem;
   height: 100%;
   color: ${({ theme }) => theme.colors.darkGrey};
   font-size: 0.875rem;
-  ${({ theme }) => theme.shadow[0]}
+  border: 1px solid rgba(149, 165, 166, 0.6);
   cursor: pointer;
 
   .dropDown__svg {
@@ -132,7 +127,7 @@ export const SelectBox = styled.div`
   }
 `;
 
-export const SelectList = styled.ul<UlProps>`
+export const SelectList = styled.ul<{ visible: boolean }>`
   list-style: none;
   padding: 0;
   margin: 0;
@@ -144,9 +139,9 @@ export const SelectList = styled.ul<UlProps>`
   right: 0;
   background-color: white;
   overflow: hidden;
+  border: 1px solid rgba(149, 165, 166, 0.6);
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
-  box-shadow: rgb(0 0 0 / 50%) 0px 0px 4px;
   transition: opacity 0.5s, transform 0.35s, z-index 0.35s ease-in;
   transform: translateY(-50%);
 

@@ -12,19 +12,21 @@ import {
 import ErrorMessage from "src/elements/ErrorMessage";
 import { passwordCheck, getWithDrawal } from "src/api/my/my";
 import axios from "axios";
-import { logout } from "modules/Slices/signIn/signInSlice";
+import { logout, signInSelector } from "modules/Slices/signIn/signInSlice";
 import DropDown from "src/elements/DropDown";
 import { errorHandler } from "src/api/http";
 import Popup from "src/elements/Popup";
 import { getKakaoUnlink } from "src/utils/oAuthUtil";
 import Editor from "components/Editor/Editor";
+import { useAppDispatch, useTypedSelector } from "src/modules/store";
 import * as Types from "./types";
 import * as Styled from "./style";
 
 const Withdrawal = () => {
   const currentReasonInit = useMemo(() => "탈퇴사유를 선택하세요.", []);
   const [currentReason, setCurrentReason] = useState(currentReasonInit);
-  const { signIn, dispatch } = useSignIn();
+  const signIn = useTypedSelector(signInSelector);
+  const dispatch = useAppDispatch();
   const { user, token } = signIn;
   const { formState, handleSubmit, register, watch, clearErrors } = useForm<Types.WithdrawalForm>();
   const { errors } = formState;

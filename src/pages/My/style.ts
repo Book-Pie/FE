@@ -11,7 +11,7 @@ export const MyContainer = styled.main`
   }
 `;
 
-export const MyMenuWrapper = styled.div`
+export const MyMenuWrapper = styled.section`
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
@@ -55,7 +55,7 @@ export const MyMenuWrapper = styled.div`
   }
 `;
 
-export const MyRouterWrapper = styled.div`
+export const MyRouterWrapper = styled.section`
   min-height: 400px;
   display: flex;
   justify-content: center;

@@ -1,14 +1,14 @@
 import noProfileImg from "assets/image/noProfile.jpg";
 import Button from "@mui/material/Button";
 import { useState, useCallback, useMemo } from "react";
-import useSignIn from "src/hooks/useSignIn";
-import { nickNameUpdateAsync } from "src/modules/Slices/signIn/signInSlice";
+import { nickNameUpdateAsync, signInSelector } from "src/modules/Slices/signIn/signInSlice";
 import { useForm, Controller, RegisterOptions } from "react-hook-form";
 import { hookFormSpecialChractersCheck, makeOption, FormErrorMessages } from "src/utils/hookFormUtil";
 import ErrorMessage from "src/elements/ErrorMessage";
 import { Skeleton, Input } from "@mui/material";
 import Popup from "src/elements/Popup";
 import { make1000UnitsCommaFormet } from "src/utils/formatUtil";
+import { useAppDispatch, useTypedSelector } from "src/modules/store";
 import * as Styled from "./style";
 import * as Types from "./type";
 import PointInfo from "./PointInfo";
@@ -25,7 +25,8 @@ const MyTop = () => {
       nickName: "",
     },
   });
-  const { signIn, dispatch } = useSignIn();
+  const signIn = useTypedSelector(signInSelector);
+  const dispatch = useAppDispatch();
   const { errors } = formState;
   const { user, token } = signIn;
 

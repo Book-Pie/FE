@@ -64,6 +64,16 @@ export const UsedBookMenuWrapper = styled.div`
     display: block;
     padding: 15px 14px;
   }
+  & > div {
+    display: flex;
+    gap: 10px;
+    & > a {
+      padding: 0;
+    }
+    button {
+      height: 100%;
+    }
+  }
 `;
 
 export const DropDownWrapper = styled.div`

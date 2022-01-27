@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const MyTopWrapper = styled.div`
+export const MyTopWrapper = styled.section`
   display: flex;
   gap: 1rem;
   margin: 0 1rem;
