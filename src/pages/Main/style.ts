@@ -1,17 +1,5 @@
 import styled from "styled-components";
 
-export const BookItemWrapper = styled.div`
-  border-radius: 5px;
-  cursor: pointer;
-  margin: 20px;
-`;
-
-export const BookReviewListContainer = styled.div`
-  display: grid;
-  grid-template-columns: repeat(4, 280px);
-  row-gap: 20px;
-`;
-
 export const Text = styled.p`
   font-size: 30px;
   font-weight: bold;

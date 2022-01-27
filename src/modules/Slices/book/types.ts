@@ -30,6 +30,19 @@ export interface BookItemProps {
   // bestRank: number;
 }
 
+export interface SubCategoryData {
+  categoryId: number;
+  categoryName: string;
+  parentId: number;
+  subCategory: [];
+}
+export interface ParentsCategoryData {
+  categoryId: number;
+  categoryName: string;
+  parentId: number;
+  subCategory: SubCategoryData[];
+}
+
 // 리듀가 사용할 데이터 타입
 export interface BookListReduceProps {
   bestSellerItem: BookItemProps[];
@@ -48,7 +61,7 @@ export interface BookListReduceProps {
 }
 
 // 썽크함수 성공시 반환 타입
-export interface getBookAsyncSuccess {
+export interface GetBookAsyncSuccess {
   success: boolean;
   data: {
     totalResults: number;
@@ -58,8 +71,20 @@ export interface getBookAsyncSuccess {
   error: null;
 }
 
+export interface GetReviewBookAsyncSuccess {
+  data: GetBookAsyncSuccess;
+  status: number;
+  statusText: string;
+}
+
+export interface GetCategoryAsyncSuccess {
+  success: boolean;
+  data: ParentsCategoryData[];
+  error: string;
+}
+
 // 썽크함수가 실패시 반환 타입
-export interface getBookAsyncFail {
+export interface GetBookAsyncFail {
   success: boolean;
   data: null;
   error: {
@@ -70,7 +95,7 @@ export interface getBookAsyncFail {
 
 // 썽크함수가 사용하는 api 타입
 export interface ThunkApi {
-  rejectValue: getBookAsyncFail;
+  rejectValue: GetBookAsyncFail;
 }
 
 export const name = "bookReduce";

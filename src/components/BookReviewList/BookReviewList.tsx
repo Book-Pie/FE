@@ -1,18 +1,15 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import BookReviewItem from "src/components/BookReviewList/BookReviewItem";
-import DropDown from "src/elements/DropDown";
-import { getBookSelector, getCategoryBook, getReviewBook } from "src/modules/Slices/book/bookSlice";
+import { getBookSelector, getDefaultBookList, getReviewBook, setListInit } from "src/modules/Slices/book/bookSlice";
 import { useTypedSelector } from "src/modules/store";
-import { makeNewQueryString, removeQueryString } from "src/utils/queryStringUtil";
-import Text from "src/elements/Text";
 import queryString from "query-string";
-import { BookItemProps } from "src/modules/Slices/book/types";
+import { BookItemProps, GetCategoryAsyncSuccess, ParentsCategoryData } from "src/modules/Slices/book/types";
 import Loading from "src/elements/Loading";
 import { useDispatch } from "react-redux";
-import { BookReviewListContainer } from "../Main/style";
-import { ReviewListTitleWrapper } from "../UsedBook/style";
-import { BookReviewContainer } from "./styles";
+import { getCategoryReview } from "src/api/usedBook/usedBook";
+import ReviewCategorys from "src/components/BookReviewList/ReviewCategorys";
+import { BookReviewContainer, BookReviewListContainer, ReviewListWrapper, Text, Wrapper } from "./styles";
 import ReviewListSkeleton from "./ReviewListSkeleton";
 
 const BookReviewList = () => {
@@ -20,13 +17,15 @@ const BookReviewList = () => {
   const dispatch = useDispatch();
   const { list } = useTypedSelector(getBookSelector);
   const { pages } = list;
-  const { search, pathname } = location;
   const [currentPage, setCurrentPage] = useState(1);
-  const [currentDropDownValue, setCurrentDropDownValue] = useState("정렬");
   const [isLoading, setIsLoading] = useState(false);
+  const [categorys, setCategorys] = useState<ParentsCategoryData[]>([]);
+
   const observerRef = useRef<IntersectionObserver>();
   const throttlingRef = useRef<NodeJS.Timeout | null>();
-  const currentQuery = useMemo(() => queryString.parse(search), [search]);
+  const { search } = location;
+
+  const query = useMemo(() => queryString.parse(search), [search]);
 
   // 무한스크롤
   const handleObserver = (node: HTMLDivElement) => {
@@ -36,6 +35,7 @@ const BookReviewList = () => {
     const observerCallback = ([entry]: IntersectionObserverEntry[], observer: IntersectionObserver) => {
       const { target, isIntersecting } = entry;
       if (isIntersecting) {
+        if (throttlingRef.current) return;
         setIsLoading(true);
         throttlingRef.current = setTimeout(() => {
           setCurrentPage(currentPage + 1);
@@ -57,45 +57,46 @@ const BookReviewList = () => {
 
   const handleHasMoreReviewList = useCallback(
     async (page: number) => {
-      const query = queryString.stringify({ page });
-      dispatch(getReviewBook(query));
+      dispatch(getReviewBook(queryString.stringify({ ...query, page })));
     },
-    [dispatch],
+    [dispatch, query],
   );
 
   useEffect(() => {
-    dispatch(getCategoryBook());
-    handleHasMoreReviewList(1);
+    (async () => {
+      const { data } = await getCategoryReview<GetCategoryAsyncSuccess>();
+      setCategorys(data.data);
+    })();
   }, []);
 
   useEffect(() => {
-    if (currentPage !== 1) handleHasMoreReviewList(currentPage);
-  }, [currentPage, handleHasMoreReviewList]);
+    if (Object.keys(query).length) {
+      setCurrentPage(1);
+      dispatch(setListInit());
+      handleHasMoreReviewList(1);
+    }
+  }, [query, handleHasMoreReviewList]);
+
+  useEffect(() => {
+    dispatch(getDefaultBookList(1));
+  }, []);
+
+  useEffect(() => {
+    if (currentPage !== 1) {
+      if (Object.keys(query).length) {
+        handleHasMoreReviewList(currentPage);
+      }
+      dispatch(getDefaultBookList(currentPage));
+    }
+  }, [currentPage, dispatch, handleHasMoreReviewList]);
 
   return (
-    <>
+    <ReviewListWrapper>
       <Loading isLoading={isLoading} />
-      {/* <Categorys categorys={categorys} defaultLocation="usedBook" /> */}
-      <ReviewListTitleWrapper>
-        <Text bold fontSize="30px" margin="0 0 0 20px">
-          리뷰
-        </Text>
-        <DropDown defaultValue={currentDropDownValue} setSelectedId={setCurrentDropDownValue}>
-          <li>
-            <Link to={removeQueryString(pathname, search, ["sort"])}>정렬</Link>
-          </li>
-          <li>
-            <Link id="date" to={makeNewQueryString(pathname, currentQuery, { sort: "date" })}>
-              최신순
-            </Link>
-          </li>
-          <li>
-            <Link id="view" to={makeNewQueryString(pathname, currentQuery, { sort: "view" })}>
-              조회순
-            </Link>
-          </li>
-        </DropDown>
-      </ReviewListTitleWrapper>
+      <ReviewCategorys categorys={categorys} defaultLocation="book" />
+      <Wrapper>
+        <Text>중고도서리뷰</Text>
+      </Wrapper>
       <BookReviewContainer>
         {pages.length !== 0 ? (
           pages.map((page, index) => (
@@ -109,7 +110,7 @@ const BookReviewList = () => {
           <ReviewListSkeleton />
         )}
       </BookReviewContainer>
-    </>
+    </ReviewListWrapper>
   );
 };
 
