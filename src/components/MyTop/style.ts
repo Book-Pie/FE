@@ -21,6 +21,7 @@ export const MyTopWrapper = styled.div`
 
   ${({ theme }) => theme.media.mobile} {
     margin: 0;
+    padding: 0 0.5rem;
     & > div:first-child {
       flex-direction: column;
     }
@@ -126,8 +127,8 @@ export const MyTopPointInfo = styled.div`
 `;
 
 export const MyTopUserInfo = styled.div`
-  flex: 4;
-  padding: 1rem 1.5rem;
+  flex: 5;
+  padding: 1rem;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;

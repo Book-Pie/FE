@@ -18,8 +18,7 @@ import { errorHandler } from "src/api/http";
 import FormInput from "src/elements/FormInput";
 import Popup from "src/elements/Popup";
 import useDaumPost from "hooks/useDaumPost";
-import DaumPostcode from "react-daum-postcode";
-import { getMyProfileImgUpload, myProfileChange, passwordChange, passwordCheck } from "src/api/my/my";
+import { myProfileImgUpload, myInfoChange, passwordChange, passwordCheck } from "src/api/my/my";
 import { myInfoAsync } from "modules/Slices/signIn/signInSlice";
 import { hyphenRemoveFormat } from "src/utils/formatUtil";
 import { useHistory } from "react-router";
@@ -29,15 +28,17 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import Loading from "src/elements/Loading";
 import { Stack } from "@mui/material";
 import useDelay from "src/hooks/useDelay";
-import { ModifiedWrapper } from "./style";
-import { IAxiosPayload, IAxiosResponse, IModifiedConfirmForm, IModifiedForm, IMyProfileUpdatePayload } from "./types";
+import DaumPostModal from "src/elements/DaumPostModal";
+import * as Styled from "./style";
+import * as Types from "./types";
 
 const Modified = () => {
   const { signIn, dispatch } = useSignIn();
   const { user } = signIn;
 
-  const modifiedConfirmForm = useForm<IModifiedConfirmForm>();
-  const modifiedForm = useForm<IModifiedForm>();
+  const [isDaumPostOpen, setIsDaumPostOpen] = useState(false);
+  const modifiedConfirmForm = useForm<Types.ModifiedConfirmForm>();
+  const modifiedForm = useForm<Types.ModifiedForm>();
   const [reconfirmation, setReconfirmation] = useState<boolean>(false);
   const [imgBase64, setImgBase64] = useState<string>(""); // 파일 base64
   const [imgFile, setImgFile] = useState<File | null>(null); // 파일
@@ -48,7 +49,6 @@ const Modified = () => {
   });
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [addressPopUpOpen, setAddressPopUpOpen] = useState<boolean>(false);
   const [newPassword, confirmPassword] = modifiedForm.watch(["newPassword", "confirmPassword"]);
   const [isLoading, setIsLoading] = useState(false);
   const { addressState, handleComplete } = useDaumPost();
@@ -121,7 +121,7 @@ const Modified = () => {
         formData.append("image", imgFile);
 
         await delay();
-        await getMyProfileImgUpload(formData, token);
+        await myProfileImgUpload(formData, token);
         dispatch(myInfoAsync(token))
           .unwrap()
           .then(() => {
@@ -164,16 +164,16 @@ const Modified = () => {
     imgFileRef.current.value = "";
   }, [imgFile]);
 
-  const handlePopUpOpne = useCallback(() => setAddressPopUpOpen(prve => !prve), []);
+  const handleDaumPostOpne = useCallback(() => setIsDaumPostOpen(prve => !prve), []);
   const handlePasswordCheck = useCallback(async (password: string, token: string) => {
-    const response = await passwordCheck<IAxiosResponse, IAxiosPayload>({ password }, token);
+    const response = await passwordCheck<Types.Response, Types.Request>({ password }, token);
     const isSuccess = response.data.data;
     // 실패 시 false
     if (!isSuccess) throw new Error("비밀번호가 틀립니다.");
   }, []);
 
   const handlePasswordChange = useCallback(async (password: string, token: string) => {
-    const response = await passwordChange<IAxiosResponse, IAxiosPayload>({ password }, token);
+    const response = await passwordChange<Types.Response, Types.Request>({ password }, token);
     const isSuccess = response.data.data;
     // 실패 시 false
     if (!isSuccess) throw new Error("비밀번호 변경에 실패 했습니다.");
@@ -191,7 +191,7 @@ const Modified = () => {
     setIsOpen(true);
   }, []);
 
-  const modifiedConfirmFormSubmit = (data: IModifiedConfirmForm) => {
+  const modifiedConfirmFormSubmit = (data: Types.ModifiedConfirmForm) => {
     if (debounce.current) clearTimeout(debounce.current);
     debounce.current = setTimeout(async () => {
       try {
@@ -208,7 +208,7 @@ const Modified = () => {
   };
 
   // 유저 정보 수정
-  const modifiedFormSubmit = (formData: IModifiedForm) => {
+  const modifiedFormSubmit = (formData: Types.ModifiedForm) => {
     if (debounce.current) clearTimeout(debounce.current);
     debounce.current = setTimeout(async () => {
       try {
@@ -223,7 +223,7 @@ const Modified = () => {
             await handlePasswordChange(newPassword, token);
           }
 
-          const payload: IMyProfileUpdatePayload = {
+          const payload: Types.MyProfileUpdateRequest = {
             name,
             phone: hyphenRemoveFormat(phone),
             address: {
@@ -233,10 +233,11 @@ const Modified = () => {
             },
           };
 
-          const myProfileChangeResponse = await myProfileChange<IAxiosResponse, IMyProfileUpdatePayload>(
+          const myProfileChangeResponse = await myInfoChange<Types.Response, Types.MyProfileUpdateRequest>(
             payload,
             token,
           );
+
           if (!myProfileChangeResponse.data.data) throw new Error("프로필 변경에 실패 했습니다.");
           // 변경된 프로필 갱신
           dispatch(myInfoAsync(token))
@@ -268,7 +269,7 @@ const Modified = () => {
       modifiedForm.setValue("detailAddress", "");
       modifiedForm.setFocus("detailAddress");
     }
-  }, [addressState, modifiedForm, setAddressPopUpOpen]);
+  }, [addressState, modifiedForm]);
 
   useEffect(() => {
     if (user && user.address) {
@@ -306,7 +307,7 @@ const Modified = () => {
       )}
       <Loading isLoading={isLoading} />
       {reconfirmation ? (
-        <ModifiedWrapper className="modified">
+        <Styled.ModifiedWrapper className="modified">
           <div className="modified__title">회원정보 수정</div>
           <div className="modified__imgUpload">
             <div>
@@ -345,7 +346,9 @@ const Modified = () => {
               <div className="modified__form__cell">
                 <span>이메일</span>
               </div>
-              <div className="modified__form__cell">{user?.email ?? ""}</div>
+              <div className="modified__form__cell">
+                <span>{user?.email ?? ""}</span>
+              </div>
             </div>
             <div className="modified__form__row">
               <div className="modified__form__cell">
@@ -418,7 +421,7 @@ const Modified = () => {
               </div>
               <div className="modified__form__address">
                 <div>
-                  <button type="button" onClick={handlePopUpOpne}>
+                  <button type="button" onClick={handleDaumPostOpne}>
                     우편찾기
                   </button>
                 </div>
@@ -438,7 +441,7 @@ const Modified = () => {
                     register={modifiedForm.register("mainAddress", addressOptions)}
                   />
                 </div>
-                <div>
+                <div className="modified__errorbox">
                   <ErrorMessage message={modifiedFormErrors.postalCode?.message} />
                   <ErrorMessage message={modifiedFormErrors.mainAddress?.message} />
                 </div>
@@ -456,37 +459,26 @@ const Modified = () => {
               </div>
             </div>
             <div className="modified__buttons">
-              <button type="submit">전송</button>
+              <button type="submit">변경</button>
               <button type="button" className="modified__buttons--reset" onClick={() => modifiedForm.reset()}>
                 초기화
               </button>
             </div>
           </form>
-          {addressPopUpOpen && (
-            <div className="fixed">
-              <div>
-                <DaumPostcode
-                  autoClose
-                  onComplete={handleComplete}
-                  onClose={() => handlePopUpOpne()}
-                  style={{
-                    width: "400px",
-                    height: "500px",
-                  }}
-                />
-                <button type="button" onClick={handlePopUpOpne}>
-                  닫기
-                </button>
-              </div>
-            </div>
-          )}
-        </ModifiedWrapper>
+          <DaumPostModal
+            isVisible={isDaumPostOpen}
+            handleComplete={handleComplete}
+            handleDaumPostOpne={handleDaumPostOpne}
+          />
+        </Styled.ModifiedWrapper>
       ) : (
-        <ModifiedWrapper className="modified">
+        <Styled.ModifiedWrapper className="modified">
           <div className="modified__title">회원정보확인</div>
           <div className="modified__text">
             {user ? (
-              <span className="modified__email">{user.email}</span>
+              <span className="modified__email">
+                <span>{user.email}</span>
+              </span>
             ) : (
               <Skeleton variant="text" width={140} height={40} animation="wave" />
             )}
@@ -515,14 +507,15 @@ const Modified = () => {
                   id="password"
                   register={modifiedConfirmForm.register("password", passwordOpions)}
                 />
-                <ErrorMessage message={modifiedConfirmFormErrors.password?.message} />
               </div>
             </div>
+            <ErrorMessage message={modifiedConfirmFormErrors.password?.message} />
+
             <div className="modified__buttons">
               <button type="submit">확인</button>
             </div>
           </form>
-        </ModifiedWrapper>
+        </Styled.ModifiedWrapper>
       )}
     </>
   );
