@@ -12,7 +12,7 @@ const Find = lazy(() => import("pages/Find/Find"));
 const UsedBook = lazy(() => import("pages/UsedBook/UsedBook"));
 const Oauth = lazy(() => import("pages/Oauth/Oauth"));
 const BookDetail = lazy(() => import("pages/BookDetail/BookDetail"));
-const BookReviewList = lazy(() => import("pages/BookReviewList/BookReviewList"));
+const BookReview = lazy(() => import("pages/BookReview/BookReview"));
 const UsedBookDetail = lazy(() => import("pages/UsedBookDetail/UsedBookDetail"));
 const Order = lazy(() => import("pages/Order/Order"));
 const Community = lazy(() => import("pages/Community/Community"));
@@ -42,7 +42,7 @@ const Routers = () => {
       <Route path="/search" component={Search} />
       <Route path="/search/aladin" component={Aladin} />
       <Route path="/book/:isbn13" component={BookDetail} />
-      <Route path="/book" component={BookReviewList} />
+      <Route path="/book" component={BookReview} />
       <Route path="*" render={() => <Redirect to="/" />} />
     </Switch>
   );

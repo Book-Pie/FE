@@ -13,10 +13,12 @@ export const ButtonText = styled.span`
 `;
 
 export const RatingContent = styled.span`
+  font-size: 15px;
   margin-right: 5px;
 `;
 
 export const RatingScore = styled.span`
+  font-size: 15px;
   color: #ef3b96;
 `;
 

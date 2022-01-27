@@ -42,3 +42,7 @@ export const getBuyer = (userId: number, token: string) => {
     headers: { "X-AUTH-TOKEN": token },
   });
 };
+
+export const getCategoryReview = <T>() => {
+  return http.get<T>("/book/category");
+};
