@@ -11,7 +11,7 @@ export const hyphenRemoveFormat = (text: string) => {
   return text.replaceAll("-", "");
 };
 
-export const addHyphenFormat = (text: string) => {
+export const hyphenFormat = (text: string) => {
   const { length } = text;
   return text.split("").reduce((acc, cur, idx) => {
     const hyphenText = `${acc}-${cur}`;

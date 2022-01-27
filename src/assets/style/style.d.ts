@@ -8,6 +8,7 @@ declare module "styled-components" {
       white: string;
       darkGrey: string;
       error: string;
+      info: string;
     };
     media: {
       pc: string;

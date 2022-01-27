@@ -13,20 +13,31 @@ const Card = ({ id, title, price, image, state }: Types.CardProps) => {
     }),
     [],
   );
+  const STATE_CLASSNAME_ENUM: Types.StateEnumType = useMemo(
+    () => ({
+      SALE: "판매 중",
+      TRADING: "거래 중",
+      SOLD_OUT: "red",
+    }),
+    [],
+  );
 
   return (
-    <Styled.Wrapper>
+    <Styled.LatestSliderCardWrapper>
       <Link to={`/usedBook/${id}`}>
-        <Styled.Image>
+        <Styled.LatestSliderCardImage>
           <img src={`${process.env.BASE_URL}/image/${image}`} alt="latestImg" />
-        </Styled.Image>
-        <Styled.Info>
+        </Styled.LatestSliderCardImage>
+        <Styled.LatestSliderCardInfo>
           <div className="card__title">{title}</div>
-          <div className="card__price">{`${make1000UnitsCommaFormet(String(price))}원`}</div>
-          <div className="card__state">{STATE_ENUM[state]}</div>
-        </Styled.Info>
+          <div className="card__price">
+            <span>중고가 </span>
+            <span>{`${make1000UnitsCommaFormet(String(price))}원`}</span>
+          </div>
+          <div className={`card__state ${STATE_CLASSNAME_ENUM[state]}`}>{STATE_ENUM[state]}</div>
+        </Styled.LatestSliderCardInfo>
       </Link>
-    </Styled.Wrapper>
+    </Styled.LatestSliderCardWrapper>
   );
 };
 

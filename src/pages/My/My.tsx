@@ -78,8 +78,6 @@ const My = () => {
           <Route path={`${path}/buy/:orderId`} component={BuyInfo} />
           <Route path={`${path}/like`} component={BookLikeList} />
           <Route path={`${path}/userReview`} component={UserReview} />
-          <Route path={`${path}/e`} render={() => <div />} />
-          <Route path={`${path}/d`} render={() => <div />} />
           <Route path={`${path}/review`} component={MyReview} />
           <Route path={`${path}/modified`} component={Modified} />
           <Route path={`${path}/withdrawal`} component={Withdrawal} />

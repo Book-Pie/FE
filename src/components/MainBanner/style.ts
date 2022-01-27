@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const Wrapper = styled.div`
+export const MainBannerWrapper = styled.div`
   .swiper-button-next {
     border-color: ${props => props.theme.colors.white} !important;
     color: ${props => props.theme.colors.white} !important;
@@ -9,7 +9,9 @@ export const Wrapper = styled.div`
     border-color: ${props => props.theme.colors.white} !important;
     color: ${props => props.theme.colors.white} !important;
   }
+
   img {
+    min-height: 200px;
     display: block;
     margin: 0 auto;
     height: 100%;
@@ -17,6 +19,6 @@ export const Wrapper = styled.div`
   }
 `;
 export const MainBannerContainer = styled.div`
-  height: 380px;
+  max-height: 380px;
   ${p => p.theme.shadow[0]}
 `;

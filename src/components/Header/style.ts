@@ -1,20 +1,20 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
-export const HeaderContainer = styled.div`
-  width: 1200px;
+export const HeaderContainer = styled.header`
+  max-width: 1200px;
   margin: 0 auto;
+  line-height: 1.5;
 `;
 
 export const InfoWrapper = styled.div`
-  background-color: ${props => props.theme.colors.mainDarkBrown};
+  display: flex;
+  justify-content: flex-end;
+  background-color: ${({ theme }) => theme.colors.mainDarkBrown};
   a {
-    color: ${props => props.theme.colors.white};
-  }
-  div {
-    display: flex;
-    justify-content: flex-end;
+    color: ${({ theme }) => theme.colors.white};
   }
   span {
+    display: inline-block;
     text-align: center;
     width: 100px;
     font-size: 1rem;
@@ -22,7 +22,49 @@ export const InfoWrapper = styled.div`
     padding: 0 0.3125rem;
   }
   span + span {
-    border-left: 1px solid white;
+    border-left: 1px solid ${({ theme }) => theme.colors.white};
+  }
+  ${({ theme }) => theme.media.mobile} {
+    display: none;
+  }
+`;
+
+export const HamburgerWrapper = styled.div<{ isVisible: boolean }>`
+  display: none;
+  background-color: ${({ theme }) => theme.colors.mainDarkBrown};
+
+  svg {
+    cursor: pointer;
+    margin: 0.5rem;
+    color: ${({ theme }) => theme.colors.white};
+  }
+  span {
+    display: inline-block;
+  }
+  ul {
+    height: 0;
+    overflow: hidden;
+    transition: height 0.5s ease-in;
+    ${({ isVisible }) =>
+      isVisible &&
+      css`
+        height: 150px;
+      `}
+  }
+
+  a {
+    display: block;
+    padding: 20px 15px;
+    height: 75px;
+    color: ${({ theme }) => theme.colors.white};
+    :hover {
+      background-color: ${({ theme }) => theme.colors.mainLightBrown};
+      color: ${({ theme }) => theme.colors.darkGrey};
+      font-weight: bold;
+    }
+  }
+  ${({ theme }) => theme.media.mobile} {
+    display: block;
   }
 `;
 
@@ -36,7 +78,13 @@ export const NavWrapper = styled.div`
     color: ${props => props.theme.colors.mainDarkBrown};
   }
   img {
-    height: 2.5375rem;
+    max-height: 2.5375rem;
+    width: 100%;
+  }
+  ${({ theme }) => theme.media.mobile} {
+    flex-direction: column;
+    height: auto;
+    padding: 1rem 0.5rem;
   }
 `;
 
@@ -47,8 +95,11 @@ export const SearchWrapper = styled.form`
   justify-content: space-between;
   align-items: center;
   height: 54px;
-  width: 500px;
+  flex: 1;
+  max-width: 500px;
+
   input {
+    margin: 0 1rem;
     border: none;
     background-color: ${props => props.theme.colors.mainLightBrown};
     ${props => props.theme.shadow[0]};
@@ -61,10 +112,9 @@ export const SearchWrapper = styled.form`
   }
   img {
     position: absolute;
-    right: 0;
+    right: 5%;
     width: 20px;
     height: 20px;
-    margin-right: 1rem;
     cursor: pointer;
     padding: 5px;
     box-sizing: content-box;
@@ -83,22 +133,38 @@ export const SearchWrapper = styled.form`
     right: 0;
     ${props => props.theme.shadow[0]};
   }
+  ${({ theme }) => theme.media.mobile} {
+    flex: none;
+    input {
+      margin: 0;
+      width: 100%;
+    }
+  }
 `;
 
 export const RouterWrapper = styled.div`
   display: flex;
-  color: ${props => props.theme.colors.mainDarkBrown};
+  color: ${({ theme }) => theme.colors.mainDarkBrown};
   span {
     cursor: pointer;
     text-align: center;
     width: 6.25rem;
     font-size: 18px;
-    padding: 0px 8px;
     font-weight: bold;
     letter-spacing: -0.45px;
-    padding: 0px 8px;
   }
+
   span + span {
-    border-left: 1px solid black;
+    border-left: 1px solid ${({ theme }) => theme.colors.mainDarkBrown};
+  }
+  a {
+    padding: 0.8rem;
+  }
+
+  ${({ theme }) => theme.media.mobile} {
+    padding-top: 1rem;
+    span {
+      width: 5.25rem;
+    }
   }
 `;

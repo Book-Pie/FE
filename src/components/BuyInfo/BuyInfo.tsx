@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo } from "react";
 import { useHistory, useParams } from "react-router";
 import { buyInfoAsync, buyInfoSelector } from "src/modules/Slices/signIn/signInSlice";
 import { useTypedSelector } from "src/modules/store";
-import { addHyphenFormat, dateFormat2, make1000UnitsCommaFormet } from "src/utils/formatUtil";
+import { hyphenFormat, dateFormat2, make1000UnitsCommaFormet } from "src/utils/formatUtil";
 import { Button } from "@mui/material";
 import { Link } from "react-router-dom";
 import Loading from "src/elements/Loading";
@@ -73,7 +73,7 @@ const BuyInfo = () => {
               </div>
               <div>
                 <p>판매자 연락처</p>
-                <p>{addHyphenFormat(seller.phone)}</p>
+                <p>{hyphenFormat(seller.phone)}</p>
               </div>
               <div>
                 <p>상품 명</p>
@@ -99,7 +99,7 @@ const BuyInfo = () => {
           </div>
           <div>
             <span>연락처</span>
-            <p>{addHyphenFormat(buyer.phone)}</p>
+            <p>{hyphenFormat(buyer.phone)}</p>
           </div>
           <div>
             <span>받는주소</span>
