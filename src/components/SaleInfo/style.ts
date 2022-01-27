@@ -1,103 +1,101 @@
 import styled from "styled-components";
 
-export const Wrapper = styled.div`
-  width: 900px;
-  padding: 10px 50px 50px;
-  ${p => p.theme.shadow[10]};
-  border: 1px solid rgba(178, 190, 195, 0.5);
+export const SaleInfoWrapper = styled.div`
+  padding: 10px 50px;
+  margin: 2rem 0;
+  width: 90%;
+  ${({ theme }) => theme.shadow[0]};
 
   .saleInfo__title {
-    font-size: 30px;
-    font-weight: bold;
-    margin: 30px 0;
-    color: ${p => p.theme.colors.darkGrey};
+    font-size: 1.8rem;
+    margin: 1.5rem 0;
+    color: ${({ theme }) => theme.colors.darkGrey};
   }
   .saleInfo__top {
+    .saleInfo__title {
+      color: ${({ theme }) => theme.colors.info};
+      font-size: 2.2rem;
+      font-weight: bold;
+    }
     & > div:nth-child(2) {
       display: flex;
-      gap: 15px;
+      gap: 10px;
       align-items: center;
+      flex-wrap: wrap;
     }
   }
 
   .saleInfo__orderDate {
-    font-size: 20px;
-    font-weight: bold;
+    font-size: 1rem;
   }
   .saleInfo__orderNumber {
-    font-size: 18px;
+    font-size: 1rem;
     font-weight: 600;
-    color: ${p => p.theme.colors.darkGrey};
+    color: ${({ theme }) => theme.colors.info};
   }
 
   .saleInfo__seller {
-    padding: 20px;
+    padding: 1rem;
     border-radius: 5px;
     background-color: white;
     border: 1px solid rgba(178, 190, 195, 0.5);
     display: flex;
-    margin-top: 20px;
+    margin-top: 1.2rem;
     justify-content: space-between;
 
-    & > div:first-child {
-      display: flex;
-      gap: 30px;
-    }
     & > div:last-child {
       display: flex;
-      gap: 30px;
       justify-content: center;
       align-items: center;
-      padding-left: 30px;
+      gap: 1rem;
       button {
         height: 50px;
+      }
+      & > div > div {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin: 0.5rem 0;
       }
     }
 
     p:first-child {
-      font-size: 25px;
+      width: 100px;
+      font-size: 1.4rem;
       font-weight: bold;
-      color: ${p => p.theme.colors.darkGrey};
-      margin: 15px 0;
+      color: ${({ theme }) => theme.colors.mainDarkBrown};
     }
     p:last-child {
-      font-size: 18px;
-      color: ${p => p.theme.colors.mainDarkBrown};
-      width: 350px;
+      font-size: 1rem;
+      max-width: 200px;
+      color: ${({ theme }) => theme.colors.darkGrey};
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
   }
   .saleInfo__bookImg {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    img {
-      width: 150px;
-      height: 100%;
-    }
+    width: 100%;
+    max-width: 150px;
+    max-height: 150px;
   }
 
   .saleInfo__buyer {
-    padding: 20px 0;
-    border-top: 3px solid ${p => p.theme.colors.darkGrey};
-    border-bottom: 1px solid ${p => p.theme.colors.darkGrey};
+    padding: 1.1rem 0;
+    border-top: 3px solid ${({ theme }) => theme.colors.darkGrey};
+    border-bottom: 1px solid ${({ theme }) => theme.colors.darkGrey};
 
     span:first-child {
-      width: 150px;
-      font-size: 20px;
+      min-width: 120px;
+      display: block;
+      font-size: 1.1rem;
       font-weight: bold;
-      color: ${p => p.theme.colors.darkGrey};
+      color: ${({ theme }) => theme.colors.darkGrey};
     }
     p:last-child {
-      font-size: 15px;
-      font-weight: bold;
-      color: ${p => p.theme.colors.mainDarkBrown};
-      width: 550px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      font-size: 1rem;
+      color: ${({ theme }) => theme.colors.mainDarkBrown};
     }
     & > div {
       margin-top: 15px;
@@ -110,33 +108,97 @@ export const Wrapper = styled.div`
   }
 
   .saleInfo__paymentInfo {
-    border-top: 3px solid ${p => p.theme.colors.darkGrey};
+    border-top: 3px solid ${({ theme }) => theme.colors.darkGrey};
     & > div {
       display: flex;
       border-bottom: 1px solid rgba(178, 190, 195, 1);
-    }
-    & > div > div:first-child {
-      flex: 7;
-      background-color: white;
-      padding: 0 15px;
-    }
-    & > div > div:last-child {
-      background-color: rgba(178, 190, 195, 0.3);
-      padding: 0 15px;
-      flex: 3;
-      & > div {
-        display: flex;
-        justify-content: space-between;
+      & > div:first-child {
+        flex: 7;
+        background-color: white;
+        padding: 12px;
+      }
+      & > div:last-child {
+        background-color: rgba(178, 190, 195, 0.3);
+        padding: 12px;
+        flex: 3;
+        & > div {
+          display: flex;
+          justify-content: space-between;
+          flex-wrap: wrap;
+        }
       }
     }
     p {
-      padding: 15px 0;
-      font-weight: bold;
+      padding: 10px 0;
+      font-weight: 500;
     }
     p:first-child {
       font-weight: bold;
       font-size: 18px;
-      color: ${p => p.theme.colors.darkGrey};
+      color: ${({ theme }) => theme.colors.darkGrey};
+    }
+  }
+  ${({ theme }) => theme.media.mobile} {
+    padding: 10px 25px;
+    width: 100%;
+    margin: 0;
+    box-shadow: none;
+    .saleInfo__title {
+      font-size: 1rem;
+      margin: 1rem 0;
+    }
+
+    .saleInfo__top {
+      .saleInfo__title {
+        font-size: 1.5rem;
+      }
+      .saleInfo__orderNumber,
+      .saleInfo__orderDate {
+        font-size: 0.8rem;
+      }
+    }
+    .saleInfo__seller {
+      padding: 0.4rem;
+      margin: 0;
+      p:first-child {
+        font-size: 0.7rem;
+      }
+      p:last-child {
+        color: ${({ theme }) => theme.colors.info};
+        font-size: 0.6rem;
+      }
+    }
+    .saleInfo__buyer {
+      padding: 20px 0;
+      span:first-child {
+        font-size: 0.7rem;
+      }
+      p:last-child {
+        font-size: 0.6rem;
+      }
+      & > div {
+        gap: 10px;
+      }
+    }
+
+    .saleInfo__paymentInfo {
+      font-size: 15px;
+      font-weight: 100;
+
+      & > div > div:first-child {
+        flex: 4;
+        padding: 10px;
+      }
+      & > div > div:last-child {
+        flex: 6;
+        padding: 10px;
+      }
+      p {
+        padding: 10px 0;
+      }
+      p:first-child {
+        font-size: 18px;
+      }
     }
   }
 `;

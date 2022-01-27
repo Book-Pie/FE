@@ -89,6 +89,11 @@ const Content = ({ pages, titleFilter, select, handleLatestClick }: Types.Conten
                       <Link to={`sale/${id}`}>판매상세보기</Link>
                     </button>
                   )}
+                  {state === "SOLD_OUT" && (
+                    <button type="button">
+                      <Link to={`sale/${id}`}>판매상세보기</Link>
+                    </button>
+                  )}
                 </Stack>
               </Grid>
               <Grid item>
@@ -172,6 +177,13 @@ const Content = ({ pages, titleFilter, select, handleLatestClick }: Types.Conten
                 )}
 
                 {state === "TRADING" && (
+                  <Button color="mainDarkBrown" variant="contained">
+                    <Link to={`sale/${id}`} style={{ color: "white" }}>
+                      판매상세보기
+                    </Link>
+                  </Button>
+                )}
+                {state === "SOLD_OUT" && (
                   <Button color="mainDarkBrown" variant="contained">
                     <Link to={`sale/${id}`} style={{ color: "white" }}>
                       판매상세보기
