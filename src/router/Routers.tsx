@@ -39,7 +39,7 @@ const Routers = () => {
       <Route path="/community" component={Community} />
       <Route path="/usedBook/:id" component={UsedBookDetail} />
       <Route path="/usedBook" component={UsedBook} />
-      <Route path="/search" component={Search} />
+      <Route path="/search" component={Search} exact />
       <Route path="/search/aladin" component={Aladin} />
       <Route path="/book/:isbn13" component={BookDetail} />
       <Route path="/book" component={BookReview} />
