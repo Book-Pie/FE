@@ -2,7 +2,7 @@ import Skeleton from "@mui/material/Skeleton";
 import { useBookDetail } from "src/hooks/useBookDetail";
 import BookDetailContent from "./BookDetailContent";
 import BookDetailHeader from "./BookDetailHeader";
-import { FlexColum, FlexWrapper } from "./style";
+import { FlexColum, FlexWrapper, Wrapper } from "./style";
 import { BookDetailProps } from "./types";
 
 const BookDetail = ({ match }: BookDetailProps) => {
@@ -30,12 +30,14 @@ const BookDetail = ({ match }: BookDetailProps) => {
           categoryName={categoryName}
           publisher={publisher}
         />
-        <BookDetailContent
-          bookIntroText={fullDescription}
-          authorIntroText={fullDescription2}
-          bookId={isbn13}
-          myUserId={id}
-        />
+        <Wrapper>
+          <BookDetailContent
+            bookIntroText={fullDescription}
+            authorIntroText={fullDescription2}
+            bookId={isbn13}
+            myUserId={id}
+          />
+        </Wrapper>
       </>
     );
   }

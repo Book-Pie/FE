@@ -213,9 +213,16 @@ const commentSlice = createSlice({
       })
       .addCase(commentLike.fulfilled, (state, { payload }) => {
         state.status = "success";
-        state.content = state.content.map(v =>
-          v.reviewId !== payload.data.reviewId ? v : { ...v, reviewLikeCount: v.reviewLikeCount, check: true },
-        );
+        const { check, reviewId } = payload.data;
+        if (check) {
+          state.content = state.content.map(v =>
+            v.reviewId !== reviewId ? v : { ...v, reviewLikeCount: v.reviewLikeCount + 1 },
+          );
+        } else {
+          state.content = state.content.map(v =>
+            v.reviewId !== reviewId ? v : { ...v, reviewLikeCount: v.reviewLikeCount - 1 },
+          );
+        }
       })
       .addCase(commentLike.rejected, state => {
         state.status = "failed";
