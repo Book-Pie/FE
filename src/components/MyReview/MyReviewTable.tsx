@@ -1,70 +1,75 @@
 import { dateFormat2 } from "utils/formatUtil";
 import Rating from "@mui/material/Rating";
 import Grid from "@mui/material/Grid";
-import Stack from "@mui/material/Stack";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { Link } from "react-router-dom";
+import { useMediaQuery } from "@mui/material";
 import * as Types from "./types";
 import * as Styled from "./style";
 
 const MyReviewTable = ({ contents }: Types.MyReviewTableProps) => {
+  const min900 = useMediaQuery("(min-width:900px)");
+
   return (
     <Styled.MyReviewTableWrapper>
-      <Grid container className="header">
-        <Grid item sm={1} xs={1}>
-          <Stack direction="row" alignItems="center" justifyContent="center" height="100%">
-            <span>리뷰 번호</span>
-          </Stack>
+      {min900 && (
+        <Grid container className="header">
+          <Grid item md={1}>
+            <Styled.MyReviewCell>
+              <span>번호</span>
+            </Styled.MyReviewCell>
+          </Grid>
+          <Grid item md={5}>
+            <Styled.MyReviewCell>
+              <span>리뷰내용</span>
+            </Styled.MyReviewCell>
+          </Grid>
+          <Grid item md={2.5}>
+            <Styled.MyReviewCell>
+              <span>작성시간</span>
+            </Styled.MyReviewCell>
+          </Grid>
+          <Grid item md={2.5}>
+            <Styled.MyReviewCell>
+              <span>리뷰별점</span>
+            </Styled.MyReviewCell>
+          </Grid>
+          <Grid item md={1}>
+            <Styled.MyReviewCell>
+              <span>좋아요</span>
+            </Styled.MyReviewCell>
+          </Grid>
         </Grid>
-        <Grid item sm={5} xs={3}>
-          <Stack direction="row" alignItems="center" justifyContent="center" height="100%">
-            <span>리뷰 내용</span>
-          </Stack>
-        </Grid>
-        <Grid item sm={2} xs={2}>
-          <Stack direction="row" alignItems="center" justifyContent="center" gap={1}>
-            <span>리뷰 별점</span>
-          </Stack>
-        </Grid>
-        <Grid item sm={3} xs={3}>
-          <Stack direction="row" alignItems="center" justifyContent="center" height="100%">
-            <span>리뷰 등록 시간</span>
-          </Stack>
-        </Grid>
-        <Grid item sm={1} xs={1}>
-          <Stack direction="row" alignItems="center" justifyContent="center" gap={1}>
-            <span>리뷰 좋아요</span>
-          </Stack>
-        </Grid>
-      </Grid>
+      )}
       {contents.map(({ isbn, content, rating, reviewDate, reviewLikeCount, reviewId }) => (
-        <Grid container key={isbn}>
-          <Grid item sm={1} xs={1}>
-            <Stack direction="row" alignItems="center" justifyContent="center" height="100%">
-              <span>{reviewId}</span>
-            </Stack>
+        <Grid container key={isbn} rowGap={{ xs: 2, sm: 1 }}>
+          <Grid item xs={12} sm={1} md={1}>
+            <Styled.MyReviewCell>
+              <span>{reviewId}.</span>
+            </Styled.MyReviewCell>
           </Grid>
-          <Grid item sm={5} xs={3}>
-            <Stack direction="row" alignItems="center" height="100%">
+          <Grid item xs={12} sm={10} md={5}>
+            <Styled.MyReviewCell className="content">
               <Link to={`/book/${isbn}`}>{content}</Link>
-            </Stack>
+            </Styled.MyReviewCell>
           </Grid>
-          <Grid item sm={2} xs={2}>
-            <Stack direction="row" alignItems="center" justifyContent="center" gap={1}>
-              <Rating name="read-only" value={rating} readOnly />
+          <Grid item xs={12} sm={6} md={2.5}>
+            <Styled.MyReviewCell>
+              <span> {dateFormat2(reviewDate)[0]}</span>
+              <span> {dateFormat2(reviewDate)[1]}</span>
+            </Styled.MyReviewCell>
+          </Grid>
+          <Grid item xs={8} sm={4.5} md={2.5}>
+            <Styled.MyReviewCell>
+              <Rating name="read-only" value={rating} readOnly size={min900 ? undefined : "small"} />
               <span>{rating} / 5점</span>
-            </Stack>
+            </Styled.MyReviewCell>
           </Grid>
-          <Grid item sm={3} xs={3}>
-            <Stack direction="row" alignItems="center" justifyContent="center" height="100%">
-              <span> {dateFormat2(reviewDate)}</span>
-            </Stack>
-          </Grid>
-          <Grid item sm={1} xs={1}>
-            <Stack direction="row" alignItems="center" justifyContent="center" gap={1}>
-              <FavoriteIcon sx={{ color: "#ff3d47" }} />
+          <Grid item xs={4} sm={1.5} md={1}>
+            <Styled.MyReviewCell>
+              <FavoriteIcon sx={{ color: "#ff3d47" }} fontSize={min900 ? undefined : "small"} />
               <span>{reviewLikeCount}개</span>
-            </Stack>
+            </Styled.MyReviewCell>
           </Grid>
         </Grid>
       ))}
