@@ -7,9 +7,6 @@ import queryString from "query-string";
 import { useHistory } from "react-router";
 import { getShopPage, removeShopPage, setShopPage } from "src/utils/localStorageUtil";
 import useSignIn from "src/hooks/useSignIn";
-import useDelay from "src/hooks/useDelay";
-import { errorHandler } from "src/api/http";
-import Loading from "src/elements/Loading";
 import { ReviewsParams } from "./types";
 import { ReviewListEmpty } from "../ReviewList/ReviewListEmpty";
 
@@ -17,33 +14,21 @@ export const Reviews: React.FC<ReviewsParams> = ({ bookId }) => {
   const { signIn, dispatch } = useSignIn();
   const history = useHistory();
   const reviewSelector = useTypedSelector(commentsSelector);
-
   const { user, isLoggedIn } = signIn;
   const { id } = user ?? -1;
-
   const { myCommentCheck, content, myComment, pageable, totalElements, totalPages } = reviewSelector;
   const { pageNumber } = pageable;
-  const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(getShopPage(0));
-  const delay = useDelay(500);
 
   const handleHasMoreList = useCallback(
     async (page: number) => {
       if (user) {
         const { id } = user;
         const query = queryString.stringify({ page });
-        try {
-          setIsLoading(true);
-          await delay();
-          dispatch(reviewCommentList({ bookId, id, query }));
-        } catch (error: any) {
-          alert(errorHandler(error));
-        } finally {
-          setIsLoading(false);
-        }
+        dispatch(reviewCommentList({ bookId, id, query }));
       }
     },
-    [user, delay, dispatch],
+    [user, dispatch, bookId],
   );
 
   const handlePaginationOnChange = useCallback(
@@ -59,7 +44,7 @@ export const Reviews: React.FC<ReviewsParams> = ({ bookId }) => {
     if (myCommentCheck === true) {
       dispatch(myReviewComment({ bookId, id }));
     }
-  }, []);
+  }, [dispatch, myCommentCheck]);
 
   useEffect(() => {
     const { content, empty, totalPages } = reviewSelector;
@@ -75,7 +60,6 @@ export const Reviews: React.FC<ReviewsParams> = ({ bookId }) => {
 
   return (
     <div className="Reviews">
-      <Loading isLoading={isLoading} />
       {/* 정렬 부분 */}
       {/* <ReviewListHeader bookId={bookId} />*/}
       {content.length ? (

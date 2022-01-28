@@ -6,8 +6,6 @@ import queryString from "query-string";
 import Stack from "@mui/material/Stack";
 import Pagination from "@mui/material/Pagination";
 import { getShopPage, removeShopPage, setShopPage } from "src/utils/localStorageUtil";
-import useDelay from "src/hooks/useDelay";
-import { errorHandler } from "src/api/http";
 import { useTypedSelector } from "src/modules/store";
 import {
   getMyReceivedUserReviewList,
@@ -26,16 +24,13 @@ const UserReview = () => {
   const { signIn } = useSignIn();
   const { user } = signIn;
   const [receivedReview, writtedReview] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
   const receivedReviewHeader = ["별점", "구매자명", "상품명", "내용", "작성일"];
   const writtedReviewHeader = ["별점", "판매자명", "상품명", "내용", "작성일", "기능"];
   const [headers, setHeader] = useState<string[]>(receivedReviewHeader);
   const [page, setPage] = useState(getShopPage(1));
-  const [limit, setLimit] = useState(5);
+  const [limit] = useState(5);
   const { list } = useTypedSelector(userReviewSelector);
-
   const { pages, pageCount } = list;
-  const delay = useDelay(500);
 
   const receivedReviewClick = () => {
     writtedReview(true);
@@ -51,25 +46,17 @@ const UserReview = () => {
     async (page: number, limit: number) => {
       if (user) {
         const query = queryString.stringify({ id: user.id, page, limit });
-        try {
-          setIsLoading(true);
-          await delay();
-          const { token } = signIn;
-          if (token) {
-            if (receivedReview) {
-              dispatch(getMyReceivedUserReviewList({ query, token }));
-            } else if (!receivedReview) {
-              dispatch(getUserReviewList({ query, token }));
-            }
+        const { token } = signIn;
+        if (token) {
+          if (receivedReview) {
+            dispatch(getMyReceivedUserReviewList({ query, token }));
+          } else if (!receivedReview) {
+            dispatch(getUserReviewList({ query, token }));
           }
-        } catch (error: any) {
-          alert(errorHandler(error));
-        } finally {
-          setIsLoading(false);
         }
       }
     },
-    [user, delay, signIn, receivedReview, dispatch],
+    [user, signIn, receivedReview, dispatch],
   );
 
   useEffect(() => {

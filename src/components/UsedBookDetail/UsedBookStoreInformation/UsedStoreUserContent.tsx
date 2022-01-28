@@ -1,7 +1,7 @@
 import { UsedBookDetailResponse } from "src/modules/Slices/usedBookDetail/types";
 import { CardBoldTitle, CardSmallTitle, UsedStoreUserContentWrapper } from "../style";
 
-const UsedStoreUserContent = ({ sellerId, sellerName }: UsedBookDetailResponse) => {
+const UsedStoreUserContent = ({ sellerName }: UsedBookDetailResponse) => {
   // 임시 데이터
   const tag1 = "#에세이";
   const tag2 = "#취미";
