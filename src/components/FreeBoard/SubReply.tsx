@@ -66,7 +66,7 @@ const SubReply = ({ content, nickName, replyDate, isMakeUser, replyId, userId }:
           <span>{dateFormat2(replyDate)}</span>
         </div>
         {isMakeUser && (
-          <ButtonGroup variant="contained" size="small">
+          <ButtonGroup disableElevation variant="contained" size="small">
             <Button color="info" variant="contained" onClick={handleSUbReplyUpdateOnClick(replyId)}>
               수정
             </Button>

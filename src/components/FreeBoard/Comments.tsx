@@ -14,7 +14,7 @@ import { useAppDispatch, useTypedSelector } from "src/modules/store";
 import Pagination from "@mui/material/Pagination";
 import Editor from "../Editor/Editor";
 import Comment from "./Comment";
-import { NoComments, CommentsBottom, CommentsTop, CommentsWrapper } from "./style";
+import * as Styled from "./style";
 import * as Types from "./types";
 
 const Comments = ({ boardId, userId }: Types.CommentsProps) => {
@@ -112,8 +112,9 @@ const Comments = ({ boardId, userId }: Types.CommentsProps) => {
 
   const pagiNation = coList ? (
     coList.empty ? null : (
-      <Stack mt={5} justifyContent="center" direction="row">
+      <Stack justifyContent="center" direction="row">
         <Pagination
+          siblingCount={0}
           count={coList.totalPages}
           page={coList.page + 1}
           variant="outlined"
@@ -132,8 +133,8 @@ const Comments = ({ boardId, userId }: Types.CommentsProps) => {
   ) : null;
 
   return (
-    <CommentsWrapper>
-      <CommentsTop>
+    <Styled.CommentsWrapper>
+      <Styled.CommentsTop>
         <h1 className="comments__header">
           <span>*</span>댓글쓰기
         </h1>
@@ -162,11 +163,11 @@ const Comments = ({ boardId, userId }: Types.CommentsProps) => {
             </Button>
           </div>
         </form>
-      </CommentsTop>
-      <CommentsBottom>
+      </Styled.CommentsTop>
+      <Styled.CommentsBottom>
         {coList ? (
           coList.empty ? (
-            <NoComments>댓글이 없습니다.</NoComments>
+            <Styled.NoComments>댓글이 없습니다.</Styled.NoComments>
           ) : (
             coList.contents[coList.page].map(comment => {
               const { content, nickName, replyDate, replyId, userId: makeUserId, subReply } = comment;
@@ -188,9 +189,9 @@ const Comments = ({ boardId, userId }: Types.CommentsProps) => {
             })
           )
         ) : null}
-      </CommentsBottom>
+      </Styled.CommentsBottom>
       {pagiNation}
-    </CommentsWrapper>
+    </Styled.CommentsWrapper>
   );
 };
 

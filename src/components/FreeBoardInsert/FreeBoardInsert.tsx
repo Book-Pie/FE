@@ -11,7 +11,7 @@ import { freeBoardSelector, insertAsync } from "src/modules/Slices/freeBoard/fre
 import { useTypedSelector } from "src/modules/store";
 import { FormErrorMessages, makeOption } from "src/utils/hookFormUtil";
 import Editor from "../Editor/Editor";
-import { Buttons, EditorWrapper, Title } from "./style";
+import * as Styled from "./style";
 import * as Types from "./types";
 
 const FreeBoardInsert = () => {
@@ -19,7 +19,7 @@ const FreeBoardInsert = () => {
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm<Types.IFreeBoardInsertForm>({
+  } = useForm<Types.FreeBoardInsertForm>({
     defaultValues: {
       title: "",
     },
@@ -53,7 +53,7 @@ const FreeBoardInsert = () => {
     minLength: makeOption<number>(1, "최소 1자 입니다."),
   };
 
-  const onSumit = (formData: Types.IFreeBoardInsertForm) => {
+  const onSumit = (formData: Types.FreeBoardInsertForm) => {
     try {
       if (!user) throw new Error("로그인이 필요합니다.");
       if (editorLength === 0) throw new Error("게시글은 필수 입니다.");
@@ -84,13 +84,17 @@ const FreeBoardInsert = () => {
       )}
       <Loading isLoading={isLoading} />
       <div>
-        <Title>
-          <span>커뮤니티</span>
-          <span>자유게시판</span>
-        </Title>
+        <Styled.Title>
+          <span>
+            <Link to="/community">커뮤니티</Link>
+          </span>
+          <span>
+            <Link to="/community/freeboard">자유게시판</Link>
+          </span>
+        </Styled.Title>
 
         <form onSubmit={handleSubmit(onSumit)}>
-          <EditorWrapper>
+          <Styled.EditorWrapper>
             <div>
               <span>
                 제목 <strong>*</strong>
@@ -126,9 +130,9 @@ const FreeBoardInsert = () => {
                 getEdiotrLength={setEditorLength}
               />
             </div>
-          </EditorWrapper>
-          <Buttons>
-            <Button color="mainDarkBrown" type="submit" variant="contained">
+          </Styled.EditorWrapper>
+          <Styled.Buttons>
+            <Button color="info" type="submit" variant="contained">
               등록
             </Button>
             <Link to="/community/freeboard">
@@ -136,7 +140,7 @@ const FreeBoardInsert = () => {
                 목록으로
               </Button>
             </Link>
-          </Buttons>
+          </Styled.Buttons>
         </form>
       </div>
     </div>

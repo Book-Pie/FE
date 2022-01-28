@@ -1,3 +1,3 @@
-export interface IFreeBoardInsertForm {
+export interface FreeBoardInsertForm {
   title: string;
 }
