@@ -49,7 +49,7 @@ const ReviewCategorys = ({ categorys, defaultLocation }: CategorysProps) => {
   }
 
   return (
-    <Wrapper>
+    <div>
       {categorys.map((item, idx) => {
         const { categoryName, subCategory } = item;
         return (
@@ -81,7 +81,7 @@ const ReviewCategorys = ({ categorys, defaultLocation }: CategorysProps) => {
           </FormControl>
         );
       })}
-    </Wrapper>
+    </div>
   );
 };
 

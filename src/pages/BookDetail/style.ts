@@ -108,3 +108,7 @@ export const P = styled.p`
   overflow-y: hidden;
   line-height: 1.5em;
 `;
+
+export const Wrapper = styled.div`
+  overflow-y: auto;
+`;

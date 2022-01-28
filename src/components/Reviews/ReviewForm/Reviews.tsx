@@ -1,37 +1,79 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { ReviewList } from "components/Reviews/ReviewList/ReviewList";
 import { ReviewWrite } from "components/Reviews/ReviewWrite";
 import { myReviewComment, reviewCommentList, commentsSelector } from "src/modules/Slices/comment/commentSlice";
 import { useTypedSelector } from "src/modules/store";
-import { useDispatch } from "react-redux";
-import { signInSelector } from "src/modules/Slices/signIn/signInSlice";
+import queryString from "query-string";
 import { useHistory } from "react-router";
+import { getShopPage, removeShopPage, setShopPage } from "src/utils/localStorageUtil";
+import useSignIn from "src/hooks/useSignIn";
 import { ReviewsParams } from "./types";
 import { ReviewListEmpty } from "../ReviewList/ReviewListEmpty";
 
 export const Reviews: React.FC<ReviewsParams> = ({ bookId }) => {
-  const dispatch = useDispatch();
+  const { signIn, dispatch } = useSignIn();
   const history = useHistory();
-
-  const signInStatus = useTypedSelector(signInSelector);
-  const { user, isLoggedIn } = signInStatus;
-  const { id } = user ?? -1;
-
   const reviewSelector = useTypedSelector(commentsSelector);
-  const { myCommentCheck, content, myComment } = reviewSelector;
+  const { user, isLoggedIn } = signIn;
+  const { id } = user ?? -1;
+  const { myCommentCheck, content, myComment, pageable, totalElements, totalPages } = reviewSelector;
+  const { pageNumber } = pageable;
+  const [page, setPage] = useState(getShopPage(0));
+
+  const handleHasMoreList = useCallback(
+    async (page: number) => {
+      if (user) {
+        const { id } = user;
+        const query = queryString.stringify({ page });
+        dispatch(reviewCommentList({ bookId, id, query }));
+      }
+    },
+    [user, dispatch, bookId],
+  );
+
+  const handlePaginationOnChange = useCallback(
+    (_: React.ChangeEvent<unknown>, value: number) => {
+      handleHasMoreList(value - 1);
+      setPage(value - 1);
+    },
+    [handleHasMoreList],
+  );
 
   useEffect(() => {
     dispatch(reviewCommentList({ bookId, id }));
     if (myCommentCheck === true) {
       dispatch(myReviewComment({ bookId, id }));
     }
-  }, [bookId, id, dispatch, myCommentCheck]);
+  }, [dispatch, myCommentCheck]);
+
+  useEffect(() => {
+    const { content, empty, totalPages } = reviewSelector;
+    if (content.length === 0 && totalPages === 0 && !empty) handleHasMoreList(page);
+  }, [handleHasMoreList, page]);
+
+  useEffect(() => {
+    if (getShopPage() === 0) setShopPage(page);
+    return () => {
+      removeShopPage();
+    };
+  });
 
   return (
     <div className="Reviews">
       {/* 정렬 부분 */}
       {/* <ReviewListHeader bookId={bookId} />*/}
-      {content.length ? <ReviewList commentList={content} myCommentId={id} /> : <ReviewListEmpty title="리뷰" />}
+      {content.length ? (
+        <ReviewList
+          commentList={content}
+          myCommentId={id}
+          pageCount={totalPages}
+          totalCount={totalElements}
+          page={pageNumber}
+          onChange={handlePaginationOnChange}
+        />
+      ) : (
+        <ReviewListEmpty title="리뷰" />
+      )}
       <ReviewWrite
         bookId={bookId}
         myReviewCheck={myCommentCheck}

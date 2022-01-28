@@ -9,7 +9,7 @@ import Loading from "src/elements/Loading";
 import { useDispatch } from "react-redux";
 import { getCategoryReview } from "src/api/usedBook/usedBook";
 import ReviewCategorys from "src/components/BookReviewList/ReviewCategorys";
-import { BookReviewContainer, BookReviewListContainer, ReviewListWrapper, Text, Wrapper } from "./styles";
+import { BookReviewContainer, BookReviewListContainer, ReviewListWrapper, Text } from "./styles";
 import ReviewListSkeleton from "./ReviewListSkeleton";
 
 const BookReviewList = () => {
@@ -94,9 +94,9 @@ const BookReviewList = () => {
     <ReviewListWrapper>
       <Loading isLoading={isLoading} />
       <ReviewCategorys categorys={categorys} defaultLocation="book" />
-      <Wrapper>
+      <div>
         <Text>중고도서리뷰</Text>
-      </Wrapper>
+      </div>
       <BookReviewContainer>
         {pages.length !== 0 ? (
           pages.map((page, index) => (
