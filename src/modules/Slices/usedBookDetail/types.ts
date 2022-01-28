@@ -1,4 +1,5 @@
 import { AppDispatch } from "src/modules/store";
+import { UserReviewData } from "../userReview/types";
 
 export interface UsedBookDetailThunk {
   dispatch: AppDispatch;
@@ -154,6 +155,17 @@ export interface MyUsedBookAsyncSuccess {
     pages: PagesResponse[];
   };
   error: null;
+}
+
+export interface UsedBookDetailReduce {
+  content: UsedBookDetailResponse;
+  replyList: usedBookDetailReplyResponse[];
+  likeList: PagesResponse[];
+  buyList: usedBookBuyListResponse[];
+  list: BuyBookList;
+  storeReviewList: UserReviewData[];
+  pageCount: number;
+  status: "loading" | "success" | "failed";
 }
 
 // =========================== 썽크함수 성공 시 리턴 타입 ===========================

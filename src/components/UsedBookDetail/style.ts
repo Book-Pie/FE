@@ -105,6 +105,7 @@ export const FlexWrapper = styled.div`
 
 export const UsedBookStoreInformationLeftWrapper = styled.div`
   flex-direction: column;
+  height: 950px;
 `;
 
 export const CountWrapper = styled.span`

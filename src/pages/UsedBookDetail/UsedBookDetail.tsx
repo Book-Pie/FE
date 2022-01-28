@@ -12,10 +12,6 @@ const UsedBookDetail = ({ match }: MatchProps) => {
   const { id } = params;
   const usedBookContent = useTypedSelector(usedBookSelector);
 
-  useEffect(() => {
-    dispatch(usedBookDetailAsync(id));
-  }, [dispatch, id]);
-
   const {
     usedBookId,
     sellerId,
@@ -34,6 +30,10 @@ const UsedBookDetail = ({ match }: MatchProps) => {
     likeCount,
     replyCount,
   } = usedBookContent.content;
+
+  useEffect(() => {
+    dispatch(usedBookDetailAsync(id));
+  }, [dispatch, id]);
 
   return (
     <>

@@ -2,41 +2,45 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 import http from "src/api/http";
 import { RootState } from "src/modules/store";
-import { AddUserReviewAsyncSuccess, AddUserReviewParam, getUserReviewListParam } from "../userReview/types";
+import {
+  AddUserReviewAsyncSuccess,
+  AddUserReviewParam,
+  GetStoreUserReviewAsyncSuccess,
+  getStoreUserReviewListParam,
+  getUserReviewListParam,
+} from "../userReview/types";
 import {
   addUsedBookDetailReplyParam,
-  BuyBookList,
   deleteUsedBookDetailParam,
   getUsedBookBuyConfirmParam,
   getUsedBookBuyListAsyncSuccess,
   getUsedBookLikeListAsyncSuccess,
-  PagesResponse,
-  usedBookBuyListResponse,
   UsedBookDetailAsyncSuccess,
   UsedBookDetailFail,
+  UsedBookDetailReduce,
   usedBookDetailReplyListAsyncSuccess,
-  usedBookDetailReplyResponse,
-  UsedBookDetailResponse,
   UsedBookDetailThunk,
   UsedBookLikeAsyncSuccess,
   usedBookLikeParam,
   UsedBookViewAsyncSuccess,
 } from "./types";
 
-const initialState = {
-  content: {} as UsedBookDetailResponse,
-  replyList: [] as usedBookDetailReplyResponse[],
-  likeList: [] as PagesResponse[],
-  buyList: [] as usedBookBuyListResponse[],
+const initialState: UsedBookDetailReduce = {
+  content: {},
+  replyList: [],
+  likeList: [],
+  buyList: [],
   list: {
     page: 1,
     pageCount: 0,
     pages: [],
     isEmpty: false,
-  } as BuyBookList,
-  category: {},
+  },
+  storeReviewList: [],
+  pageCount: 0,
   status: "loading",
 };
+
 const name = "usedBookDetail";
 const myPage = "myPage";
 
@@ -127,6 +131,20 @@ export const deleteUsedBookDetailReply = createAsyncThunk(
     try {
       await http.delete(`/reply/usedbook/${id}`);
       return id;
+    } catch (error: any) {
+      console.error(error);
+      return rejectWithValue(error.response.data);
+    }
+  },
+);
+
+// 중고장터 상점후기
+export const getStoreUserReviewList = createAsyncThunk<GetStoreUserReviewAsyncSuccess, getStoreUserReviewListParam>(
+  `${name}/storeUserReviewList`,
+  async ({ sellerId, page }, { rejectWithValue }) => {
+    try {
+      const response = await http.get(`/userreview/${sellerId}?page=${page}&limit=3`);
+      return response.data;
     } catch (error: any) {
       console.error(error);
       return rejectWithValue(error.response.data);
@@ -272,6 +290,18 @@ const usedBookDetailSlice = createSlice({
         state.replyList = state.replyList.filter(comment => comment.replyId !== payload);
       })
       .addCase(deleteUsedBookDetailReply.rejected, state => {
+        state.status = "failed";
+      })
+      // 중고장터 상점후기
+      .addCase(getStoreUserReviewList.pending, state => {
+        state.status = "loading";
+      })
+      .addCase(getStoreUserReviewList.fulfilled, (state, { payload }) => {
+        state.status = "success";
+        state.storeReviewList = payload.data.pages;
+        state.pageCount = payload.data.pageCount;
+      })
+      .addCase(getStoreUserReviewList.rejected, state => {
         state.status = "failed";
       })
       // 마이페이지 - 중고장터 찜 목록

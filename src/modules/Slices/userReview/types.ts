@@ -1,5 +1,10 @@
 import { addUserReviewSubmitParam } from "src/components/BuyList/types";
 
+export interface getStoreUserReviewListParam {
+  sellerId: number;
+  page: number;
+}
+
 export interface addUserReviewData {
   orderId: number;
   content: string;
@@ -87,6 +92,15 @@ export interface GetUserReviewListAsyncSuccess {
   data: {
     pageCount: number;
     pages: GetUserReceivedReviewListData[];
+  };
+  error: string;
+}
+
+export interface GetStoreUserReviewAsyncSuccess {
+  success: boolean;
+  data: {
+    pageCount: number;
+    pages: UserReviewData[];
   };
   error: string;
 }
