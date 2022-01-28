@@ -15,7 +15,13 @@ const DaumPostModal = ({ handleComplete, handleDaumPostOpne, isVisible }: DaumPo
   return (
     <DaumPostModalWrapper isVisible={isVisible}>
       <div>
-        <DaumPostcode autoClose={false} onComplete={handleComplete} />
+        <DaumPostcode
+          autoClose={false}
+          onComplete={(data: Address) => {
+            handleDaumPostOpne();
+            handleComplete(data);
+          }}
+        />
         <Button variant="contained" color="mainDarkBrown" onClick={handleDaumPostOpne}>
           닫기
         </Button>

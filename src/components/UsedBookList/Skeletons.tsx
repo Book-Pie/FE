@@ -10,8 +10,8 @@ const Skeletons = () => {
 
   let sx = { padding: "0 0.5rem", mt: 2, width: "20%" };
 
-  sx = max1000 ? { ...sx, width: "33.3%" } : sx;
-  sx = max800 ? { ...sx, width: "25%" } : sx;
+  sx = max1000 ? { ...sx, width: "25%" } : sx;
+  sx = max800 ? { ...sx, width: "33.3%" } : sx;
   sx = max500 ? { ...sx, width: "50%" } : sx;
 
   let imgheight = 300;

@@ -65,13 +65,26 @@ export const UsedBookMenuWrapper = styled.div`
     padding: 15px 14px;
   }
   & > div {
+    flex: 1;
     display: flex;
+    flex-wrap: wrap;
     gap: 10px;
     & > a {
       padding: 0;
     }
+    &:last-child {
+      justify-content: flex-end;
+    }
     button {
       height: 100%;
+    }
+  }
+
+  ${({ theme }) => theme.media.mobile} {
+    & > div {
+      button {
+        font-size: 15px;
+      }
     }
   }
 `;

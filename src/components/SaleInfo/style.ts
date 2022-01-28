@@ -201,7 +201,3 @@ export const SaleInfoWrapper = styled.div`
     }
   }
 `;
-
-export const Empty = styled.div`
-  min-height: 500px;
-`;

@@ -151,7 +151,7 @@ export const SaleTitle = styled.div`
   align-items: center;
   span {
     display: block;
-    color: #1565c0;
+    color: ${({ theme }) => theme.colors.info};
     display: -webkit-box;
     word-break: break-word;
     overflow-wrap: break-word;

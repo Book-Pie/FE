@@ -16,7 +16,8 @@ import Loading from "src/elements/Loading";
 import useDelay from "src/hooks/useDelay";
 import { FormErrorMessages } from "utils/hookFormUtil";
 import useWindowFiexd from "src/hooks/useWindowFiexd";
-import { Wrapper, Fixed, Row, DropdownWrapper, Text, Payment } from "./style";
+import DaumPostModal from "src/elements/DaumPostModal";
+import * as Styled from "./style";
 import * as Types from "./types";
 
 const OrderForm = ({ usedBook }: Types.OrderFormProps) => {
@@ -37,7 +38,6 @@ const OrderForm = ({ usedBook }: Types.OrderFormProps) => {
   const [isDaumPostcodeOpen, setIsDaumPostcodeOpen] = useState(false);
   const [deliveryText, setDeliveryText] = useState(deliveryTextInit);
   const { signIn } = useSignIn();
-  useWindowFiexd(isDaumPostcodeOpen);
   const { user } = signIn;
 
   const { price } = usedBook;
@@ -62,7 +62,7 @@ const OrderForm = ({ usedBook }: Types.OrderFormProps) => {
     });
   }, []);
   const handleReset = useCallback(() => reset(), [reset]);
-  const handleDaumPostOpen = useCallback(() => setIsDaumPostcodeOpen(true), []);
+  const handleDaumPostOpen = useCallback(() => setIsDaumPostcodeOpen(prev => !prev), []);
   const handleDaumPostClose = useCallback(() => setIsDaumPostcodeOpen(false), []);
   const handlePaymentPopUpOnClick = useCallback(() => {
     const name = "북파이 결제페이지";
@@ -140,32 +140,27 @@ const OrderForm = ({ usedBook }: Types.OrderFormProps) => {
   if (user === null) return null;
 
   return (
-    <Wrapper>
-      {isDaumPostcodeOpen && (
-        <Fixed>
-          <div>
-            <DaumPostcode onComplete={handleComplete} onClose={handleDaumPostClose} />
-            <Button variant="contained" color="mainDarkBrown" fullWidth onClick={handleDaumPostClose}>
-              닫기
-            </Button>
-          </div>
-        </Fixed>
-      )}
+    <Styled.OrderFormWrapper>
       {isOpen && (
         <Popup isOpen={isOpen} setIsOpen={setIsOpen} className={popUpState.isSuccess ? "green" : "red"} autoClose>
           {popUpState.message}
         </Popup>
       )}
+      <DaumPostModal
+        isVisible={isDaumPostcodeOpen}
+        handleComplete={handleComplete}
+        handleDaumPostOpne={handleDaumPostOpen}
+      />
       <Loading isLoading={isLoading} />
       <h1>결제하기</h1>
       <form onSubmit={handleSubmit(onSumit)} className="paymentForm__form">
-        <Text>배송지</Text>
-        <Row>
-          <Button variant="contained" color="mainDarkBrown" onClick={handleDaumPostOpen}>
+        <Styled.OrderFormText>배송지</Styled.OrderFormText>
+        <Styled.OrderFormRow>
+          <Button variant="contained" sx={{ fontSize: "10px" }} color="mainDarkBrown" onClick={handleDaumPostOpen}>
             배송지 변경
           </Button>
-        </Row>
-        <Row>
+        </Styled.OrderFormRow>
+        <Styled.OrderFormRow>
           <FormInput
             disabled
             type="text"
@@ -181,24 +176,24 @@ const OrderForm = ({ usedBook }: Types.OrderFormProps) => {
             placeholder="주소"
             register={register("mainAddress", addressOptions)}
           />
-        </Row>
-        <Row>
+        </Styled.OrderFormRow>
+        <Styled.OrderFormRow>
           <ErrorMessage message={errors.postalCode?.message} />
           <ErrorMessage message={errors.mainAddress?.message} />
-        </Row>
-        <Row>
+        </Styled.OrderFormRow>
+        <Styled.OrderFormRow>
           <FormInput
             type="text"
             id="detailAddress"
             placeholder="상세주소"
             register={register("detailAddress", detailAddressOptions)}
           />
-        </Row>
-        <Row>
+        </Styled.OrderFormRow>
+        <Styled.OrderFormRow>
           <ErrorMessage message={errors.detailAddress?.message} />
-        </Row>
-        <Text>배송요청사항</Text>
-        <DropdownWrapper>
+        </Styled.OrderFormRow>
+        <Styled.OrderFormText>배송요청사항</Styled.OrderFormText>
+        <Styled.DropdownWrapper>
           <Dropdown defaultValue={deliveryText} setSelectedText={setDeliveryText}>
             {deliveryTexts.map((text, idx) => (
               <li key={idx}>
@@ -206,15 +201,15 @@ const OrderForm = ({ usedBook }: Types.OrderFormProps) => {
               </li>
             ))}
           </Dropdown>
-        </DropdownWrapper>
-        <Text>포인트</Text>
-        <Row>
-          <Button variant="contained" color="mainDarkBrown" onClick={handlePaymentPopUpOnClick}>
+        </Styled.DropdownWrapper>
+        <Styled.OrderFormText>포인트</Styled.OrderFormText>
+        <Styled.OrderFormRow>
+          <Button variant="contained" color="info" onClick={handlePaymentPopUpOnClick}>
             충전하기
           </Button>
-        </Row>
-        <Text>결제</Text>
-        <Payment>
+        </Styled.OrderFormRow>
+        <Styled.OrderFormText>결제</Styled.OrderFormText>
+        <Styled.OrderFormPayment>
           <div>
             <span>현재포인트</span>
             <span>{`${make1000UnitsCommaFormet(String(user.point.holdPoint))}원`}</span>
@@ -237,8 +232,8 @@ const OrderForm = ({ usedBook }: Types.OrderFormProps) => {
               `}
             </span>
           </div>
-        </Payment>
-        <Row>
+        </Styled.OrderFormPayment>
+        <Styled.OrderFormRow>
           <Button
             variant="contained"
             color="mainDarkBrown"
@@ -248,14 +243,14 @@ const OrderForm = ({ usedBook }: Types.OrderFormProps) => {
           >
             {user.point.holdPoint - price < 0 ? "포인트가 부족합니다." : "결제하기"}
           </Button>
-        </Row>
-        <Row>
-          <Button variant="contained" color="mainDarkBrown" fullWidth onClick={handleReset}>
+        </Styled.OrderFormRow>
+        <Styled.OrderFormRow>
+          <Button variant="contained" color="error" fullWidth onClick={handleReset}>
             초기화
           </Button>
-        </Row>
+        </Styled.OrderFormRow>
       </form>
-    </Wrapper>
+    </Styled.OrderFormWrapper>
   );
 };
 

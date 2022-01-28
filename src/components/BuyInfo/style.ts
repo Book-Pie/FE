@@ -198,7 +198,3 @@ export const Wrapper = styled.div`
     }
   }
 `;
-
-export const Empty = styled.div`
-  min-height: 100vh;
-`;

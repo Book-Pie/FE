@@ -7,10 +7,10 @@ import OrderForm from "src/components/OrderForm/OrderForm";
 import { make1000UnitsCommaFormet } from "src/utils/formatUtil";
 import { getUsedBookOrder, removeUsedBookOrder, setUsedBookOrder } from "src/utils/localStorageUtil";
 import useSignIn from "src/hooks/useSignIn";
-import { Empty, Header, Wrapper } from "./style";
+import * as Styled from "./style";
 import * as Types from "./types";
 
-const init: Types.IUsedBook = {
+const init: Types.UsedBook = {
   bookState: "",
   content: "",
   fstCategory: "",
@@ -29,8 +29,8 @@ const init: Types.IUsedBook = {
 };
 
 const Order = () => {
-  const { id } = useParams<Types.IParam>();
-  const [usedBook, setUsedBook] = useState<Types.IUsedBook>(() => {
+  const { id } = useParams<Types.Param>();
+  const [usedBook, setUsedBook] = useState<Types.UsedBook>(() => {
     const info = getUsedBookOrder();
     if (info) return info;
     return init;
@@ -42,7 +42,7 @@ const Order = () => {
   const { images, price, title, saleState } = usedBook;
 
   const handleUsedBookLoad = useCallback(async () => {
-    const { data } = await getUsedBook<Types.AxiosResponse>(id);
+    const { data } = await getUsedBook<Types.Response>(id);
     setUsedBookOrder(JSON.stringify(data.data));
     setUsedBook(data.data);
   }, [id]);
@@ -57,47 +57,52 @@ const Order = () => {
     };
   }, [handleUsedBookLoad]);
 
-  if (saleState === "SOLD_OUT") {
-    alert("판매 완료된 물품입니다.");
-    window.location.replace(`/usedBook/${id}`);
-    return <Empty />;
-  }
-  if (usedBook.sellerId === user?.id) {
-    alert("자기 자신 물품을 구매 할 수 없습니다.");
-    window.location.replace(`/usedBook/${id}`);
-    return <Empty />;
-  }
+  useEffect(() => {
+    if (saleState === "SOLD_OUT") {
+      alert("판매 완료된 물품입니다.");
+      window.location.replace(`/usedBook/${id}`);
+      return;
+    }
+    if (saleState === "TRADING") {
+      alert("거래 중인 물품입니다.");
+      window.location.replace(`/usedBook/${id}`);
+      return;
+    }
+    if (usedBook.sellerId === user?.id) {
+      alert("자기 자신 물품을 구매 할 수 없습니다.");
+      window.location.replace(`/usedBook/${id}`);
+    }
+  }, [saleState, usedBook, user, id]);
 
-  if (saleState === "TRADING") {
-    alert("거래가 진행 중인 물품입니다.");
-    window.location.replace(`/usedBook/${id}`);
-    return <Empty />;
+  if (!usedBook.usedBookId || saleState === "SOLD_OUT" || saleState === "TRADING" || usedBook.sellerId === user?.id) {
+    return <Styled.Empty />;
   }
-  if (!usedBook.usedBookId) return <Empty />;
 
   return (
-    <Wrapper>
+    <Styled.OrderWrapper>
       <Switch>
         <Route path={`${path}/result`} component={OrderResult} />
         <Route path={path}>
-          <Header>
+          <Styled.OrderHeader>
             <p>택배거래, 안전결제로 구매합니다.</p>
             <div className="header__info">
-              <div className="header__img">
-                <Link to={`/usedBook/${id}`}>
-                  {images.length !== 0 && <img src={`${process.env.BASE_URL}/image/${images[0]}`} alt="usedBookimg" />}
-                </Link>
-              </div>
+              <Link to={`/usedBook/${id}`}>
+                {images.length !== 0 && (
+                  <img className="header__img" src={`${process.env.BASE_URL}/image/${images[0]}`} alt="usedBookimg" />
+                )}
+              </Link>
               <div className="header__text">
-                <p>가격 : {`${make1000UnitsCommaFormet(String(price))}원`}</p>
-                <p>제목 : {title}</p>
+                <p>가격</p>
+                <p>{`${make1000UnitsCommaFormet(String(price))}원`}</p>
+                <p>판매도서명</p>
+                <p>{title}</p>
               </div>
             </div>
-          </Header>
+          </Styled.OrderHeader>
           <OrderForm usedBook={usedBook} />
         </Route>
       </Switch>
-    </Wrapper>
+    </Styled.OrderWrapper>
   );
 };
 
