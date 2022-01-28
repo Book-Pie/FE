@@ -49,7 +49,10 @@ const SaleInfo = () => {
 
   useEffect(() => {
     if (saleInfo && user) {
-      if (saleInfo.seller.userId !== user.id) histoy.replace("/");
+      if (saleInfo.seller.userId !== user.id) {
+        alert("판매자가 아닙니다.");
+        histoy.replace("/");
+      }
     }
   }, [saleInfo, user, histoy]);
 

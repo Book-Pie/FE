@@ -74,7 +74,7 @@ const My = () => {
           <Route path={`${path}/sale`} exact component={SaleList} />
           <Route path={`${path}/sale/insert`} component={SaleInsert} />
           <Route path={`${path}/sale/:bookId`} component={SaleInfo} />
-          <Route path={`${path}/buy`} component={BuyList} />
+          <Route path={`${path}/buy`} component={BuyList} exact />
           <Route path={`${path}/buy/:orderId`} component={BuyInfo} />
           <Route path={`${path}/like`} component={BookLikeList} />
           <Route path={`${path}/userReview`} component={UserReview} />

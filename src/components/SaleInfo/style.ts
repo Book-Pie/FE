@@ -69,7 +69,7 @@ export const SaleInfoWrapper = styled.div`
     p:last-child {
       font-size: 1rem;
       max-width: 200px;
-      color: ${({ theme }) => theme.colors.darkGrey};
+      color: ${({ theme }) => theme.colors.info};
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -164,7 +164,6 @@ export const SaleInfoWrapper = styled.div`
         font-size: 0.7rem;
       }
       p:last-child {
-        color: ${({ theme }) => theme.colors.info};
         font-size: 0.6rem;
       }
     }

@@ -1,3 +1,3 @@
-export interface IParams {
+export interface Params {
   orderId: string;
 }
