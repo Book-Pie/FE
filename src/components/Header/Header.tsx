@@ -131,6 +131,14 @@ const Header = () => {
           </span>
           <span>
             <Link to="/community">커뮤니티</Link>
+            <ul>
+              <li>
+                <Link to="/community/freeboard">자유게시판</Link>
+              </li>
+              <li>
+                <Link to="/">책사고팝니다.</Link>
+              </li>
+            </ul>
           </span>
         </Styled.RouterWrapper>
       </Styled.NavWrapper>

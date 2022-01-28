@@ -12,7 +12,6 @@ import {
 import FormInput from "src/elements/FormInput";
 import ErrorMessage from "src/elements/ErrorMessage";
 import FormLabel from "src/elements/FormLabel";
-import DaumPostCode from "react-daum-postcode";
 import { useEffect, useMemo, useState } from "react";
 import useDaumPost from "hooks/useDaumPost";
 import { errorHandler } from "src/api/http";
@@ -25,7 +24,7 @@ import Button from "@mui/material/Button";
 import naverImg from "assets/image/naver_oauth.png";
 import kakaoImg from "assets/image/kakao_oauth.png";
 import { Link } from "react-router-dom";
-import useWindowFiexd from "src/hooks/useWindowFiexd";
+import DaumPostModal from "src/elements/DaumPostModal";
 import * as Types from "./types";
 import * as Styled from "./style";
 
@@ -56,7 +55,6 @@ const SignUpForm = () => {
   const { errors } = formState;
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState("");
-  useWindowFiexd(isDaumPostOpen);
   const history = useHistory();
 
   const onSubmit = async (data: Types.SignUpForm) => {
@@ -254,15 +252,11 @@ const SignUpForm = () => {
           {message}
         </Popup>
       )}
-      <Styled.DaumPostWrapper isVisible={isDaumPostOpen}>
-        <div>
-          <p>주소찾기</p>
-          <DaumPostCode autoClose={false} onComplete={handleComplete} />
-          <Button variant="contained" color="mainDarkBrown" onClick={handleDaumPostOpne}>
-            닫기
-          </Button>
-        </div>
-      </Styled.DaumPostWrapper>
+      <DaumPostModal
+        isVisible={isDaumPostOpen}
+        handleComplete={handleComplete}
+        handleDaumPostOpne={handleDaumPostOpne}
+      />
       <form onSubmit={handleSubmit(onSubmit)}>
         <div>{rows}</div>
         <div>

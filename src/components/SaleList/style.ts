@@ -1,96 +1,203 @@
 import styled from "styled-components";
 
-export const Wrapper = styled.div`
-  width: 100%;
+export const SaleListWrapper = styled.div`
+  flex: 1;
+  margin-top: 2rem;
+  padding: 0 1rem;
+
+  ${({ theme }) => theme.media.mobile} {
+    padding: 0 0.5rem;
+    margin-bottom: 2rem;
+  }
 `;
-export const TableHeader = styled.div`
+
+export const SaleSearch = styled.div`
+  display: flex;
+  justify-content: center;
+  margin: 2rem 0;
+  gap: 1rem;
+  flex-wrap: wrap;
+  & > div:first-child {
+    width: 50%;
+  }
+
+  ${({ theme }) => theme.media.mobile} {
+    flex-direction: column;
+    margin: 1rem 0;
+    & > div:first-child,
+    & > div {
+      width: 100%;
+    }
+  }
+`;
+export const SaleFilter = styled.div`
+  display: flex;
+  margin-bottom: 2rem;
+  justify-content: flex-end;
+  gap: 1rem;
+  button {
+    height: 100%;
+  }
+  ${({ theme }) => theme.media.mobile} {
+    margin: 1rem 0;
+  }
+`;
+
+export const SaleTableHeader = styled.div`
   display: flex;
   & > div {
     text-align: center;
     flex: 1;
-    border-top: 1px solid ${props => props.theme.colors.darkGrey};
-    border-bottom: 1px solid ${props => props.theme.colors.darkGrey};
+    border-top: 1px solid rgba(99, 110, 114, 0.2);
+    border-bottom: 1px solid rgba(99, 110, 114, 0.2);
+    padding: 0 0.5rem;
     & > span {
       display: block;
       margin: 15px 0;
-      font-size: 18px;
-      font-weight: 600;
+      font-size: 1rem;
+      font-weight: 500;
+      color: ${({ theme }) => theme.colors.darkGrey};
     }
   }
 `;
-export const Cell = styled.div`
+export const SaleCell = styled.div`
   flex: 1;
   text-align: center;
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 0 0.5rem;
   a {
     flex: 1;
   }
 `;
 
-export const TableBody = styled.div`
+export const SaleTableBody = styled.div`
   & > div {
-    border-bottom: 1px solid ${props => props.theme.colors.mainLightBrown};
+    border-bottom: 1px solid ${({ theme }) => theme.colors.mainLightBrown};
     display: flex;
     padding: 10px 0;
   }
+  span {
+    display: flex;
+    align-items: center;
+  }
+
+  @media screen and (max-width: 950px) {
+    button.error {
+      background-color: ${({ theme }) => theme.colors.error};
+    }
+
+    button.info {
+      background-color: ${({ theme }) => theme.colors.info};
+    }
+    button {
+      border: none;
+      padding: 0.5rem;
+      border-radius: 5px;
+      font-size: 1rem;
+      cursor: pointer;
+      ${({ theme }) => theme.shadow[0]};
+      color: ${({ theme }) => theme.colors.white};
+      background-color: ${({ theme }) => theme.colors.mainDarkBrown};
+      a {
+        color: ${({ theme }) => theme.colors.white};
+      }
+    }
+  }
+
+  ${({ theme }) => theme.media.mobile} {
+    span {
+      font-size: 0.6rem;
+    }
+    img {
+      width: 80px;
+      height: 80px;
+    }
+    svg {
+      width: 24px;
+    }
+    h6 {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 0.6rem;
+    }
+    button {
+      padding: 0.4rem;
+      font-size: 0.5rem;
+    }
+  }
 `;
-export const Image = styled.div`
-  height: 150px;
-  width: 150px;
-  img {
-    height: 100%;
-    width: 100%;
+export const SaleImage = styled.img`
+  height: 100px;
+  width: 100px;
+`;
+
+export const SaleState = styled.span`
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: ${({ theme }) => theme.colors.mainDarkBrown};
+  .red {
+    color: ${({ theme }) => theme.colors.error};
+  }
+  .info {
+    color: ${({ theme }) => theme.colors.info};
   }
 `;
 
-export const State = styled.span`
-  font-size: 20px;
-  font-weight: 600;
-  color: ${props => props.theme.colors.mainDarkBrown};
-`;
-
-export const Title = styled.div`
-  width: 100%;
+export const SaleTitle = styled.div`
+  display: flex;
+  align-items: center;
   span {
-    color: #1565c0;
+    display: block;
+    color: ${({ theme }) => theme.colors.info};
     display: -webkit-box;
     word-break: break-word;
     overflow-wrap: break-word;
-    font-size: 0.875rem;
+    font-size: 1rem;
     line-height: 1.5;
     overflow: hidden;
     text-overflow: ellipsis;
-    -webkit-line-clamp: 6;
+    -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     font-weight: 900;
-    padding: 10px;
+    margin: 10px;
   }
 `;
-export const Like = styled.div`
-  display: flex;
-  gap: 10px;
-`;
-
-export const Price = styled.div`
-  span {
-    font-size: 18px;
-    font-weight: 600;
-    color: ${props => props.theme.colors.mainDarkBrown};
-  }
-`;
-export const Date = styled.div`
+export const SaleLike = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
+  & > div {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  ${({ theme }) => theme.media.mobile} {
+    span {
+      font-size: 1rem;
+    }
+  }
+`;
+
+export const SalePrice = styled.div`
   span {
-    font-weight: 700;
-    font-size: 15px;
-    color: ${props => props.theme.colors.mainDarkBrown};
+    font-size: 1rem;
+    color: ${({ theme }) => theme.colors.mainDarkBrown};
+  }
+`;
+export const SaleDate = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  span {
+    font-size: 1rem;
+    color: ${({ theme }) => theme.colors.mainDarkBrown};
   }
   span:first-child {
-    font-size: 18px;
+    font-weight: 600;
+    font-size: 1.1rem;
   }
 `;
 export const Empty = styled.div`
@@ -100,9 +207,10 @@ export const Empty = styled.div`
   align-items: center;
   flex-direction: column;
   gap: 10px;
+  width: 100%;
   p {
     font-size: 20px;
-    color: ${props => props.theme.colors.mainDarkBrown};
+    color: ${({ theme }) => theme.colors.mainDarkBrown};
     font-weight: 600;
   }
   img {

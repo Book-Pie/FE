@@ -1,10 +1,9 @@
 import { useCallback, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { freeBoardSelector, setPage, listAsync, listByTitleAsync } from "src/modules/Slices/freeBoard/freeBoardSlice";
-import range from "lodash/range";
 import { useTypedSelector } from "src/modules/store";
 import Pagination from "@mui/material/Pagination";
-import { Button, Skeleton, Stack, TextField } from "@mui/material";
+import { Button, Stack, TextField, useMediaQuery } from "@mui/material";
 import { dateFormat2 } from "src/utils/formatUtil";
 import Loading from "src/elements/Loading";
 import { getFreeBoardPage, setFreeBoardPage } from "src/utils/localStorageUtil";
@@ -14,10 +13,10 @@ import { useForm, Controller, RegisterOptions } from "react-hook-form";
 import { makeOption } from "src/utils/hookFormUtil";
 import ErrorMessage from "src/elements/ErrorMessage";
 import useDebounce from "src/hooks/useDebounce";
-import { Row, Title, Empty, Wrapper, Search } from "./style";
-import { ISearchForm } from "./types";
+import * as Styled from "./style";
+import * as Types from "./types";
 
-const init: ISearchForm = {
+const init: Types.SearchForm = {
   title: "",
 };
 
@@ -26,7 +25,7 @@ const FreeBoardList = () => {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<ISearchForm>({
+  } = useForm<Types.SearchForm>({
     defaultValues: init,
   });
   const debounce = useDebounce();
@@ -34,12 +33,13 @@ const FreeBoardList = () => {
   const { list, status, keyWord } = useTypedSelector(freeBoardSelector);
   const dispatch = useDispatch();
   const isLoading = status === "loading";
+  const min900 = useMediaQuery("(min-width:900px)");
 
   const titleOptions: RegisterOptions = {
     maxLength: makeOption<number>(50, "최대 50자 입니다."),
   };
 
-  const onSubmit = (data: ISearchForm) => {
+  const onSubmit = (data: Types.SearchForm) => {
     if (debounce.current) clearTimeout(debounce.current);
 
     debounce.current = setTimeout(() => {
@@ -93,46 +93,38 @@ const FreeBoardList = () => {
     return (
       <>
         {status === "loading" && <Loading isLoading={isLoading} />}
-        <Wrapper>
-          <Title>자유게시판</Title>
+        <Styled.FreeBoardListWrapper>
+          <Styled.FreeBoardListTitle>자유게시판</Styled.FreeBoardListTitle>
           {user && (
             <Stack mt={2} mb={2} direction="row" justifyContent="flex-end">
               <Link to="freeboard/insert">
-                <Button variant="contained">게시글 등록</Button>
+                <Button variant="contained" size={min900 ? "large" : "small"}>
+                  게시글 등록
+                </Button>
               </Link>
             </Stack>
           )}
-          <Row>
+          <Styled.FreeBoardListRow>
             <div className="header">
-              <span>번호</span>
-              <span>제목</span>
-              <span>작성자</span>
-              <span>조회수</span>
-              <span>등록일</span>
+              <div>번호</div>
+              <div>제목</div>
+              <div>작성자</div>
+              <div>조회수</div>
+              <div>등록일</div>
             </div>
-            {status === "loading" ? (
-              range(0, 5).map(v => {
-                return (
-                  <div key={v}>
-                    <Skeleton variant="rectangular" height={20} animation="wave" sx={{ borderRadius: "5px" }} />
-                    <Skeleton variant="rectangular" height={20} animation="wave" sx={{ borderRadius: "5px" }} />
-                    <Skeleton variant="rectangular" height={20} animation="wave" sx={{ borderRadius: "5px" }} />
-                    <Skeleton variant="rectangular" height={20} animation="wave" sx={{ borderRadius: "5px" }} />
-                    <Skeleton variant="rectangular" height={20} animation="wave" sx={{ borderRadius: "5px" }} />
-                  </div>
-                );
-              })
-            ) : empty ? (
-              <Empty>
+            {empty ? (
+              <Styled.Empty>
                 <p>결과가 없습니다.</p>
-              </Empty>
+              </Styled.Empty>
             ) : (
               content.map(value => {
                 const { boardDate, nickName, boardId, view, title } = value;
                 return (
                   <div key={boardId}>
-                    <span>{boardId}</span>
-                    <span>
+                    <div>
+                      <span>{boardId}</span>
+                    </div>
+                    <div>
                       <Link
                         to={{
                           pathname: `freeboard/${boardId}`,
@@ -143,34 +135,44 @@ const FreeBoardList = () => {
                       >
                         {title}
                       </Link>
-                    </span>
-                    <span>{nickName}</span>
-                    <span>{view}</span>
-                    <span>{dateFormat2(boardDate)[0]}</span>
+                    </div>
+                    <div>
+                      <span>{nickName}</span>
+                    </div>
+                    <div>
+                      <span>{view}</span>
+                    </div>
+                    <div>
+                      <span>{dateFormat2(boardDate)[0]}</span>
+                      <span>{dateFormat2(boardDate)[1]}</span>
+                    </div>
                   </div>
                 );
               })
             )}
-          </Row>
-          <div>
-            <Stack mt={5} justifyContent="center" direction="row">
-              <Pagination
-                count={totalPages}
-                page={page + 1}
-                onChange={handlePaginationOnChange}
-                variant="outlined"
-                shape="rounded"
-                size="large"
-                sx={{
-                  ".Mui-selected": {
-                    background: theme => theme.colors.mainDarkBrown,
-                    color: theme => theme.colors.white,
-                  },
-                }}
-              />
-            </Stack>
-          </div>
-          <Search onSubmit={handleSubmit(onSubmit)}>
+          </Styled.FreeBoardListRow>
+          {totalPages !== 0 && (
+            <div>
+              <Stack mt={2} justifyContent="center" direction="row">
+                <Pagination
+                  siblingCount={0}
+                  count={totalPages}
+                  page={page + 1}
+                  onChange={handlePaginationOnChange}
+                  variant="outlined"
+                  shape="rounded"
+                  size={min900 ? "large" : "small"}
+                  sx={{
+                    ".Mui-selected": {
+                      background: theme => theme.colors.mainDarkBrown,
+                      color: theme => theme.colors.white,
+                    },
+                  }}
+                />
+              </Stack>
+            </div>
+          )}
+          <Styled.FreeBoardListSearch onSubmit={handleSubmit(onSubmit)}>
             <div>
               <Controller
                 name="title"
@@ -180,20 +182,19 @@ const FreeBoardList = () => {
                   <TextField
                     {...field}
                     type="text"
+                    size={min900 ? "medium" : "small"}
                     color="mainDarkBrown"
                     placeholder="자유게시판 제목을 입력해주세요."
                   />
                 )}
               />
-              <Button variant="contained" color="mainDarkBrown" type="submit">
+              <Button variant="contained" size={min900 ? "large" : "small"} color="mainDarkBrown" type="submit">
                 검색
               </Button>
             </div>
-            <div>
-              <ErrorMessage message={errors.title?.message} />
-            </div>
-          </Search>
-        </Wrapper>
+            <ErrorMessage message={errors.title?.message} />
+          </Styled.FreeBoardListSearch>
+        </Styled.FreeBoardListWrapper>
       </>
     );
   }

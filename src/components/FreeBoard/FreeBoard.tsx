@@ -21,17 +21,17 @@ import { dateFormat2 } from "src/utils/formatUtil";
 import { FormErrorMessages, makeOption } from "src/utils/hookFormUtil";
 import Editor from "../Editor/Editor";
 import { Buttons, EditorWrapper } from "../FreeBoardInsert/style";
-import { IFreeBoardInsertForm } from "../FreeBoardInsert/types";
+import { FreeBoardInsertForm } from "../FreeBoardInsert/types";
 import Comments from "./Comments";
-import { Empty, Main, Title, Top, Wrapper } from "./style";
+import * as Styled from "./style";
 import * as Types from "./types";
 
-const init: IFreeBoardInsertForm = {
+const init: FreeBoardInsertForm = {
   title: "",
 };
 
 const FreeBoard = () => {
-  const { handleSubmit, control, setValue, clearErrors, formState } = useForm<IFreeBoardInsertForm>({
+  const { handleSubmit, control, setValue, clearErrors, formState } = useForm<FreeBoardInsertForm>({
     defaultValues: init,
   });
   const { errors } = formState;
@@ -70,7 +70,7 @@ const FreeBoard = () => {
     });
   }, []);
 
-  const onSumit = (formData: IFreeBoardInsertForm) => {
+  const onSumit = (formData: FreeBoardInsertForm) => {
     try {
       if (editorLength === 0) throw new Error("게시글은 필수 입니다.");
       if (!user) throw new Error("로그인이 필요합니다.");
@@ -127,14 +127,14 @@ const FreeBoard = () => {
     const innerHtmlContent = content.replaceAll("&lt;", "<");
 
     return (
-      <Wrapper>
+      <Styled.FreeboardWrapper>
         {isOpen && (
           <Popup isOpen={isOpen} setIsOpen={setIsOpen} autoClose className="red">
             {popUpState.message}
           </Popup>
         )}
         <Loading isLoading={isLoading} />
-        <Title>자유게시판</Title>
+        <Styled.Title>자유게시판</Styled.Title>
         {isUpdate ? (
           <div>
             <form onSubmit={handleSubmit(onSumit)}>
@@ -188,7 +188,7 @@ const FreeBoard = () => {
           </div>
         ) : (
           <div>
-            <Top>
+            <Styled.FreeboardTop>
               <div>
                 <div>{title}</div>
                 <div>
@@ -217,22 +217,22 @@ const FreeBoard = () => {
                   </>
                 )}
               </div>
-            </Top>
-            <Main>
+            </Styled.FreeboardTop>
+            <Styled.Main>
               <div
                 className="view ql-editor"
                 // eslint-disable-next-line react/no-danger
                 dangerouslySetInnerHTML={{ __html: innerHtmlContent }}
               />
-            </Main>
+            </Styled.Main>
           </div>
         )}
         <Comments boardId={boardId} userId={user?.id} />
-      </Wrapper>
+      </Styled.FreeboardWrapper>
     );
   }
 
-  return <Empty />;
+  return <Styled.Empty />;
 };
 
 export default FreeBoard;

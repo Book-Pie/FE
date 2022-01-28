@@ -1,24 +1,40 @@
 import styled from "styled-components";
 
-export const Wrapper = styled.form`
-  width: 1000px;
+export const SaleInsertWrapper = styled.form`
+  width: 80%;
+  margin-top: 2rem;
+
+  @media screen and (max-width: 800px) {
+    margin: 1rem 0;
+    width: 95%;
+  }
 `;
 
 export const Title = styled.div`
-  padding: 25px 0;
-  margin-bottom: 50px;
+  padding: 1.5rem 0;
+  margin-bottom: 2.5rem;
   display: flex;
-  gap: 20px;
+  gap: 1rem;
   align-items: center;
   border-bottom: 2px solid ${props => props.theme.colors.darkGrey};
 
   & > span:first-child {
-    font-size: 30px;
+    font-size: 2rem;
   }
   & > span:last-child {
-    font-size: 20px;
+    font-size: 1.2rem;
     color: ${props => props.theme.colors.error};
     font-weight: 600;
+  }
+  ${({ theme }) => theme.media.mobile} {
+    padding: 1rem 0;
+    margin-bottom: 2rem;
+    & > span:first-child {
+      font-size: 1.2rem;
+    }
+    & > span:last-child {
+      font-size: 0.8rem;
+    }
   }
 `;
 
@@ -26,12 +42,12 @@ export const ImgDelete = styled.div`
   display: flex;
   justify-content: flex-end;
   height: 20px;
+  margin-bottom: 5px;
 
   span {
     position: relative;
     color: rgba(113, 128, 147, 0.8);
     cursor: pointer;
-
     :hover {
       ::after {
         position: absolute;
@@ -39,21 +55,28 @@ export const ImgDelete = styled.div`
         width: 100%;
         height: 1px;
         border-bottom: 1px solid rgba(113, 128, 147, 0.8);
-        bottom: -20%;
+        bottom: 0;
         left: 0;
         right: 0;
       }
+    }
+  }
+  ${({ theme }) => theme.media.mobile} {
+    span {
+      font-size: 0.6rem;
     }
   }
 `;
 
 export const ImgUpload = styled.div`
   display: flex;
-
+  justify-content: space-between;
+  gap: 10px;
   & > div:first-child {
     flex: 2;
     display: flex;
-    gap: 10px;
+    gap: 0.7rem;
+
     & > span:first-child {
       font-size: 16px;
       font-weight: 600;
@@ -70,10 +93,10 @@ export const ImgUpload = styled.div`
   & > div:last-child {
     flex: 8;
     display: grid;
-    padding-left: 50px;
+    justify-content: center;
     grid-template-columns: repeat(3, 200px);
     grid-template-rows: repeat(2, 200px);
-    gap: 20px;
+    gap: 15px;
     img {
       width: 100%;
       height: 100%;
@@ -103,13 +126,42 @@ export const ImgUpload = styled.div`
       }
     }
   }
+
+  @media screen and (max-width: 1000px) {
+    & > div:first-child {
+      gap: 5px;
+    }
+    & > div:last-child {
+      grid-template-columns: repeat(2, 200px);
+      grid-template-rows: repeat(3, 200px);
+    }
+  }
+  ${({ theme }) => theme.media.mobile} {
+    & > div:first-child {
+      gap: 5px;
+      flex-direction: column;
+      span {
+        text-align: center;
+      }
+    }
+    & > div:last-child {
+      grid-template-columns: repeat(2, 2fr);
+      grid-template-rows: repeat(3, 150px);
+      .one {
+        border: 1px solid ${props => props.theme.colors.mainLightBrown};
+        span {
+          font-size: 0.6rem;
+          bottom: 10%;
+        }
+      }
+    }
+  }
 `;
 
 export const ImgUploadText = styled.div`
   display: flex;
   justify-content: flex-end;
-
-  & > div:first-child {
+  & > div {
     width: 80%;
     margin: 1.5rem;
     padding: 1rem;
@@ -120,10 +172,33 @@ export const ImgUploadText = styled.div`
     div + div {
       margin-top: 15px;
     }
-    div {
+    & > div {
       cursor: pointer;
       display: flex;
+      align-items: center;
       gap: 10px;
+    }
+  }
+
+  @media screen and (max-width: 700px) {
+    & > div {
+      width: 100%;
+      margin-right: 0;
+      margin-left: 0;
+      div + div {
+        margin-top: 10px;
+      }
+    }
+  }
+
+  ${({ theme }) => theme.media.mobile} {
+    & > div {
+      span {
+        font-size: 0.8rem;
+      }
+      svg {
+        width: 24px;
+      }
     }
   }
 `;
@@ -134,8 +209,10 @@ export const Row = styled.div`
     display: flex;
     align-items: center;
     margin: 35px 0;
+    gap: 15px;
     & > div:first-child {
       flex: 2;
+      text-align: center;
       & > span:first-child {
         font-size: 16px;
         font-weight: 600;
@@ -147,11 +224,27 @@ export const Row = styled.div`
     }
     & > div:last-child {
       flex: 8;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
     }
   }
+  .title {
+    width: 100%;
+  }
   .price {
+    width: 100%;
+  }
+  .editor {
     & > div {
-      width: 30%;
+      width: 100%;
+    }
+  }
+
+  @media screen and (max-width: 700px) {
+    .category {
+      flex: 1;
     }
   }
 `;
@@ -169,7 +262,6 @@ export const TagBox = styled.div`
     cursor: text;
     font-size: 1.125rem;
     line-height: 2rem;
-    margin-bottom: 0.75rem;
     min-width: 8rem;
     border: none;
     background: transparent;
@@ -178,6 +270,13 @@ export const TagBox = styled.div`
       opacity: 1;
       transform: translateY(0px);
       z-index: 5;
+    }
+  }
+
+  ${({ theme }) => theme.media.mobile} {
+    input {
+      width: 100%;
+      font-size: 0.8rem;
     }
   }
 `;
@@ -189,15 +288,16 @@ export const Tag = styled.div`
   align-items: center;
   height: 2rem;
   border-radius: 1rem;
-  padding-left: 1rem;
-  padding-right: 1rem;
+  padding: 0 1rem;
   background: rgb(241, 243, 245);
   color: rgb(12, 166, 120);
-  margin-right: 0.75rem;
   transition: all 0.125s ease-in 0s;
   cursor: pointer;
-  margin-bottom: 0.75rem;
   animation: 0.125s ease-in-out 0s 1 normal forwards running iMKika;
+
+  ${({ theme }) => theme.media.mobile} {
+    margin: 0;
+  }
 `;
 
 export const InputMessage = styled.div`
@@ -205,19 +305,23 @@ export const InputMessage = styled.div`
   display: flex;
   flex-direction: column;
   gap: 2px;
-  width: 330px;
+  max-width: 330px;
   background: rgba(73, 80, 87, 1);
   padding: 0.7rem 1rem;
   color: white;
   line-height: 1.5;
   font-size: 0.8rem;
   z-index: -1;
-  top: 100%;
+  top: 120%;
   transition: opacity 0.5s, z-index 0.5s, transform 0.35s ease-in;
   opacity: 0;
   transform: translateY(-30px);
+  ${({ theme }) => theme.media.mobile} {
+    left: -25%;
+    top: 110%;
+  }
 `;
 
 export const ErrorMessageWrapper = styled.div`
-  margin-top: 15px;
+  width: 100%;
 `;

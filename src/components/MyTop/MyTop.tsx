@@ -1,16 +1,17 @@
 import noProfileImg from "assets/image/noProfile.jpg";
 import Button from "@mui/material/Button";
 import { useState, useCallback, useMemo } from "react";
-import useSignIn from "src/hooks/useSignIn";
-import { nickNameUpdateAsync } from "src/modules/Slices/signIn/signInSlice";
+import { nickNameUpdateAsync, signInSelector } from "src/modules/Slices/signIn/signInSlice";
 import { useForm, Controller, RegisterOptions } from "react-hook-form";
 import { hookFormSpecialChractersCheck, makeOption, FormErrorMessages } from "src/utils/hookFormUtil";
 import ErrorMessage from "src/elements/ErrorMessage";
-import { Skeleton } from "@mui/material";
+import { Skeleton, Input } from "@mui/material";
 import Popup from "src/elements/Popup";
 import { make1000UnitsCommaFormet } from "src/utils/formatUtil";
-import { ProfileImg, UserInfoMation, Wrapper, CustomInput } from "./style";
-import { NickNameForm } from "./type";
+import { useAppDispatch, useTypedSelector } from "src/modules/store";
+import * as Styled from "./style";
+import * as Types from "./type";
+import PointInfo from "./PointInfo";
 
 const MyTop = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -19,16 +20,17 @@ const MyTop = () => {
     message: "",
   });
   const [isNickNameUpdateOpne, setIsNickNameUpdateOpen] = useState<boolean>(false);
-  const { handleSubmit, control, formState, clearErrors } = useForm<NickNameForm>({
+  const { handleSubmit, control, formState, clearErrors } = useForm<Types.NickNameForm>({
     defaultValues: {
       nickName: "",
     },
   });
-  const { signIn, dispatch } = useSignIn();
+  const signIn = useTypedSelector(signInSelector);
+  const dispatch = useAppDispatch();
   const { errors } = formState;
   const { user, token } = signIn;
 
-  const options = useMemo<RegisterOptions>(
+  const nickNameOptions = useMemo<RegisterOptions>(
     () => ({
       maxLength: makeOption<number>(10, FormErrorMessages.MAX_LENGTH),
       minLength: makeOption<number>(3, FormErrorMessages.MIN_LENGTH),
@@ -64,7 +66,7 @@ const MyTop = () => {
   }, [clearErrors]);
 
   const handleNickNameUpdate = useCallback(
-    (formDate: NickNameForm) => {
+    (formDate: Types.NickNameForm) => {
       const { nickName } = formDate;
       if (token) {
         dispatch(nickNameUpdateAsync({ nickName, token }))
@@ -79,17 +81,6 @@ const MyTop = () => {
     [token, dispatch, handlePopUpMessage],
   );
 
-  const getRating = useCallback((point: number) => {
-    let rating = "브론즈";
-    if (point >= 100000) {
-      rating = "실버";
-    }
-    if (point >= 1000000) {
-      rating = "골드";
-    }
-    return rating;
-  }, []);
-
   return (
     <>
       {isOpen && (
@@ -97,50 +88,18 @@ const MyTop = () => {
           {popUpState.message}
         </Popup>
       )}
-      <Wrapper>
+      <Styled.MyTopWrapper>
         {user ? (
           <div>
-            <ProfileImg>
-              <div>
-                {user.image ? (
-                  <img src={`${process.env.BASE_URL}/image/${user.image}`} alt="myProfileImg" />
-                ) : (
-                  <img src={noProfileImg} alt="noProfileImg" />
-                )}
-              </div>
-            </ProfileImg>
-            <UserInfoMation>
-              <div>
-                <span>{`${getRating(user.point.totalPoint)}회원`}</span>
-                <span>{`총 ${make1000UnitsCommaFormet(String(user.point.totalPoint))}점`}</span>
-                <div className="point">
-                  <p>북파이 등급안내</p>
-                  <div>
-                    <span className="bronze">브론즈</span>
-                    <span>포인트 0점~ 100,000점</span>
-                  </div>
-                  <div>
-                    <span className="silver">실버</span>
-                    <span>포인트 100,000점~ 1,000,000점</span>
-                  </div>
-                  <div>
-                    <span className="gold">골드</span>
-                    <span>포인트 1,000,000점 ~</span>
-                  </div>
-                  <div>
-                    <span>총 포인트</span>
-                    <span>{`${make1000UnitsCommaFormet(String(user.point.totalPoint))}점`}</span>
-                  </div>
-                  <div>
-                    <span>사용한 포인트</span>
-                    <span>{`${make1000UnitsCommaFormet(String(user.point.usedPoint))}점`}</span>
-                  </div>
-                  <div>
-                    <span>보유한 포인트</span>
-                    <span>{`${make1000UnitsCommaFormet(String(user.point.holdPoint))}점`}</span>
-                  </div>
-                </div>
-              </div>
+            <Styled.ProfileImg>
+              {user.image ? (
+                <img src={`${process.env.BASE_URL}/image/${user.image}`} alt="myProfileImg" />
+              ) : (
+                <img src={noProfileImg} alt="noProfileImg" />
+              )}
+            </Styled.ProfileImg>
+            <Styled.MyTopUserInfo>
+              <PointInfo />
               <div>
                 <span>{user.nickName}</span>
                 <Button color="mainDarkBrown" variant="contained" onClick={handleNickNameUpdateOpen}>
@@ -152,12 +111,12 @@ const MyTop = () => {
                   <Controller
                     name="nickName"
                     control={control}
-                    rules={options}
-                    render={({ field }) => <CustomInput {...field} placeholder="닉네임 입력" />}
+                    rules={nickNameOptions}
+                    render={({ field }) => <Input {...field} placeholder="닉네임 입력" sx={{ width: "50%" }} />}
                   />
 
                   <Button color="mainDarkBrown" variant="contained" type="submit">
-                    닉네임변경
+                    변경하기
                   </Button>
                 </form>
               )}
@@ -174,16 +133,16 @@ const MyTop = () => {
                   포인트 충전
                 </Button>
               </div>
-            </UserInfoMation>
+            </Styled.MyTopUserInfo>
           </div>
         ) : (
           <div>
-            <ProfileImg>
+            <Styled.ProfileImg>
               <div>
                 <Skeleton variant="circular" width={200} height={200} animation="wave" />
               </div>
-            </ProfileImg>
-            <UserInfoMation>
+            </Styled.ProfileImg>
+            <Styled.MyTopUserInfo>
               <div>
                 <Skeleton variant="text" width={150} height={50} animation="wave" sx={{ borderRadius: "5px" }} />
                 <Skeleton variant="rectangular" width={150} height={50} animation="wave" sx={{ borderRadius: "5px" }} />
@@ -200,11 +159,11 @@ const MyTop = () => {
                 <Skeleton variant="text" width={150} height={50} animation="wave" sx={{ borderRadius: "5px" }} />
                 <Skeleton variant="rectangular" width={150} height={50} animation="wave" sx={{ borderRadius: "5px" }} />
               </div>
-            </UserInfoMation>
+            </Styled.MyTopUserInfo>
           </div>
         )}
-        <div />
-      </Wrapper>
+        <div>차트</div>
+      </Styled.MyTopWrapper>
     </>
   );
 };

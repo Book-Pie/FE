@@ -5,9 +5,9 @@ import { getFindEmail } from "src/api/oauth";
 import useDebounce from "hooks/useDebounce";
 import { hyphenRemoveFormat } from "src/utils/formatUtil";
 import useDelay from "src/hooks/useDelay";
-import { IFindEmail } from "./types";
 import Form from "./Form";
-import { Result, Title } from "./style";
+import * as Types from "./types";
+import * as Styled from "./style";
 
 const FindEmail = () => {
   const [resulte, setResulte] = useState(null);
@@ -17,8 +17,9 @@ const FindEmail = () => {
     isSuccess: false,
     message: "",
   });
+  const { isSuccess, message } = popUpState;
   const debounceRef = useDebounce();
-  const delay = useDelay(600);
+  const delay = useDelay(200);
 
   const handlePopUp = useCallback((message: string, isSuccess: boolean) => {
     setPopUpState({
@@ -28,14 +29,14 @@ const FindEmail = () => {
     setIsOpen(true);
   }, []);
 
-  const onSubmit = (formData: IFindEmail) => {
+  const onSubmit = (formData: Types.FindEmailForm) => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(async () => {
       try {
         const { phone, name } = formData;
         setIsLoading(true);
         await delay();
-        const { data } = await getFindEmail<IFindEmail>({ phone: hyphenRemoveFormat(phone), name });
+        const { data } = await getFindEmail<Types.FindEmailForm>({ phone: hyphenRemoveFormat(phone), name });
         const email = data.data;
         setResulte(email);
         handlePopUp("이메일 찾기에 성공했습니다.", true);
@@ -48,29 +49,29 @@ const FindEmail = () => {
   };
 
   return (
-    <>
+    <section>
       {isOpen && (
         <Popup
           isOpen={isOpen}
           setIsOpen={setIsOpen}
-          autoClose
-          className={popUpState.isSuccess ? "green" : "red"}
+          className={isSuccess ? "green" : "red"}
           closeDelay={2000}
+          autoClose
         >
-          <div>{popUpState.message}</div>
+          <div>{message}</div>
         </Popup>
       )}
-      <Title>이메일 찾기</Title>
+      <Styled.Title>이메일 찾기</Styled.Title>
       <Form isLoading={isLoading} onSubmit={onSubmit} />
       {resulte && (
-        <Result>
+        <Styled.Result>
+          <h2>고객님이 찾으신 이메일</h2>
           <div>
-            <p>이메일 확인 : </p>
-            <p>{resulte}</p>
+            <span>이메일 확인</span> <span>{resulte}</span>
           </div>
-        </Result>
+        </Styled.Result>
       )}
-    </>
+    </section>
   );
 };
 

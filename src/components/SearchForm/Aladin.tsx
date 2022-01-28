@@ -91,9 +91,9 @@ const Aladin = () => {
   }, []);
 
   return (
-    <Styled.SearchContainer>
+    <Styled.SearchWrapper>
       <Loading isLoading={loading} />
-      <Typography variant="h5" mt={2} fontWeight="bold">
+      <Typography variant="h4" mt={2} fontWeight="bold">
         알라딘 검색 결과
         {pageCount > 1 && (
           <>
@@ -125,7 +125,7 @@ const Aladin = () => {
           <ArrowUpwardIcon sx={{ color: "white" }} />
         </button>
       </Styled.SearchTopButtonWrapper>
-    </Styled.SearchContainer>
+    </Styled.SearchWrapper>
   );
 };
 

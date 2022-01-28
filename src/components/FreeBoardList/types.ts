@@ -1,3 +1,3 @@
-export interface ISearchForm {
+export interface SearchForm {
   title: string;
 }

@@ -7,16 +7,15 @@ interface ErrorMessageProps {
 
 const ErrorMessageContainer = styled.div`
   background-color: ${props => props.theme.colors.error};
-  padding: 1rem;
+  padding: 20px;
   color: white;
   border-radius: 5px;
-  line-height: 1.3;
 `;
 
 const ErrorMessage = ({ message }: ErrorMessageProps) => {
   if (message) {
     return (
-      <ErrorMessageContainer>
+      <ErrorMessageContainer className="errorMessage">
         <span>{message}</span>
       </ErrorMessageContainer>
     );

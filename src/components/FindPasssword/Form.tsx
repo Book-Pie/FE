@@ -14,16 +14,16 @@ import ErrorMessage from "src/elements/ErrorMessage";
 import Button from "@mui/material/Button";
 import { Link } from "react-router-dom";
 import withLoading from "src/hoc/withLoading";
-import { Row } from "./style";
-import { IFindPassword, IFindPasswordForm } from "./types";
+import * as Styled from "./style";
+import * as Types from "./types";
 
-const Form = ({ onSubmit }: IFindPasswordForm) => {
-  const { register, handleSubmit, formState } = useForm<IFindPassword>();
+const Form = ({ onSubmit }: Types.FormProps) => {
+  const { register, handleSubmit, formState } = useForm<Types.FindPasswordForm>();
   const { errors } = formState;
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <Row>
+      <Styled.Row isError={errors.email ? true : false}>
         <FormLabel text="이메일" />
         <FormInput
           placeholder="이메일을 입력해주세요."
@@ -37,13 +37,13 @@ const Form = ({ onSubmit }: IFindPasswordForm) => {
           })}
         />
         <ErrorMessage message={errors.email?.message} />
-      </Row>
-      <Row>
+      </Styled.Row>
+      <Styled.Row isError={errors.name ? true : false}>
         <FormLabel text="이름" />
         <FormInput
           placeholder="이름을 입력해주세요."
           register={register("name", {
-            maxLength: makeOption<number>(5, FormErrorMessages.MAX_LENGTH),
+            maxLength: makeOption<number>(10, FormErrorMessages.MAX_LENGTH),
             minLength: makeOption<number>(3, FormErrorMessages.MIN_LENGTH),
             required: makeOption<boolean>(true, FormErrorMessages.REQUIRED),
             validate: {
@@ -53,8 +53,8 @@ const Form = ({ onSubmit }: IFindPasswordForm) => {
           })}
         />
         <ErrorMessage message={errors.name?.message} />
-      </Row>
-      <Row>
+      </Styled.Row>
+      <Styled.Row isError={errors.phone ? true : false}>
         <FormLabel text="휴대번호" />
         <FormInput
           placeholder="ex ) 010-0000-0000"
@@ -68,8 +68,8 @@ const Form = ({ onSubmit }: IFindPasswordForm) => {
           })}
         />
         <ErrorMessage message={errors.phone?.message} />
-      </Row>
-      <Row>
+      </Styled.Row>
+      <Styled.Row isError={errors.password ? true : false}>
         <FormLabel text="새로운 비밀번호" />
         <FormInput
           type="password"
@@ -85,12 +85,12 @@ const Form = ({ onSubmit }: IFindPasswordForm) => {
           })}
         />
         <ErrorMessage message={errors.password?.message} />
-      </Row>
-      <Button type="submit" variant="contained" color="mainDarkBrown" fullWidth sx={{ mt: 2, mb: 2, height: 60 }}>
+      </Styled.Row>
+      <Button type="submit" variant="contained" color="mainDarkBrown">
         변경
       </Button>
       <Link to="/find/email">
-        <Button variant="contained" color="mainDarkBrown" fullWidth sx={{ mb: 2, height: 60 }}>
+        <Button variant="contained" color="mainDarkBrown">
           이메일 찾기
         </Button>
       </Link>

@@ -7,7 +7,6 @@ import Pagination from "@mui/material/Pagination";
 import Loading from "src/elements/Loading";
 import noComments from "assets/image/noComments.png";
 import * as Styled from "./style";
-
 import MyReviewTable from "./MyReviewTable";
 
 const MyReview = () => {
@@ -44,9 +43,9 @@ const MyReview = () => {
 
   if (contents) {
     return (
-      <Styled.MyReviewContainer>
+      <Styled.MyReviewWrapper>
         <Loading isLoading={loading} />
-        <Typography variant="h5" mt={2} fontWeight="bold">
+        <Typography variant="h4" mt={2} fontWeight="bold">
           최근 작성한 도서 리뷰
         </Typography>
         {empty ? (
@@ -58,7 +57,7 @@ const MyReview = () => {
           <MyReviewTable contents={contents[page]} />
         )}
         {empty || (
-          <Stack mt={1} justifyContent="center" direction="row">
+          <Stack justifyContent="center" direction="row">
             <Pagination
               count={pageCount}
               page={page + 1}
@@ -74,7 +73,7 @@ const MyReview = () => {
             />
           </Stack>
         )}
-      </Styled.MyReviewContainer>
+      </Styled.MyReviewWrapper>
     );
   }
 

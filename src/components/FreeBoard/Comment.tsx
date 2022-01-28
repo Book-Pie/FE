@@ -58,7 +58,7 @@ const Comment = ({
           <span>{nickName}</span>
           <span>{dateFormat2(replyDate)}</span>
         </div>
-        <ButtonGroup variant="contained" size="small">
+        <ButtonGroup size="small" disableElevation variant="contained">
           {isLoggedIn && (
             <Button color="mainDarkBrown" variant="contained" onClick={handleReplyAddOnClick}>
               댓글쓰기
@@ -89,6 +89,7 @@ const Comment = ({
           <div>
             <Button
               color="info"
+              size="small"
               variant="contained"
               onClick={handleReplyOnClick(replyId, "replyUpdate", updateEditorValue, updateEditorLength)}
             >
@@ -104,6 +105,7 @@ const Comment = ({
           <div>
             <Button
               color="info"
+              size="small"
               variant="contained"
               onClick={handleReplyOnClick(replyId, "subRely", subReplyEditorValue, subReplyEditorLength)}
             >

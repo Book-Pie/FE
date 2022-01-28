@@ -1,8 +1,12 @@
 import styled from "styled-components";
 
 export const FooterContainer = styled.footer`
-  margin: 2rem 0 0;
+  margin: 2rem 0 0 0;
   background-color: ${({ theme }) => theme.colors.mainLightBrown};
+
+  ${({ theme }) => theme.media.mobile} {
+    margin: 0 0 0 0;
+  }
 `;
 
 export const FooterWrapper = styled.div`

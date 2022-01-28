@@ -1,9 +1,9 @@
-export interface IFindPassword {
+export interface FindPasswordForm {
   email: string;
   name: string;
   phone: string;
   password: string;
 }
-export interface IFindPasswordForm {
-  onSubmit: (FormData: IFindPassword) => void;
+export interface FormProps {
+  onSubmit: (FormData: FindPasswordForm) => void;
 }

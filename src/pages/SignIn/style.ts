@@ -3,7 +3,6 @@ import styled from "styled-components";
 export const SignInContainer = styled.main`
   padding: 2rem 2rem 1rem 2rem;
   margin: 2rem auto 0 auto;
-  background-color: ${p => p.theme.colors.mainLightBrown};
   color: ${p => p.theme.colors.mainDarkBrown};
   border-radius: 5px;
   text-align: center;
@@ -17,6 +16,7 @@ export const SignInContainer = styled.main`
 
   ${p => p.theme.media.mobile} {
     padding: 2rem 1rem 1rem 1rem;
+    margin: 0;
     & > div:nth-child(2) {
       padding: 1rem 0;
     }

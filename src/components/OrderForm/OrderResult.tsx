@@ -7,7 +7,7 @@ import { getMyOrder } from "src/api/usedBook/usedBook";
 import { dateFormat2, make1000UnitsCommaFormet } from "src/utils/formatUtil";
 import { useTypedSelector } from "src/modules/store";
 import { signInSelector } from "src/modules/Slices/signIn/signInSlice";
-import { Result, Wrapper } from "./style";
+import * as Styled from "./style";
 import * as Types from "./types";
 
 const OrderResult = () => {
@@ -27,8 +27,8 @@ const OrderResult = () => {
   if (!orderResult || !state) return null;
 
   return (
-    <Wrapper>
-      <Result>
+    <Styled.OrderFormWrapper>
+      <Styled.OrderResult>
         <div className="result__title">
           <div>
             <ExpandMoreOutlinedIcon fontSize="large" />
@@ -42,7 +42,7 @@ const OrderResult = () => {
           </div>
           <div>
             <span>주문번호</span>
-            <span>{state}</span>
+            <span>{state}번</span>
           </div>
           <div>
             <span>상품명</span>
@@ -50,7 +50,7 @@ const OrderResult = () => {
           </div>
         </div>
         <div className="result__price">
-          <span>결제 금액</span>
+          <span>결제된 금액</span>
           <span>{`${make1000UnitsCommaFormet(String(orderResult.book.price))}원`}</span>
         </div>
         <div className="result__button">
@@ -59,12 +59,12 @@ const OrderResult = () => {
               중고도서 더보기
             </Button>
           </Link>
-          <Link to="/">
+          <Link to="/my/buy">
             <Button variant="contained">주문목록</Button>
           </Link>
         </div>
-      </Result>
-    </Wrapper>
+      </Styled.OrderResult>
+    </Styled.OrderFormWrapper>
   );
 };
 

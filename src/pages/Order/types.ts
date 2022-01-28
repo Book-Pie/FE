@@ -1,7 +1,7 @@
-export interface IParam {
+export interface Param {
   id: string;
 }
-export interface IUsedBook {
+export interface UsedBook {
   bookState: string;
   content: string;
   fstCategory: string;
@@ -18,8 +18,8 @@ export interface IUsedBook {
   usedBookId: number;
   view: number;
 }
-export interface AxiosResponse {
+export interface Response {
   seuccess: boolean;
-  data: IUsedBook;
+  data: UsedBook;
   error: null;
 }
