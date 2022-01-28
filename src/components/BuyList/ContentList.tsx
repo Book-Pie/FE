@@ -2,7 +2,7 @@ import Button from "@mui/material/Button";
 import { Link } from "react-router-dom";
 import noComments from "assets/image/noComments.png";
 import { useState, useEffect } from "react";
-import { usedBookBuyListResponse } from "src/modules/Slices/usedBookDetail/types";
+import { UsedBookBuyListResponse } from "src/modules/Slices/usedBookDetail/types";
 import { usedBookBuyConfirm } from "src/modules/Slices/usedBookDetail/usedBookDetailSlice";
 import useSignIn from "src/hooks/useSignIn";
 import { useTypedSelector } from "src/modules/store";
@@ -12,7 +12,7 @@ import { BuyContent, BuyTitleContent, ContentText, ContentWrapper, ImgContent, B
 import { Empty } from "../SaleList/style";
 
 export interface IContent {
-  pages: usedBookBuyListResponse[];
+  pages: UsedBookBuyListResponse[];
   titleFilter: string | null;
   select: string;
   open: boolean;
@@ -22,7 +22,7 @@ export interface IContent {
 const ContentList = ({ pages, select, titleFilter, open, setOpen }: IContent) => {
   const { signIn, dispatch } = useSignIn();
   const review = useTypedSelector(userReviewSelector);
-  const [selectedItem, setSelectedItem] = useState<usedBookBuyListResponse | null>(null);
+  const [selectedItem, setSelectedItem] = useState<UsedBookBuyListResponse | null>(null);
 
   const contents = pages.filter(({ title, state }) => {
     if (titleFilter !== null && title.match(titleFilter) === null) return false;
@@ -30,7 +30,7 @@ const ContentList = ({ pages, select, titleFilter, open, setOpen }: IContent) =>
     return true;
   });
 
-  const expandModal = (item: usedBookBuyListResponse) => {
+  const expandModal = (item: UsedBookBuyListResponse) => {
     setSelectedItem(item);
     setOpen(true);
   };

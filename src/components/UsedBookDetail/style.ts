@@ -49,9 +49,8 @@ export const ProductDetailTitle = styled.div`
 `;
 
 export const ReplyItemWrapper = styled.div`
-  // width: 100%;
   height: 112px;
-  margin: 0 0 20px;
+  margin: 0 0 24px;
   padding: 16px;
   border: solid 1px #51382b;
   border-radius: 10px;

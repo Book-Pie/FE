@@ -6,31 +6,36 @@ export interface UsedBookDetailThunk {
   rejectValue: string;
 }
 
-export interface getUsedBookBuyConfirmParam {
+export interface GetUsedBookBuyConfirmParam {
   orderId: string;
   token: string;
 }
 
-export interface getUsedBookBuyListParam {
+export interface UsedBookDetailReplyListParam {
+  usedBookId: number | string;
+  page: number;
+}
+
+export interface GetUsedBookBuyListParam {
   id: number;
   token: string;
 }
 
-export interface deleteUsedBookDetailParam {
+export interface DeleteUsedBookDetailParam {
   id: number;
 }
 
-export interface addUsedBookDetailReplyParam {
+export interface AddUsedBookDetailReplyParam {
   usedBookId: number;
   userId: number;
   content: string;
 }
 
-export interface usedBookLikeParam {
+export interface UsedBookLikeParam {
   usedBookId: number;
 }
 
-export interface usedBookBuyListResponse {
+export interface UsedBookBuyListResponse {
   orderId: string;
   bookId?: number;
   reviewId: number;
@@ -64,19 +69,21 @@ export interface ModalItemParam {
   usedBookTitle: string;
 }
 
-export interface usedBookDetailReplyResponse {
+export interface UsedBookDetailReplyResponse {
   replyId: number;
-  parentReplyId: number;
+  parentReplyId: number | null;
   usedBookId: number;
   userId: number;
   content: string;
   replyDate: string;
   nickName: string;
+  secret: boolean | null;
+  subReply: [];
 }
 
 export interface BuyBookList {
   pageCount: number;
-  pages: usedBookBuyListResponse[];
+  pages: UsedBookBuyListResponse[];
   page: number;
   isEmpty: boolean;
 }
@@ -120,7 +127,7 @@ export interface UsedBookLikeGetResponse {
 }
 
 export interface usedBookDetailReplyListData {
-  content: usedBookDetailReplyResponse[];
+  content: UsedBookDetailReplyResponse[];
   pageable: {
     sort: {
       empty: boolean;
@@ -159,12 +166,15 @@ export interface MyUsedBookAsyncSuccess {
 
 export interface UsedBookDetailReduce {
   content: UsedBookDetailResponse;
-  replyList: usedBookDetailReplyResponse[];
+  replyList: UsedBookDetailReplyResponse[];
   likeList: PagesResponse[];
-  buyList: usedBookBuyListResponse[];
+  buyList: UsedBookBuyListResponse[];
   list: BuyBookList;
   storeReviewList: UserReviewData[];
   pageCount: number;
+  totalElements: number;
+  totalPages: number;
+  pageNumber: number;
   status: "loading" | "success" | "failed";
 }
 
@@ -216,8 +226,14 @@ export interface getUsedBookBuyListAsyncSuccess {
   success: boolean;
   data: {
     pageCount: number;
-    pages: usedBookBuyListResponse[];
+    pages: UsedBookBuyListResponse[];
   };
+  error: null;
+}
+
+export interface AddUsedBookDetailReplyAsyncSuccess {
+  success: boolean;
+  data: UsedBookDetailReplyResponse;
   error: null;
 }
 

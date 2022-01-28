@@ -33,14 +33,16 @@ const UsedBookStoreReview = () => {
 
   const handleHasMoreList = useCallback(
     async (page: number) => {
-      dispatch(getStoreUserReviewList({ sellerId, page }));
+      if (sellerId !== undefined) {
+        dispatch(getStoreUserReviewList({ sellerId, page }));
+      }
     },
     [dispatch, sellerId],
   );
 
   useEffect(() => {
     if (storeReviewList.length === 0 && pageCount === 0) handleHasMoreList(page);
-  }, [handleHasMoreList, page, pageCount, storeReviewList]);
+  }, [handleHasMoreList, page]);
 
   const handlePaginationOnChange = useCallback(
     (_: React.ChangeEvent<unknown>, value: number) => {
