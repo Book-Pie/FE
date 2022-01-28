@@ -4,7 +4,6 @@ import { make1000UnitsCommaFormet } from "src/utils/formatUtil";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import InsertCommentIcon from "@mui/icons-material/InsertComment";
 import { StateEnumType } from "components/SaleList/type";
-
 import { useMemo } from "react";
 import * as Styled from "./style";
 import * as Types from "./types";
@@ -57,7 +56,7 @@ const SearchUsedBookCard = ({ page }: Types.SearchUsedBookCardProp) => {
   }
 
   return (
-    <Grid item xs={3}>
+    <Grid item xs={6} sm={6} md={3}>
       <Styled.SearchCard>{content}</Styled.SearchCard>
     </Grid>
   );

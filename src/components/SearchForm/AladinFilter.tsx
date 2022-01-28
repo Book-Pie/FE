@@ -1,5 +1,5 @@
 import Stack from "@mui/material/Stack";
-import { FormControl, InputLabel, Select, MenuItem, SelectChangeEvent, TextField } from "@mui/material";
+import { FormControl, InputLabel, Select, MenuItem, SelectChangeEvent, TextField, useMediaQuery } from "@mui/material";
 import { memo, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useHistory, useLocation } from "react-router";
@@ -19,6 +19,7 @@ const AladinFilter = () => {
       keyword: "",
     },
   });
+  const max500 = useMediaQuery("(max-width:500px)");
   const [filter, setFilter] = useState("Title");
   const { pathname, search } = useLocation();
   const dispatch = useAppDispatch();
@@ -73,8 +74,8 @@ const AladinFilter = () => {
   };
 
   return (
-    <Stack direction="row" justifyContent="center" gap={1} mb={5} mt={5} position="relative">
-      <form onSubmit={handleSubmit(onSubmit)}>
+    <Stack direction="row" justifyContent="center" flexWrap="wrap" gap={1} mb={2} mt={2} position="relative">
+      <form onSubmit={handleSubmit(onSubmit)} style={max500 ? { width: "100%" } : { width: "auto" }}>
         <Controller
           name="keyword"
           control={control}
@@ -82,7 +83,7 @@ const AladinFilter = () => {
           render={({ field }) => (
             <TextField
               {...field}
-              sx={{ width: 500 }}
+              sx={max500 ? { width: "100%" } : { width: 500 }}
               type="text"
               color="mainDarkBrown"
               placeholder="검색 키워드를 입력해주세요."
@@ -90,7 +91,7 @@ const AladinFilter = () => {
           )}
         />
       </form>
-      <FormControl sx={{ width: 150 }} color="mainDarkBrown">
+      <FormControl sx={max500 ? { width: "100%" } : { width: 150 }} color="mainDarkBrown">
         <InputLabel id="queryType ">{labelText}</InputLabel>
         <Select labelId="queryType" label={labelText} value={filter} onChange={handleSelectOnChange}>
           {menuItems.map(({ text, value }, idx) => (

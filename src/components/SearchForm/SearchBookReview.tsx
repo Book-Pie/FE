@@ -30,7 +30,7 @@ const SearchBookReview = () => {
   }, [search, query, dispatch]);
 
   return (
-    <Styled.SearchContainer>
+    <Styled.SearchWrapper>
       <Typography variant="h5" mt={2} fontWeight="bold">
         알라딘 검색 결과
         {pageCount > 1 && (
@@ -54,7 +54,7 @@ const SearchBookReview = () => {
           </Grid>
         )}
       </Grid>
-    </Styled.SearchContainer>
+    </Styled.SearchWrapper>
   );
 };
 

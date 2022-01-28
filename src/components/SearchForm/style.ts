@@ -1,22 +1,33 @@
 import styled, { css, keyframes } from "styled-components";
 
-export const SearchContainer = styled.div`
+export const SearchWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
-  margin-bottom: 20px;
-
+  margin-bottom: 1rem;
+  h4 {
+    color: ${({ theme }) => theme.colors.darkGrey};
+  }
   h5 {
-    color: ${p => p.theme.colors.mainDarkBrown};
+    color: ${({ theme }) => theme.colors.mainDarkBrown};
   }
   a {
     display: block;
+  }
+  ${({ theme }) => theme.media.mobile} {
+    margin-top: 1rem;
+    h5 {
+      font-size: 20px;
+    }
+    a {
+      font-size: 15px;
+    }
   }
 `;
 
 export const SearchCard = styled.div`
   cursor: pointer;
-  ${p => p.theme.shadow[0]}
+  ${({ theme }) => theme.shadow[0]}
   .content {
     padding: 15px;
   }
@@ -25,7 +36,7 @@ export const SearchCard = styled.div`
     align-items: center;
     gap: 10px;
     margin-top: 15px;
-    color: ${p => p.theme.colors.darkGrey};
+    color: ${({ theme }) => theme.colors.darkGrey};
     span:first-child {
       font-weight: bold;
       font-size: 19px;
@@ -40,10 +51,10 @@ export const SearchCard = styled.div`
     font-size: 15px;
     overflow: hidden;
     display: -webkit-box;
-    -webkit-line-clamp: 1;
+    -webkit-line-clamp: 6;
     -webkit-box-orient: vertical;
     line-height: 1.3;
-    color: ${p => p.theme.colors.darkGrey};
+    color: ${({ theme }) => theme.colors.darkGrey};
   }
   .like {
     display: flex;
@@ -60,11 +71,34 @@ export const SearchCard = styled.div`
     text-overflow: ellipsis;
     white-space: nowrap;
     font-weight: bold;
-    color: ${p => p.theme.colors.mainDarkBrown};
+    color: ${({ theme }) => theme.colors.mainDarkBrown};
     height: 20px;
   }
   .info {
     color: #1565c0;
+  }
+
+  ${({ theme }) => theme.media.mobile} {
+    svg {
+      width: 30px;
+    }
+    .content {
+      padding: 10px;
+      font-size: 20px;
+    }
+    .state {
+      margin-top: 15px;
+      flex-direction: column;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .like {
+      justify-content: center;
+    }
+    .author {
+      text-align: center;
+    }
   }
 `;
 
@@ -75,7 +109,7 @@ export const SearchImg = styled.img`
 `;
 export const SearchTitle = styled.p`
   font-size: 22px;
-  color: ${p => p.theme.colors.darkGrey};
+  color: ${({ theme }) => theme.colors.darkGrey};
   height: 35px;
   line-height: 1.5;
   overflow: hidden;
@@ -90,7 +124,7 @@ export const SearchAddMore = styled.div`
   border-bottom: 1px solid rgba(99, 110, 114, 0.3);
   padding-bottom: 15px;
   a {
-    color: ${p => p.theme.colors.darkGrey};
+    color: ${({ theme }) => theme.colors.darkGrey};
     border-bottom: 1px solid transparent;
   }
   a:hover {
@@ -102,12 +136,12 @@ export const SearchEmpty = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  font-size: 25px;
+  font-size: 0.9rem;
   font-weight: bold;
   padding-bottom: 20px;
   padding-top: 20px;
-  color: ${p => p.theme.colors.darkGrey};
-  ${p => p.theme.shadow[0]}
+  color: ${({ theme }) => theme.colors.darkGrey};
+  ${({ theme }) => theme.shadow[0]}
 
   img {
     width: 250px;
@@ -116,6 +150,9 @@ export const SearchEmpty = styled.div`
   }
   p {
     padding: 15px;
+  }
+  ${({ theme }) => theme.media.mobile} {
+    font-size: 15px;
   }
 `;
 
@@ -155,8 +192,8 @@ export const SearchTopButtonWrapper = styled.div<{
     padding: 15px;
     border-radius: 50%;
     border: none;
-    ${p => p.theme.shadow[0]}
-    background-color: ${p => p.theme.colors.mainDarkBrown};
+    ${({ theme }) => theme.shadow[0]}
+    background-color: ${({ theme }) => theme.colors.mainDarkBrown};
     cursor: pointer;
     :hover {
       animation: ${buttonUpDownKeyFrames} 1.5s 0.2s infinite linear alternate;

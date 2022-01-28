@@ -21,7 +21,7 @@ const SearchUsedBook = () => {
   }, [search, dispatch]);
 
   return (
-    <Styled.SearchContainer>
+    <Styled.SearchWrapper>
       <Typography variant="h5" mt={2} fontWeight="bold">
         중고도서 검색 결과
         {pageCount > 1 && (
@@ -43,7 +43,7 @@ const SearchUsedBook = () => {
           </Grid>
         )}
       </Grid>
-    </Styled.SearchContainer>
+    </Styled.SearchWrapper>
   );
 };
 
