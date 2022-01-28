@@ -7,7 +7,7 @@ import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import { useTypedSelector } from "src/modules/store";
 import { signInSelector } from "src/modules/Slices/signIn/signInSlice";
-import { getMyReview, setMyReview } from "src/utils/localStorageUtil";
+import { getMyRating, getMyReview, setMyRating, setMyReview } from "src/utils/localStorageUtil";
 import { reviewDateFormat } from "src/utils/formatUtil";
 import Textarea from "src/components/TextArea/Textarea";
 import { ButtonArea, TextareaAutosize, TextWrapper, MyReviwContent } from "./style";
@@ -17,37 +17,40 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({ isbn, isMyReview, myComm
   const { handleSubmit } = useForm({ defaultValues: { something: "anything" } });
   const { reviewDate } = myComment ?? "";
   const commentDate = reviewDateFormat(reviewDate);
-
   const myUserStatus = useTypedSelector(signInSelector);
   const { isLoggedIn } = myUserStatus ?? false;
 
   let editStatus = false;
-  let myCommentDefault = "";
   let myRatingDefault = 3;
 
   if (myComment === null) {
     editStatus = false;
-    myCommentDefault = "";
   } else {
     editStatus = true;
-    myCommentDefault = myComment.content;
     myRatingDefault = myComment.rating;
   }
 
   const dispatch = useDispatch();
-  const [reviewContent, setContent] = useState(myCommentDefault); // 리뷰 등록
+  const [reviewContent, setContent] = useState(""); // 리뷰 등록
   const [ratingValue, setValue] = useState(myRatingDefault); // 별점 추가
   const [editDisabled, editEnabled] = useState(editStatus);
 
   useEffect(() => {
-    if (isLoggedIn === true) {
-      setMyReview(myCommentDefault);
-      const saved = getMyReview();
-      if (saved !== null) {
-        setContent(saved);
+    if (isLoggedIn === true && myComment !== null) {
+      setMyReview(myComment.content);
+      setMyRating(String(myComment.rating));
+      const savedReview = getMyReview();
+      const savedRating = getMyRating();
+      if (savedReview !== "" && savedReview !== null) {
+        setContent(savedReview);
+        setValue(Number(savedRating));
       }
+      editEnabled(true);
     }
-  }, [isLoggedIn, myCommentDefault, editEnabled]);
+    if (myComment === null) {
+      editEnabled(false);
+    }
+  }, [isLoggedIn, myComment, editEnabled]);
 
   const handleRatingChange = (event: any) => {
     setValue(event.target.value);
@@ -83,6 +86,14 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({ isbn, isMyReview, myComm
 
   const handleEdit = () => {
     editEnabled(prev => !prev);
+    if (editDisabled === false && getMyReview() !== null) {
+      const savedReview = getMyReview();
+      const savedRating = getMyRating();
+      if (savedReview !== "" && savedReview !== null) {
+        setContent(savedReview);
+        setValue(Number(savedRating));
+      }
+    }
   };
 
   return isMyReview ? (

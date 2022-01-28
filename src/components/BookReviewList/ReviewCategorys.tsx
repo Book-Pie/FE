@@ -9,7 +9,7 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import { SelectChangeEvent, Skeleton } from "@mui/material";
 import { ParentsCategoryData } from "src/modules/Slices/book/types";
-import { Wrapper, LinkWrapper } from "../Categorys/style";
+import { Wrapper, LinkWrapper } from "./styles";
 
 export interface CategorysProps {
   categorys: ParentsCategoryData[];
@@ -49,7 +49,7 @@ const ReviewCategorys = ({ categorys, defaultLocation }: CategorysProps) => {
   }
 
   return (
-    <Wrapper>
+    <div>
       {categorys.map((item, idx) => {
         const { categoryName, subCategory } = item;
         return (
@@ -81,7 +81,7 @@ const ReviewCategorys = ({ categorys, defaultLocation }: CategorysProps) => {
           </FormControl>
         );
       })}
-    </Wrapper>
+    </div>
   );
 };
 

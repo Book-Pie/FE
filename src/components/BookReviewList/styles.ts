@@ -62,4 +62,14 @@ export const Text = styled.p`
   border-bottom: 2px solid rgba(99, 110, 114, 0.1);
 `;
 
-export const Wrapper = styled.div``;
+export const Wrapper = styled.ul`
+  display: flex;
+  justify-content: center;
+`;
+
+export const LinkWrapper = styled.span`
+  flex: 1;
+  a {
+    display: block;
+  }
+`;

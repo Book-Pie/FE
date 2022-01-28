@@ -1,4 +1,3 @@
-import { useDispatch } from "react-redux";
 import { usedBookLike } from "src/modules/Slices/usedBookDetail/usedBookDetailSlice";
 import { Link } from "react-router-dom";
 import { compareDateFormat, make1000UnitsCommaFormet } from "src/utils/formatUtil";
@@ -42,15 +41,13 @@ const UsedBookArea = ({
   uploadDate,
   tags,
   likeCount,
-  replyCount,
   usedBookId,
   sellerId,
   saleState,
 }: UsedBookAreaProps) => {
-  const date = compareDateFormat(uploadDate);
+  const date = compareDateFormat(String(uploadDate));
   const bookPrice = make1000UnitsCommaFormet(String(price));
-  const dispatch = useDispatch();
-  const { signIn } = useSignIn();
+  const { signIn, dispatch } = useSignIn();
   const { user } = signIn;
   const { id } = user ?? -1;
 
@@ -104,12 +101,10 @@ const UsedBookArea = ({
       </ProductDetail>
       <TagArea>{tags && tags.map((tag, index) => <TagContent key={index}>#{tag}</TagContent>)}</TagArea>
       {id !== sellerId && (
-        <>
-          <ButtonArea>
-            <UsedBookDetailButton onClick={likeClick}>좋아요</UsedBookDetailButton>
-            {saleState === "TRADING" && <DisabledButton>현재 거래중인 상품입니다.</DisabledButton>}
-            {saleState === "SOLD_OUT" && <DisabledButton>판매완료된 상품입니다.</DisabledButton>}
-          </ButtonArea>
+        <ButtonArea>
+          <UsedBookDetailButton onClick={likeClick}>좋아요</UsedBookDetailButton>
+          {saleState === "TRADING" && <DisabledButton>현재 거래중인 상품입니다.</DisabledButton>}
+          {saleState === "SOLD_OUT" && <DisabledButton>판매완료된 상품입니다.</DisabledButton>}
           {saleState === "SALE" && (
             <>
               <UsedBookDetailButton>1:1채팅 </UsedBookDetailButton>
@@ -118,7 +113,7 @@ const UsedBookArea = ({
               </Link>
             </>
           )}
-        </>
+        </ButtonArea>
       )}
     </UsedBookWrapper>
   );

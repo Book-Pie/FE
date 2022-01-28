@@ -13,6 +13,10 @@ export interface Review {
 export interface ReviewListProps {
   commentList: getCommentProps[];
   myCommentId: number;
+  pageCount: number;
+  totalCount: number;
+  page: number;
+  onChange: (_: React.ChangeEvent<unknown>, value: number) => void;
 }
 
 export interface Comment {

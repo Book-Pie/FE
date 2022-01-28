@@ -13,7 +13,6 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import Pagination from "@mui/material/Pagination";
 import useDelay from "src/hooks/useDelay";
-import { errorHandler } from "src/api/http";
 import { getShopPage, removeShopPage, setShopPage } from "src/utils/localStorageUtil";
 import { Empty } from "src/components/SaleList/style";
 import { getUsedBookBuyList, usedBookSelector } from "src/modules/Slices/usedBookDetail/usedBookDetailSlice";
@@ -38,7 +37,6 @@ const BuyList = () => {
   const [select, setSelect] = useState<string>("NONE");
   const [limit, setLimit] = useState(5);
   const [titleFilter, setTitleFilter] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(getShopPage(1));
   const { list } = useTypedSelector(usedBookSelector);
   const [open, setOpen] = useState(false);
@@ -52,17 +50,10 @@ const BuyList = () => {
     async (page: number, limit: number) => {
       if (user) {
         const query = queryString.stringify({ id: user.id, page, limit });
-        try {
-          setIsLoading(true);
-          await delay();
-          const { token } = signIn;
-          if (token) {
-            dispatch(getUsedBookBuyList({ query, token }));
-          }
-        } catch (error: any) {
-          alert(errorHandler(error));
-        } finally {
-          setIsLoading(false);
+        await delay();
+        const { token } = signIn;
+        if (token) {
+          dispatch(getUsedBookBuyList({ query, token }));
         }
       }
     },
