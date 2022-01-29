@@ -2,41 +2,56 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 import http from "src/api/http";
 import { RootState } from "src/modules/store";
-import { AddUserReviewAsyncSuccess, AddUserReviewParam, getUserReviewListParam } from "../userReview/types";
 import {
-  addUsedBookDetailReplyParam,
-  BuyBookList,
-  deleteUsedBookDetailParam,
-  getUsedBookBuyConfirmParam,
+  AddUserReviewAsyncSuccess,
+  AddUserReviewParam,
+  GetRelatedUsedBookListAsyncSuccess,
+  GetRelatedUsedBookListParam,
+  GetStoreUserReviewAsyncSuccess,
+  getStoreUserReviewListParam,
+  getUserReviewListParam,
+} from "../userReview/types";
+import {
+  AddUsedBookDetailReplyAsyncSuccess,
+  AddUsedBookDetailReplyParam,
+  DeleteUsedBookDetailParam,
+  GetUsedBookBuyConfirmParam,
   getUsedBookBuyListAsyncSuccess,
   getUsedBookLikeListAsyncSuccess,
-  PagesResponse,
-  usedBookBuyListResponse,
   UsedBookDetailAsyncSuccess,
   UsedBookDetailFail,
+  UsedBookDetailReduce,
   usedBookDetailReplyListAsyncSuccess,
-  usedBookDetailReplyResponse,
-  UsedBookDetailResponse,
+  UsedBookDetailReplyListParam,
   UsedBookDetailThunk,
   UsedBookLikeAsyncSuccess,
-  usedBookLikeParam,
+  UsedBookLikeParam,
   UsedBookViewAsyncSuccess,
 } from "./types";
 
-const initialState = {
-  content: {} as UsedBookDetailResponse,
-  replyList: [] as usedBookDetailReplyResponse[],
-  likeList: [] as PagesResponse[],
-  buyList: [] as usedBookBuyListResponse[],
+const initialState: UsedBookDetailReduce = {
+  content: {},
+  replyList: [],
+  likeList: [],
+  buyList: [],
+  relatedUsedBookList: [],
+  // 마이페이지
   list: {
     page: 1,
     pageCount: 0,
     pages: [],
     isEmpty: false,
-  } as BuyBookList,
-  category: {},
+  },
+  // 상점후기
+  storeReviewList: [],
+  pageCount: 0,
+  // 상품문의
+  totalElements: 0,
+  totalPages: 0,
+  pageNumber: 0,
   status: "loading",
 };
+
 const name = "usedBookDetail";
 const myPage = "myPage";
 
@@ -54,7 +69,6 @@ export const usedBookDetailAsync = createAsyncThunk<UsedBookDetailAsyncSuccess, 
         }
       }
       dispatch(usedBookView(id));
-      dispatch(usedBookDetailReplyList(id));
       return data;
     } catch (err) {
       const error = err as AxiosError<UsedBookDetailFail>;
@@ -65,7 +79,7 @@ export const usedBookDetailAsync = createAsyncThunk<UsedBookDetailAsyncSuccess, 
 );
 
 // 중고장터 좋아요 추가 및 취소
-export const usedBookLike = createAsyncThunk<UsedBookLikeAsyncSuccess, usedBookLikeParam>(
+export const usedBookLike = createAsyncThunk<UsedBookLikeAsyncSuccess, UsedBookLikeParam>(
   `${name}/like`,
   async ({ usedBookId }, { rejectWithValue }) => {
     try {
@@ -93,21 +107,21 @@ export const usedBookView = createAsyncThunk<UsedBookViewAsyncSuccess, string>(
 );
 
 // 중고장터 댓글 리스트
-export const usedBookDetailReplyList = createAsyncThunk<usedBookDetailReplyListAsyncSuccess, string>(
-  `${name}/replyList`,
-  async (id, { rejectWithValue }) => {
-    try {
-      const response = await http.get(`/reply/usedbook/${id}`);
-      return response.data;
-    } catch (error: any) {
-      console.error(error);
-      return rejectWithValue(error.response.data);
-    }
-  },
-);
+export const usedBookDetailReplyList = createAsyncThunk<
+  usedBookDetailReplyListAsyncSuccess,
+  UsedBookDetailReplyListParam
+>(`${name}/replyList`, async ({ usedBookId, page }, { rejectWithValue }) => {
+  try {
+    const response = await http.get(`/reply/usedbook/${usedBookId}?page=${page}&size=5`);
+    return response.data;
+  } catch (error: any) {
+    console.error(error);
+    return rejectWithValue(error.response.data);
+  }
+});
 
 // 중고장터 댓글 작성
-export const addUsedBookDetailReply = createAsyncThunk<UsedBookLikeAsyncSuccess, addUsedBookDetailReplyParam>(
+export const addUsedBookDetailReply = createAsyncThunk<AddUsedBookDetailReplyAsyncSuccess, AddUsedBookDetailReplyParam>(
   `${name}/addReply`,
   async (data, { rejectWithValue }) => {
     try {
@@ -123,10 +137,38 @@ export const addUsedBookDetailReply = createAsyncThunk<UsedBookLikeAsyncSuccess,
 // 중고장터 댓글 삭제
 export const deleteUsedBookDetailReply = createAsyncThunk(
   `${name}/deleteReply`,
-  async ({ id }: deleteUsedBookDetailParam, { rejectWithValue }) => {
+  async ({ id }: DeleteUsedBookDetailParam, { rejectWithValue }) => {
     try {
       await http.delete(`/reply/usedbook/${id}`);
       return id;
+    } catch (error: any) {
+      console.error(error);
+      return rejectWithValue(error.response.data);
+    }
+  },
+);
+
+// 중고장터 상점후기
+export const getStoreUserReviewList = createAsyncThunk<GetStoreUserReviewAsyncSuccess, getStoreUserReviewListParam>(
+  `${name}/storeUserReviewList`,
+  async ({ sellerId, page }, { rejectWithValue }) => {
+    try {
+      const response = await http.get(`/userreview/${sellerId}?page=${page}&limit=3`);
+      return response.data;
+    } catch (error: any) {
+      console.error(error);
+      return rejectWithValue(error.response.data);
+    }
+  },
+);
+
+// 중고장터 연관 중고도서리스트
+export const getRelatedUsedBookList = createAsyncThunk<GetRelatedUsedBookListAsyncSuccess, GetRelatedUsedBookListParam>(
+  `${name}/relatedUsedBookList`,
+  async (data, { rejectWithValue }) => {
+    try {
+      const response = await http.post(`/usedbook/recommendation`, data);
+      return response.data;
     } catch (error: any) {
       console.error(error);
       return rejectWithValue(error.response.data);
@@ -167,7 +209,7 @@ export const getUsedBookBuyList = createAsyncThunk<getUsedBookBuyListAsyncSucces
 );
 
 // 마이페이지 - 중고장터 구매확정
-export const usedBookBuyConfirm = createAsyncThunk<string, getUsedBookBuyConfirmParam>(
+export const usedBookBuyConfirm = createAsyncThunk<string, GetUsedBookBuyConfirmParam>(
   `${myPage}/${name}/buy/confirm`,
   async ({ token, orderId }, { rejectWithValue }) => {
     try {
@@ -249,6 +291,9 @@ const usedBookDetailSlice = createSlice({
       .addCase(usedBookDetailReplyList.fulfilled, (state, { payload }) => {
         state.status = "success";
         state.replyList = payload.data.content;
+        state.totalElements = payload.data.totalElements;
+        state.totalPages = payload.data.totalPages;
+        state.pageNumber = payload.data.pageable.pageNumber;
       })
       .addCase(usedBookDetailReplyList.rejected, state => {
         state.status = "failed";
@@ -257,8 +302,10 @@ const usedBookDetailSlice = createSlice({
       .addCase(addUsedBookDetailReply.pending, state => {
         state.status = "loading";
       })
-      .addCase(addUsedBookDetailReply.fulfilled, state => {
+      .addCase(addUsedBookDetailReply.fulfilled, (state, { payload }) => {
         state.status = "success";
+        state.replyList.unshift(payload.data);
+        state.totalElements += 1;
       })
       .addCase(addUsedBookDetailReply.rejected, state => {
         state.status = "failed";
@@ -270,10 +317,35 @@ const usedBookDetailSlice = createSlice({
       .addCase(deleteUsedBookDetailReply.fulfilled, (state, { payload }) => {
         state.status = "success";
         state.replyList = state.replyList.filter(comment => comment.replyId !== payload);
+        state.totalElements -= 1;
       })
       .addCase(deleteUsedBookDetailReply.rejected, state => {
         state.status = "failed";
       })
+      // 중고장터 상점후기
+      .addCase(getStoreUserReviewList.pending, state => {
+        state.status = "loading";
+      })
+      .addCase(getStoreUserReviewList.fulfilled, (state, { payload }) => {
+        state.status = "success";
+        state.storeReviewList = payload.data.pages;
+        state.pageCount = payload.data.pageCount;
+      })
+      .addCase(getStoreUserReviewList.rejected, state => {
+        state.status = "failed";
+      })
+      // 중고장터 연관상품 리스트
+      .addCase(getRelatedUsedBookList.pending, state => {
+        state.status = "loading";
+      })
+      .addCase(getRelatedUsedBookList.fulfilled, (state, { payload }) => {
+        state.status = "success";
+        state.relatedUsedBookList = payload.data;
+      })
+      .addCase(getRelatedUsedBookList.rejected, state => {
+        state.status = "failed";
+      })
+
       // 마이페이지 - 중고장터 찜 목록
       .addCase(getUsedBookLikeList.pending, state => {
         state.status = "loading";
@@ -336,5 +408,4 @@ const usedBookDetailSlice = createSlice({
 
 export const usedBookSelector = (state: RootState) => state.usedBookDetailReduce;
 export const buyListSelector = (state: RootState) => state.usedBookDetailReduce.buyList;
-
 export default usedBookDetailSlice;

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import queryString from "query-string";
 import useSignIn from "src/hooks/useSignIn";
 import noComments from "assets/image/noComments.png";
-import { usedBookBuyListResponse } from "src/modules/Slices/usedBookDetail/types";
+import { UsedBookBuyListResponse } from "src/modules/Slices/usedBookDetail/types";
 import TextField from "@mui/material/TextField";
 import Autocomplete, { AutocompleteChangeReason } from "@mui/material/Autocomplete";
 import Box from "@mui/material/Box";
@@ -27,7 +27,7 @@ export interface buyConfirmSubmitParam {
   orderId: string;
 }
 export interface BuyList {
-  pages: usedBookBuyListResponse[];
+  pages: UsedBookBuyListResponse[];
 }
 
 const BuyList = () => {

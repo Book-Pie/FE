@@ -102,7 +102,6 @@ export const getBookSlice = createSlice({
         state.status = "idle";
       })
       .addCase(getBestSeller.rejected, (state, { payload }) => {
-        console.log("error");
         state.status = "loading";
         // 에러핸들링
         if (!payload) {
@@ -128,7 +127,6 @@ export const getBookSlice = createSlice({
         state.status = "idle";
       })
       .addCase(getDefaultBookList.rejected, (state, { payload }) => {
-        console.log("error");
         state.status = "loading";
         // 에러핸들링
         if (!payload) {
@@ -154,7 +152,6 @@ export const getBookSlice = createSlice({
         state.status = "idle";
       })
       .addCase(getReviewBook.rejected, (state, { payload }) => {
-        console.log("error");
         state.status = "loading";
         // 에러핸들링
         if (!payload) {

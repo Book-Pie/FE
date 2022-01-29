@@ -3,6 +3,10 @@ import { FlexWrapper } from "./style";
 import UsedBookInquiry from "./UsedBookInquiry/UsedBookInquiry";
 import UsedBookStoreInformationArea from "./UsedBookStoreInformation/UsedBookStoreInformationArea";
 
+export interface UsedBookStoreInformationBottomParam {
+  usedBookId: string;
+}
+
 export const UsedBookStoreInformationBottom = () => {
   return (
     <>

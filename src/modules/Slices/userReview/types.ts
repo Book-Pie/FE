@@ -1,4 +1,15 @@
 import { addUserReviewSubmitParam } from "src/components/BuyList/types";
+import { PagesResponse } from "../usedBookDetail/types";
+
+export interface GetRelatedUsedBookListParam {
+  category: string;
+  tags: string[];
+}
+
+export interface getStoreUserReviewListParam {
+  sellerId: number;
+  page: number;
+}
 
 export interface addUserReviewData {
   orderId: number;
@@ -76,6 +87,12 @@ export interface AddUserReviewAsyncSuccess {
   error: string;
 }
 
+export interface GetRelatedUsedBookListAsyncSuccess {
+  success: boolean;
+  data: PagesResponse[];
+  error: string;
+}
+
 export interface EditUserReviewAsyncSuccess {
   success: boolean;
   data: UserReviewData;
@@ -87,6 +104,15 @@ export interface GetUserReviewListAsyncSuccess {
   data: {
     pageCount: number;
     pages: GetUserReceivedReviewListData[];
+  };
+  error: string;
+}
+
+export interface GetStoreUserReviewAsyncSuccess {
+  success: boolean;
+  data: {
+    pageCount: number;
+    pages: UserReviewData[];
   };
   error: string;
 }

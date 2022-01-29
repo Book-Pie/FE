@@ -18,7 +18,7 @@ export const Reviews: React.FC<ReviewsParams> = ({ bookId }) => {
   const { id } = user ?? -1;
   const { myCommentCheck, content, myComment, pageable, totalElements, totalPages } = reviewSelector;
   const { pageNumber } = pageable;
-  const [page, setPage] = useState(getShopPage(0));
+  const [page, setPage] = useState(getShopPage(1));
 
   const handleHasMoreList = useCallback(
     async (page: number) => {
