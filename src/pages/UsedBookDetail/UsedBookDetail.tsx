@@ -2,15 +2,20 @@ import UsedBookInformationTop from "components/UsedBookDetail/UsedBookInformatio
 import UsedBookStoreInformationBottom from "components/UsedBookDetail/UsedBookStoreInformationBottom";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
+import { useLocation, useRouteMatch } from "react-router";
 import { usedBookDetailAsync, usedBookSelector } from "src/modules/Slices/usedBookDetail/usedBookDetailSlice";
 import { useTypedSelector } from "src/modules/store";
-import { MatchProps } from "./types";
 
-const UsedBookDetail = ({ match }: MatchProps) => {
+const UsedBookDetail = () => {
   const dispatch = useDispatch();
-  const { params } = match;
+  const { pathname } = useLocation();
+  const { params } = useRouteMatch<{ id: string }>();
   const { id } = params;
   const usedBookContent = useTypedSelector(usedBookSelector);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
 
   const {
     usedBookId,

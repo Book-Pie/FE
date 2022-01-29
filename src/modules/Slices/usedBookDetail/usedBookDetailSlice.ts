@@ -5,6 +5,8 @@ import { RootState } from "src/modules/store";
 import {
   AddUserReviewAsyncSuccess,
   AddUserReviewParam,
+  GetRelatedUsedBookListAsyncSuccess,
+  GetRelatedUsedBookListParam,
   GetStoreUserReviewAsyncSuccess,
   getStoreUserReviewListParam,
   getUserReviewListParam,
@@ -32,6 +34,7 @@ const initialState: UsedBookDetailReduce = {
   replyList: [],
   likeList: [],
   buyList: [],
+  relatedUsedBookList: [],
   // 마이페이지
   list: {
     page: 1,
@@ -151,6 +154,20 @@ export const getStoreUserReviewList = createAsyncThunk<GetStoreUserReviewAsyncSu
   async ({ sellerId, page }, { rejectWithValue }) => {
     try {
       const response = await http.get(`/userreview/${sellerId}?page=${page}&limit=3`);
+      return response.data;
+    } catch (error: any) {
+      console.error(error);
+      return rejectWithValue(error.response.data);
+    }
+  },
+);
+
+// 중고장터 연관 중고도서리스트
+export const getRelatedUsedBookList = createAsyncThunk<GetRelatedUsedBookListAsyncSuccess, GetRelatedUsedBookListParam>(
+  `${name}/relatedUsedBookList`,
+  async (data, { rejectWithValue }) => {
+    try {
+      const response = await http.post(`/usedbook/recommendation`, data);
       return response.data;
     } catch (error: any) {
       console.error(error);
@@ -317,6 +334,18 @@ const usedBookDetailSlice = createSlice({
       .addCase(getStoreUserReviewList.rejected, state => {
         state.status = "failed";
       })
+      // 중고장터 연관상품 리스트
+      .addCase(getRelatedUsedBookList.pending, state => {
+        state.status = "loading";
+      })
+      .addCase(getRelatedUsedBookList.fulfilled, (state, { payload }) => {
+        state.status = "success";
+        state.relatedUsedBookList = payload.data;
+      })
+      .addCase(getRelatedUsedBookList.rejected, state => {
+        state.status = "failed";
+      })
+
       // 마이페이지 - 중고장터 찜 목록
       .addCase(getUsedBookLikeList.pending, state => {
         state.status = "loading";

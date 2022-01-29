@@ -7,6 +7,8 @@ import Pagination from "@mui/material/Pagination";
 import { getShopPage, removeShopPage, setShopPage } from "src/utils/localStorageUtil";
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
+import { ReviewListEmpty } from "src/components/Reviews/ReviewList/ReviewListEmpty";
+import { useRouteMatch } from "react-router";
 import {
   FlexBox,
   RatingContent,
@@ -22,14 +24,17 @@ import {
   PieImg,
   ProductDetailTitle,
   ProfileArea,
+  ReviewListEmptyWrapper,
   UsedBookStoreInformationWrapper,
 } from "../style";
 
 const UsedBookStoreReview = () => {
   const { storeReviewList, pageCount, content } = useTypedSelector(usedBookSelector);
+  const { params } = useRouteMatch<{ id: string }>();
+  const { id } = params;
   const [page, setPage] = useState(getShopPage(1));
   const dispatch = useDispatch();
-  const { sellerId } = content;
+  const { sellerId, usedBookId } = content;
 
   const handleHasMoreList = useCallback(
     async (page: number) => {
@@ -39,6 +44,12 @@ const UsedBookStoreReview = () => {
     },
     [dispatch, sellerId],
   );
+
+  useEffect(() => {
+    if (Number(id) === usedBookId && pageCount !== 0 && storeReviewList.length !== 0) {
+      handleHasMoreList(1);
+    }
+  }, [usedBookId]);
 
   useEffect(() => {
     if (storeReviewList.length === 0 && pageCount === 0) handleHasMoreList(page);
@@ -89,23 +100,34 @@ const UsedBookStoreReview = () => {
           상점후기 <CountWrapper>{pageCount * 3}</CountWrapper>
         </div>
       </ProductDetailTitle>
-      {reviewList}
-      <Stack mt={5} justifyContent="center" direction="row">
-        <Pagination
-          count={pageCount}
-          page={page}
-          onChange={handlePaginationOnChange}
-          variant="outlined"
-          shape="rounded"
-          size="large"
-          sx={{
-            ".Mui-selected": {
-              background: theme => theme.colors.mainDarkBrown,
-              color: theme => theme.colors.white,
-            },
-          }}
-        />
-      </Stack>
+      {reviewList.length ? (
+        reviewList
+      ) : (
+        <ReviewListEmptyWrapper>
+          <ReviewListEmpty title="상점후기" />
+        </ReviewListEmptyWrapper>
+      )}
+      {reviewList.length ? (
+        <Stack mt={5} justifyContent="center" direction="row">
+          <Pagination
+            count={pageCount}
+            page={page}
+            onChange={handlePaginationOnChange}
+            variant="outlined"
+            shape="rounded"
+            size="large"
+            sx={{
+              ".Mui-selected": {
+                background: theme => theme.colors.mainDarkBrown,
+                color: theme => theme.colors.white,
+              },
+            }}
+          />
+        </Stack>
+      ) : (
+        // eslint-disable-next-line react/jsx-no-useless-fragment
+        <></>
+      )}
     </UsedBookStoreInformationWrapper>
   );
 };

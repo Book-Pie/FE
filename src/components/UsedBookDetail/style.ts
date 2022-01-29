@@ -212,7 +212,7 @@ export const RelatedUsedBookBoldTitle = styled.div`
   width: 187px;
 `;
 
-export const UsedBookThumbnail = styled.div`
+export const UsedBookThumbnail = styled.img`
   width: 187px;
   height: 281px;
   margin: 0 21px 20px 0;
@@ -222,7 +222,7 @@ export const UsedBookThumbnail = styled.div`
 export const RelatedUsedBookWrapper = styled.div`
   border-top: 1px solid #4f3629;
   width: 100%;
-  height: 450px;
+  height: 600px;
   margin: 10px auto 0 auto;
 `;
 
@@ -323,7 +323,7 @@ export const SwiperWrapper = styled.div`
   cursor: pointer;
 
   .swiper-slide {
-    width: 190px;
+    width: 200px;
     color: ${props => props.theme.colors.darkGrey};
   }
 

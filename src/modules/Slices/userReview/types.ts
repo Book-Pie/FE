@@ -1,4 +1,10 @@
 import { addUserReviewSubmitParam } from "src/components/BuyList/types";
+import { PagesResponse } from "../usedBookDetail/types";
+
+export interface GetRelatedUsedBookListParam {
+  category: string;
+  tags: string[];
+}
 
 export interface getStoreUserReviewListParam {
   sellerId: number;
@@ -78,6 +84,12 @@ export interface AddUserReviewAsyncSuccess {
     orderId: number;
     reviewId: number;
   };
+  error: string;
+}
+
+export interface GetRelatedUsedBookListAsyncSuccess {
+  success: boolean;
+  data: PagesResponse[];
   error: string;
 }
 

@@ -169,6 +169,7 @@ export interface UsedBookDetailReduce {
   replyList: UsedBookDetailReplyResponse[];
   likeList: PagesResponse[];
   buyList: UsedBookBuyListResponse[];
+  relatedUsedBookList: PagesResponse[];
   list: BuyBookList;
   storeReviewList: UserReviewData[];
   pageCount: number;

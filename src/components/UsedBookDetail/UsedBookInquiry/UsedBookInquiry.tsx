@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { useHistory } from "react-router";
+import { useHistory, useRouteMatch } from "react-router";
 import UsedBookReplyItem from "src/components/UsedBookDetail/UsedBookInquiry/UsedBookReplyItem";
 import { ReviewListEmpty } from "src/components/Reviews/ReviewList/ReviewListEmpty";
 import Textarea from "src/components/TextArea/Textarea";
@@ -28,6 +28,8 @@ const UsedBookInquiry = () => {
   const { handleSubmit } = useForm<submitParam>();
   const history = useHistory();
   const dispatch = useDispatch();
+  const { params } = useRouteMatch<{ id: string }>();
+  const { id } = params;
   const { content, replyList, totalElements, totalPages } = useTypedSelector(usedBookSelector);
   const { isLoggedIn, user } = useTypedSelector(signInSelector);
   const { usedBookId } = content;
@@ -48,7 +50,13 @@ const UsedBookInquiry = () => {
   );
 
   useEffect(() => {
-    if (replyList.length === 0 && totalPages === 0) {
+    if (Number(id) === usedBookId && totalPages !== 0 && replyList.length !== 0) {
+      handleHasMoreList(1);
+    }
+  }, [usedBookId]);
+
+  useEffect(() => {
+    if (replyList.length === 0 && totalPages === 0 && Number(id) === usedBookId) {
       handleHasMoreList(page);
     }
   }, [handleHasMoreList, page]);

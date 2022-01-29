@@ -7,7 +7,7 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import { useMemo } from "react";
-import { Pagination } from "swiper";
+import { Navigation, Pagination } from "swiper";
 import { CategoryArea, UsedBookDetailWrapper, UsedBookImg, SwiperWrapper } from "./style";
 import UsedBookArea from "./UsedBookContent/UsedBookArea";
 
@@ -47,7 +47,15 @@ const UsedBookInformationTop = ({
       </CategoryArea>
       <UsedBookDetailWrapper>
         <SwiperWrapper>
-          <Swiper modules={[Pagination]} spaceBetween={30} slidesPerView={5} style={swiperStyle} cssMode navigation>
+          <Swiper
+            spaceBetween={30}
+            slidesPerView={5}
+            style={swiperStyle}
+            cssMode
+            navigation
+            modules={[Navigation, Pagination]}
+            pagination={{ clickable: true }}
+          >
             {images &&
               images.map((image, idx) => (
                 <SwiperSlide key={idx}>
