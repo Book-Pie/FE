@@ -2,8 +2,9 @@ import { useDispatch } from "react-redux";
 import profileImg from "src/assets/image/pie3x.png";
 import { Button, ClickArea } from "src/components/Reviews/ReviewList/style";
 import useSignIn from "src/hooks/useSignIn";
-import { usedBookDetailReplyResponse } from "src/modules/Slices/usedBookDetail/types";
+import { UsedBookDetailReplyResponse } from "src/modules/Slices/usedBookDetail/types";
 import { deleteUsedBookDetailReply } from "src/modules/Slices/usedBookDetail/usedBookDetailSlice";
+import { compareDateFormat } from "src/utils/formatUtil";
 import {
   ContentWrapper,
   FlexBox,
@@ -14,9 +15,10 @@ import {
   ReplyItemNickName,
   ReplyItemWrapper,
 } from "../style";
+import { DateContent } from "./styles";
 
 export interface UsedBookReplyListParam {
-  review: usedBookDetailReplyResponse;
+  review: UsedBookDetailReplyResponse;
 }
 
 export const UsedBookReplyItem: React.FC<UsedBookReplyListParam> = props => {
@@ -27,6 +29,11 @@ export const UsedBookReplyItem: React.FC<UsedBookReplyListParam> = props => {
   const { signIn } = useSignIn();
   const { user } = signIn;
   const { id } = user ?? noId;
+  const date = compareDateFormat(replyDate);
+  let dayAgo = "일전";
+  if (date === 0) {
+    dayAgo = "오늘";
+  }
 
   const deleteClick = () => {
     if (window.confirm("상품문의 댓글을 정말로 삭제하시겠습니까?") === true) {
@@ -50,7 +57,13 @@ export const UsedBookReplyItem: React.FC<UsedBookReplyListParam> = props => {
             <PieImg src={profileImg} alt="profileImg" />
           </ProfileArea>
           <ContentWrapper>
-            <div>{replyDate}</div>
+            {date !== 0 ? (
+              <DateContent>
+                {date} {dayAgo}
+              </DateContent>
+            ) : (
+              <DateContent>{dayAgo}</DateContent>
+            )}
             <ReplyItemNickName>{nickName}</ReplyItemNickName>
             <ReplyItemContent dangerouslySetInnerHTML={{ __html: content }} />
           </ContentWrapper>

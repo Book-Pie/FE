@@ -76,7 +76,7 @@ const UsedBookArea = ({
           </InteractionSpan>
           {date !== 0 ? (
             <InteractionSpan>
-              날짜{" "}
+              날짜
               <RedContent>
                 {date} {dayAgo}
               </RedContent>

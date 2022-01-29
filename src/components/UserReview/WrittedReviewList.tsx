@@ -3,7 +3,6 @@ import Rating from "@mui/material/Rating";
 import { Dispatch, useState } from "react";
 import { Link } from "react-router-dom";
 import { ISignInReduce } from "src/modules/Slices/signIn/types";
-import { usedBookBuyListResponse } from "src/modules/Slices/usedBookDetail/types";
 import { GetUserReceivedReviewListData } from "src/modules/Slices/userReview/types";
 import { deleteUserReview } from "src/modules/Slices/userReview/userReviewSlice";
 import { RatingContent, RatingScore } from "src/pages/BookDetail/style";
@@ -18,9 +17,9 @@ export interface WrittedReviewListProps {
 
 const WrittedReviewList = ({ contents, dispatch, signIn }: WrittedReviewListProps) => {
   const [open, setOpen] = useState(false);
-  const [selectedItem, setSelectedItem] = useState<usedBookBuyListResponse | null>(null);
+  const [selectedItem, setSelectedItem] = useState<GetUserReceivedReviewListData | null>(null);
 
-  const expandModal = (item: usedBookBuyListResponse) => {
+  const expandModal = (item: GetUserReceivedReviewListData) => {
     setSelectedItem(item);
     setOpen(true);
   };
