@@ -1,5 +1,5 @@
 import LatestSlider from "components/LatestSlider/LatestSlider";
-import MainBanner from "src/components/MainBanner/MainBanner";
+import MainBanner from "components/MainBanner/MainBanner";
 import BestSeller from "components/BestSeller/BestSeller";
 import * as Styled from "./style";
 

@@ -1,18 +1,18 @@
 import { useCallback, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { freeBoardSelector, setPage, listAsync, listByTitleAsync } from "src/modules/Slices/freeBoard/freeBoardSlice";
-import { useTypedSelector } from "src/modules/store";
+import { freeBoardSelector, setPage, listAsync, listByTitleAsync } from "modules/Slices/freeBoard/freeBoardSlice";
+import { useTypedSelector } from "modules/store";
 import Pagination from "@mui/material/Pagination";
 import { Button, Stack, TextField, useMediaQuery } from "@mui/material";
-import { dateFormat2 } from "src/utils/formatUtil";
+import { dateFormat2 } from "utils/formatUtil";
 import Loading from "src/elements/Loading";
-import { getFreeBoardPage, setFreeBoardPage } from "src/utils/localStorageUtil";
-import { signInSelector } from "src/modules/Slices/signIn/signInSlice";
+import { getFreeBoardPage, setFreeBoardPage } from "utils/localStorageUtil";
+import { signInSelector } from "modules/Slices/signIn/signInSlice";
 import { Link } from "react-router-dom";
 import { useForm, Controller, RegisterOptions } from "react-hook-form";
-import { makeOption } from "src/utils/hookFormUtil";
+import { makeOption } from "utils/hookFormUtil";
 import ErrorMessage from "src/elements/ErrorMessage";
-import useDebounce from "src/hooks/useDebounce";
+import useDebounce from "hooks/useDebounce";
 import * as Styled from "./style";
 import * as Types from "./types";
 
@@ -94,16 +94,16 @@ const FreeBoardList = () => {
       <>
         {status === "loading" && <Loading isLoading={isLoading} />}
         <Styled.FreeBoardListWrapper>
-          <Styled.FreeBoardListTitle>자유게시판</Styled.FreeBoardListTitle>
-          {user && (
-            <Stack mt={2} mb={2} direction="row" justifyContent="flex-end">
+          <Stack mt={2} mb={2} direction="row" justifyContent="space-between" alignItems="center">
+            <Styled.FreeBoardListTitle>자유게시판</Styled.FreeBoardListTitle>
+            {user && (
               <Link to="freeboard/insert">
                 <Button variant="contained" size={min900 ? "large" : "small"}>
                   게시글 등록
                 </Button>
               </Link>
-            </Stack>
-          )}
+            )}
+          </Stack>
           <Styled.FreeBoardListRow>
             <div className="header">
               <div>번호</div>
@@ -152,25 +152,23 @@ const FreeBoardList = () => {
             )}
           </Styled.FreeBoardListRow>
           {totalPages !== 0 && (
-            <div>
-              <Stack mt={2} justifyContent="center" direction="row">
-                <Pagination
-                  siblingCount={0}
-                  count={totalPages}
-                  page={page + 1}
-                  onChange={handlePaginationOnChange}
-                  variant="outlined"
-                  shape="rounded"
-                  size={min900 ? "large" : "small"}
-                  sx={{
-                    ".Mui-selected": {
-                      background: theme => theme.colors.mainDarkBrown,
-                      color: theme => theme.colors.white,
-                    },
-                  }}
-                />
-              </Stack>
-            </div>
+            <Stack mt={2} justifyContent="center" direction="row">
+              <Pagination
+                siblingCount={0}
+                count={totalPages}
+                page={page + 1}
+                onChange={handlePaginationOnChange}
+                variant="outlined"
+                shape="rounded"
+                size={min900 ? "large" : "small"}
+                sx={{
+                  ".Mui-selected": {
+                    background: theme => theme.colors.mainDarkBrown,
+                    color: theme => theme.colors.white,
+                  },
+                }}
+              />
+            </Stack>
           )}
           <Styled.FreeBoardListSearch onSubmit={handleSubmit(onSubmit)}>
             <div>

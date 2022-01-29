@@ -13,10 +13,10 @@ import {
   subReplyDelete,
   subReplyInsert,
   subReplyUpdate,
-} from "src/api/board/board";
-import { errorHandler } from "src/api/http";
-import { RootState } from "src/modules/store";
-import { getFreeBoardPage } from "src/utils/localStorageUtil";
+} from "api/board/board";
+import { errorHandler } from "api/http";
+import { RootState } from "modules/store";
+import { getFreeBoardPage } from "utils/localStorageUtil";
 import * as Types from "./types";
 
 const name = "freeboardReduce";

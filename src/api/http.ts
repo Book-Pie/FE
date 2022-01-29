@@ -1,5 +1,5 @@
 import axios, { AxiosError } from "axios";
-import { removeToken } from "src/utils/localStorageUtil";
+import { removeToken } from "utils/localStorageUtil";
 import * as Types from "./types";
 
 const RESPONSE_STATUS_ENUM: Types.ResponseEnumType = {

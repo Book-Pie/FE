@@ -1,4 +1,4 @@
-import * as T from "src/modules/Slices/search/types";
+import * as T from "modules/Slices/search/types";
 
 export interface UsedBooksResponse {
   success: boolean;

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import http from "src/api/http";
+import http from "api/http";
 import Popup from "src/elements/Popup";
-import useSignIn from "src/hooks/useSignIn";
-import { make1000UnitsCommaFormet } from "src/utils/formatUtil";
+import useSignIn from "hooks/useSignIn";
+import { make1000UnitsCommaFormet } from "utils/formatUtil";
 import TextField from "@mui/material/TextField";
 import logo from "assets/image/logo-removebg.png";
 import { Wrapper } from "./style";

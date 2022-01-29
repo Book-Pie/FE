@@ -5,10 +5,10 @@ import { ThemeProvider as StyledThemeProvider } from "styled-components";
 import { ThemeProvider as MaterialThemeProvider } from "@mui/material/styles";
 import store, { customHistory } from "modules/store";
 import React from "react";
-import GlobalStyle from "src/assets/style/global";
+import GlobalStyle from "assets/style/global";
+import styledTheme from "assets/style/styledTheme";
+import materialThme from "assets/style/muiTheme";
 import App from "./App";
-import styledTheme from "./assets/style/styledTheme";
-import materialThme from "./assets/style/muiTheme";
 
 const rootElement = document.getElementById("root");
 

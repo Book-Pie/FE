@@ -1,6 +1,6 @@
 import { Redirect, Route } from "react-router";
-import { signInSelector } from "src/modules/Slices/signIn/signInSlice";
-import { useTypedSelector } from "src/modules/store";
+import { signInSelector } from "modules/Slices/signIn/signInSlice";
+import { useTypedSelector } from "modules/store";
 import { getAccessToken } from "utils/localStorageUtil";
 import { PrivateRouteProps } from "./types";
 

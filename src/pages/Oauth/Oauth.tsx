@@ -1,16 +1,16 @@
 import { useHistory, useParams } from "react-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import queryString from "query-string";
-import { kakaoOauth, kakaoOauthAccessToken, naverOauthAccessToken } from "src/api/oauth";
-import { myInfoAsync } from "src/modules/Slices/signIn/signInSlice";
+import { kakaoOauth, kakaoOauthAccessToken, naverOauthAccessToken } from "api/oauth";
+import { myInfoAsync } from "modules/Slices/signIn/signInSlice";
 import { setAccessToken } from "utils/localStorageUtil";
 import { useDispatch } from "react-redux";
-import { errorHandler } from "src/api/http";
+import { errorHandler } from "api/http";
 import Popup from "src/elements/Popup";
 import { Link } from "react-router-dom";
 import Loading from "src/elements/Loading";
 import { Button } from "@mui/material";
-import { getKakaoUnlink, setKakaoAccessToken } from "src/utils/oAuthUtil";
+import { getKakaoUnlink, setKakaoAccessToken } from "utils/oAuthUtil";
 import * as Types from "./types";
 import { Wrapper } from "./style";
 

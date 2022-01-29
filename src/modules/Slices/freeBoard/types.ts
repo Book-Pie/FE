@@ -1,5 +1,5 @@
 import { History } from "history";
-import { AppDispatch, RootState } from "src/modules/store";
+import { AppDispatch, RootState } from "modules/store";
 
 export interface IListByTitleRequest {
   keyWord: string;

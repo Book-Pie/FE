@@ -1,5 +1,5 @@
-import { searchAladinBookListAsync, searchAladinBookSelector } from "src/modules/Slices/search/searchSlice";
-import { useAppDispatch, useTypedSelector } from "src/modules/store";
+import { searchAladinBookListAsync, searchAladinBookSelector } from "modules/Slices/search/searchSlice";
+import { useAppDispatch, useTypedSelector } from "modules/store";
 import { Typography, Grid } from "@mui/material";
 import Loading from "src/elements/Loading";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -7,7 +7,7 @@ import queryString from "query-string";
 import { useLocation } from "react-router";
 import noComments from "assets/image/noComments.png";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
-import useScrollTop from "src/hooks/useScrollTop";
+import useScrollTop from "hooks/useScrollTop";
 import AladinFilter from "./AladinFilter";
 import SearchReviewCard from "./SearchReviewCard";
 import * as Styled from "./style";

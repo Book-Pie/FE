@@ -84,25 +84,13 @@ export const SaleTableBody = styled.div`
   }
 
   @media screen and (max-width: 950px) {
-    button.error {
-      background-color: ${({ theme }) => theme.colors.error};
-    }
-
-    button.info {
-      background-color: ${({ theme }) => theme.colors.info};
-    }
     button {
       border: none;
       padding: 0.5rem;
       border-radius: 5px;
       font-size: 1rem;
       cursor: pointer;
-      ${({ theme }) => theme.shadow[0]};
-      color: ${({ theme }) => theme.colors.white};
-      background-color: ${({ theme }) => theme.colors.mainDarkBrown};
-      a {
-        color: ${({ theme }) => theme.colors.white};
-      }
+      height: 30px;
     }
   }
 
@@ -122,6 +110,7 @@ export const SaleTableBody = styled.div`
       overflow: hidden;
       text-overflow: ellipsis;
       font-size: 0.6rem;
+      width: 180px;
     }
     button {
       padding: 0.4rem;

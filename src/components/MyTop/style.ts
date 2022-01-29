@@ -137,6 +137,11 @@ export const MyTopUserInfo = styled.div`
   background-color: ${({ theme }) => theme.colors.mainLightBrown};
   color: ${({ theme }) => theme.colors.mainDarkBrown};
 
+  a {
+    display: block;
+    flex: 1;
+  }
+
   & > form,
   & > div {
     display: flex;
@@ -173,6 +178,9 @@ export const MyTopUserInfo = styled.div`
       font-size: 0.9rem;
       color: ${({ theme }) => theme.colors.white};
     }
+  }
+  .skeleton {
+    height: auto;
   }
 
   @media screen and (max-width: 900px) {

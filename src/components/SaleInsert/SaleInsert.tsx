@@ -8,20 +8,20 @@ import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
-import { makeOption } from "src/utils/hookFormUtil";
+import { makeOption } from "utils/hookFormUtil";
 import { FormControl, FormGroup, InputLabel, MenuItem, Select, SelectChangeEvent } from "@mui/material";
-import { getCategory } from "src/api/usedBook/usedBook";
+import { getCategory } from "api/usedBook/usedBook";
 import Popup from "src/elements/Popup";
-import Editor from "src/components/Editor/Editor";
-import useDebounce from "src/hooks/useDebounce";
-import { getSaleInsert } from "src/api/my/my";
-import { errorHandler } from "src/api/http";
+import Editor from "components/Editor/Editor";
+import useDebounce from "hooks/useDebounce";
+import { getSaleInsert } from "src/api/my";
+import { errorHandler } from "api/http";
 import { useHistory } from "react-router";
 import { CategoryState, CategoryResponse } from "components/UsedBookList/types";
-import { useTypedSelector } from "src/modules/store";
-import { signInSelector } from "src/modules/Slices/signIn/signInSlice";
+import { useTypedSelector } from "modules/store";
+import { signInSelector } from "modules/Slices/signIn/signInSlice";
 import * as Styled from "./style";
-import * as Types from "./type";
+import * as Types from "./types";
 
 const KEY_ENUM = {
   enter: "Enter",

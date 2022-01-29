@@ -1,17 +1,18 @@
 import { Redirect, Route, Switch, useRouteMatch } from "react-router";
 import Modified from "components/Modified/Modified";
 import Withdrawal from "components/Withdrawal/Withdrawal";
-import MyTop from "src/components/MyTop/MyTop";
+import MyTop from "components/MyTop/MyTop";
 import { NavLink } from "react-router-dom";
 import { useMemo } from "react";
-import SaleList from "src/components/SaleList/SaleList";
-import SaleInsert from "src/components/SaleInsert/SaleInsert";
-import BuyInfo from "src/components/BuyInfo/BuyInfo";
-import SaleInfo from "src/components/SaleInfo/SaleInfo";
-import BookLikeList from "src/components/UsedBookLike/BookLikeList";
-import BuyList from "src/components/BuyList/BuyList";
-import UserReview from "src/components/UserReview/UserReview";
-import MyReview from "src/components/MyReview/MyReview";
+import SaleList from "components/SaleList/SaleList";
+import SaleInsert from "components/SaleInsert/SaleInsert";
+import BuyInfo from "components/BuyInfo/BuyInfo";
+import SaleInfo from "components/SaleInfo/SaleInfo";
+import BookLikeList from "components/UsedBookLike/BookLikeList";
+import BuyList from "components/BuyList/BuyList";
+import UserReview from "components/UserReview/UserReview";
+import MyReview from "components/MyReview/MyReview";
+import Point from "components/Point/Point";
 import * as Styled from "./style";
 
 const My = () => {
@@ -71,6 +72,7 @@ const My = () => {
       </Styled.MyMenuWrapper>
       <Styled.MyRouterWrapper>
         <Switch>
+          <Route path={`${path}/point`} exact component={Point} />
           <Route path={`${path}/sale`} exact component={SaleList} />
           <Route path={`${path}/sale/insert`} component={SaleInsert} />
           <Route path={`${path}/sale/:bookId`} component={SaleInfo} />

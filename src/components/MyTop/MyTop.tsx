@@ -1,17 +1,19 @@
 import noProfileImg from "assets/image/noProfile.jpg";
 import Button from "@mui/material/Button";
 import { useState, useCallback, useMemo } from "react";
-import { nickNameUpdateAsync, signInSelector } from "src/modules/Slices/signIn/signInSlice";
+import { nickNameUpdateAsync, signInSelector } from "modules/Slices/signIn/signInSlice";
 import { useForm, Controller, RegisterOptions } from "react-hook-form";
-import { hookFormSpecialChractersCheck, makeOption, FormErrorMessages } from "src/utils/hookFormUtil";
+import { hookFormSpecialChractersCheck, makeOption, FormErrorMessages } from "utils/hookFormUtil";
 import ErrorMessage from "src/elements/ErrorMessage";
-import { Skeleton, Input } from "@mui/material";
+import { Input } from "@mui/material";
 import Popup from "src/elements/Popup";
-import { make1000UnitsCommaFormet } from "src/utils/formatUtil";
-import { useAppDispatch, useTypedSelector } from "src/modules/store";
+import { dateFormat2, make1000UnitsCommaFormet } from "utils/formatUtil";
+import { useAppDispatch, useTypedSelector } from "modules/store";
+import { Link } from "react-router-dom";
 import * as Styled from "./style";
-import * as Types from "./type";
+import * as Types from "./types";
 import PointInfo from "./PointInfo";
+import Skeletons from "./Skeletons";
 
 const MyTop = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -19,6 +21,7 @@ const MyTop = () => {
     isSuccess: false,
     message: "",
   });
+  const { isSuccess, message } = popUpState;
   const [isNickNameUpdateOpne, setIsNickNameUpdateOpen] = useState<boolean>(false);
   const { handleSubmit, control, formState, clearErrors } = useForm<Types.NickNameForm>({
     defaultValues: {
@@ -84,19 +87,15 @@ const MyTop = () => {
   return (
     <>
       {isOpen && (
-        <Popup isOpen={isOpen} setIsOpen={setIsOpen} autoClose className={popUpState.isSuccess ? "green" : "red"}>
-          {popUpState.message}
+        <Popup isOpen={isOpen} setIsOpen={setIsOpen} autoClose className={isSuccess ? "green" : "red"}>
+          {message}
         </Popup>
       )}
       <Styled.MyTopWrapper>
         {user ? (
           <div>
             <Styled.ProfileImg>
-              {user.image ? (
-                <img src={`${process.env.BASE_URL}/image/${user.image}`} alt="myProfileImg" />
-              ) : (
-                <img src={noProfileImg} alt="noProfileImg" />
-              )}
+              <img src={user.image ? `${process.env.BASE_URL}/image/${user.image}` : noProfileImg} alt="myProfileImg" />
             </Styled.ProfileImg>
             <Styled.MyTopUserInfo>
               <PointInfo />
@@ -122,7 +121,7 @@ const MyTop = () => {
               )}
               <ErrorMessage message={errors.nickName?.message} />
               <div>
-                <span>회원가입일</span> <span>{user.createDate.split("T")[0].replaceAll("-", ".") ?? ""}</span>
+                <span>회원가입일</span> <span>{dateFormat2(user.createDate)[0]}</span>
               </div>
               <div>
                 <span>남은 포인트</span>
@@ -133,34 +132,17 @@ const MyTop = () => {
                   포인트 충전
                 </Button>
               </div>
+              <div>
+                <Link to="point">
+                  <Button color="info" variant="contained">
+                    충전 내역 확인
+                  </Button>
+                </Link>
+              </div>
             </Styled.MyTopUserInfo>
           </div>
         ) : (
-          <div>
-            <Styled.ProfileImg>
-              <div>
-                <Skeleton variant="circular" width={200} height={200} animation="wave" />
-              </div>
-            </Styled.ProfileImg>
-            <Styled.MyTopUserInfo>
-              <div>
-                <Skeleton variant="text" width={150} height={50} animation="wave" sx={{ borderRadius: "5px" }} />
-                <Skeleton variant="rectangular" width={150} height={50} animation="wave" sx={{ borderRadius: "5px" }} />
-              </div>
-              <div>
-                <Skeleton variant="text" width={150} height={50} animation="wave" sx={{ borderRadius: "5px" }} />
-                <Skeleton variant="rectangular" width={150} height={50} animation="wave" sx={{ borderRadius: "5px" }} />
-              </div>
-              <div>
-                <Skeleton variant="text" width={150} height={50} animation="wave" sx={{ borderRadius: "5px" }} />
-                <Skeleton variant="rectangular" width={150} height={50} animation="wave" sx={{ borderRadius: "5px" }} />
-              </div>
-              <div>
-                <Skeleton variant="text" width={150} height={50} animation="wave" sx={{ borderRadius: "5px" }} />
-                <Skeleton variant="rectangular" width={150} height={50} animation="wave" sx={{ borderRadius: "5px" }} />
-              </div>
-            </Styled.MyTopUserInfo>
-          </div>
+          <Skeletons />
         )}
         <div>차트</div>
       </Styled.MyTopWrapper>

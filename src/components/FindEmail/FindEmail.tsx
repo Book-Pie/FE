@@ -1,10 +1,10 @@
 import { useCallback, useState } from "react";
 import Popup from "src/elements/Popup";
-import { errorHandler } from "src/api/http";
-import { getFindEmail } from "src/api/oauth";
+import { errorHandler } from "api/http";
+import { getFindEmail } from "api/oauth";
 import useDebounce from "hooks/useDebounce";
-import { hyphenRemoveFormat } from "src/utils/formatUtil";
-import useDelay from "src/hooks/useDelay";
+import { hyphenRemoveFormat } from "utils/formatUtil";
+import useDelay from "hooks/useDelay";
 import Form from "./Form";
 import * as Types from "./types";
 import * as Styled from "./style";

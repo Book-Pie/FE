@@ -1,7 +1,7 @@
-import { IUsedBook } from "src/pages/Order/types";
+import { UsedBook } from "pages/Order/types";
 
 export interface OrderFormProps {
-  usedBook: IUsedBook;
+  usedBook: UsedBook;
 }
 export interface IOrderForm {
   detailAddress: string;

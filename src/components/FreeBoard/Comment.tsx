@@ -1,9 +1,9 @@
 import Button from "@mui/material/Button";
 import { memo, useCallback, useState } from "react";
-import { dateFormat2 } from "src/utils/formatUtil";
+import { dateFormat2 } from "utils/formatUtil";
 import ButtonGroup from "@mui/material/ButtonGroup";
-import { useTypedSelector } from "src/modules/store";
-import { signInSelector } from "src/modules/Slices/signIn/signInSlice";
+import { useTypedSelector } from "modules/store";
+import { signInSelector } from "modules/Slices/signIn/signInSlice";
 import * as Styled from "./style";
 import Editor from "../Editor/Editor";
 import * as Types from "./types";

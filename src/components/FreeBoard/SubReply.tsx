@@ -1,14 +1,14 @@
-import { dateFormat2 } from "src/utils/formatUtil";
+import { dateFormat2 } from "utils/formatUtil";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import { Button } from "@mui/material";
 import SubdirectoryArrowRightIcon from "@mui/icons-material/SubdirectoryArrowRight";
 import { memo, useCallback, useState } from "react";
-import { useAppDispatch } from "src/modules/store";
+import { useAppDispatch } from "modules/store";
 import { useParams } from "react-router";
-import { subReplyDeleteAsync, subReplyUpdateAsync } from "src/modules/Slices/freeBoard/freeBoardSlice";
-import { errorHandler } from "src/api/http";
+import { subReplyDeleteAsync, subReplyUpdateAsync } from "modules/Slices/freeBoard/freeBoardSlice";
+import { errorHandler } from "api/http";
+import Editor from "components/Editor/Editor";
 import * as Types from "./types";
-import Editor from "../Editor/Editor";
 
 const SubReply = ({ content, nickName, replyDate, isMakeUser, replyId, userId }: Types.SubReplyProps) => {
   const [currentUpdateSubReplyId, setCurrentUpdateSubReplyId] = useState<number>(0);

@@ -1,14 +1,13 @@
 import { useEffect, useState } from "react";
 import { Redirect, Route, Switch, useRouteMatch } from "react-router";
 import { Link } from "react-router-dom";
-import http from "src/api/http";
-import FreeBoard from "src/components/FreeBoard/FreeBoard";
-import FreeBoardInsert from "src/components/FreeBoardInsert/FreeBoardInsert";
-import FreeBoardList from "src/components/FreeBoardList/FreeBoardList";
-import { Content } from "src/modules/Slices/freeBoard/types";
-import { dateFormat2 } from "src/utils/formatUtil";
+import http from "api/http";
+import FreeBoard from "components/FreeBoard/FreeBoard";
+import FreeBoardInsert from "components/FreeBoardInsert/FreeBoardInsert";
+import FreeBoardList from "components/FreeBoardList/FreeBoardList";
+import { Content } from "modules/Slices/freeBoard/types";
+import { dateFormat2 } from "utils/formatUtil";
 import Grid from "@mui/material/Grid";
-
 import * as Styled from "./style";
 
 const Community = () => {

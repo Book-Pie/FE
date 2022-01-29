@@ -3,10 +3,10 @@ import { useCallback, useEffect, useMemo } from "react";
 import { useHistory, useParams } from "react-router";
 import { Link } from "react-router-dom";
 import Loading from "src/elements/Loading";
-import useSignIn from "src/hooks/useSignIn";
-import { saleInfoAsync, saleInfoSelector } from "src/modules/Slices/signIn/signInSlice";
-import { useTypedSelector } from "src/modules/store";
-import { hyphenFormat, dateFormat2, make1000UnitsCommaFormet } from "src/utils/formatUtil";
+import useSignIn from "hooks/useSignIn";
+import { saleInfoAsync, saleInfoSelector } from "modules/Slices/signIn/signInSlice";
+import { useTypedSelector } from "modules/store";
+import { hyphenFormat, dateFormat2, make1000UnitsCommaFormet } from "utils/formatUtil";
 import * as Styled from "./style";
 
 const SaleInfo = () => {

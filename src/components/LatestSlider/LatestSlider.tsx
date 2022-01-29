@@ -6,7 +6,7 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/free-mode";
 import { Pagination, Autoplay } from "swiper";
-import { getLatestUsedBook } from "src/api/usedBook/usedBook";
+import { getLatestUsedBook } from "api/usedBook/usedBook";
 import * as Styled from "./style";
 import * as Types from "./types";
 import Card from "./Card";

@@ -1,14 +1,13 @@
 import { useEffect, useMemo } from "react";
 import { useLocation } from "react-router";
-import { searchAladinBookListAsync, searchAladinBookSelector } from "src/modules/Slices/search/searchSlice";
-import { useAppDispatch, useTypedSelector } from "src/modules/store";
+import { searchAladinBookListAsync, searchAladinBookSelector } from "modules/Slices/search/searchSlice";
+import { useAppDispatch, useTypedSelector } from "modules/store";
 import { Link } from "react-router-dom";
 import queryString from "query-string";
 import { Grid, Typography } from "@mui/material";
 import { range } from "lodash";
 import noComments from "assets/image/noComments.png";
 import * as Styled from "./style";
-
 import SearchReviewCard from "./SearchReviewCard";
 
 const SearchBookReview = () => {

@@ -1,5 +1,5 @@
 import { memo } from "react";
-import bannerImg from "src/assets/image/banner1.png";
+import bannerImg from "assets/image/banner1.png";
 
 const BannerImage = () => {
   return (

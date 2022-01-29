@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import profileImg from "src/assets/image/pie3x.png";
+import profileImg from "assets/image/pie3x.png";
 import { Button, ClickArea } from "src/components/Reviews/ReviewList/style";
 import useSignIn from "src/hooks/useSignIn";
 import { UsedBookDetailReplyResponse } from "src/modules/Slices/usedBookDetail/types";

@@ -1,12 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { removeEmail, removeToken, setRememberEmail, setAccessToken, getAccessToken } from "utils/localStorageUtil";
-import { getSignIn } from "src/api/oauth";
-import { hyphenFormat } from "src/utils/formatUtil";
+import { getSignIn } from "api/oauth";
+import { hyphenFormat } from "utils/formatUtil";
 import { RootState } from "modules/store";
-import { getNickNameUpdate, getMyProfile } from "src/api/my/my";
-import http, { errorHandler } from "src/api/http";
-import { getMyOrder, getMyOrderByBookId } from "src/api/usedBook/usedBook";
-import { IOrderResult } from "src/components/OrderForm/types";
+import { getNickNameUpdate, getMyProfile } from "src/api/my";
+import http, { errorHandler } from "api/http";
+import { getMyOrder, getMyOrderByBookId } from "api/usedBook/usedBook";
+import { IOrderResult } from "components/OrderForm/types";
 import {
   IAxiosResponse,
   IPayload,

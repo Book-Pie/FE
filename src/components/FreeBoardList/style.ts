@@ -1,10 +1,7 @@
 import styled from "styled-components";
 
-const boardColor = "rgba(99, 110, 114,0.2)";
-
 export const FreeBoardListWrapper = styled.div`
   margin: 20px 0;
-  min-height: 500px;
 `;
 
 export const FreeBoardListRow = styled.div`
@@ -12,7 +9,7 @@ export const FreeBoardListRow = styled.div`
   & > div {
     display: flex;
     align-items: center;
-    border-bottom: 1px solid ${boardColor};
+    border-bottom: 1px solid ${({ theme }) => theme.colors.borderColors[0]};
     cursor: pointer;
     transition: background-color 0.5s ease;
 
@@ -88,10 +85,10 @@ export const FreeBoardListRow = styled.div`
     }
 
     div + div {
-      border-left: 1px solid ${boardColor};
+      border-left: 1px solid ${({ theme }) => theme.colors.borderColors[0]};
     }
     & > div:nth-child(4) {
-      border-right: 1px solid ${boardColor};
+      border-right: 1px solid ${({ theme }) => theme.colors.borderColors[0]};
     }
     & > div:last-child {
       border: none;

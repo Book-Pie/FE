@@ -107,6 +107,9 @@ export const Colors = {
   DARK_GREY: "#434343",
   INFO: "#1565c0",
   ERROR: "rgba(225, 112, 85, 1)",
+  BORDER_COLORS: {
+    0: "rgba(99, 110, 114,0.2)",
+  },
 };
 
 export default GlobalStyle;

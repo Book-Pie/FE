@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { errorHandler } from "src/api/http";
-import { getSearchAladinBooks, getSearchUsedBooks } from "src/api/search/seach";
-import { RootState } from "src/modules/store";
+import { errorHandler } from "api/http";
+import { getSearchAladinBooks, getSearchUsedBooks } from "api/search/seach";
+import { RootState } from "modules/store";
 import * as T from "./types";
 
 const name = "searchReduce";
