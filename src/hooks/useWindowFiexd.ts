@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-const useWindowFiexd = (isFxied: any) => {
+const useWindowFiexd = (isFxied: boolean) => {
   useEffect(() => {
     if (isFxied) {
       document.body.style.cssText = `

@@ -41,6 +41,7 @@ export const LatestSliderContainer = styled.div`
   }
   ${({ theme }) => theme.media.mobile} {
     margin: 0 -1rem;
+    margin-bottom: 1.5rem;
     .swiper {
       padding-bottom: 0;
       width: 900px;

@@ -161,6 +161,52 @@ export const RouterWrapper = styled.div`
     padding: 0.8rem;
   }
 
+  span:last-child {
+    position: relative;
+    :hover {
+      ul {
+        opacity: 1;
+        transform: translateY(0%);
+        z-index: 3;
+      }
+    }
+
+    ul {
+      transition: opacity 0.4s ease-in;
+      transition: z-index 0.4s ease-in;
+      transition: transform 0.2s ease-in;
+      transform: translateY(10%);
+      z-index: -1;
+      background-color: white;
+      display: flex;
+      flex-direction: column;
+      position: absolute;
+      width: 150px;
+      right: 0;
+      opacity: 0;
+      ${({ theme }) => theme.shadow[0]};
+      border-radius: 2px;
+    }
+
+    li {
+      a {
+        padding: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 15px;
+        color: ${({ theme }) => theme.colors.mainDarkBrown};
+        :hover {
+          background-color: ${({ theme }) => theme.colors.mainLightBrown};
+        }
+      }
+    }
+
+    li + li {
+      border-top: 1px solid rgba(99, 110, 114, 0.2);
+    }
+  }
+
   ${({ theme }) => theme.media.mobile} {
     padding-top: 1rem;
     span {

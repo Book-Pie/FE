@@ -1,83 +1,83 @@
 import styled from "styled-components";
-import { styled as mStyled } from "@mui/material";
-import Input from "@mui/material/Input";
 
-export const Wrapper = styled.div`
+export const MyTopWrapper = styled.section`
   display: flex;
-  margin: 0 auto;
-  margin-top: 2rem;
+  gap: 1rem;
+  margin: 0 1rem;
 
   & > div:first-child {
-    flex: 6;
+    flex: 5;
     display: flex;
     justify-content: center;
     align-items: center;
   }
   & > div:last-child {
-    flex: 4;
+    flex: 5;
   }
+
+  @media screen and (max-width: 900px) {
+    flex-direction: column;
+  }
+
+  ${({ theme }) => theme.media.mobile} {
+    margin: 0;
+    padding: 0 0.5rem;
+    & > div:first-child {
+      flex-direction: column;
+    }
+  } ;
 `;
 
 export const ProfileImg = styled.div`
-  flex: 5;
+  flex: 6;
   display: flex;
   justify-content: center;
   align-items: center;
-  & > div {
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 50%;
-    border: 1px solid ${props => props.theme.colors.mainLightBrown};
-  }
+  padding: 1rem;
+
   img {
+    border-radius: 50%;
     height: 200px;
     width: 200px;
+    ${({ theme }) => theme.shadow[0]};
   }
 `;
 
-export const UserInfoMation = styled.div`
-  flex: 5;
-  padding: 1rem 1.5rem;
-  background-color: ${props => props.theme.colors.mainLightBrown};
-  border-radius: 5px;
-  color: ${props => props.theme.colors.mainDarkBrown};
-  & > div {
-    position: relative;
-    cursor: pointer;
-  }
-
-  & > div:hover > .point {
+export const MyTopPointInfo = styled.div`
+  position: relative;
+  cursor: pointer;
+  &:hover > .point {
     visibility: visible;
     opacity: 1;
     transform: translateY(0%);
   }
+
   .point {
     display: flex;
-    gap: 20px;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     visibility: hidden;
     position: absolute;
+    width: 450px;
+    padding: 1rem 1rem 1rem 2rem;
+    gap: 1rem;
     top: 100%;
     background-color: ${p => p.theme.colors.white};
     z-index: 1;
-    width: 450px;
+    left: -50%;
     transition: all 0.5s ease-in-out;
     opacity: 0;
     transform: translateY(-50%);
     border-radius: 5px;
-    ${p => p.theme.shadow[10]};
-    height: 300px;
-    color: ${p => p.theme.colors.mainDarkBrown};
+    ${p => p.theme.shadow[0]};
+    color: ${p => p.theme.colors.darkGrey};
 
     div {
       width: 100%;
       display: flex;
       align-items: center;
-      padding-left: 20px;
+      gap: 0.7rem;
     }
 
     .bronze,
@@ -101,59 +101,107 @@ export const UserInfoMation = styled.div`
       font-weight: 900;
     }
 
-    span {
-      font-weight: 600;
-    }
     span:first-child {
+      font-weight: 600;
       text-align: center;
       width: 130px;
     }
-    span + span {
+    span:last-child {
+      color: ${p => p.theme.colors.info};
     }
   }
+
+  ${({ theme }) => theme.media.mobile} {
+    .point {
+      padding: 1rem 0.7rem;
+      gap: 0.5rem;
+      width: 100%;
+      left: 0;
+      right: 0;
+
+      div {
+        flex-direction: column;
+      }
+    }
+  }
+`;
+
+export const MyTopUserInfo = styled.div`
+  flex: 6;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  border-radius: 5px;
+  ${({ theme }) => theme.shadow[0]};
+  background-color: ${({ theme }) => theme.colors.mainLightBrown};
+  color: ${({ theme }) => theme.colors.mainDarkBrown};
 
   & > form,
   & > div {
     display: flex;
-    height: 50px;
+    height: 40px;
     align-items: center;
     justify-content: space-between;
-    & > button {
-      width: 150px;
-      height: 100%;
-      letter-spacing: 0.1rem;
-      &:hover {
-        opacity: 0.5;
-      }
-    }
-    & > button:first-child {
-      width: 100%;
-    }
-    & > div {
-      width: 150px;
-      height: 100%;
-    }
+    gap: 1rem;
 
     & > span:first-child {
-      font-weight: 900;
       font-size: 1.2rem;
-      letter-spacing: 0.1rem;
+      color: ${({ theme }) => theme.colors.darkGrey};
+      font-weight: 500;
     }
     & > span:nth-child(2) {
-      font-size: 1.3rem;
+      color: ${({ theme }) => theme.colors.info};
+      font-size: 1rem;
     }
   }
-  & > div + form,
-  & > form + div,
-  & > div + div {
-    margin-top: 1rem;
-  }
-`;
 
-export const CustomInput = mStyled(Input)(({ theme }) => {
-  return {
-    "::after": {
-      borderColor: theme.colors.mainDarkBrown,
-    },
-  };
-});
+  button:first-child {
+    width: 100%;
+  }
+
+  button:nth-child(2) {
+    width: 110px;
+    transition: opacity 0.25s ease-in;
+    :hover {
+      opacity: 0.8;
+    }
+  }
+  .errorMessage {
+    padding: 0.2rem 1rem;
+    & > span:first-child {
+      font-size: 0.9rem;
+      color: ${({ theme }) => theme.colors.white};
+    }
+  }
+
+  @media screen and (max-width: 900px) {
+    padding: 1rem;
+  }
+
+  ${({ theme }) => theme.media.mobile} {
+    padding: 1.1rem 0.7rem;
+    width: 100%;
+    & > form,
+    & > div {
+      span:first-child {
+        font-size: 0.8rem;
+      }
+      span:nth-child(2) {
+        font-size: 0.7rem;
+      }
+    }
+    button {
+      font-size: 0.6rem;
+    }
+
+    .errorMessage {
+      padding: 0.5rem;
+      height: 50px;
+      & > span:first-child {
+        font-size: 0.8rem;
+        color: ${({ theme }) => theme.colors.white};
+      }
+    }
+  } ;
+`;

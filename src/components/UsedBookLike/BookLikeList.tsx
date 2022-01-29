@@ -5,8 +5,8 @@ import { getUsedBookLikeList, usedBookSelector } from "src/modules/Slices/usedBo
 import { useTypedSelector } from "src/modules/store";
 import noComments from "assets/image/noComments.png";
 import styled from "styled-components";
+import UsedBookCard from "src/components/UsedBookList/UsedBookCard";
 import { ReviewListEmptyParagraph, ReviewListEmptyWrapper } from "../Reviews/ReviewList/style";
-import UsedBookCard from "../UsedBookCard/UsedBookCard";
 import { CountWrapper } from "../UsedBookDetail/style";
 import { ContentWrapper, Title, UsedBookLikeListWrapper, TitleSpan } from "./styles";
 

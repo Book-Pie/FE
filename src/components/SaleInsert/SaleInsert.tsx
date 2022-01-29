@@ -10,28 +10,18 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import { makeOption } from "src/utils/hookFormUtil";
 import { FormControl, FormGroup, InputLabel, MenuItem, Select, SelectChangeEvent } from "@mui/material";
-import { CategorysResponse, ICategory } from "src/pages/UsedBook/types";
 import { getCategory } from "src/api/usedBook/usedBook";
 import Popup from "src/elements/Popup";
 import Editor from "src/components/Editor/Editor";
 import useDebounce from "src/hooks/useDebounce";
 import { getSaleInsert } from "src/api/my/my";
-import useSignIn from "src/hooks/useSignIn";
 import { errorHandler } from "src/api/http";
 import { useHistory } from "react-router";
-import {
-  InputMessage,
-  Row,
-  Wrapper,
-  Tag,
-  Title,
-  ImgDelete,
-  ImgUpload,
-  ImgUploadText,
-  ErrorMessageWrapper,
-  TagBox,
-} from "./style";
-import { CheckBoxType, ISaleInsertForm, KeyEvent, TagsType } from "./type";
+import { CategoryState, CategoryResponse } from "components/UsedBookList/types";
+import { useTypedSelector } from "src/modules/store";
+import { signInSelector } from "src/modules/Slices/signIn/signInSlice";
+import * as Styled from "./style";
+import * as Types from "./type";
 
 const KEY_ENUM = {
   enter: "Enter",
@@ -39,36 +29,30 @@ const KEY_ENUM = {
   comma: "Comma",
 };
 
-const insertFormInit: ISaleInsertForm = {
-  title: "",
-  price: "",
-};
-const popUpStateInit = {
-  isSuccess: false,
-  message: "",
-};
-
 const TAGS_MAX_COUNT = 5;
 const TAGS_MAX_LENGTH = 20;
 
 const SaleInsert = () => {
   const [imgBase64, setImgBase64] = useState<string[]>([]);
-  const [form, setForm] = useState<TagsType>({ tags: new Set<string>() });
+  const [form, setForm] = useState<Types.TagsType>({ tags: new Set<string>() });
   const [imgFiles, setImgFiles] = useState<File[]>([]);
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [popUpState, setPopUpState] = useState(popUpStateInit);
-  const [categorys, setCategorys] = useState<ICategory>({});
+  const [popUpState, setPopUpState] = useState({
+    isSuccess: false,
+    message: "",
+  });
+  const [categorys, setCategorys] = useState<CategoryState>({});
   const [currentFirstCategory, setCurrentFirstCategory] = useState("소설");
   const [currentSecondCategory, setCurrentSecondCategory] = useState("추리");
   const [editorValue, setEditorValue] = useState("");
-  const [usedBookState, setUsedBookState] = useState<CheckBoxType>({
+  const [usedBookState, setUsedBookState] = useState<Types.CheckBoxType>({
     UNRELEASED: true,
   });
   const imgFilesRef = useRef<HTMLInputElement>(null);
   const tagInputRef = useRef<HTMLInputElement>(null);
   const history = useHistory();
   const debounceRef = useDebounce();
-  const { signIn } = useSignIn();
+  const signIn = useTypedSelector(signInSelector);
   const { tags } = form;
 
   const {
@@ -76,8 +60,11 @@ const SaleInsert = () => {
     formState: { errors },
     reset,
     control,
-  } = useForm<ISaleInsertForm>({
-    defaultValues: insertFormInit,
+  } = useForm<Types.SaleInsertForm>({
+    defaultValues: {
+      title: "",
+      price: "",
+    },
   });
 
   const titleOpions: RegisterOptions = {
@@ -196,7 +183,7 @@ const SaleInsert = () => {
     [],
   );
 
-  const handleOnSubmit = (data: ISaleInsertForm) => {
+  const handleOnSubmit = (data: Types.SaleInsertForm) => {
     if (signIn.token) {
       const { token } = signIn;
       const { price, title } = data;
@@ -238,7 +225,7 @@ const SaleInsert = () => {
   );
 
   const handlekeyDown = useCallback(() => {
-    return (e: KeyEvent) => {
+    return (e: Types.KeyEvent) => {
       const { code, currentTarget } = e;
       const { id, value } = currentTarget;
 
@@ -282,7 +269,7 @@ const SaleInsert = () => {
   }, [debounceRef]);
 
   const handlekeyPress = useCallback(() => {
-    return (e: KeyEvent) => {
+    return (e: Types.KeyEvent) => {
       const { code, currentTarget } = e;
       if (code === KEY_ENUM.enter && tagInputRef.current) {
         e.preventDefault();
@@ -309,7 +296,7 @@ const SaleInsert = () => {
   }, [debounceRef]);
 
   const handleLoadCategory = useCallback(async () => {
-    const { data } = await getCategory<CategorysResponse>();
+    const { data } = await getCategory<CategoryResponse>();
     setCategorys(data.data);
   }, []);
 
@@ -324,13 +311,15 @@ const SaleInsert = () => {
           {popUpState.message}
         </Popup>
       )}
-      <Wrapper onSubmit={handleSubmit(handleOnSubmit)}>
-        <Title>
+      <Styled.SaleInsertWrapper onSubmit={handleSubmit(handleOnSubmit)}>
+        <Styled.Title>
           <span>기본정보</span>
           <span>*필수항목</span>
-        </Title>
-        <ImgDelete>{imgFiles.length !== 0 && <span onClick={handleFilesUploadAllDelete}>모두 제거</span>}</ImgDelete>
-        <ImgUpload>
+        </Styled.Title>
+        <Styled.ImgDelete>
+          {imgFiles.length !== 0 && <span onClick={handleFilesUploadAllDelete}>모두 제거</span>}
+        </Styled.ImgDelete>
+        <Styled.ImgUpload>
           <div>
             <span>
               상품이미지<span>*</span>
@@ -358,9 +347,9 @@ const SaleInsert = () => {
               </div>
             ))}
           </div>
-        </ImgUpload>
+        </Styled.ImgUpload>
         {imgFiles.length !== 0 && (
-          <ImgUploadText>
+          <Styled.ImgUploadText>
             <div>
               {imgFiles.map((file, idx) => (
                 <div key={file.name} onClick={handleFileDelete(idx)}>
@@ -369,38 +358,36 @@ const SaleInsert = () => {
                 </div>
               ))}
             </div>
-          </ImgUploadText>
+          </Styled.ImgUploadText>
         )}
-        <Row>
+        <Styled.Row>
           <div>
             <div>
               <span>제목</span>
               <span>*</span>
             </div>
-            <div>
-              <div>
-                <Controller
-                  name="title"
-                  control={control}
-                  rules={titleOpions}
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      type="text"
-                      fullWidth
-                      color="mainDarkBrown"
-                      error={errors.title ? true : false}
-                    />
-                  )}
-                />
-              </div>
-              <ErrorMessageWrapper>
+            <div className="title">
+              <Controller
+                name="title"
+                control={control}
+                rules={titleOpions}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    type="text"
+                    fullWidth
+                    color="mainDarkBrown"
+                    error={errors.title ? true : false}
+                  />
+                )}
+              />
+              <Styled.ErrorMessageWrapper>
                 <ErrorMessage message={errors.title?.message} />
-              </ErrorMessageWrapper>
+              </Styled.ErrorMessageWrapper>
             </div>
           </div>
-        </Row>
-        <Row>
+        </Styled.Row>
+        <Styled.Row>
           <div>
             <div>
               <span>카테고리</span>
@@ -409,7 +396,7 @@ const SaleInsert = () => {
             <div>
               {Object.entries(categorys).map(([first, second], idx) => {
                 return (
-                  <FormControl sx={{ m: 1, width: 150 }} key={idx} color="mainDarkBrown">
+                  <FormControl className="category" sx={{ minWidth: 130 }} key={idx} color="mainDarkBrown">
                     <InputLabel id="category">{first}</InputLabel>
                     <Select
                       labelId="category"
@@ -436,8 +423,8 @@ const SaleInsert = () => {
               })}
             </div>
           </div>
-        </Row>
-        <Row>
+        </Styled.Row>
+        <Styled.Row>
           <div>
             <div>
               <span>상품상태</span>
@@ -460,58 +447,56 @@ const SaleInsert = () => {
               ))}
             </FormGroup>
           </div>
-        </Row>
-        <Row>
+        </Styled.Row>
+        <Styled.Row>
           <div>
             <div>
               <span>가격</span>
               <span>*</span>
             </div>
             <div className="price">
-              <div>
-                <Controller
-                  name="price"
-                  control={control}
-                  rules={priceOpions}
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      type="number"
-                      color="mainDarkBrown"
-                      error={errors.price ? true : false}
-                    />
-                  )}
-                />
-              </div>
-              <ErrorMessageWrapper>
+              <Controller
+                name="price"
+                control={control}
+                rules={priceOpions}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    fullWidth
+                    type="number"
+                    color="mainDarkBrown"
+                    error={errors.price ? true : false}
+                  />
+                )}
+              />
+              <Styled.ErrorMessageWrapper>
                 <ErrorMessage message={errors.price?.message} />
-              </ErrorMessageWrapper>
+              </Styled.ErrorMessageWrapper>
             </div>
           </div>
-        </Row>
-        <Row>
+        </Styled.Row>
+        <Styled.Row>
           <div>
             <div>
               <span>내용</span>
               <span>*</span>
             </div>
-            <div>
-              <Editor limit={2000} setEditorValue={setEditorValue} />
+            <div className="editor">
+              <Editor limit={2000} height={200} setEditorValue={setEditorValue} />
             </div>
           </div>
-        </Row>
-        <Row>
+        </Styled.Row>
+        <Styled.Row>
           <div>
             <div>
               <span>연관태그</span>
               <span />
             </div>
-            <TagBox>
+            <Styled.TagBox>
               {Array.from(tags).map((tag, idx) => (
-                <Tag key={idx} onClick={tagClick} id={tag}>
+                <Styled.Tag key={idx} onClick={tagClick} id={tag}>
                   {`#${tag}`}
-                </Tag>
+                </Styled.Tag>
               ))}
               <input
                 type="text"
@@ -522,30 +507,30 @@ const SaleInsert = () => {
                 onKeyDown={handlekeyDown()}
                 onKeyPress={handlekeyPress()}
               />
-              <InputMessage>
+              <Styled.InputMessage>
                 {tags.size !== 5 ? (
                   <div>
                     <span>쉼표 혹은 엔터를 입력하여 태그를 등록 할 수 있습니다.</span>
-                    <span>등록된 태그를 클릭하면 삭제됩니다.</span>
+                    <span> 등록된 태그를 클릭하면 삭제됩니다.</span>
                   </div>
                 ) : (
                   <div>
                     <span>태그는 최대 {TAGS_MAX_COUNT}개 까지 등록 가능합니다.</span>
                   </div>
                 )}
-              </InputMessage>
-            </TagBox>
+              </Styled.InputMessage>
+            </Styled.TagBox>
           </div>
-        </Row>
+        </Styled.Row>
         <Stack spacing={1} direction="row" justifyContent="center" mt={3}>
           <Button color="mainDarkBrown" variant="contained" type="submit">
             등록
           </Button>
-          <Button color="mainDarkBrown" variant="contained" onClick={handleReset}>
+          <Button color="error" variant="contained" onClick={handleReset}>
             초기화
           </Button>
         </Stack>
-      </Wrapper>
+      </Styled.SaleInsertWrapper>
     </>
   );
 };

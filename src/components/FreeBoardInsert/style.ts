@@ -17,6 +17,7 @@ export const EditorWrapper = styled.div`
   & > div {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
 
     & > div:last-child {
       flex: 1;
@@ -31,6 +32,25 @@ export const EditorWrapper = styled.div`
       font-weight: 900;
     }
   }
+
+  ${({ theme }) => theme.media.mobile} {
+    & > div {
+      margin-top: 35px;
+      gap: 10px;
+      & > div:last-child {
+        width: 100%;
+        flex: auto;
+      }
+      & > span:first-child {
+        padding-left: 0px;
+      }
+    }
+    & > div + div {
+      margin-top: 30px;
+      padding-top: 30px;
+      border-top: 1px solid rgba(189, 195, 199, 0.5);
+    }
+  } ;
 `;
 
 export const Title = styled.div`
@@ -41,11 +61,11 @@ export const Title = styled.div`
     font-size: 23px;
     font-weight: 900;
     &:last-child {
-      color: ${p => p.theme.colors.mainDarkBrown};
+      color: ${({ theme }) => theme.colors.mainDarkBrown};
     }
     &:first-child {
       padding-left: 20px;
-      border-left: 5px solid ${p => p.theme.colors.mainDarkBrown};
+      border-left: 5px solid ${({ theme }) => theme.colors.mainDarkBrown};
     }
   }
 `;
@@ -58,5 +78,13 @@ export const Buttons = styled.div`
   button {
     height: 50px;
     width: 100px;
+  }
+  ${({ theme }) => theme.media.mobile} {
+    margin: 20px 0;
+    button {
+      width: 150px;
+      height: 35px;
+      font-size: 15px;
+    }
   }
 `;

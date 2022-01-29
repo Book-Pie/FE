@@ -31,7 +31,7 @@ const Card = ({ id, title, price, image, state }: Types.CardProps) => {
         <Styled.LatestSliderCardInfo>
           <div className="card__title">{title}</div>
           <div className="card__price">
-            <span>중고가 </span>
+            <span>판매가 </span>
             <span>{`${make1000UnitsCommaFormet(String(price))}원`}</span>
           </div>
           <div className={`card__state ${STATE_CLASSNAME_ENUM[state]}`}>{STATE_ENUM[state]}</div>

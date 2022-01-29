@@ -1,81 +1,123 @@
 import styled from "styled-components";
 
-const boardColor = "rgba(99, 110, 114,0.5)";
+const boardColor = "rgba(99, 110, 114,0.2)";
 
-export const Wrapper = styled.div`
-  margin-top: 30px;
+export const FreeBoardListWrapper = styled.div`
+  margin: 20px 0;
   min-height: 500px;
 `;
 
-export const Row = styled.div`
-  width: 1200px;
+export const FreeBoardListRow = styled.div`
+  min-height: 400px;
   & > div {
     display: flex;
     align-items: center;
     border-bottom: 1px solid ${boardColor};
-    box-shadow: rgb(0 0 0 / 50%) 0px 0px 4px;
     cursor: pointer;
     transition: background-color 0.5s ease;
 
     span {
-      width: 120px;
-      margin: 20px 0;
-      font-weight: 500;
-      text-align: center;
-      display: block;
-      font-size: 20px;
-      color: ${p => p.theme.colors.mainDarkBrown};
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+    }
+    a {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: ${({ theme }) => theme.colors.info};
+      flex: 1;
+    }
+    & > div {
+      width: 150px;
+      text-align: center;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      font-size: 15px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      margin: 15px 0;
+      padding: 0 10px;
+      height: 100%;
+
       &:nth-child(1) {
-        font-weight: bold;
+        width: 100px;
       }
       &:nth-child(2) {
         flex: 1;
         transition: transform 0.5s ease;
       }
-      &:nth-child(3) {
-        width: 200px;
+      &:nth-child(4) {
+        width: 100px;
       }
       &:nth-child(5) {
-        width: 250px;
+        width: 200px;
+      }
+
+      @media screen and (max-width: 900px) {
+        font-size: 15px;
+        margin: 15px 0;
+        width: 100px;
+
+        &:nth-child(4) {
+          width: 70px;
+        }
+        &:nth-child(5) {
+          width: 150px;
+        }
+      }
+
+      ${({ theme }) => theme.media.mobile} {
+        font-size: 15px;
+        margin: 15px 0;
+        flex: 1;
+        &:nth-child(1) {
+          width: 50px;
+        }
+        &:nth-child(4) {
+          width: 60px;
+        }
+        &:nth-child(5) {
+          margin: 10px;
+          width: 100px;
+        }
       }
     }
 
-    span + span {
+    div + div {
       border-left: 1px solid ${boardColor};
+    }
+    & > div:nth-child(4) {
+      border-right: 1px solid ${boardColor};
+    }
+    & > div:last-child {
+      border: none;
     }
 
     &:not(.header) {
       &:hover {
-        background-color: ${p => p.theme.colors.mainLightBrown};
+        background-color: ${({ theme }) => theme.colors.mainLightBrown};
       }
-      & > span:nth-child(2) {
+      & > div:nth-child(2) {
         :hover {
           transform: scale(1.02);
         }
-      }
-      a {
-        color: #1565c0;
-        display: block;
       }
     }
   }
 
   .header {
-    background-color: ${p => p.theme.colors.mainLightBrown};
-    span {
-      font-weight: bold;
-    }
+    background-color: ${({ theme }) => theme.colors.mainLightBrown};
   }
 `;
 
-export const Title = styled.h1`
-  margin: 20px 0;
+export const FreeBoardListTitle = styled.h1`
   font-size: 30px;
   font-weight: bold;
-  color: ${p => p.theme.colors.mainDarkBrown};
+  color: ${({ theme }) => theme.colors.mainDarkBrown};
 `;
 
 export const Empty = styled.div`
@@ -84,13 +126,13 @@ export const Empty = styled.div`
   justify-content: center;
   align-items: center;
   p {
-    font-size: 30px;
+    font-size: 1.1rem;
     font-weight: bold;
-    color: ${p => p.theme.colors.darkGrey};
+    color: ${({ theme }) => theme.colors.darkGrey};
   }
 `;
 
-export const Search = styled.form`
+export const FreeBoardListSearch = styled.form`
   & > div {
     margin-top: 20px;
     justify-content: center;

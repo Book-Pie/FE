@@ -1,4 +1,4 @@
-export interface IPage {
+export interface Page {
   id: number;
   title: string;
   price: number;
@@ -10,17 +10,17 @@ export interface IPage {
   replyCount: number;
 }
 
-export interface IList {
+export interface ListState {
   pageCount: number;
-  pages: IPage[];
+  pages: Page[];
   page: number;
   isEmpty: boolean;
 }
-export interface AxioseReponse {
+export interface Response {
   success: boolean;
   data: {
     pageCount: number;
-    pages: IPage[];
+    pages: Page[];
   };
   error: null;
 }
@@ -29,8 +29,8 @@ export type StateEnumType = {
   [key: string]: string;
 };
 
-export interface IContent {
-  pages: IPage[];
+export interface Content {
+  pages: Page[];
   handleLatestClick: (id: number) => () => void;
   titleFilter: string | null;
   select: string;

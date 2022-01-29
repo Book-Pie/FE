@@ -13,10 +13,7 @@ const SearchReviewCard = ({ page }: Types.SearchReviewCardProp) => {
         <Skeleton variant="text" height={35} animation="pulse" />
         <Skeleton variant="text" height={20} animation="pulse" />
         <Stack direction="row" gap={1}>
-          <Skeleton variant="rectangular" height={20} width={20} animation="pulse" />
-          <Skeleton variant="rectangular" height={20} width={20} animation="pulse" />
-          <Skeleton variant="rectangular" height={20} width={20} animation="pulse" />
-          <Skeleton variant="rectangular" height={20} width={20} animation="pulse" />
+          <Skeleton variant="rectangular" height={95} width="100%" animation="pulse" />
         </Stack>
       </Stack>
     </>
@@ -41,7 +38,7 @@ const SearchReviewCard = ({ page }: Types.SearchReviewCardProp) => {
   }
 
   return (
-    <Grid item xs={3}>
+    <Grid item xs={6} sm={6} md={3}>
       <Styled.SearchCard>{content}</Styled.SearchCard>
     </Grid>
   );

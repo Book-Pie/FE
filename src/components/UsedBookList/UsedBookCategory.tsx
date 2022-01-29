@@ -1,4 +1,4 @@
-import { memo, useCallback, useState } from "react";
+import { memo, useCallback, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router";
 import queryString from "query-string";
@@ -7,12 +7,15 @@ import Select from "@mui/material/Select";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
-import { SelectChangeEvent, Skeleton } from "@mui/material";
-import { Wrapper, LinkWrapper } from "./style";
-import { CategorysProps } from "./types";
+import { SelectChangeEvent } from "@mui/material";
+import Skeleton from "@mui/material/Skeleton";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import * as Types from "./types";
+import * as Styled from "./style";
 
-const Categorys = ({ categorys, defaultLocation }: CategorysProps) => {
+const UsedBookCategory = ({ categorys, defaultLocation }: Types.CategorysProps) => {
   const location = useLocation();
+  const matches = useMediaQuery("(max-width:500px)");
   const { pathname, search } = location;
   const currentQuery = queryString.parse(search);
   const [currentFirstCategory, setCurrentFirstCategory] = useState("");
@@ -26,27 +29,26 @@ const Categorys = ({ categorys, defaultLocation }: CategorysProps) => {
     [],
   );
 
+  const sx = useMemo(() => (matches ? { minWidth: 100, height: 52 } : { minWidth: 150, height: 56 }), [matches]);
+
   if (Object.keys(categorys).length === 0) {
-    const height = 56;
-    const width = 150;
-    const sx = { margin: "8px" };
     return (
-      <Wrapper>
-        <Skeleton width={width} height={height} sx={sx} animation="wave" variant="rectangular" />
-        <Skeleton width={width} height={height} sx={sx} animation="wave" variant="rectangular" />
-        <Skeleton width={width} height={height} sx={sx} animation="wave" variant="rectangular" />
-        <Skeleton width={width} height={height} sx={sx} animation="wave" variant="rectangular" />
-        <Skeleton width={width} height={height} sx={sx} animation="wave" variant="rectangular" />
-        <Skeleton width={width} height={height} sx={sx} animation="wave" variant="rectangular" />
-        <Skeleton width={width} height={height} sx={sx} animation="wave" variant="rectangular" />
-      </Wrapper>
+      <Styled.UsedBookCategoryWrapper>
+        <Skeleton sx={sx} animation="wave" variant="rectangular" />
+        <Skeleton sx={sx} animation="wave" variant="rectangular" />
+        <Skeleton sx={sx} animation="wave" variant="rectangular" />
+        <Skeleton sx={sx} animation="wave" variant="rectangular" />
+        <Skeleton sx={sx} animation="wave" variant="rectangular" />
+        <Skeleton sx={sx} animation="wave" variant="rectangular" />
+        <Skeleton sx={sx} animation="wave" variant="rectangular" />
+      </Styled.UsedBookCategoryWrapper>
     );
   }
 
   return (
-    <Wrapper>
+    <Styled.UsedBookCategoryWrapper>
       {Object.entries(categorys).map(([first, second], idx) => (
-        <FormControl key={idx} sx={{ m: 1, minWidth: 150 }} color="mainDarkBrown">
+        <FormControl key={idx} color="mainDarkBrown" sx={sx} size={matches ? "small" : "medium"}>
           <InputLabel id="category">{first}</InputLabel>
           <Select
             labelId="category"
@@ -55,22 +57,22 @@ const Categorys = ({ categorys, defaultLocation }: CategorysProps) => {
             onChange={handleChange(first)}
           >
             <MenuItem value="">
-              <LinkWrapper>
+              <Styled.UsedBookCategoryLinkWrapper>
                 <Link to={`/${defaultLocation}`}>전체</Link>
-              </LinkWrapper>
+              </Styled.UsedBookCategoryLinkWrapper>
             </MenuItem>
             {second.map((value, i) => (
               <MenuItem key={i} value={value}>
-                <LinkWrapper>
+                <Styled.UsedBookCategoryLinkWrapper>
                   <Link to={makeNewQueryString(pathname, currentQuery, { first, second: value })}>{value}</Link>
-                </LinkWrapper>
+                </Styled.UsedBookCategoryLinkWrapper>
               </MenuItem>
             ))}
           </Select>
         </FormControl>
       ))}
-    </Wrapper>
+    </Styled.UsedBookCategoryWrapper>
   );
 };
 
-export default memo(Categorys);
+export default memo(UsedBookCategory);

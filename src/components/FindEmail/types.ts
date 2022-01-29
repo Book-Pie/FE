@@ -1,8 +1,8 @@
-export interface IFindEmail {
+export interface FindEmailForm {
   name: string;
   phone: string;
 }
 
-export interface IFindEmailForm {
-  onSubmit: (FormData: IFindEmail) => void;
+export interface FormProps {
+  onSubmit: (FormData: FindEmailForm) => void;
 }

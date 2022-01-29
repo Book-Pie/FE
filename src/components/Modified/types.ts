@@ -1,7 +1,7 @@
-export interface IModifiedConfirmForm {
+export interface ModifiedConfirmForm {
   password: string;
 }
-export interface IModifiedForm {
+export interface ModifiedForm {
   name: string;
   phone: string;
   currentPassword: string;
@@ -12,17 +12,17 @@ export interface IModifiedForm {
   detailAddress: string;
 }
 
-export interface IAxiosPayload {
+export interface Request {
   password: string;
 }
 
-export interface IAxiosResponse {
+export interface Response {
   data: string;
   success: boolean;
   error: null;
 }
 
-export interface IMyProfileUpdatePayload {
+export interface MyProfileUpdateRequest {
   name: string;
   phone: string;
   address: {
