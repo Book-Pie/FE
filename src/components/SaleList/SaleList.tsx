@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Link, useRouteMatch } from "react-router-dom";
 import queryString from "query-string";
-import { getSaleList, getUsedbookLatest } from "src/api/my/my";
-import useSignIn from "src/hooks/useSignIn";
+import { getSaleList, getUsedbookLatest } from "src/api/my";
+import useSignIn from "hooks/useSignIn";
 import Popup from "src/elements/Popup";
-import { errorHandler } from "src/api/http";
+import { errorHandler } from "api/http";
 import noComments from "assets/image/noComments.png";
 import { AutocompleteChangeReason, SelectChangeEvent, useMediaQuery } from "@mui/material";
 import Autocomplete from "@mui/material/Autocomplete";
@@ -17,11 +17,11 @@ import Pagination from "@mui/material/Pagination";
 import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
 import Select from "@mui/material/Select";
-import useDelay from "src/hooks/useDelay";
-import { getShopPage, removeShopPage, setShopPage } from "src/utils/localStorageUtil";
+import useDelay from "hooks/useDelay";
+import { getShopPage, removeShopPage, setShopPage } from "utils/localStorageUtil";
 import * as Styled from "./style";
-import * as Types from "./type";
-import Skelaton from "./Skelaton";
+import * as Types from "./types";
+import Skeletons from "./Skeletons";
 import Content from "./Content";
 
 const SaleList = () => {
@@ -155,7 +155,7 @@ const SaleList = () => {
   ) : (
     Array.from({ length: limit }).map((_, idx) => (
       <Styled.SaleTableBody key={idx}>
-        <Skelaton />
+        <Skeletons />
       </Styled.SaleTableBody>
     ))
   );
@@ -190,7 +190,7 @@ const SaleList = () => {
               onChange={handleSelectOnChange}
               sx={{
                 color: theme => theme.colors.mainDarkBrown,
-                fontSize: max950 ?"0.5rem":"1rem",
+                fontSize: max950 ? "0.5rem" : "1rem",
                 height: "100%",
               }}
             >

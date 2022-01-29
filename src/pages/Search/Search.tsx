@@ -1,10 +1,10 @@
 import Typography from "@mui/material/Typography";
 import { Route, Switch } from "react-router";
-import { Colors } from "src/assets/style/global";
-import Aladin from "src/components/SearchForm/Aladin";
-import SearchBookReview from "src/components/SearchForm/SearchBookReview";
-import SearchUsedBook from "src/components/SearchForm/SearchUsedBook";
-import useScrollTop from "src/hooks/useScrollTop";
+import { Colors } from "assets/style/global";
+import Aladin from "components/SearchForm/Aladin";
+import SearchBookReview from "components/SearchForm/SearchBookReview";
+import SearchUsedBook from "components/SearchForm/SearchUsedBook";
+import useScrollTop from "hooks/useScrollTop";
 import * as Styled from "./style";
 
 const Search = () => {

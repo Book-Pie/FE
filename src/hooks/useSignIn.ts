@@ -2,15 +2,15 @@ import { myInfoAsync, signInSelector } from "modules/Slices/signIn/signInSlice";
 import { ISignInReduce } from "modules/Slices/signIn/types";
 import { AppDispatch, useAppDispatch, useTypedSelector } from "modules/store";
 import { useCallback, useEffect } from "react";
-import { getAccessToken } from "utils/localStorageUtil";
+import { getAccessToken, removeToken } from "utils/localStorageUtil";
 import { useHistory } from "react-router";
 
-interface UseSignInReturnType {
+interface UseSignInReturn {
   dispatch: AppDispatch;
   signIn: ISignInReduce;
 }
 
-const useSignIn = (): UseSignInReturnType => {
+const useSignIn = (): UseSignInReturn => {
   const dispatch = useAppDispatch();
   const history = useHistory();
   const signIn = useTypedSelector(signInSelector);
@@ -22,7 +22,10 @@ const useSignIn = (): UseSignInReturnType => {
     if (accessToken && isLoggedIn === false) {
       dispatch(myInfoAsync(accessToken))
         .unwrap()
-        .catch(() => history.replace("signIn"));
+        .catch(() => {
+          removeToken();
+          history.replace("signIn");
+        });
     }
   }, [dispatch, isLoggedIn, history]);
 

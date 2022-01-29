@@ -3,10 +3,10 @@ import ExpandMoreOutlinedIcon from "@mui/icons-material/ExpandMoreOutlined";
 import { Button } from "@mui/material";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getMyOrder } from "src/api/usedBook/usedBook";
-import { dateFormat2, make1000UnitsCommaFormet } from "src/utils/formatUtil";
-import { useTypedSelector } from "src/modules/store";
-import { signInSelector } from "src/modules/Slices/signIn/signInSlice";
+import { getMyOrder } from "api/usedBook/usedBook";
+import { dateFormat2, make1000UnitsCommaFormet } from "utils/formatUtil";
+import { useTypedSelector } from "modules/store";
+import { signInSelector } from "modules/Slices/signIn/signInSlice";
 import * as Styled from "./style";
 import * as Types from "./types";
 

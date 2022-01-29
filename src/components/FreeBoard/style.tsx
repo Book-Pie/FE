@@ -11,7 +11,7 @@ export const FreeboardWrapper = styled.div`
   }
 `;
 
-export const Title = styled.h1`
+export const FreeboardTitle = styled.h1`
   font-size: 30px;
   font-weight: bold;
   color: ${({ theme }) => theme.colors.darkGrey};

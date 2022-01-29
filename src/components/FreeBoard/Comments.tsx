@@ -1,7 +1,7 @@
 import { Button, Stack } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
-import { errorHandler } from "src/api/http";
-import useDebounce from "src/hooks/useDebounce";
+import { errorHandler } from "api/http";
+import useDebounce from "hooks/useDebounce";
 import {
   commentDeleteAsync,
   commentInsertAsync,
@@ -9,8 +9,8 @@ import {
   commentUpdateAsync,
   getCommentContentsSelector,
   subReplyInsertAsync,
-} from "src/modules/Slices/freeBoard/freeBoardSlice";
-import { useAppDispatch, useTypedSelector } from "src/modules/store";
+} from "modules/Slices/freeBoard/freeBoardSlice";
+import { useAppDispatch, useTypedSelector } from "modules/store";
 import Pagination from "@mui/material/Pagination";
 import Editor from "../Editor/Editor";
 import Comment from "./Comment";

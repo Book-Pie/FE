@@ -1,8 +1,8 @@
 import { Button } from "@mui/material";
 import { Route, Switch, useRouteMatch } from "react-router";
 import { Link } from "react-router-dom";
-import FindEmail from "src/components/FindEmail/FindEmail";
-import FindPasssword from "src/components/FindPasssword/FindPasssword";
+import FindEmail from "components/FindEmail/FindEmail";
+import FindPasssword from "components/FindPasssword/FindPasssword";
 import * as Styled from "./style";
 
 const Find = () => {

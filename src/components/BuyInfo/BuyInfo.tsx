@@ -1,19 +1,17 @@
 import { useCallback, useEffect, useMemo } from "react";
 import { useHistory, useParams } from "react-router";
-import { buyInfoAsync, buyInfoSelector } from "src/modules/Slices/signIn/signInSlice";
-import { useTypedSelector } from "src/modules/store";
-import { hyphenFormat, dateFormat2, make1000UnitsCommaFormet } from "src/utils/formatUtil";
+import { buyInfoAsync, buyInfoSelector } from "modules/Slices/signIn/signInSlice";
+import { useTypedSelector } from "modules/store";
+import { hyphenFormat, dateFormat2, make1000UnitsCommaFormet } from "utils/formatUtil";
 import { Button } from "@mui/material";
 import { Link } from "react-router-dom";
 import Loading from "src/elements/Loading";
-import useSignIn from "src/hooks/useSignIn";
-import * as Types from "./type";
+import useSignIn from "hooks/useSignIn";
+import * as Types from "./types";
 import * as Styled from "./style";
 
 const BuyInfo = () => {
   const { orderId } = useParams<Types.Params>();
-  console.log(orderId);
-
   const { dispatch, signIn } = useSignIn();
   const { status, user } = signIn;
   const isLoading = status === "loading";

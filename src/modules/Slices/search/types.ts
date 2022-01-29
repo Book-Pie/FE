@@ -1,4 +1,4 @@
-import { AppDispatch, RootState } from "src/modules/store";
+import { AppDispatch, RootState } from "modules/store";
 import { History } from "history";
 
 type Status = "idle" | "loading";

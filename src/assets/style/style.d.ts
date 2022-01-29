@@ -9,9 +9,13 @@ declare module "styled-components" {
       darkGrey: string;
       error: string;
       info: string;
+      borderColors: {
+        0: string;
+      };
     };
     media: {
       pc: string;
+      tab: string;
       mobile: string;
     };
     shadow: {

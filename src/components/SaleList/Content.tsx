@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { ButtonGroup, Button, useMediaQuery, Stack, Typography } from "@mui/material";
-import { dateFormat2, make1000UnitsCommaFormet } from "src/utils/formatUtil";
+import { dateFormat2, make1000UnitsCommaFormet } from "utils/formatUtil";
 import withLoading from "src/hoc/withLoading";
 import noComments from "assets/image/noComments.png";
 import { useState } from "react";
@@ -8,8 +8,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import InsertCommentIcon from "@mui/icons-material/InsertComment";
 import Grid from "@mui/material/Grid";
 import * as Styled from "./style";
-
-import * as Types from "./type";
+import * as Types from "./types";
 
 const STATE_ENUM: Types.StateEnumType = {
   SALE: "판매 중",
@@ -72,29 +71,33 @@ const Content = ({ pages, titleFilter, select, handleLatestClick }: Types.Conten
                 <div>
                   <span>{dateFormat2(modifiedDate)}</span>
                 </div>
-                <Stack direction="row" gap={1} maxHeight={50} mt={1} mb={1}>
+                <ButtonGroup disableElevation variant="contained" sx={{ mb: 1 }}>
                   {state === "SALE" && (
                     <>
-                      <button type="button" className="error" onClick={handleLatestClick(id)}>
+                      <Button color="error" variant="contained" onClick={handleLatestClick(id)}>
                         최신글로 등록
-                      </button>
-                      <button type="button" className="info">
+                      </Button>
+                      <Button color="primary" variant="contained">
                         수정하기
-                      </button>
+                      </Button>
                     </>
                   )}
 
                   {state === "TRADING" && (
-                    <button type="button">
-                      <Link to={`sale/${id}`}>판매상세보기</Link>
-                    </button>
+                    <Button color="mainDarkBrown" variant="contained">
+                      <Link to={`sale/${id}`} style={{ color: "white" }}>
+                        판매상세보기
+                      </Link>
+                    </Button>
                   )}
                   {state === "SOLD_OUT" && (
-                    <button type="button">
-                      <Link to={`sale/${id}`}>판매상세보기</Link>
-                    </button>
+                    <Button color="mainDarkBrown" variant="contained">
+                      <Link to={`sale/${id}`} style={{ color: "white" }}>
+                        판매상세보기
+                      </Link>
+                    </Button>
                   )}
-                </Stack>
+                </ButtonGroup>
               </Grid>
               <Grid item>
                 <Styled.SaleImage src={`${process.env.BASE_URL}/image/${image}`} alt="usedBookImg" />

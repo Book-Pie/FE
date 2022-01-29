@@ -1,24 +1,23 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import FormInput from "src/elements/FormInput";
 import { RegisterOptions, useForm } from "react-hook-form";
-import useSignIn from "hooks/useSignIn";
 import {
   hookFormKoreaChractersCheck,
   hookFormMisMatchCheck,
   hookFormWhiteSpaceCheck,
   makeOption,
   FormErrorMessages,
-} from "src/utils/hookFormUtil";
+} from "utils/hookFormUtil";
 import ErrorMessage from "src/elements/ErrorMessage";
-import { passwordCheck, getWithDrawal } from "src/api/my/my";
+import { passwordCheck, getWithDrawal } from "src/api/my";
 import axios from "axios";
 import { logout, signInSelector } from "modules/Slices/signIn/signInSlice";
 import DropDown from "src/elements/DropDown";
-import { errorHandler } from "src/api/http";
+import { errorHandler } from "api/http";
 import Popup from "src/elements/Popup";
-import { getKakaoUnlink } from "src/utils/oAuthUtil";
+import { getKakaoUnlink } from "utils/oAuthUtil";
 import Editor from "components/Editor/Editor";
-import { useAppDispatch, useTypedSelector } from "src/modules/store";
+import { useAppDispatch, useTypedSelector } from "modules/store";
 import * as Types from "./types";
 import * as Styled from "./style";
 

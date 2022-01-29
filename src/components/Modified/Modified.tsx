@@ -13,22 +13,22 @@ import {
   FormErrorMessages,
 } from "utils/hookFormUtil";
 import useDebounce from "hooks/useDebounce";
-import { errorHandler } from "src/api/http";
+import { errorHandler } from "api/http";
 import FormInput from "src/elements/FormInput";
 import Popup from "src/elements/Popup";
 import useDaumPost from "hooks/useDaumPost";
-import { myProfileImgUpload, myInfoChange, passwordChange, passwordCheck } from "src/api/my/my";
+import { myProfileImgUpload, myInfoChange, passwordChange, passwordCheck } from "src/api/my";
 import { myInfoAsync, signInSelector } from "modules/Slices/signIn/signInSlice";
-import { hyphenRemoveFormat } from "src/utils/formatUtil";
+import { hyphenRemoveFormat } from "utils/formatUtil";
 import { useHistory } from "react-router";
 import Skeleton from "@mui/material/Skeleton";
 import Button from "@mui/material/Button";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Loading from "src/elements/Loading";
 import { Stack } from "@mui/material";
-import useDelay from "src/hooks/useDelay";
+import useDelay from "hooks/useDelay";
 import DaumPostModal from "src/elements/DaumPostModal";
-import { useAppDispatch, useTypedSelector } from "src/modules/store";
+import { useAppDispatch, useTypedSelector } from "modules/store";
 import * as Styled from "./style";
 import * as Types from "./types";
 

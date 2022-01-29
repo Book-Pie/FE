@@ -1,6 +1,6 @@
 import { Button } from "@mui/material";
 import DaumPostcode, { Address } from "react-daum-postcode";
-import useWindowFiexd from "src/hooks/useWindowFiexd";
+import useWindowFiexd from "hooks/useWindowFiexd";
 import styled, { css } from "styled-components";
 
 interface DaumPostModalProps {

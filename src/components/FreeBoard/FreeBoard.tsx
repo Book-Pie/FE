@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { Controller, RegisterOptions, useForm } from "react-hook-form";
 import { useHistory, useLocation, useParams } from "react-router";
 import { Link } from "react-router-dom";
-import { errorHandler } from "src/api/http";
+import { errorHandler } from "api/http";
 import ErrorMessage from "src/elements/ErrorMessage";
 import Loading from "src/elements/Loading";
 import Popup from "src/elements/Popup";
@@ -14,11 +14,11 @@ import {
   contentInfoSelector,
   infoAsync,
   updateAsync,
-} from "src/modules/Slices/freeBoard/freeBoardSlice";
-import { signInSelector } from "src/modules/Slices/signIn/signInSlice";
-import { useAppDispatch, useTypedSelector } from "src/modules/store";
-import { dateFormat2 } from "src/utils/formatUtil";
-import { FormErrorMessages, makeOption } from "src/utils/hookFormUtil";
+} from "modules/Slices/freeBoard/freeBoardSlice";
+import { signInSelector } from "modules/Slices/signIn/signInSlice";
+import { useAppDispatch, useTypedSelector } from "modules/store";
+import { dateFormat2 } from "utils/formatUtil";
+import { FormErrorMessages, makeOption } from "utils/hookFormUtil";
 import Editor from "../Editor/Editor";
 import { Buttons, EditorWrapper } from "../FreeBoardInsert/style";
 import { FreeBoardInsertForm } from "../FreeBoardInsert/types";
@@ -134,7 +134,7 @@ const FreeBoard = () => {
           </Popup>
         )}
         <Loading isLoading={isLoading} />
-        <Styled.Title>자유게시판</Styled.Title>
+        <Styled.FreeboardTitle>자유게시판</Styled.FreeboardTitle>
         {isUpdate ? (
           <div>
             <form onSubmit={handleSubmit(onSumit)}>

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
-import { bestSellerItemSelector, getBestSeller } from "src/modules/Slices/book/bookSlice";
-import { useAppDispatch, useTypedSelector } from "src/modules/store";
-import { removeFreeBoardPage } from "src/utils/localStorageUtil";
+import { bestSellerItemSelector, getBestSeller } from "modules/Slices/book/bookSlice";
+import { useAppDispatch, useTypedSelector } from "modules/store";
+import { removeFreeBoardPage } from "utils/localStorageUtil";
 import { range } from "lodash";
 import { Skeleton, Stack } from "@mui/material";
 import Card from "./Card";

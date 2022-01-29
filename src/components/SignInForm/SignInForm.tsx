@@ -13,7 +13,7 @@ import { getRememberEmail } from "utils/localStorageUtil";
 import Popup from "src/elements/Popup";
 import useDebounce from "hooks/useDebounce";
 import TextField from "@mui/material/TextField";
-import { useAppDispatch, useTypedSelector } from "src/modules/store";
+import { useAppDispatch, useTypedSelector } from "modules/store";
 import * as Styled from "./style";
 import * as Types from "./types";
 

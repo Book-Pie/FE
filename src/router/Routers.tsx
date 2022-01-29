@@ -1,7 +1,7 @@
 import { Redirect, Route, Switch } from "react-router";
 import { logout } from "modules/Slices/signIn/signInSlice";
 import { useCallback, lazy } from "react";
-import { useAppDispatch } from "src/modules/store";
+import { useAppDispatch } from "modules/store";
 import PrivateRoute from "./PrivateRoute";
 
 const Main = lazy(() => import("pages/Main/Main"));

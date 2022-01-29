@@ -1,4 +1,4 @@
-import { make1000UnitsCommaFormet } from "src/utils/formatUtil";
+import { make1000UnitsCommaFormet } from "utils/formatUtil";
 import { Link } from "react-router-dom";
 import { useMemo } from "react";
 import * as Types from "./types";

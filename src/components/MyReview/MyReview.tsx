@@ -1,7 +1,7 @@
-import { useAppDispatch, useTypedSelector } from "src/modules/store";
+import { useAppDispatch, useTypedSelector } from "modules/store";
 import queryString from "query-string";
 import { useEffect } from "react";
-import { reviewsSelector, reviewListAsync, signInSelector, setReviewPage } from "src/modules/Slices/signIn/signInSlice";
+import { reviewsSelector, reviewListAsync, signInSelector, setReviewPage } from "modules/Slices/signIn/signInSlice";
 import { Stack, Typography } from "@mui/material";
 import Pagination from "@mui/material/Pagination";
 import Loading from "src/elements/Loading";

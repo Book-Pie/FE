@@ -1,4 +1,4 @@
-import http from "../http";
+import http from "api/http";
 
 const makeAuthTokenHeader = (token: string) => ({
   headers: { "X-AUTH-TOKEN": token },
@@ -81,3 +81,9 @@ export const getWrittedReviewList = <T>(query: string, token: string) => {
   });
   return response;
 };
+
+export const myPointList = (userId: number) => {
+  return http.get(`/point/${userId}`);
+};
+
+export const myPointCancel = <P>(payload: P) => http.post("/point", payload);

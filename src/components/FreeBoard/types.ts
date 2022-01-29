@@ -1,4 +1,4 @@
-import { SubReply } from "src/modules/Slices/freeBoard/types";
+import { SubReply } from "modules/Slices/freeBoard/types";
 
 export interface IParam {
   boardId: string;

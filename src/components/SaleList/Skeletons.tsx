@@ -1,7 +1,7 @@
 import { Grid, Skeleton, Stack, useMediaQuery } from "@mui/material";
 import * as Styled from "./style";
 
-const Skelaton = () => {
+const Skeletons = () => {
   const max950 = useMediaQuery("(max-width:950px)");
 
   if (max950) {
@@ -63,4 +63,4 @@ const Skelaton = () => {
   );
 };
 
-export default Skelaton;
+export default Skeletons;

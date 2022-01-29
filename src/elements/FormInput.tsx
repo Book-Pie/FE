@@ -38,11 +38,7 @@ const Input = styled.input<InputProps>`
 `;
 
 const FormInput = (props: FormInputProps) => {
-  const { register } = props;
-
-  if (register) {
-    return <Input {...props} {...register} />;
-  }
+  console.log(props);
 
   return <Input {...props} />;
 };

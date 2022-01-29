@@ -1,9 +1,9 @@
 import { Grid, Skeleton, Stack } from "@mui/material";
 import { Link } from "react-router-dom";
-import { make1000UnitsCommaFormet } from "src/utils/formatUtil";
+import { make1000UnitsCommaFormet } from "utils/formatUtil";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import InsertCommentIcon from "@mui/icons-material/InsertComment";
-import { StateEnumType } from "components/SaleList/type";
+import { StateEnumType } from "components/SaleList/types";
 import { useMemo } from "react";
 import * as Styled from "./style";
 import * as Types from "./types";

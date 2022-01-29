@@ -1,11 +1,11 @@
 import { useHistory } from "react-router";
 import { useCallback, useState } from "react";
 import Popup from "src/elements/Popup";
-import { getFindPassword } from "src/api/oauth";
-import { errorHandler } from "src/api/http";
+import { getFindPassword } from "api/oauth";
+import { errorHandler } from "api/http";
 import useDebounce from "hooks/useDebounce";
-import { hyphenRemoveFormat } from "src/utils/formatUtil";
-import useDelay from "src/hooks/useDelay";
+import { hyphenRemoveFormat } from "utils/formatUtil";
+import useDelay from "hooks/useDelay";
 import * as Types from "./types";
 import Form from "./Form";
 import * as Styled from "./style";

@@ -1,7 +1,7 @@
 import { useCallback } from "react";
-import { signInUser } from "src/modules/Slices/signIn/signInSlice";
-import { useTypedSelector } from "src/modules/store";
-import { make1000UnitsCommaFormet } from "src/utils/formatUtil";
+import { signInUser } from "modules/Slices/signIn/signInSlice";
+import { useTypedSelector } from "modules/store";
+import { make1000UnitsCommaFormet } from "utils/formatUtil";
 import * as Styled from "./style";
 
 const PointInfo = () => {

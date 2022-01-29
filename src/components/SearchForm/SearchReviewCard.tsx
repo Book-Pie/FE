@@ -1,7 +1,7 @@
 import { Grid, Skeleton, Stack } from "@mui/material";
 import { memo } from "react";
 import { Link } from "react-router-dom";
-import { make1000UnitsCommaFormet } from "src/utils/formatUtil";
+import { make1000UnitsCommaFormet } from "utils/formatUtil";
 import * as Styled from "./style";
 import * as Types from "./types";
 

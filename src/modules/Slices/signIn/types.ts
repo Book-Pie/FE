@@ -1,6 +1,6 @@
 import { History } from "history";
 import { AppDispatch, RootState } from "modules/store";
-import { IOrderResult } from "src/components/OrderForm/types";
+import { IOrderResult } from "components/OrderForm/types";
 // =========================== 썽크함수 파라미터 타입 ===========================
 // thunk 함수로 넘겨질 인자 타입
 
@@ -17,7 +17,7 @@ export interface NickNameUpdateParam {
 
 // =========================== 썽크함수 성공 시 리턴 타입 ===========================
 
-export interface IUserInfo {
+export interface UserInfo {
   id: number;
   email: string;
   nickName: string;
@@ -41,7 +41,7 @@ export interface IUserInfo {
 }
 export interface MyProfileSuccess {
   success: boolean;
-  data: IUserInfo;
+  data: UserInfo;
   error: null;
 }
 
@@ -81,7 +81,7 @@ export interface IAxiosResponse {
   error: null;
 }
 export interface MyProfileResponse {
-  data: IUserInfo;
+  data: UserInfo;
   error: null;
   success: boolean;
 }
@@ -157,7 +157,7 @@ export interface ReviewListData {
 }
 
 export interface ISignInReduce {
-  user: IUserInfo | null;
+  user: UserInfo | null;
   token: string | null;
   isLoggedIn: boolean;
   status: "loading" | "idle";

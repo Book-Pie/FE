@@ -1,21 +1,18 @@
 import { RegisterOptions, useForm } from "react-hook-form";
-import useDaumPost from "src/hooks/useDaumPost";
+import useDaumPost from "hooks/useDaumPost";
 import FormInput from "src/elements/FormInput";
-import DaumPostcode from "react-daum-postcode";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Dropdown from "src/elements/DropDown";
 import useSignIn from "hooks/useSignIn";
-import { make1000UnitsCommaFormet } from "src/utils/formatUtil";
-import { makeOption } from "src/utils/hookFormUtil";
+import { make1000UnitsCommaFormet } from "utils/formatUtil";
+import { makeOption, FormErrorMessages } from "utils/hookFormUtil";
 import ErrorMessage from "src/elements/ErrorMessage";
 import Button from "@mui/material/Button";
 import Popup from "src/elements/Popup";
-import { getOrder } from "src/api/usedBook/usedBook";
+import { getOrder } from "api/usedBook/usedBook";
 import { useHistory } from "react-router";
 import Loading from "src/elements/Loading";
-import useDelay from "src/hooks/useDelay";
-import { FormErrorMessages } from "utils/hookFormUtil";
-import useWindowFiexd from "src/hooks/useWindowFiexd";
+import useDelay from "hooks/useDelay";
 import DaumPostModal from "src/elements/DaumPostModal";
 import * as Styled from "./style";
 import * as Types from "./types";
@@ -63,7 +60,6 @@ const OrderForm = ({ usedBook }: Types.OrderFormProps) => {
   }, []);
   const handleReset = useCallback(() => reset(), [reset]);
   const handleDaumPostOpen = useCallback(() => setIsDaumPostcodeOpen(prev => !prev), []);
-  const handleDaumPostClose = useCallback(() => setIsDaumPostcodeOpen(false), []);
   const handlePaymentPopUpOnClick = useCallback(() => {
     const name = "북파이 결제페이지";
     const url = "/payment";

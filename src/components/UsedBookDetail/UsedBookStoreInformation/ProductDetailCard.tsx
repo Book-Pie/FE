@@ -1,4 +1,4 @@
-import profileImg from "src/assets/image/pie3x.png";
+import profileImg from "assets/image/pie3x.png";
 import { usedBookSelector } from "src/modules/Slices/usedBookDetail/usedBookDetailSlice";
 import { useTypedSelector } from "src/modules/store";
 import {
