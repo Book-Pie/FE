@@ -1,21 +1,21 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
-import BookReviewItem from "src/components/BookReviewList/BookReviewItem";
-import { getBookSelector, getDefaultBookList, getReviewBook, setListInit } from "src/modules/Slices/book/bookSlice";
-import { useTypedSelector } from "src/modules/store";
+import BookReviewItem from "components/BookReviewList/BookReviewItem";
+import { bookReduceSelector, getDefaultBookList, getReviewBook, setListInit } from "modules/Slices/book/bookSlice";
+import { useTypedSelector } from "modules/store";
 import queryString from "query-string";
-import { BookItemProps, GetCategoryAsyncSuccess, ParentsCategoryData } from "src/modules/Slices/book/types";
-import Loading from "src/elements/Loading";
+import { BookItemProps, GetCategoryAsyncSuccess, ParentsCategoryData } from "modules/Slices/book/types";
+import Loading from "elements/Loading";
 import { useDispatch } from "react-redux";
-import { getCategoryReview } from "src/api/usedBook/usedBook";
-import ReviewCategorys from "src/components/BookReviewList/ReviewCategorys";
+import { getCategoryReview } from "api/book";
+import ReviewCategorys from "components/BookReviewList/ReviewCategorys";
 import { BookReviewContainer, BookReviewListContainer, ReviewListWrapper, Text } from "./styles";
 import ReviewListSkeleton from "./ReviewListSkeleton";
 
 const BookReviewList = () => {
   const location = useLocation();
   const dispatch = useDispatch();
-  const { list } = useTypedSelector(getBookSelector);
+  const { list } = useTypedSelector(bookReduceSelector);
   const { pages } = list;
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);

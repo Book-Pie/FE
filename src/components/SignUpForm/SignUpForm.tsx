@@ -9,22 +9,22 @@ import {
   hookFormMisMatchCheck,
   FormErrorMessages,
 } from "utils/hookFormUtil";
-import FormInput from "src/elements/FormInput";
-import ErrorMessage from "src/elements/ErrorMessage";
-import FormLabel from "src/elements/FormLabel";
+import FormInput from "elements/FormInput";
+import ErrorMessage from "elements/ErrorMessage";
+import FormLabel from "elements/FormLabel";
 import { useEffect, useMemo, useState } from "react";
 import useDaumPost from "hooks/useDaumPost";
 import { errorHandler } from "api/http";
 import axios from "axios";
-import { getEmailDuplicateCheck, getNickNameDuplicateCheck, getSignUp } from "api/oauth";
+import { getEmailDuplicateCheck, getNickNameDuplicateCheck, getSignUp } from "api/user";
 import { useHistory } from "react-router";
-import Popup from "src/elements/Popup";
+import Popup from "elements/Popup";
 import { hyphenRemoveFormat } from "utils/formatUtil";
 import Button from "@mui/material/Button";
 import naverImg from "assets/image/naver_oauth.png";
 import kakaoImg from "assets/image/kakao_oauth.png";
 import { Link } from "react-router-dom";
-import DaumPostModal from "src/elements/DaumPostModal";
+import DaumPostModal from "elements/DaumPostModal";
 import * as Types from "./types";
 import * as Styled from "./style";
 

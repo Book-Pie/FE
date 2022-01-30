@@ -1,10 +1,10 @@
 import { useDispatch } from "react-redux";
 import profileImg from "assets/image/pie3x.png";
-import { Button, ClickArea } from "src/components/Reviews/ReviewList/style";
-import useSignIn from "src/hooks/useSignIn";
-import { UsedBookDetailReplyResponse } from "src/modules/Slices/usedBookDetail/types";
-import { deleteUsedBookDetailReply } from "src/modules/Slices/usedBookDetail/usedBookDetailSlice";
-import { compareDateFormat } from "src/utils/formatUtil";
+import { Button, ClickArea } from "components/Reviews/ReviewList/style";
+import useSignIn from "hooks/useSignIn";
+import { UsedBookDetailReplyResponse } from "modules/Slices/usedBookDetail/types";
+import { deleteUsedBookDetailReply } from "modules/Slices/usedBookDetail/usedBookDetailSlice";
+import { compareDateFormat } from "utils/formatUtil";
 import {
   ContentWrapper,
   FlexBox,

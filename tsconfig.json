@@ -28,6 +28,7 @@
       "pages/*": ["src/pages/*"],
       "style/*": ["src/assets/style/*"],
       "router/*": ["src/router/*"],
+      "hoc/*": ["src/hoc/*"],
       "utils/*": ["src/utils/*"],
     }
   },

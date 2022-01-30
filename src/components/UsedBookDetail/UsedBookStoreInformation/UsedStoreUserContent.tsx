@@ -1,4 +1,4 @@
-import { UsedBookDetailResponse } from "src/modules/Slices/usedBookDetail/types";
+import { UsedBookDetailResponse } from "modules/Slices/usedBookDetail/types";
 import { CardBoldTitle, CardSmallTitle, UsedStoreUserContentWrapper } from "../style";
 
 const UsedStoreUserContent = ({ sellerName }: UsedBookDetailResponse) => {

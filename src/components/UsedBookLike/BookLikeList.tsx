@@ -1,11 +1,11 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import useSignIn from "src/hooks/useSignIn";
-import { getUsedBookLikeList, usedBookSelector } from "src/modules/Slices/usedBookDetail/usedBookDetailSlice";
-import { useTypedSelector } from "src/modules/store";
+import useSignIn from "hooks/useSignIn";
+import { getUsedBookLikeList, usedBookSelector } from "modules/Slices/usedBookDetail/usedBookDetailSlice";
+import { useTypedSelector } from "modules/store";
 import noComments from "assets/image/noComments.png";
 import styled from "styled-components";
-import UsedBookCard from "src/components/UsedBookList/UsedBookCard";
+import UsedBookCard from "components/UsedBookList/UsedBookCard";
 import { ReviewListEmptyParagraph, ReviewListEmptyWrapper } from "../Reviews/ReviewList/style";
 import { CountWrapper } from "../UsedBookDetail/style";
 import { ContentWrapper, Title, UsedBookLikeListWrapper, TitleSpan } from "./styles";

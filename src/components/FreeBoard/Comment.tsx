@@ -1,9 +1,9 @@
 import Button from "@mui/material/Button";
 import { memo, useCallback, useState } from "react";
-import { dateFormat2 } from "utils/formatUtil";
+import { dateArrayFormat } from "utils/formatUtil";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import { useTypedSelector } from "modules/store";
-import { signInSelector } from "modules/Slices/signIn/signInSlice";
+import { isLoggedInSelector } from "modules/Slices/user/userSlice";
 import * as Styled from "./style";
 import Editor from "../Editor/Editor";
 import * as Types from "./types";
@@ -25,7 +25,7 @@ const Comment = ({
   const [updateEditorLength, setUpdateEditorLength] = useState<number>(0);
   const [subReplyEditorValue, setSubReplyEditorValue] = useState<string>("");
   const [subReplyEditorLength, setSubReplyEditorLength] = useState<number>(0);
-  const { isLoggedIn } = useTypedSelector(signInSelector);
+  const isLoggedIn = useTypedSelector(isLoggedInSelector);
   const newContentInnerHTML = content.replaceAll("&lt;", "<");
 
   const handleEditorOnChange = useCallback(
@@ -56,7 +56,7 @@ const Comment = ({
       <div className="comment__userinfo">
         <div>
           <span>{nickName}</span>
-          <span>{dateFormat2(replyDate)}</span>
+          <span>{dateArrayFormat(replyDate)}</span>
         </div>
         <ButtonGroup size="small" disableElevation variant="contained">
           {isLoggedIn && (

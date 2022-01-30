@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { bestSellerItemSelector, getBestSeller } from "modules/Slices/book/bookSlice";
+import { bestSellerSelector, bestSellerAsync } from "modules/Slices/book/bookSlice";
 import { useAppDispatch, useTypedSelector } from "modules/store";
 import { removeFreeBoardPage } from "utils/localStorageUtil";
 import { range } from "lodash";
@@ -9,10 +9,10 @@ import * as Styled from "./style";
 
 const BestSeller = () => {
   const dispatch = useAppDispatch();
-  const bestSeller = useTypedSelector(bestSellerItemSelector);
+  const bestSeller = useTypedSelector(bestSellerSelector);
 
   useEffect(() => {
-    if (bestSeller.length === 0) dispatch(getBestSeller());
+    if (bestSeller.length === 0) dispatch(bestSellerAsync());
     removeFreeBoardPage();
   }, [bestSeller, dispatch]);
 

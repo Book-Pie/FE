@@ -10,7 +10,7 @@ import useDebounce from "hooks/useDebounce";
 import { reset } from "modules/Slices/search/searchSlice";
 import { Controller, RegisterOptions, useForm } from "react-hook-form";
 import { hookFormHtmlCheck, makeOption } from "utils/hookFormUtil";
-import ErrorMessage from "src/elements/ErrorMessage";
+import ErrorMessage from "elements/ErrorMessage";
 import * as Types from "./types";
 
 const AladinFilter = () => {

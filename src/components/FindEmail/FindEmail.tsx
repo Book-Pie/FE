@@ -1,33 +1,22 @@
-import { useCallback, useState } from "react";
-import Popup from "src/elements/Popup";
+import { useState } from "react";
+import Popup from "elements/Popup";
 import { errorHandler } from "api/http";
-import { getFindEmail } from "api/oauth";
+import { getFindEmail } from "api/user";
 import useDebounce from "hooks/useDebounce";
 import { hyphenRemoveFormat } from "utils/formatUtil";
 import useDelay from "hooks/useDelay";
+import usePopup from "hooks/usePopup";
 import Form from "./Form";
 import * as Types from "./types";
 import * as Styled from "./style";
 
 const FindEmail = () => {
   const [resulte, setResulte] = useState(null);
-  const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [popUpState, setPopUpState] = useState({
-    isSuccess: false,
-    message: "",
-  });
-  const { isSuccess, message } = popUpState;
   const debounceRef = useDebounce();
   const delay = useDelay(200);
-
-  const handlePopUp = useCallback((message: string, isSuccess: boolean) => {
-    setPopUpState({
-      isSuccess,
-      message,
-    });
-    setIsOpen(true);
-  }, []);
+  const { handlePopupClose, handlePopupMessage, popupState } = usePopup();
+  const { isOpen, isSuccess, message } = popupState;
 
   const onSubmit = (formData: Types.FindEmailForm) => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
@@ -39,9 +28,10 @@ const FindEmail = () => {
         const { data } = await getFindEmail<Types.FindEmailForm>({ phone: hyphenRemoveFormat(phone), name });
         const email = data.data;
         setResulte(email);
-        handlePopUp("이메일 찾기에 성공했습니다.", true);
+        handlePopupMessage(true, "이메일 찾기에 성공했습니다.");
       } catch (error) {
-        handlePopUp(errorHandler(error), false);
+        const message = errorHandler(error);
+        handlePopupMessage(false, message);
       } finally {
         setIsLoading(false);
       }
@@ -53,7 +43,7 @@ const FindEmail = () => {
       {isOpen && (
         <Popup
           isOpen={isOpen}
-          setIsOpen={setIsOpen}
+          setIsOpen={handlePopupClose}
           className={isSuccess ? "green" : "red"}
           closeDelay={2000}
           autoClose

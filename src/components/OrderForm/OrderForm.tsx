@@ -1,28 +1,25 @@
 import { RegisterOptions, useForm } from "react-hook-form";
 import useDaumPost from "hooks/useDaumPost";
-import FormInput from "src/elements/FormInput";
+import FormInput from "elements/FormInput";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import Dropdown from "src/elements/DropDown";
-import useSignIn from "hooks/useSignIn";
+import Dropdown from "elements/DropDown";
 import { make1000UnitsCommaFormet } from "utils/formatUtil";
 import { makeOption, FormErrorMessages } from "utils/hookFormUtil";
-import ErrorMessage from "src/elements/ErrorMessage";
+import ErrorMessage from "elements/ErrorMessage";
 import Button from "@mui/material/Button";
-import Popup from "src/elements/Popup";
-import { getOrder } from "api/usedBook/usedBook";
+import Popup from "elements/Popup";
+import { getOrder } from "api/order";
 import { useHistory } from "react-router";
-import Loading from "src/elements/Loading";
+import Loading from "elements/Loading";
 import useDelay from "hooks/useDelay";
-import DaumPostModal from "src/elements/DaumPostModal";
+import DaumPostModal from "elements/DaumPostModal";
+import { userInfoAsync, userReduceSelector } from "modules/Slices/user/userSlice";
+import { useAppDispatch, useTypedSelector } from "modules/store";
+import usePopup from "hooks/usePopup";
 import * as Styled from "./style";
 import * as Types from "./types";
 
 const OrderForm = ({ usedBook }: Types.OrderFormProps) => {
-  const [popUpState, setPopUpState] = useState({
-    isSuccess: false,
-    message: "",
-  });
-  const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const deliveryTextInit = useMemo(() => "배송요청사항을 선택해주세요.", []);
   const { addressState, handleComplete } = useDaumPost();
@@ -32,10 +29,13 @@ const OrderForm = ({ usedBook }: Types.OrderFormProps) => {
     [],
   );
 
+  const { handlePopupClose, handlePopupMessage, popupState } = usePopup();
+  const { isOpen, isSuccess, message } = popupState;
+
   const [isDaumPostcodeOpen, setIsDaumPostcodeOpen] = useState(false);
   const [deliveryText, setDeliveryText] = useState(deliveryTextInit);
-  const { signIn } = useSignIn();
-  const { user } = signIn;
+  const dispatch = useAppDispatch();
+  const { user, token } = useTypedSelector(userReduceSelector);
 
   const { price } = usedBook;
   const { errors } = formState;
@@ -51,13 +51,6 @@ const OrderForm = ({ usedBook }: Types.OrderFormProps) => {
     minLength: makeOption<number>(5, FormErrorMessages.MIN_LENGTH),
   };
 
-  const handlePopUp = useCallback((isSuccess: boolean, message: string) => {
-    setIsOpen(true);
-    setPopUpState({
-      isSuccess,
-      message,
-    });
-  }, []);
   const handleReset = useCallback(() => reset(), [reset]);
   const handleDaumPostOpen = useCallback(() => setIsDaumPostcodeOpen(prev => !prev), []);
   const handlePaymentPopUpOnClick = useCallback(() => {
@@ -67,20 +60,22 @@ const OrderForm = ({ usedBook }: Types.OrderFormProps) => {
     const popupY = window.screen.height / 2 - 300 / 2;
     const option = `width = 850, height = 600, top = ${popupY}, left = ${popupX}, screenX=${popupX} screenY=${popupY} resizable=no`;
     const win = window.open(url, name, option);
-    win?.addEventListener("beforeunload", () => window.location.reload());
-  }, []);
+    win?.addEventListener("beforeunload", () => {
+      if (token) dispatch(userInfoAsync(token));
+    });
+  }, [token, dispatch]);
 
   const onSumit = async (formData: Types.IOrderForm) => {
     try {
       setIsLoading(true);
-      if (user && signIn.token) {
+      if (user && token) {
         const { detailAddress, mainAddress, postalCode } = formData;
         if (user.point.holdPoint - price < 0) {
-          handlePopUp(false, "금액이 부족합니다.");
+          handlePopupMessage(false, "금액이 부족합니다.");
           return;
         }
         if (deliveryText === deliveryTextInit) {
-          handlePopUp(false, "배송요청사항을 선택해주세요.");
+          handlePopupMessage(false, "배송요청사항을 선택해주세요.");
           return;
         }
 
@@ -94,7 +89,7 @@ const OrderForm = ({ usedBook }: Types.OrderFormProps) => {
           deliveryRequest: deliveryText,
         };
 
-        const { data } = await getOrder<Types.OrderRequest>(payload, signIn.token);
+        const { data } = await getOrder<Types.OrderRequest>(payload, token);
         await delay();
         history.replace({
           pathname: `/order/${usedBook.usedBookId}/result`,
@@ -102,7 +97,7 @@ const OrderForm = ({ usedBook }: Types.OrderFormProps) => {
         });
       }
     } catch (error: any) {
-      handlePopUp(false, error);
+      handlePopupMessage(false, error);
     } finally {
       setIsLoading(false);
     }
@@ -138,8 +133,8 @@ const OrderForm = ({ usedBook }: Types.OrderFormProps) => {
   return (
     <Styled.OrderFormWrapper>
       {isOpen && (
-        <Popup isOpen={isOpen} setIsOpen={setIsOpen} className={popUpState.isSuccess ? "green" : "red"} autoClose>
-          {popUpState.message}
+        <Popup isOpen={isOpen} setIsOpen={handlePopupClose} className={isSuccess ? "green" : "red"} autoClose>
+          {message}
         </Popup>
       )}
       <DaumPostModal

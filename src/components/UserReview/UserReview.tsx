@@ -1,17 +1,17 @@
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import useSignIn from "src/hooks/useSignIn";
+import useSignIn from "hooks/useSignIn";
 import noComments from "assets/image/noComments.png";
 import queryString from "query-string";
 import Stack from "@mui/material/Stack";
 import Pagination from "@mui/material/Pagination";
-import { getShopPage, removeShopPage, setShopPage } from "src/utils/localStorageUtil";
-import { useTypedSelector } from "src/modules/store";
+import { getShopPage, removeShopPage, setShopPage } from "utils/localStorageUtil";
+import { useTypedSelector } from "modules/store";
 import {
   getMyReceivedUserReviewList,
   getUserReviewList,
   userReviewSelector,
-} from "src/modules/Slices/userReview/userReviewSlice";
+} from "modules/Slices/userReview/userReviewSlice";
 import { CancelButton, FlexBox, HeaderTitle, UserReviewButtonArea, UserReviewHeaderWrapper } from "../BuyList/styles";
 import { ReviewListEmptyParagraph, ReviewListEmptyWrapper } from "../Reviews/ReviewList/style";
 import { Empty } from "../SaleList/style";

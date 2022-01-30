@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { bookDetailAsync } from "src/modules/Slices/bookDetail/bookDetailSlice";
-import { useTypedSelector } from "src/modules/store";
-import { bookInfo } from "src/modules/Slices/bookDetail/types";
-import { paramProps } from "src/pages/BookDetail/types";
+import { bookDetailAsync } from "modules/Slices/book/bookSlice";
+import { useTypedSelector } from "modules/store";
+import { bookInfo } from "modules/Slices/book/types";
+import { paramProps } from "src/components/BookDetail/types";
 
 export const useBookDetail = ({ isbn13 }: paramProps) => {
   const dispatch = useDispatch();
-  const bookDetailContent = useTypedSelector(state => state.bookDetailReduce.content.data);
+  const bookDetailContent = useTypedSelector(state => state.bookReduce.content.data);
   const [bookContent, setBookContent] = useState<bookInfo[]>([]);
 
   useEffect(() => {

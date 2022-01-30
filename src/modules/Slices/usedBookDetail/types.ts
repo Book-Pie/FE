@@ -1,4 +1,4 @@
-import { AppDispatch } from "src/modules/store";
+import { AppDispatch } from "modules/store";
 import { UserReviewData } from "../userReview/types";
 
 export interface UsedBookDetailThunk {

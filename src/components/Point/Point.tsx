@@ -1,28 +1,30 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { myPointCancel, myPointList } from "api/my";
+import { getUserPointCancel, getUserPoints } from "api/user";
 import { Typography, Button, FormGroup, FormControlLabel, Checkbox, Grid } from "@mui/material";
-import { useTypedSelector } from "modules/store";
-import { signInUser } from "modules/Slices/signIn/signInSlice";
-import { dateFormat2, make1000UnitsCommaFormet } from "utils/formatUtil";
-
-import useDelay from "hooks/useDelay";
-import Loading from "src/elements/Loading";
+import { useAppDispatch, useTypedSelector } from "modules/store";
+import { userInfoAsync, userReduceSelector } from "modules/Slices/user/userSlice";
+import { dateArrayFormat, make1000UnitsCommaFormet } from "utils/formatUtil";
+import Loading from "elements/Loading";
 import { errorHandler } from "api/http";
+import useFetch, { errorAction } from "hooks/useFetch";
+import PointInfo from "components/MyTop/PointInfo";
+import Popup from "elements/Popup";
 import * as Styled from "./styles";
 import * as Types from "./types";
-import PointInfo from "../MyTop/PointInfo";
 
 const Point = () => {
   const [page, setPage] = useState(1);
   const [pointList, setPointList] = useState<Types.PointState>([]);
   const [pointCancelList, setPointCancelList] = useState<Types.PointState>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [list, setList] = useState<Types.PointState>([]);
   const [checkBoxState, setCheckBoxState] = useState<Types.CheckBoxStateType>({
     DATE: true,
     CANCEL: false,
   });
-  const user = useTypedSelector(signInUser);
-  const delay = useDelay(400);
+  const [isOpen, setIsOpen] = useState(false);
+  const { state, callApi, dispatch, handleDelay } = useFetch<Types.PointState>();
+  const reduxDispatch = useAppDispatch();
+  const { user, token } = useTypedSelector(userReduceSelector);
 
   const checkBox = useMemo(
     () => [
@@ -32,72 +34,90 @@ const Point = () => {
     [],
   );
 
+  const handlePopUp = useCallback(
+    (message: string) => {
+      setIsOpen(true);
+      dispatch(errorAction(message));
+    },
+    [dispatch],
+  );
+
   const handleOnChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) =>
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      handleDelay();
       setCheckBoxState(prev => ({
         ...prev,
         [e.target.name]: !prev[e.target.name],
-      })),
-    [],
+      }));
+    },
+    [handleDelay],
   );
+
+  const handleHasMorePage = useCallback(async () => {
+    handleDelay();
+    setPage(prev => prev + 1);
+  }, [handleDelay]);
+
   const handleCancelOnClick = (pointId: number, amount: number) => async () => {
     try {
-      if (user) {
-        const userId = user.id;
+      if (user && token) {
         if (amount > user.point.holdPoint) throw new Error("남은 포인트가 부족합니다.");
-        await myPointCancel<Types.Request>({
-          userId,
+        const payload = {
+          userId: user.id,
           pointId,
           cancelAmount: amount,
-        });
+        };
+        await getUserPointCancel(payload);
         alert("환불이 되었습니다.");
-        window.location.reload();
+        fetcher();
+        reduxDispatch(userInfoAsync(token));
       }
     } catch (error: any) {
       const message = errorHandler(error);
-      alert(message);
+      handlePopUp(message);
     }
   };
-  const handleHasMorePage = useCallback(async () => {
-    setIsLoading(true);
-    await delay();
-    setPage(prev => prev + 1);
-    setIsLoading(false);
-  }, [delay]);
+  const fetcher = useCallback(async () => {
+    if (user) {
+      const data = await callApi(getUserPoints(user.id));
+      const pointCancelList = data.filter(item => item.cancelAmount !== 0);
+      const pointList = data.filter(item => item.cancelAmount === 0);
+      setPointList(pointList);
+      setPointCancelList(pointCancelList);
+    }
+  }, [callApi, user]);
 
   useEffect(() => {
-    async function fetcher() {
-      try {
-        if (user) {
-          const { data } = await myPointList(user.id);
-          const pointCancelList = data.data.filter((point: any) => point.cancelAmount !== 0);
-          const pointList = data.data.filter((point: any) => point.cancelAmount === 0);
-          setPointList(pointList);
-          setPointCancelList(pointCancelList);
-        }
-      } catch (error: any) {
-        const message = errorHandler(error);
-        alert(message);
-      }
-    }
     fetcher();
-  }, [user]);
+  }, [fetcher]);
 
-  let list = checkBoxState.CANCEL ? pointCancelList : pointList;
-  list = list.slice(0, page * 6).sort((prev, curr) => {
-    const date1 = new Date(prev.orderDate).getTime();
-    const date2 = new Date(curr.orderDate).getTime();
-    return checkBoxState.DATE ? date2 - date1 : date1 - date2;
-  });
+  useEffect(() => {
+    setList(() => {
+      const list = checkBoxState.CANCEL ? pointCancelList : pointList;
+      return list
+        .sort((prev, curr) => {
+          const date1 = new Date(prev.orderDate).getTime();
+          const date2 = new Date(curr.orderDate).getTime();
+          return checkBoxState.DATE ? date2 - date1 : date1 - date2;
+        })
+        .slice(0, page * 6);
+    });
+  }, [checkBoxState, pointCancelList, pointList, page]);
 
   return (
     <Styled.PointWrapper>
-      <Loading isLoading={isLoading} />
+      <Loading isLoading={state.loading} />
+      {isOpen && (
+        <Popup isOpen={isOpen} autoClose setIsOpen={setIsOpen}>
+          {state.error}
+        </Popup>
+      )}
       <Typography variant="h4" fontWeight="bold">
         포인트 내역
       </Typography>
       {user && (
         <Styled.PointInfo>
+          <PointInfo />
           <div>
             <span>총 포인트</span>
             <span className="info">{make1000UnitsCommaFormet(user.point.totalPoint)}원</span>
@@ -110,7 +130,6 @@ const Point = () => {
             <span>남은 포인트</span>
             <span className="info">{make1000UnitsCommaFormet(user.point.holdPoint)}원</span>
           </div>
-          <PointInfo />
         </Styled.PointInfo>
       )}
 
@@ -150,7 +169,7 @@ const Point = () => {
 
               <div>
                 <span>{cancelAmount ? "환불시간" : "충전시간"}</span>
-                <span>{dateFormat2(orderDate)}</span>
+                <span>{dateArrayFormat(orderDate)}</span>
               </div>
               {user && (
                 <Button

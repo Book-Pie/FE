@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { ButtonGroup, Button, useMediaQuery, Stack, Typography } from "@mui/material";
-import { dateFormat2, make1000UnitsCommaFormet } from "utils/formatUtil";
-import withLoading from "src/hoc/withLoading";
+import { dateArrayFormat, make1000UnitsCommaFormet } from "utils/formatUtil";
+import withLoading from "hoc/withLoading";
 import noComments from "assets/image/noComments.png";
 import { useState } from "react";
 import FavoriteIcon from "@mui/icons-material/Favorite";
@@ -69,7 +69,7 @@ const Content = ({ pages, titleFilter, select, handleLatestClick }: Types.Conten
                   </Typography>
                 </Stack>
                 <div>
-                  <span>{dateFormat2(modifiedDate)}</span>
+                  <span>{dateArrayFormat(modifiedDate)}</span>
                 </div>
                 <ButtonGroup disableElevation variant="contained" sx={{ mb: 1 }}>
                   {state === "SALE" && (
@@ -162,8 +162,8 @@ const Content = ({ pages, titleFilter, select, handleLatestClick }: Types.Conten
             </Styled.SaleCell>
             <Styled.SaleCell>
               <Styled.SaleDate>
-                <span>{dateFormat2(modifiedDate)[0]}</span>
-                <span>{dateFormat2(modifiedDate)[1]}</span>
+                <span>{dateArrayFormat(modifiedDate)[0]}</span>
+                <span>{dateArrayFormat(modifiedDate)[1]}</span>
               </Styled.SaleDate>
             </Styled.SaleCell>
             <Styled.SaleCell>

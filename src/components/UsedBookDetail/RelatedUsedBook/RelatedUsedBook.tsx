@@ -1,12 +1,12 @@
-import { useTypedSelector } from "src/modules/store";
-import { getRelatedUsedBookList, usedBookSelector } from "src/modules/Slices/usedBookDetail/usedBookDetailSlice";
+import { useTypedSelector } from "modules/store";
+import { getRelatedUsedBookList, usedBookSelector } from "modules/Slices/usedBookDetail/usedBookDetailSlice";
 import { useEffect, useMemo } from "react";
 import { useDispatch } from "react-redux";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
-import { compareDateFormat, make1000UnitsCommaFormet } from "src/utils/formatUtil";
+import { compareDateFormat, make1000UnitsCommaFormet } from "utils/formatUtil";
 import { Link, useRouteMatch } from "react-router-dom";
 import { Navigation } from "swiper";
 

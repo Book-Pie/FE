@@ -1,18 +1,18 @@
 import { useAppDispatch, useTypedSelector } from "modules/store";
 import queryString from "query-string";
 import { useEffect } from "react";
-import { reviewsSelector, reviewListAsync, signInSelector, setReviewPage } from "modules/Slices/signIn/signInSlice";
+import { userReviewsSelector, reviewListAsync, setReviewPage, userSelector } from "modules/Slices/user/userSlice";
 import { Stack, Typography } from "@mui/material";
 import Pagination from "@mui/material/Pagination";
-import Loading from "src/elements/Loading";
+import Loading from "elements/Loading";
 import noComments from "assets/image/noComments.png";
 import * as Styled from "./style";
 import MyReviewTable from "./MyReviewTable";
 
 const MyReview = () => {
-  const { empty, contents, page, pageCount, size, status } = useTypedSelector(reviewsSelector);
+  const { empty, contents, page, pageCount, size, status } = useTypedSelector(userReviewsSelector);
   const loading = status === "loading";
-  const { user } = useTypedSelector(signInSelector);
+  const user = useTypedSelector(userSelector);
   const dispatch = useAppDispatch();
 
   const makeQuery = (userId: number, page: number, size: number) => {

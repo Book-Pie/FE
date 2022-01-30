@@ -1,4 +1,4 @@
-import Loading from "src/elements/Loading";
+import Loading from "elements/Loading";
 
 interface WithLoadingProps {
   isLoading: boolean;

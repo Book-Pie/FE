@@ -1,6 +1,6 @@
 import profileImg from "assets/image/pie3x.png";
-import { usedBookSelector } from "src/modules/Slices/usedBookDetail/usedBookDetailSlice";
-import { useTypedSelector } from "src/modules/store";
+import { usedBookSelector } from "modules/Slices/usedBookDetail/usedBookDetailSlice";
+import { useTypedSelector } from "modules/store";
 import {
   ProductDetailCardWrapper,
   UsedStoreUserThumbnail,

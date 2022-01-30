@@ -3,10 +3,10 @@ import { useCallback, useEffect, useState } from "react";
 import { errorHandler } from "api/http";
 import useDebounce from "hooks/useDebounce";
 import {
-  commentDeleteAsync,
-  commentInsertAsync,
-  commentListAsync,
-  commentUpdateAsync,
+  freeboardCommentDeleteAsync,
+  freeboardCommentInsertAsync,
+  freeboardCommentsAsync,
+  freeboardCommentUpdateAsync,
   getCommentContentsSelector,
   subReplyInsertAsync,
 } from "modules/Slices/freeBoard/freeBoardSlice";
@@ -32,7 +32,7 @@ const Comments = ({ boardId, userId }: Types.CommentsProps) => {
           if (!userId) throw new Error("로그인은 필수입니다.");
           if (type === "update") setCurrentUpdateReplyId(prev => (replyId === prev ? 0 : replyId));
           if (type === "delete") {
-            dispatch(commentDeleteAsync({ replyId, boardId }))
+            dispatch(freeboardCommentDeleteAsync({ replyId, boardId }))
               .unwrap()
               .then(message => alert(message));
           }
@@ -42,7 +42,7 @@ const Comments = ({ boardId, userId }: Types.CommentsProps) => {
 
             const content = value.replaceAll("<", "&lt;");
             dispatch(
-              commentUpdateAsync({
+              freeboardCommentUpdateAsync({
                 userId,
                 replyId,
                 content,
@@ -80,7 +80,7 @@ const Comments = ({ boardId, userId }: Types.CommentsProps) => {
   );
 
   const handlePaginationOnChange = (_: any, value: number) => {
-    dispatch(commentListAsync({ boardId, page: value - 1 }));
+    dispatch(freeboardCommentsAsync({ boardId, page: value - 1 }));
   };
 
   const handleCreateOnSumit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -93,7 +93,7 @@ const Comments = ({ boardId, userId }: Types.CommentsProps) => {
         if (!userId) throw new Error("로그인은 필수입니다.");
         const content = editorValue.replaceAll("<", "&lt;");
         dispatch(
-          commentInsertAsync({
+          freeboardCommentInsertAsync({
             userId,
             boardId,
             content,
@@ -107,7 +107,7 @@ const Comments = ({ boardId, userId }: Types.CommentsProps) => {
   };
 
   useEffect(() => {
-    if (!coList) dispatch(commentListAsync({ boardId, page: 0 }));
+    if (!coList) dispatch(freeboardCommentsAsync({ boardId, page: 0 }));
   }, [dispatch, boardId, coList]);
 
   const pagiNation = coList ? (

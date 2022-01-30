@@ -1,35 +1,36 @@
 import { useCallback, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { freeBoardSelector, setPage, listAsync, listByTitleAsync } from "modules/Slices/freeBoard/freeBoardSlice";
+import {
+  freeBoardSelector,
+  setPage,
+  freeboardsAsync,
+  freeboardsByTitleAsync,
+} from "modules/Slices/freeBoard/freeBoardSlice";
 import { useTypedSelector } from "modules/store";
 import Pagination from "@mui/material/Pagination";
 import { Button, Stack, TextField, useMediaQuery } from "@mui/material";
-import { dateFormat2 } from "utils/formatUtil";
-import Loading from "src/elements/Loading";
+import { dateArrayFormat } from "utils/formatUtil";
+import Loading from "elements/Loading";
 import { getFreeBoardPage, setFreeBoardPage } from "utils/localStorageUtil";
-import { signInSelector } from "modules/Slices/signIn/signInSlice";
+import { userSelector } from "modules/Slices/user/userSlice";
 import { Link } from "react-router-dom";
 import { useForm, Controller, RegisterOptions } from "react-hook-form";
 import { makeOption } from "utils/hookFormUtil";
-import ErrorMessage from "src/elements/ErrorMessage";
+import ErrorMessage from "elements/ErrorMessage";
 import useDebounce from "hooks/useDebounce";
 import * as Styled from "./style";
 import * as Types from "./types";
 
-const init: Types.SearchForm = {
-  title: "",
-};
-
 const FreeBoardList = () => {
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<Types.SearchForm>({
-    defaultValues: init,
+  const { control, handleSubmit, formState } = useForm<Types.SearchForm>({
+    defaultValues: {
+      title: "",
+    },
   });
+
+  const { errors } = formState;
   const debounce = useDebounce();
-  const { user } = useTypedSelector(signInSelector);
+  const user = useTypedSelector(userSelector);
   const { list, status, keyWord } = useTypedSelector(freeBoardSelector);
   const dispatch = useDispatch();
   const isLoading = status === "loading";
@@ -46,7 +47,7 @@ const FreeBoardList = () => {
       const { title } = data;
       if (title !== "") {
         dispatch(
-          listByTitleAsync({
+          freeboardsByTitleAsync({
             keyWord: data.title,
             page: 0,
           }),
@@ -54,7 +55,7 @@ const FreeBoardList = () => {
         return;
       }
 
-      dispatch(listAsync(0));
+      dispatch(freeboardsAsync(0));
     }, 1000);
   };
 
@@ -69,9 +70,9 @@ const FreeBoardList = () => {
       dispatch(setPage(page));
 
       if (keyWord) {
-        dispatch(listByTitleAsync({ keyWord, page }));
+        dispatch(freeboardsByTitleAsync({ keyWord, page }));
       } else if (!content) {
-        dispatch(listAsync(page));
+        dispatch(freeboardsAsync(page));
       }
     },
     [dispatch, keyWord, list],
@@ -79,7 +80,7 @@ const FreeBoardList = () => {
 
   useEffect(() => {
     if (!list) {
-      dispatch(listAsync(getFreeBoardPage()));
+      dispatch(freeboardsAsync(getFreeBoardPage()));
     }
   }, [dispatch, list]);
 
@@ -143,8 +144,8 @@ const FreeBoardList = () => {
                       <span>{view}</span>
                     </div>
                     <div>
-                      <span>{dateFormat2(boardDate)[0]}</span>
-                      <span>{dateFormat2(boardDate)[1]}</span>
+                      <span>{dateArrayFormat(boardDate)[0]}</span>
+                      <span>{dateArrayFormat(boardDate)[1]}</span>
                     </div>
                   </div>
                 );

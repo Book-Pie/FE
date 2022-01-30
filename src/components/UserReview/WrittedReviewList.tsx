@@ -2,17 +2,17 @@ import Button from "@mui/material/Button";
 import Rating from "@mui/material/Rating";
 import { Dispatch, useState } from "react";
 import { Link } from "react-router-dom";
-import { ISignInReduce } from "src/modules/Slices/signIn/types";
-import { GetUserReceivedReviewListData } from "src/modules/Slices/userReview/types";
-import { deleteUserReview } from "src/modules/Slices/userReview/userReviewSlice";
-import { RatingContent, RatingScore } from "src/pages/BookDetail/style";
+import { SignInReduce } from "modules/Slices/user/types";
+import { GetUserReceivedReviewListData } from "modules/Slices/userReview/types";
+import { deleteUserReview } from "modules/Slices/userReview/userReviewSlice";
+import { RatingContent, RatingScore } from "src/components/BookDetail/style";
 import Modal from "../BuyList/Modal";
 import { ColorContent, ContentItem, ContentWrapper, FlexBox, TitleContentItem } from "../BuyList/styles";
 
 export interface WrittedReviewListProps {
   contents: GetUserReceivedReviewListData[];
   dispatch: Dispatch<any>;
-  signIn: ISignInReduce;
+  signIn: SignInReduce;
 }
 
 const WrittedReviewList = ({ contents, dispatch, signIn }: WrittedReviewListProps) => {

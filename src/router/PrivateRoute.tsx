@@ -1,11 +1,15 @@
-import { Redirect, Route } from "react-router";
-import { signInSelector } from "modules/Slices/signIn/signInSlice";
+import { Redirect, Route, RouteProps } from "react-router";
+import { isLoggedInSelector } from "modules/Slices/user/userSlice";
 import { useTypedSelector } from "modules/store";
 import { getAccessToken } from "utils/localStorageUtil";
-import { PrivateRouteProps } from "./types";
+
+export interface PrivateRouteProps extends RouteProps {
+  component: any;
+  redirectPath: string;
+}
 
 const PrivateRoute = ({ component: Component, redirectPath, ...rest }: PrivateRouteProps) => {
-  const { isLoggedIn } = useTypedSelector(signInSelector);
+  const isLoggedIn = useTypedSelector(isLoggedInSelector);
 
   return (
     <Route

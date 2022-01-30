@@ -1,4 +1,4 @@
-import ErrorMessage from "src/elements/ErrorMessage";
+import ErrorMessage from "elements/ErrorMessage";
 import {
   FormErrorMessages,
   hookFormEmailPatternCheck,
@@ -7,10 +7,10 @@ import {
   makeOption,
 } from "utils/hookFormUtil";
 import { useForm, Controller } from "react-hook-form";
-import { clearError, signInAsync, signInSelector } from "modules/Slices/signIn/signInSlice";
+import { setClearError, signInAsync, userReduceSelector } from "modules/Slices/user/userSlice";
 import { useCallback, useEffect, useState } from "react";
 import { getRememberEmail } from "utils/localStorageUtil";
-import Popup from "src/elements/Popup";
+import Popup from "elements/Popup";
 import useDebounce from "hooks/useDebounce";
 import TextField from "@mui/material/TextField";
 import { useAppDispatch, useTypedSelector } from "modules/store";
@@ -26,7 +26,7 @@ const SignInForm = ({ isRemember }: Types.SignInFormProps) => {
   });
   const debouncdRef = useDebounce();
   const dispatch = useAppDispatch();
-  const { error } = useTypedSelector(signInSelector);
+  const { error } = useTypedSelector(userReduceSelector);
   const [isOpen, setIsOpen] = useState(false);
   const { errors } = formState;
 
@@ -71,7 +71,7 @@ const SignInForm = ({ isRemember }: Types.SignInFormProps) => {
   const handleError = useCallback(() => {
     if (error) setIsOpen(true);
     return () => {
-      if (error) dispatch(clearError());
+      if (error) dispatch(setClearError());
     };
   }, [dispatch, error]);
 

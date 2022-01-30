@@ -6,12 +6,21 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { Link, useHistory } from "react-router-dom";
-import useSignIn from "src/hooks/useSignIn";
-import { ModalItemParam } from "src/modules/Slices/usedBookDetail/types";
-import { addUserReview, editUserReview } from "src/modules/Slices/userReview/userReviewSlice";
-import { RegisterButton, TextReviewArea } from "src/pages/Review/styles";
+import useSignIn from "hooks/useSignIn";
+import { ModalItemParam } from "modules/Slices/usedBookDetail/types";
+import { addUserReview, editUserReview } from "modules/Slices/userReview/userReviewSlice";
+import {
+  RegisterButton,
+  TextReviewArea,
+  ButtonArea,
+  CancelButton,
+  ModalContent,
+  BuyContent,
+  FlexWrapper,
+  ImgContent,
+  Text,
+} from "./styles";
 import { HoverRating } from "../Rating/Rating";
-import { ButtonArea, CancelButton, ModalContent, BuyContent, FlexWrapper, ImgContent, Text } from "./styles";
 import { addUserReviewSubmitParam } from "./types";
 
 export interface userReviewModalProps {

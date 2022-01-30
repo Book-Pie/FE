@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import FormInput from "src/elements/FormInput";
+import FormInput from "elements/FormInput";
 import { RegisterOptions, useForm } from "react-hook-form";
 import {
   hookFormKoreaChractersCheck,
@@ -8,13 +8,13 @@ import {
   makeOption,
   FormErrorMessages,
 } from "utils/hookFormUtil";
-import ErrorMessage from "src/elements/ErrorMessage";
-import { passwordCheck, getWithDrawal } from "src/api/my";
+import ErrorMessage from "elements/ErrorMessage";
+import { getPasswordCheck, getUserWithDrawal } from "api/user";
 import axios from "axios";
-import { logout, signInSelector } from "modules/Slices/signIn/signInSlice";
-import DropDown from "src/elements/DropDown";
+import { logout, userReduceSelector } from "modules/Slices/user/userSlice";
+import DropDown from "elements/DropDown";
 import { errorHandler } from "api/http";
-import Popup from "src/elements/Popup";
+import Popup from "elements/Popup";
 import { getKakaoUnlink } from "utils/oAuthUtil";
 import Editor from "components/Editor/Editor";
 import { useAppDispatch, useTypedSelector } from "modules/store";
@@ -24,9 +24,8 @@ import * as Styled from "./style";
 const Withdrawal = () => {
   const currentReasonInit = useMemo(() => "탈퇴사유를 선택하세요.", []);
   const [currentReason, setCurrentReason] = useState(currentReasonInit);
-  const signIn = useTypedSelector(signInSelector);
   const dispatch = useAppDispatch();
-  const { user, token } = signIn;
+  const { user, token } = useTypedSelector(userReduceSelector);
   const { formState, handleSubmit, register, watch, clearErrors } = useForm<Types.WithdrawalForm>();
   const { errors } = formState;
   const [password, confirmPassword] = watch(["password", "confirmPassword"]);
@@ -81,8 +80,8 @@ const Withdrawal = () => {
 
       if (user.loginType === "LOCAL") {
         const responses = await axios.all([
-          passwordCheck<Types.Response, Types.Requset>(passwordPayload, token),
-          passwordCheck<Types.Response, Types.Requset>(confirmPayload, token),
+          getPasswordCheck<Types.Response, Types.Requset>(passwordPayload, token),
+          getPasswordCheck<Types.Response, Types.Requset>(confirmPayload, token),
         ]);
 
         responses.forEach(({ data: { data } }) => {
@@ -97,7 +96,7 @@ const Withdrawal = () => {
 
       if (user.loginType === "KAKAO") getKakaoUnlink();
 
-      const response = await getWithDrawal<{ reason: string }>({ reason }, token);
+      const response = await getUserWithDrawal<{ reason: string }>({ reason }, token);
       const { data } = response;
       if (data.data) {
         alert("회원 탈퇴가 완료되었습니다.");

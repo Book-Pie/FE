@@ -2,19 +2,18 @@ import { Button } from "@mui/material";
 import { useCallback, useEffect, useMemo } from "react";
 import { useHistory, useParams } from "react-router";
 import { Link } from "react-router-dom";
-import Loading from "src/elements/Loading";
-import useSignIn from "hooks/useSignIn";
-import { saleInfoAsync, saleInfoSelector } from "modules/Slices/signIn/signInSlice";
-import { useTypedSelector } from "modules/store";
-import { hyphenFormat, dateFormat2, make1000UnitsCommaFormet } from "utils/formatUtil";
+import Loading from "elements/Loading";
+import { saleInfoAsync, userReduceSelector, userSaleInfoSelector } from "modules/Slices/user/userSlice";
+import { useAppDispatch, useTypedSelector } from "modules/store";
+import { hyphenFormat, dateArrayFormat, make1000UnitsCommaFormet } from "utils/formatUtil";
 import * as Styled from "./style";
 
 const SaleInfo = () => {
   const { bookId } = useParams<{ bookId: string }>();
-  const { dispatch, signIn } = useSignIn();
-  const { status, user } = signIn;
+  const { status, user } = useTypedSelector(userReduceSelector);
   const isLoading = status === "loading";
-  const saleInfo = useTypedSelector(saleInfoSelector(Number(bookId)));
+  const dispatch = useAppDispatch();
+  const saleInfo = useTypedSelector(userSaleInfoSelector(Number(bookId)));
 
   const histoy = useHistory();
 
@@ -65,7 +64,7 @@ const SaleInfo = () => {
           <div className="saleInfo__top">
             <div className="saleInfo__title">판매상세</div>
             <div>
-              <p className="saleInfo__orderDate">판매 날짜 {dateFormat2(orderDate)[0]} 판매</p>
+              <p className="saleInfo__orderDate">판매 날짜 {dateArrayFormat(orderDate)[0]} 판매</p>
               <p className="saleInfo__orderNumber">판매번호 {orderId}</p>
             </div>
           </div>

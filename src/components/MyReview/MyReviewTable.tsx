@@ -1,4 +1,4 @@
-import { dateFormat2 } from "utils/formatUtil";
+import { dateArrayFormat } from "utils/formatUtil";
 import Rating from "@mui/material/Rating";
 import Grid from "@mui/material/Grid";
 import FavoriteIcon from "@mui/icons-material/Favorite";
@@ -55,8 +55,8 @@ const MyReviewTable = ({ contents }: Types.MyReviewTableProps) => {
           </Grid>
           <Grid item xs={12} sm={6} md={2.5}>
             <Styled.MyReviewCell>
-              <span> {dateFormat2(reviewDate)[0]}</span>
-              <span> {dateFormat2(reviewDate)[1]}</span>
+              <span> {dateArrayFormat(reviewDate)[0]}</span>
+              <span> {dateArrayFormat(reviewDate)[1]}</span>
             </Styled.MyReviewCell>
           </Grid>
           <Grid item xs={8} sm={4.5} md={2.5}>

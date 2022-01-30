@@ -1,5 +1,5 @@
-import FormInput from "src/elements/FormInput";
-import FormLabel from "src/elements/FormLabel";
+import FormInput from "elements/FormInput";
+import FormLabel from "elements/FormLabel";
 import { useForm } from "react-hook-form";
 import {
   hookFormEmailPatternCheck,
@@ -10,10 +10,10 @@ import {
   makeOption,
   FormErrorMessages,
 } from "utils/hookFormUtil";
-import ErrorMessage from "src/elements/ErrorMessage";
+import ErrorMessage from "elements/ErrorMessage";
 import Button from "@mui/material/Button";
 import { Link } from "react-router-dom";
-import withLoading from "src/hoc/withLoading";
+import withLoading from "hoc/withLoading";
 import * as Styled from "./style";
 import * as Types from "./types";
 

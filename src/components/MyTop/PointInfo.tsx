@@ -1,11 +1,11 @@
 import { useCallback } from "react";
-import { signInUser } from "modules/Slices/signIn/signInSlice";
+import { userSelector } from "modules/Slices/user/userSlice";
 import { useTypedSelector } from "modules/store";
 import { make1000UnitsCommaFormet } from "utils/formatUtil";
 import * as Styled from "./style";
 
 const PointInfo = () => {
-  const user = useTypedSelector(signInUser);
+  const user = useTypedSelector(userSelector);
 
   const getRating = useCallback((point: number) => {
     let rating = "브론즈";

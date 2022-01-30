@@ -122,3 +122,16 @@ export const ContentItem = styled.div`
 export const TitleContentItem = styled(ContentItem)`
   color: #52a4c3;
 `;
+export const RegisterButton = styled(CancelButton)`
+  border-color: rgba(0, 0, 0, 0.1);
+  background-color: #4f3629;
+  color: #fff;
+`;
+
+export const TextReviewArea = styled.div`
+  position: relative;
+  margin: 10px 0;
+  padding: 10px 10px 11px;
+  border: 1px solid #cbcbcb;
+  background-color: #f4f4f4;
+`;

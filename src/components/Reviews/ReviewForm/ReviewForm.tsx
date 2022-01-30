@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
-import { addComment, editComment } from "src/modules/Slices/comment/commentSlice";
-import { HoverRating } from "src/components/Rating/Rating";
+import { addComment, editComment } from "modules/Slices/comment/commentSlice";
+import { HoverRating } from "components/Rating/Rating";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
-import { useTypedSelector } from "src/modules/store";
-import { signInSelector } from "src/modules/Slices/signIn/signInSlice";
-import { getMyRating, getMyReview, setMyRating, setMyReview } from "src/utils/localStorageUtil";
-import { reviewDateFormat } from "src/utils/formatUtil";
-import Textarea from "src/components/TextArea/Textarea";
+import { useTypedSelector } from "modules/store";
+import { userReduceSelector } from "modules/Slices/user/userSlice";
+import { getMyRating, getMyReview, setMyRating, setMyReview } from "utils/localStorageUtil";
+import { reviewDateFormat } from "utils/formatUtil";
+import Textarea from "components/TextArea/Textarea";
 import { ButtonArea, TextareaAutosize, TextWrapper, MyReviwContent } from "./style";
 import { ReviewFormProps } from "./types";
 
@@ -17,7 +17,7 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({ isbn, isMyReview, myComm
   const { handleSubmit } = useForm({ defaultValues: { something: "anything" } });
   const { reviewDate } = myComment ?? "";
   const commentDate = reviewDateFormat(reviewDate);
-  const myUserStatus = useTypedSelector(signInSelector);
+  const myUserStatus = useTypedSelector(userReduceSelector);
   const { isLoggedIn } = myUserStatus ?? false;
 
   let editStatus = false;

@@ -80,7 +80,8 @@ export function dateFormat(date: Date) {
 
   return `${date.getFullYear()}-${month}-${day} ${hour}:${minute}`;
 }
-export const dateFormat2 = (date: string | null) => {
+
+export const dateArrayFormat = (date: string | null) => {
   if (date) {
     const [YMD, HMS] = date.split("T");
     const [YYYY, MM, DD] = YMD.split("-");

@@ -1,6 +1,6 @@
-import FormInput from "src/elements/FormInput";
-import FormLabel from "src/elements/FormLabel";
-import ErrorMessage from "src/elements/ErrorMessage";
+import FormInput from "elements/FormInput";
+import FormLabel from "elements/FormLabel";
+import ErrorMessage from "elements/ErrorMessage";
 import { useForm } from "react-hook-form";
 import {
   hookFormMobileNumberPatternCheck,
@@ -9,7 +9,7 @@ import {
   makeOption,
   FormErrorMessages,
 } from "utils/hookFormUtil";
-import withLoading from "src/hoc/withLoading";
+import withLoading from "hoc/withLoading";
 import Button from "@mui/material/Button";
 import { Link } from "react-router-dom";
 import * as Types from "./types";

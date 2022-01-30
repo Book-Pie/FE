@@ -1,19 +1,19 @@
 import { createAsyncThunk, createSlice, current } from "@reduxjs/toolkit";
 import {
-  boardDelete,
-  boardInsert,
-  boardList,
-  boardListByTitle,
-  boardUpdate,
-  commentDelet,
-  commentInsert,
-  commentList,
-  commentUpdate,
-  getBoard,
-  subReplyDelete,
-  subReplyInsert,
-  subReplyUpdate,
-} from "api/board/board";
+  getFreeboardDelete,
+  getFreeboards,
+  getFreeboardsByTitle,
+  getFreeboardUpdate,
+  getFreeboardInsert,
+  getFreeboardCommentDelet,
+  getFreeboardCommentInsert,
+  getFreeboardComments,
+  getFreeboardCommentUpdate,
+  getFreeboard,
+  getSubReplyDelete,
+  getSubReplyInsert,
+  getSubReplyUpdate,
+} from "api/freeboard";
 import { errorHandler } from "api/http";
 import { RootState } from "modules/store";
 import { getFreeBoardPage } from "utils/localStorageUtil";
@@ -21,19 +21,19 @@ import * as Types from "./types";
 
 const name = "freeboardReduce";
 
-export const updateAsync = createAsyncThunk<void, Types.IUpdateRequest, Types.ThunkApi>(
-  `${name}/updateAsync`,
+export const freeboardUpdateAsync = createAsyncThunk<string, Types.FreeboardUpdateAsyncPayload, Types.ThunkApi>(
+  `${name}/freeboardUpdateAsync`,
   async (payload, { extra, rejectWithValue, dispatch, getState }) => {
     const { history } = extra;
     const { freeBoardReduce } = getState();
     const { list } = freeBoardReduce;
     try {
       const page = list?.page ?? getFreeBoardPage() ?? 0;
-      const { data } = await boardUpdate<Types.IUpdateRequest>(payload);
+      const { data } = await getFreeboardUpdate<Types.FreeboardUpdateAsyncPayload>(payload);
       if (data.data.success === false) throw new Error("수정에 실패했습니다.");
-      dispatch(listAsync(String(page)));
+      dispatch(freeboardsAsync(String(page)));
       history.replace("/community/freeboard");
-      return undefined;
+      return "수정에 성공했습니다.";
     } catch (error) {
       const message = errorHandler(error);
       return rejectWithValue(message);
@@ -41,22 +41,21 @@ export const updateAsync = createAsyncThunk<void, Types.IUpdateRequest, Types.Th
   },
 );
 
-export const insertAsync = createAsyncThunk<void, Types.IInsertRequest, Types.ThunkApi>(
-  `${name}/insertAsync`,
+export const freeboardInsertAsync = createAsyncThunk<void, Types.FreeboardInsertAsyncPayload, Types.ThunkApi>(
+  `${name}/freeboardInsertAsync`,
   async (payload, { extra, rejectWithValue, dispatch, getState }) => {
     const { history } = extra;
     const { freeBoardReduce } = getState();
     const { list, keyWord } = freeBoardReduce;
     try {
       const page = list?.page ?? getFreeBoardPage() ?? 0;
-      const { data } = await boardInsert<Types.IInsertRequest>(payload);
+      const { data } = await getFreeboardInsert<Types.FreeboardInsertAsyncPayload>(payload);
       if (data.data.success === false) throw new Error("등록에 실패했습니다.");
-
       dispatch(setContentInit());
       if (keyWord) {
-        dispatch(listAsync("0"));
+        dispatch(freeboardsAsync("0"));
       } else {
-        dispatch(listAsync(String(page)));
+        dispatch(freeboardsAsync(String(page)));
       }
       history.replace("/community/freeboard");
       return undefined;
@@ -67,8 +66,8 @@ export const insertAsync = createAsyncThunk<void, Types.IInsertRequest, Types.Th
   },
 );
 
-export const deleteAsync = createAsyncThunk<string, string, Types.ThunkApi>(
-  `${name}/deleteAsync`,
+export const freeboardDeleteAsync = createAsyncThunk<string, string, Types.ThunkApi>(
+  `${name}/freeboardDeleteAsync`,
   async (boardId, { extra, rejectWithValue, getState, dispatch }) => {
     const { freeBoardReduce } = getState();
     const { list, keyWord } = freeBoardReduce;
@@ -76,19 +75,19 @@ export const deleteAsync = createAsyncThunk<string, string, Types.ThunkApi>(
     try {
       if (list) {
         const { page, contents } = list;
-        const { data } = await boardDelete(boardId);
+        const { data } = await getFreeboardDelete(boardId);
         if (data.data.success === false) throw new Error("삭제에 실패했습니다.");
 
         if (keyWord) {
           if (contents[page].length === 1) {
-            dispatch(listByTitleAsync({ keyWord, page: page - 1 }));
+            dispatch(freeboardsByTitleAsync({ keyWord, page: page - 1 }));
           } else {
-            dispatch(listByTitleAsync({ keyWord, page }));
+            dispatch(freeboardsByTitleAsync({ keyWord, page }));
           }
         } else if (contents[page].length === 1) {
-          dispatch(listAsync(String(page - 1)));
+          dispatch(freeboardsAsync(String(page - 1)));
         } else {
-          dispatch(listAsync(String(page)));
+          dispatch(freeboardsAsync(String(page)));
         }
 
         history.replace("/community/freeboard");
@@ -101,11 +100,11 @@ export const deleteAsync = createAsyncThunk<string, string, Types.ThunkApi>(
   },
 );
 
-export const listByTitleAsync = createAsyncThunk<Types.List, Types.IListByTitleRequest, Types.ThunkApi>(
-  `${name}/listByTitleAsync`,
+export const freeboardsByTitleAsync = createAsyncThunk<Types.List, Types.FreeboardsByTitleParam, Types.ThunkApi>(
+  `${name}/freeboardsByTitleAsync`,
   async ({ keyWord, page }, { rejectWithValue, dispatch }) => {
     try {
-      const { data } = await boardListByTitle(page, keyWord);
+      const { data } = await getFreeboardsByTitle(page, keyWord);
       dispatch(setKeyWord(keyWord));
       return data.data;
     } catch (e) {
@@ -115,11 +114,11 @@ export const listByTitleAsync = createAsyncThunk<Types.List, Types.IListByTitleR
   },
 );
 
-export const listAsync = createAsyncThunk<Types.List, string | number, Types.ThunkApi>(
-  `${name}/listAsync`,
+export const freeboardsAsync = createAsyncThunk<Types.List, string | number, Types.ThunkApi>(
+  `${name}/freeboardsAsync`,
   async (page, { rejectWithValue }) => {
     try {
-      const { data } = await boardList(page);
+      const { data } = await getFreeboards(page);
       return data.data;
     } catch (error) {
       const message = errorHandler(error);
@@ -128,11 +127,11 @@ export const listAsync = createAsyncThunk<Types.List, string | number, Types.Thu
   },
 );
 
-export const infoAsync = createAsyncThunk<Types.Content, string, Types.ThunkApi>(
-  `${name}/infoAsync`,
+export const freeboardInfoAsync = createAsyncThunk<Types.Content, string, Types.ThunkApi>(
+  `${name}/freeboardInfoAsync`,
   async (boardId, { rejectWithValue }) => {
     try {
-      const { data } = await getBoard(boardId);
+      const { data } = await getFreeboard(boardId);
       return data.data;
     } catch (error) {
       const message = errorHandler(error);
@@ -141,13 +140,12 @@ export const infoAsync = createAsyncThunk<Types.Content, string, Types.ThunkApi>
   },
 );
 
-export const commentListAsync = createAsyncThunk<Types.Comments, Types.ICommentListRequest, Types.ThunkApi>(
-  `${name}/commentListAsync`,
+export const freeboardCommentsAsync = createAsyncThunk<Types.Comments, Types.FreeboardCommentsParam, Types.ThunkApi>(
+  `${name}/freeboardCommentsAsync`,
   async ({ boardId, page, isReload }, { rejectWithValue }) => {
     try {
-      const { data } = await commentList(boardId, page);
+      const { data } = await getFreeboardComments(boardId, page);
       const comments = data.data;
-
       return {
         boardId: Number(boardId),
         comments,
@@ -160,13 +158,13 @@ export const commentListAsync = createAsyncThunk<Types.Comments, Types.ICommentL
   },
 );
 
-export const commentInsertAsync = createAsyncThunk<void, Types.InsertPayload, Types.ThunkApi>(
-  `${name}/commentInsertAsync`,
+export const freeboardCommentInsertAsync = createAsyncThunk<void, Types.FreeboardInsertPayload, Types.ThunkApi>(
+  `${name}/freeboardCommentInsertAsync`,
   async (payload, { rejectWithValue, dispatch }) => {
     try {
-      const { data } = await commentInsert<Types.InsertPayload>(payload);
+      const { data } = await getFreeboardCommentInsert<Types.FreeboardInsertPayload>(payload);
       const { boardId } = data.data;
-      dispatch(commentListAsync({ boardId, page: 0, isReload: true }));
+      dispatch(freeboardCommentsAsync({ boardId, page: 0, isReload: true }));
       return undefined;
     } catch (error) {
       const message = errorHandler(error);
@@ -174,12 +172,13 @@ export const commentInsertAsync = createAsyncThunk<void, Types.InsertPayload, Ty
     }
   },
 );
-export const commentDeleteAsync = createAsyncThunk<string, Types.DeletePayload, Types.ThunkApi>(
-  `${name}/commentDeleteAsync`,
+
+export const freeboardCommentDeleteAsync = createAsyncThunk<string, Types.FreeboardDeletePayload, Types.ThunkApi>(
+  `${name}/freeboardCommentDeleteAsync`,
   async ({ replyId, boardId }, { rejectWithValue, dispatch }) => {
     try {
-      await commentDelet(replyId);
-      dispatch(commentListAsync({ boardId, page: 0, isReload: true }));
+      await getFreeboardCommentDelet(replyId);
+      dispatch(freeboardCommentsAsync({ boardId, page: 0, isReload: true }));
       return "삭제가 완료되었습니다.";
     } catch (error) {
       const message = errorHandler(error);
@@ -187,13 +186,13 @@ export const commentDeleteAsync = createAsyncThunk<string, Types.DeletePayload, 
     }
   },
 );
-export const commentUpdateAsync = createAsyncThunk<string, Types.UpdatePayload, Types.ThunkApi>(
-  `${name}/commentDeleteAsync`,
+export const freeboardCommentUpdateAsync = createAsyncThunk<string, Types.FreeboardUpdatePayload, Types.ThunkApi>(
+  `${name}/freeboardCommentUpdateAsync`,
   async (payload, { rejectWithValue, dispatch }) => {
     try {
-      const { data } = await commentUpdate<Types.UpdatePayload>(payload);
+      const { data } = await getFreeboardCommentUpdate<Types.FreeboardUpdatePayload>(payload);
       const { boardId } = data.data;
-      dispatch(commentListAsync({ boardId, page: 0, isReload: true }));
+      dispatch(freeboardCommentsAsync({ boardId, page: 0, isReload: true }));
       return "업데이트가 되었습니다.";
     } catch (error) {
       const message = errorHandler(error);
@@ -206,8 +205,8 @@ export const subReplyInsertAsync = createAsyncThunk<void, Types.SubReplyInsertPa
   `${name}/subRelyInsertAsync`,
   async ({ boardId, payload }, { rejectWithValue, dispatch }) => {
     try {
-      await subReplyInsert<Types.SubReplyInsertPayload>(payload);
-      dispatch(commentListAsync({ boardId, page: 0, isReload: true }));
+      await getSubReplyInsert<Types.SubReplyInsertPayload>(payload);
+      dispatch(freeboardCommentsAsync({ boardId, page: 0, isReload: true }));
       return undefined;
     } catch (error) {
       const message = errorHandler(error);
@@ -220,8 +219,8 @@ export const subReplyDeleteAsync = createAsyncThunk<string, Types.SubReplyDelete
   `${name}/subRelyInsertAsync`,
   async ({ boardId, subReplyId }, { rejectWithValue, dispatch }) => {
     try {
-      await subReplyDelete(subReplyId);
-      dispatch(commentListAsync({ boardId, page: 0, isReload: true }));
+      await getSubReplyDelete(subReplyId);
+      dispatch(freeboardCommentsAsync({ boardId, page: 0, isReload: true }));
       return "삭제가 되었습니다.";
     } catch (error) {
       const message = errorHandler(error);
@@ -234,8 +233,8 @@ export const subReplyUpdateAsync = createAsyncThunk<string, Types.SubReplyUpdate
   `${name}/subRelyInsertAsync`,
   async ({ boardId, payload }, { rejectWithValue, dispatch }) => {
     try {
-      await subReplyUpdate<Types.SubReplyUpdatePayload>(payload);
-      dispatch(commentListAsync({ boardId, page: 0, isReload: true }));
+      await getSubReplyUpdate<Types.SubReplyUpdatePayload>(payload);
+      dispatch(freeboardCommentsAsync({ boardId, page: 0, isReload: true }));
       return "업데이트가 되었습니다.";
     } catch (error) {
       const message = errorHandler(error);
@@ -244,7 +243,7 @@ export const subReplyUpdateAsync = createAsyncThunk<string, Types.SubReplyUpdate
   },
 );
 
-const initialState: Types.IFreeBoardReduce = {
+const initialState: Types.FreeBoardReduce = {
   status: "idle",
   error: null,
   list: null,
@@ -270,20 +269,20 @@ const freeBoardSlice = createSlice({
     },
   },
   extraReducers: builder => {
-    builder.addCase(insertAsync.pending, state => {
+    builder.addCase(freeboardInsertAsync.pending, state => {
       state.status = "loading";
     });
-    builder.addCase(insertAsync.fulfilled, state => {
+    builder.addCase(freeboardInsertAsync.fulfilled, state => {
       state.status = "idle";
     });
-    builder.addCase(insertAsync.rejected, (state, { payload }) => {
+    builder.addCase(freeboardInsertAsync.rejected, (state, { payload }) => {
       state.status = "idle";
       state.error = payload ?? "클라이언트에서 문제가 발생했습니다.";
     });
-    builder.addCase(listByTitleAsync.pending, state => {
+    builder.addCase(freeboardsByTitleAsync.pending, state => {
       state.status = "loading";
     });
-    builder.addCase(listByTitleAsync.fulfilled, (state, { payload }) => {
+    builder.addCase(freeboardsByTitleAsync.fulfilled, (state, { payload }) => {
       const {
         content,
         empty,
@@ -311,14 +310,14 @@ const freeBoardSlice = createSlice({
 
       state.status = "idle";
     });
-    builder.addCase(listByTitleAsync.rejected, (state, { payload }) => {
+    builder.addCase(freeboardsByTitleAsync.rejected, (state, { payload }) => {
       state.status = "idle";
       state.error = payload ?? "클라이언트에서 문제가 발생했습니다.";
     });
-    builder.addCase(listAsync.pending, state => {
+    builder.addCase(freeboardsAsync.pending, state => {
       state.status = "loading";
     });
-    builder.addCase(listAsync.fulfilled, (state, { payload }) => {
+    builder.addCase(freeboardsAsync.fulfilled, (state, { payload }) => {
       const {
         content,
         empty,
@@ -355,25 +354,25 @@ const freeBoardSlice = createSlice({
       state.keyWord = null;
       state.status = "idle";
     });
-    builder.addCase(listAsync.rejected, (state, { payload }) => {
+    builder.addCase(freeboardsAsync.rejected, (state, { payload }) => {
       state.status = "idle";
       state.error = payload ?? "클라이언트에서 문제가 발생했습니다.";
     });
-    builder.addCase(infoAsync.pending, state => {
+    builder.addCase(freeboardInfoAsync.pending, state => {
       state.status = "loading";
     });
-    builder.addCase(infoAsync.fulfilled, (state, { payload }) => {
+    builder.addCase(freeboardInfoAsync.fulfilled, (state, { payload }) => {
       state.status = "idle";
       state.info = payload;
     });
-    builder.addCase(infoAsync.rejected, (state, { payload }) => {
+    builder.addCase(freeboardInfoAsync.rejected, (state, { payload }) => {
       state.status = "idle";
       state.error = payload ?? "클라이언트에서 문제가 발생했습니다.";
     });
-    builder.addCase(deleteAsync.pending, state => {
+    builder.addCase(freeboardDeleteAsync.pending, state => {
       state.status = "loading";
     });
-    builder.addCase(deleteAsync.fulfilled, (state, { payload }) => {
+    builder.addCase(freeboardDeleteAsync.fulfilled, (state, { payload }) => {
       const { list } = state;
       if (list) {
         const { size } = list;
@@ -403,24 +402,24 @@ const freeBoardSlice = createSlice({
       }
       state.status = "idle";
     });
-    builder.addCase(deleteAsync.rejected, (state, { payload }) => {
+    builder.addCase(freeboardDeleteAsync.rejected, (state, { payload }) => {
       state.status = "idle";
       state.error = payload ?? "클라이언트에서 문제가 발생했습니다.";
     });
-    builder.addCase(updateAsync.pending, state => {
+    builder.addCase(freeboardUpdateAsync.pending, state => {
       state.status = "loading";
     });
-    builder.addCase(updateAsync.fulfilled, state => {
+    builder.addCase(freeboardUpdateAsync.fulfilled, state => {
       state.status = "idle";
     });
-    builder.addCase(updateAsync.rejected, (state, { payload }) => {
+    builder.addCase(freeboardUpdateAsync.rejected, (state, { payload }) => {
       state.status = "idle";
       state.error = payload ?? "클라이언트에서 문제가 발생했습니다.";
     });
-    builder.addCase(commentListAsync.pending, state => {
+    builder.addCase(freeboardCommentsAsync.pending, state => {
       state.status = "loading";
     });
-    builder.addCase(commentListAsync.fulfilled, (state, { payload }) => {
+    builder.addCase(freeboardCommentsAsync.fulfilled, (state, { payload }) => {
       const { boardId, comments, isReload } = payload;
       const {
         content,
@@ -462,7 +461,7 @@ const freeBoardSlice = createSlice({
 
       state.status = "idle";
     });
-    builder.addCase(commentListAsync.rejected, (state, { payload }) => {
+    builder.addCase(freeboardCommentsAsync.rejected, (state, { payload }) => {
       state.status = "idle";
       state.error = payload ?? "클라이언트에서 문제가 발생했습니다.";
     });
