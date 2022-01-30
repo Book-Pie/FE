@@ -8,7 +8,7 @@ import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import { SelectChangeEvent, Skeleton } from "@mui/material";
-import { ParentsCategoryData } from "src/modules/Slices/book/types";
+import { ParentsCategoryData } from "modules/Slices/book/types";
 import { Wrapper, LinkWrapper } from "./styles";
 
 export interface CategorysProps {

@@ -3,9 +3,9 @@ import searchImg from "assets/image/search.png";
 import { Link } from "react-router-dom";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTypedSelector } from "modules/store";
-import { signInUser } from "modules/Slices/signIn/signInSlice";
+import { userSelector } from "modules/Slices/user/userSlice";
 import { RegisterOptions, useForm } from "react-hook-form";
-import ErrorMessage from "src/elements/ErrorMessage";
+import ErrorMessage from "elements/ErrorMessage";
 import { hookFormHtmlCheck, makeOption } from "utils/hookFormUtil";
 import { useHistory } from "react-router";
 import Tooltip from "@mui/material/Tooltip";
@@ -14,7 +14,7 @@ import * as Styled from "./style";
 import * as Types from "./types";
 
 const Header = () => {
-  const user = useTypedSelector(signInUser);
+  const user = useTypedSelector(userSelector);
   const el = useRef<HTMLDivElement>(null);
 
   const { handleSubmit, formState, register, setValue } = useForm<Types.SearchForm>({

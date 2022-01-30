@@ -1,4 +1,4 @@
-import { addUserReviewSubmitParam } from "src/components/BuyList/types";
+import { addUserReviewSubmitParam } from "components/BuyList/types";
 import { PagesResponse } from "../usedBookDetail/types";
 
 export interface GetRelatedUsedBookListParam {

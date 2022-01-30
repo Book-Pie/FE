@@ -1,4 +1,4 @@
-import { dateFormat2 } from "utils/formatUtil";
+import { dateArrayFormat } from "utils/formatUtil";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import { Button } from "@mui/material";
 import SubdirectoryArrowRightIcon from "@mui/icons-material/SubdirectoryArrowRight";
@@ -63,7 +63,7 @@ const SubReply = ({ content, nickName, replyDate, isMakeUser, replyId, userId }:
         <div>
           <SubdirectoryArrowRightIcon sx={{ mr: 0.5, pt: 1 }} />
           <span>{nickName}</span>
-          <span>{dateFormat2(replyDate)}</span>
+          <span>{dateArrayFormat(replyDate)}</span>
         </div>
         {isMakeUser && (
           <ButtonGroup disableElevation variant="contained" size="small">

@@ -1,15 +1,15 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import Popup from "src/elements/Popup";
+import Popup from "elements/Popup";
 import UsedBookCard from "components/UsedBookList/UsedBookCard";
-import DropDown from "src/elements/DropDown";
-import { getCategory, getUsedBooks } from "api/usedBook/usedBook";
+import DropDown from "elements/DropDown";
+import { getCategorys, getUsedBooks } from "api/usedBook";
 import { errorHandler } from "api/http";
 import { Link } from "react-router-dom";
 import { useHistory, useLocation } from "react-router";
 import queryString from "query-string";
 import { makeNewQueryString, removeQueryString } from "utils/queryStringUtil";
 import noUsedBookCard from "assets/image/noComments.png";
-import Loading from "src/elements/Loading";
+import Loading from "elements/Loading";
 import TextField from "@mui/material/TextField";
 import useDelay from "hooks/useDelay";
 import useDebounce from "hooks/useDebounce";
@@ -18,9 +18,9 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { Button, Typography, useTheme } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { FormErrorMessages, htmlTagPatternCheck } from "utils/hookFormUtil";
-import ErrorMessage from "src/elements/ErrorMessage";
+import ErrorMessage from "elements/ErrorMessage";
 import { useTypedSelector } from "modules/store";
-import { isLoggedInSelector } from "modules/Slices/signIn/signInSlice";
+import { isLoggedInSelector } from "modules/Slices/user/userSlice";
 import UsedBookCategory from "./UsedBookCategory";
 import * as Types from "./types";
 import * as Styled from "./style";
@@ -152,7 +152,7 @@ const UsedBookList = () => {
   // ============================================ useEffect ============================================
   useEffect(() => {
     (async () => {
-      const { data } = await getCategory<Types.CategoryResponse>();
+      const { data } = await getCategorys<Types.CategoryResponse>();
       setCategorys(data.data);
     })();
   }, []);

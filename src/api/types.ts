@@ -7,6 +7,12 @@ export interface ErrorResponse {
   data: null;
 }
 
-export type ResponseEnumType = {
+export type ResponseEnum = {
   [key: number]: string;
+};
+
+export type Response = {
+  error: null;
+  success: boolean;
+  data: any;
 };

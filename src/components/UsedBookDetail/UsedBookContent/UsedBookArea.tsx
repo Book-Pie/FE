@@ -1,7 +1,7 @@
-import { usedBookLike } from "src/modules/Slices/usedBookDetail/usedBookDetailSlice";
+import { usedBookLike } from "modules/Slices/usedBookDetail/usedBookDetailSlice";
 import { Link } from "react-router-dom";
-import { compareDateFormat, make1000UnitsCommaFormet } from "src/utils/formatUtil";
-import useSignIn from "src/hooks/useSignIn";
+import { compareDateFormat, make1000UnitsCommaFormet } from "utils/formatUtil";
+import useSignIn from "hooks/useSignIn";
 import {
   BookPrice,
   BuyButton,

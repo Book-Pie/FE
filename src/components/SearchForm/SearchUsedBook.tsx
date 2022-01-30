@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { Typography, Grid } from "@mui/material";
 import { Link } from "react-router-dom";
 import { useAppDispatch, useTypedSelector } from "modules/store";
-import { searchUsedBookListAsync, searchUsedBookSelector } from "modules/Slices/search/searchSlice";
+import { searchUsedBooksAsync, searchUsedBookSelector } from "modules/Slices/search/searchSlice";
 import { range } from "lodash";
 import noComments from "assets/image/noComments.png";
 import * as Styled from "./style";
@@ -17,7 +17,7 @@ const SearchUsedBook = () => {
   const pageArray = loading ? range(0, 8) : pages;
 
   useEffect(() => {
-    dispatch(searchUsedBookListAsync(search));
+    dispatch(searchUsedBooksAsync(search));
   }, [search, dispatch]);
 
   return (

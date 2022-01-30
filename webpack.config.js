@@ -56,6 +56,7 @@ module.exports = (_, argv) => {
         style: getAbsolutePath("src/assets/style"),
         elements: getAbsolutePath("src/elements"),
         utils: getAbsolutePath("src/utils"),
+        hoc: getAbsolutePath("src/hoc"),
         router: getAbsolutePath("src/router"),
       },
     },

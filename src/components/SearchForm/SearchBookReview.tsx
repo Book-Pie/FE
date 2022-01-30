@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from "react";
 import { useLocation } from "react-router";
-import { searchAladinBookListAsync, searchAladinBookSelector } from "modules/Slices/search/searchSlice";
+import { searchAladinBooksAsync, searchAladinBookSelector } from "modules/Slices/search/searchSlice";
 import { useAppDispatch, useTypedSelector } from "modules/store";
 import { Link } from "react-router-dom";
 import queryString from "query-string";
@@ -21,7 +21,7 @@ const SearchBookReview = () => {
   useEffect(() => {
     const newQuery = queryString.stringify({ keyword: query.title, QueryType: "Title" });
     dispatch(
-      searchAladinBookListAsync({
+      searchAladinBooksAsync({
         query: newQuery,
         isReload: true,
       }),

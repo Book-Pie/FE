@@ -1,22 +1,20 @@
 import { useCallback, useEffect, useMemo } from "react";
 import { useHistory, useParams } from "react-router";
-import { buyInfoAsync, buyInfoSelector } from "modules/Slices/signIn/signInSlice";
-import { useTypedSelector } from "modules/store";
-import { hyphenFormat, dateFormat2, make1000UnitsCommaFormet } from "utils/formatUtil";
+import { buyInfoAsync, userBuyInfoSelector, userReduceSelector } from "modules/Slices/user/userSlice";
+import { useAppDispatch, useTypedSelector } from "modules/store";
+import { hyphenFormat, dateArrayFormat, make1000UnitsCommaFormet } from "utils/formatUtil";
 import { Button } from "@mui/material";
 import { Link } from "react-router-dom";
-import Loading from "src/elements/Loading";
-import useSignIn from "hooks/useSignIn";
+import Loading from "elements/Loading";
 import * as Types from "./types";
 import * as Styled from "./style";
 
 const BuyInfo = () => {
   const { orderId } = useParams<Types.Params>();
-  const { dispatch, signIn } = useSignIn();
-  const { status, user } = signIn;
+  const dispatch = useAppDispatch();
+  const { status, user } = useTypedSelector(userReduceSelector);
   const isLoading = status === "loading";
-
-  const buyInfo = useTypedSelector(buyInfoSelector(Number(orderId)));
+  const buyInfo = useTypedSelector(userBuyInfoSelector(Number(orderId)));
   const histoy = useHistory();
 
   const handleGoBack = useCallback(() => {
@@ -55,7 +53,7 @@ const BuyInfo = () => {
           <div className="buyInfo__top">
             <div className="buyInfo__title">구매상세</div>
             <div>
-              <p className="buyInfo__orderDate">{dateFormat2(orderDate)[0]} 구매</p>
+              <p className="buyInfo__orderDate">{dateArrayFormat(orderDate)[0]} 구매</p>
               <p className="buyInfo__orderNumber">주문번호 {orderId}</p>
             </div>
           </div>

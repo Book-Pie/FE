@@ -1,7 +1,7 @@
 import { History } from "history";
 import { AppDispatch, RootState } from "modules/store";
 
-export interface IListByTitleRequest {
+export interface FreeboardsByTitleParam {
   keyWord: string;
   page: number | string;
 }
@@ -15,14 +15,14 @@ export interface ThunkApi {
   rejectValue: string;
 }
 
-export interface IInsertRequest {
+export interface FreeboardInsertAsyncPayload {
   title: string;
   content: string;
   boardType: string;
   userId: number;
 }
 
-export interface IUpdateRequest {
+export interface FreeboardUpdateAsyncPayload {
   title: string;
   content: string;
   boardType: string;
@@ -125,7 +125,7 @@ export interface Contents {
   [key: number]: Content[];
 }
 
-export interface IFreeBoardReduce {
+export interface FreeBoardReduce {
   status: "loading" | "idle";
   error: string | null;
   list: {
@@ -142,25 +142,25 @@ export interface IFreeBoardReduce {
   coList: { [key: number]: Comment } | null;
 }
 
-export interface InsertPayload {
+export interface FreeboardInsertPayload {
   boardId: number | string;
   content: string;
   userId: number;
 }
 
-export interface UpdatePayload {
+export interface FreeboardUpdatePayload {
   replyId: number | string;
   userId: number;
   content: string;
 }
-export interface ICommentListRequest {
+export interface FreeboardDeletePayload {
+  replyId: number;
+  boardId: number | string;
+}
+export interface FreeboardCommentsParam {
   boardId: string | number;
   page: number;
   isReload?: boolean;
-}
-export interface DeletePayload {
-  replyId: number;
-  boardId: number | string;
 }
 
 export interface SubReplyInsertPayload {

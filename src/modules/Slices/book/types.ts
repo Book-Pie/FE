@@ -23,11 +23,6 @@ export interface BookItemProps {
   priceStandard: number;
   mileage: number;
   bestRank: number;
-  // itemId: number;
-  // title: string;
-  // categoryName: string;
-  // cover: string;
-  // bestRank: number;
 }
 
 export interface SubCategoryData {
@@ -41,23 +36,6 @@ export interface ParentsCategoryData {
   categoryName: string;
   parentId: number;
   subCategory: SubCategoryData[];
-}
-
-// 리듀가 사용할 데이터 타입
-export interface BookListReduceProps {
-  bestSellerItem: BookItemProps[];
-  status: "loading" | "idle";
-  error: null | {
-    code: number;
-    message: string;
-  };
-  item: BookItemProps[];
-
-  list: {
-    pages: BookItemProps[][];
-    pageCount: number;
-    isEmpty: boolean;
-  };
 }
 
 // 썽크함수 성공시 반환 타입
@@ -98,4 +76,65 @@ export interface ThunkApi {
   rejectValue: GetBookAsyncFail;
 }
 
-export const name = "bookReduce";
+export interface bookInfo {
+  title: string;
+  author: string;
+  pubDate: string;
+  description: string;
+  cover: string;
+  categoryName: string;
+  publisher: string;
+  fullDescription: string;
+  fullDescription2: string;
+  isbn13: string;
+  isbn: string;
+  itemId: number;
+  priceSales: number;
+  priceStandard: number;
+  mallType: string;
+  stockStatus: string;
+  mileage: number;
+  categoryId: number;
+  salesPoint: number;
+  adult: boolean;
+  fixedPrice: boolean;
+  customerReviewRank: number;
+}
+
+export interface bookDisplayData {
+  item: bookInfo[];
+}
+
+// 통신 성공 시 반환하는 타입
+export interface BookAsyncSuccess {
+  success: boolean;
+  data: bookDisplayData;
+  error: null;
+}
+
+export interface BookAsyncFail {
+  success: boolean;
+  data: null;
+  error: {
+    code: number;
+    message: string;
+  };
+}
+
+// 리듀가 사용할 데이터 타입
+export interface BookReduce {
+  content: BookAsyncSuccess;
+  bestSeller: BookItemProps[];
+  status: "loading" | "idle" | "success" | "failed";
+  error: null | {
+    code: number;
+    message: string;
+  };
+  item: BookItemProps[];
+
+  list: {
+    pages: BookItemProps[][];
+    pageCount: number;
+    isEmpty: boolean;
+  };
+}

@@ -2,7 +2,7 @@ import axios, { AxiosError } from "axios";
 import { removeToken } from "utils/localStorageUtil";
 import * as Types from "./types";
 
-const RESPONSE_STATUS_ENUM: Types.ResponseEnumType = {
+const RESPONSE_STATUS_ENUM: Types.ResponseEnum = {
   400: "클라이언트에서 잘못된 요청을 보냈습니다.",
   403: "유효하지 않는 토큰값입니다. 다시 로그인해주세요.",
   404: "유효하지 않는 자원입니다.",
@@ -20,9 +20,7 @@ const http = axios.create({
 
 // 서버에서 응답이 왔을때
 http.interceptors.response.use(
-  response => {
-    return response;
-  },
+  response => response,
   (error: AxiosError) => {
     const { response } = error;
 
@@ -40,13 +38,13 @@ http.interceptors.response.use(
       // 1. 서버에서 핸들링된 응답
       if (isHandling) {
         const { error } = response.data;
-        console.error("핸들링된 에러입니다.", error.status);
+        console.log("핸들링된 에러입니다.", error.status);
         return Promise.reject(new Error(error.message));
       }
       // 2. 서버에서 비핸들링된 응답
       if (!isHandling) {
         const { status } = response;
-        console.error("비 핸들링된 에러입니다.", status);
+        console.log("비 핸들링된 에러입니다.", status);
         return Promise.reject(new Error(RESPONSE_STATUS_ENUM[status]));
       }
     }
@@ -81,9 +79,17 @@ export const errorHandler = (error: any) => {
         if (data.error.message) message = data.error.message;
       }
     }
-  } else if (error.message) message = error.message;
+  } else if (error.message) {
+    message = error.message;
+  } else if (typeof error === "string") {
+    message = error;
+  }
 
   return message;
 };
+
+export const makeAuthTokenHeader = (token: string) => ({
+  headers: { "X-AUTH-TOKEN": token },
+});
 
 export default http;

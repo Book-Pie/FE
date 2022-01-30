@@ -1,11 +1,11 @@
 import React from "react";
-import { commentLike, deleteComment } from "src/modules/Slices/comment/commentSlice";
+import { commentLike, deleteComment } from "modules/Slices/comment/commentSlice";
 import { useDispatch } from "react-redux";
 import { Rating } from "@mui/material";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
-import { useTypedSelector } from "src/modules/store";
-import { signInSelector } from "src/modules/Slices/signIn/signInSlice";
-import { reviewDateFormat } from "src/utils/formatUtil";
+import { useTypedSelector } from "modules/store";
+import { userReduceSelector } from "modules/Slices/user/userSlice";
+import { reviewDateFormat } from "utils/formatUtil";
 import {
   ContentWrapper,
   ReviewContent,
@@ -27,9 +27,8 @@ export const ReviewItem: React.FC<ReviewItemProps> = ({ content, myCommentId }) 
 
   const commentDate = reviewDateFormat(reviewDate);
 
-  const myUserStatus = useTypedSelector(signInSelector);
-  const { user } = myUserStatus ?? null;
-  const { id } = user ?? -1;
+  const myUserStatus = useTypedSelector(userReduceSelector);
+  const { user } = myUserStatus;
 
   const deleteClick = () => {
     if (window.confirm("댓글을 정말로 삭제하시겠습니까?") === true) {
@@ -56,7 +55,7 @@ export const ReviewItem: React.FC<ReviewItemProps> = ({ content, myCommentId }) 
 
   return (
     <ReviewItemWrapper>
-      <ClickArea>{id === userId && <Button onClick={deleteClick}>x</Button>}</ClickArea>
+      <ClickArea>{user?.id === userId && <Button onClick={deleteClick}>x</Button>}</ClickArea>
       <ReviewContent>
         <ReviewContentTop>
           <Rating name="read-only" precision={0.5} value={rating} size="small" readOnly />

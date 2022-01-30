@@ -5,34 +5,33 @@ import { Controller, RegisterOptions, useForm } from "react-hook-form";
 import { useHistory, useLocation, useParams } from "react-router";
 import { Link } from "react-router-dom";
 import { errorHandler } from "api/http";
-import ErrorMessage from "src/elements/ErrorMessage";
-import Loading from "src/elements/Loading";
-import Popup from "src/elements/Popup";
+import ErrorMessage from "elements/ErrorMessage";
+import Loading from "elements/Loading";
+import Popup from "elements/Popup";
 import {
-  deleteAsync,
+  freeboardDeleteAsync,
   contentSelector,
   contentInfoSelector,
-  infoAsync,
-  updateAsync,
+  freeboardInfoAsync,
+  freeboardUpdateAsync,
 } from "modules/Slices/freeBoard/freeBoardSlice";
-import { signInSelector } from "modules/Slices/signIn/signInSlice";
+import { userReduceSelector } from "modules/Slices/user/userSlice";
 import { useAppDispatch, useTypedSelector } from "modules/store";
-import { dateFormat2 } from "utils/formatUtil";
+import { dateArrayFormat } from "utils/formatUtil";
 import { FormErrorMessages, makeOption } from "utils/hookFormUtil";
-import Editor from "../Editor/Editor";
+import usePopup from "hooks/usePopup";
+import Editor from "components/Editor/Editor";
 import { Buttons, EditorWrapper } from "../FreeBoardInsert/style";
 import { FreeBoardInsertForm } from "../FreeBoardInsert/types";
 import Comments from "./Comments";
 import * as Styled from "./style";
 import * as Types from "./types";
 
-const init: FreeBoardInsertForm = {
-  title: "",
-};
-
 const FreeBoard = () => {
   const { handleSubmit, control, setValue, clearErrors, formState } = useForm<FreeBoardInsertForm>({
-    defaultValues: init,
+    defaultValues: {
+      title: "",
+    },
   });
   const { errors } = formState;
   let { boardId } = useParams<Types.IParam>();
@@ -43,14 +42,14 @@ const FreeBoard = () => {
   const paginatoionPage = state?.paginatoionPage ?? 0;
   const freeBoard = useTypedSelector(contentSelector(paginatoionPage, Number(boardId)));
   let info = useTypedSelector(contentInfoSelector);
-  const { user, status } = useTypedSelector(signInSelector);
+  const { user, status } = useTypedSelector(userReduceSelector);
   const dispatch = useAppDispatch();
   const history = useHistory();
   const [editorValue, setEditorValue] = useState("");
   const [editorLength, setEditorLength] = useState(0);
-  const [isOpen, setIsOpen] = useState(false);
-  const [popUpState, setPopUpState] = useState({ isSuccess: false, message: "" });
   const isLoading = status === "loading";
+  const { handlePopupClose, handlePopupMessage, popupState } = usePopup();
+  const { isOpen, message } = popupState;
 
   const titleOptions: RegisterOptions = useMemo(
     () => ({
@@ -61,34 +60,24 @@ const FreeBoard = () => {
     [],
   );
 
-  const handlePopUp = useCallback((isSuccess: boolean, error: any) => {
-    const message = errorHandler(error);
-    setIsOpen(true);
-    setPopUpState({
-      isSuccess,
-      message,
-    });
-  }, []);
-
-  const onSumit = (formData: FreeBoardInsertForm) => {
+  const onSumit = async ({ title }: FreeBoardInsertForm) => {
     try {
       if (editorLength === 0) throw new Error("게시글은 필수 입니다.");
       if (!user) throw new Error("로그인이 필요합니다.");
-      const { title } = formData;
       const content = editorValue.replaceAll("<", "&lt;");
 
-      dispatch(
-        updateAsync({
+      const { payload } = await dispatch(
+        freeboardUpdateAsync({
           boardType: "FREE",
           title,
           boardId,
           content,
         }),
-      )
-        .unwrap()
-        .catch(error => handlePopUp(false, error));
-    } catch (error) {
-      handlePopUp(false, error);
+      );
+      handlePopupMessage(false, payload ?? "수정에 성공했습니다.");
+    } catch (error: any) {
+      const message = errorHandler(error);
+      handlePopupMessage(false, message);
     }
   };
 
@@ -106,12 +95,12 @@ const FreeBoard = () => {
   }, [clearErrors]);
 
   const handleDeleteOnClick = () => {
-    dispatch(deleteAsync(boardId));
+    dispatch(freeboardDeleteAsync(boardId));
   };
 
   useEffect(() => {
     if (!freeBoard) {
-      dispatch(infoAsync(boardId))
+      dispatch(freeboardInfoAsync(boardId))
         .unwrap()
         .catch(error => {
           alert(error);
@@ -129,8 +118,8 @@ const FreeBoard = () => {
     return (
       <Styled.FreeboardWrapper>
         {isOpen && (
-          <Popup isOpen={isOpen} setIsOpen={setIsOpen} autoClose className="red">
-            {popUpState.message}
+          <Popup isOpen={isOpen} setIsOpen={handlePopupClose} autoClose className="red">
+            {message}
           </Popup>
         )}
         <Loading isLoading={isLoading} />
@@ -193,7 +182,7 @@ const FreeBoard = () => {
                 <div>{title}</div>
                 <div>
                   <span>{nickName}</span>
-                  <span>{dateFormat2(boardDate)}</span>
+                  <span>{dateArrayFormat(boardDate)}</span>
                   <span>조회수 {view}</span>
                 </div>
               </div>

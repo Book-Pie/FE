@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
-import FormLabel from "src/elements/FormLabel";
+import FormLabel from "elements/FormLabel";
 import { RegisterOptions, useForm } from "react-hook-form";
-import ErrorMessage from "src/elements/ErrorMessage";
+import ErrorMessage from "elements/ErrorMessage";
 import noProfileImg from "assets/image/noProfile.jpg";
 import {
   hookFormKoreaChractersCheck,
@@ -14,28 +14,28 @@ import {
 } from "utils/hookFormUtil";
 import useDebounce from "hooks/useDebounce";
 import { errorHandler } from "api/http";
-import FormInput from "src/elements/FormInput";
-import Popup from "src/elements/Popup";
+import FormInput from "elements/FormInput";
+import Popup from "elements/Popup";
 import useDaumPost from "hooks/useDaumPost";
-import { myProfileImgUpload, myInfoChange, passwordChange, passwordCheck } from "src/api/my";
-import { myInfoAsync, signInSelector } from "modules/Slices/signIn/signInSlice";
+import { getUserProfileImgUpload, getUserInfoUpdate, getPasswordChange, getPasswordCheck } from "api/user";
+import { userInfoAsync, userReduceSelector } from "modules/Slices/user/userSlice";
 import { hyphenRemoveFormat } from "utils/formatUtil";
 import { useHistory } from "react-router";
 import Skeleton from "@mui/material/Skeleton";
 import Button from "@mui/material/Button";
 import DeleteIcon from "@mui/icons-material/Delete";
-import Loading from "src/elements/Loading";
+import Loading from "elements/Loading";
 import { Stack } from "@mui/material";
 import useDelay from "hooks/useDelay";
-import DaumPostModal from "src/elements/DaumPostModal";
+import DaumPostModal from "elements/DaumPostModal";
 import { useAppDispatch, useTypedSelector } from "modules/store";
+import usePopup from "hooks/usePopup";
 import * as Styled from "./style";
 import * as Types from "./types";
 
 const Modified = () => {
-  const signIn = useTypedSelector(signInSelector);
   const dispatch = useAppDispatch();
-  const { user, token } = signIn;
+  const { user, token } = useTypedSelector(userReduceSelector);
 
   const [isDaumPostOpen, setIsDaumPostOpen] = useState(false);
   const modifiedConfirmForm = useForm<Types.ModifiedConfirmForm>();
@@ -44,12 +44,10 @@ const Modified = () => {
   const [imgBase64, setImgBase64] = useState<string>(""); // 파일 base64
   const [imgFile, setImgFile] = useState<File | null>(null); // 파일
   const imgFileRef = useRef<HTMLInputElement>(null);
-  const [popUpState, setPopUpState] = useState({
-    isSuccess: false,
-    message: "",
-  });
 
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const { handlePopupClose, handlePopupMessage, popupState } = usePopup();
+  const { isOpen, isSuccess, message } = popupState;
+
   const [newPassword, confirmPassword] = modifiedForm.watch(["newPassword", "confirmPassword"]);
   const [isLoading, setIsLoading] = useState(false);
   const { addressState, handleComplete } = useDaumPost();
@@ -121,22 +119,15 @@ const Modified = () => {
         formData.append("image", imgFile);
 
         await delay();
-        await myProfileImgUpload(formData, token);
-        dispatch(myInfoAsync(token))
-          .unwrap()
-          .then(() => {
-            handleFileDelete();
-            handlePopUp("업로드에 성공했습니다.", true);
-          })
-          .catch(error => {
-            handlePopUp(errorHandler(error), false);
-          })
-          .finally(() => {
-            setIsLoading(false);
-          });
+        await getUserProfileImgUpload(formData, token);
+        await dispatch(userInfoAsync(token));
+        handleFileDelete();
+        handlePopupMessage(true, "업로드에 성공했습니다.");
       }
     } catch (error) {
-      handlePopUp(errorHandler(error), false);
+      handlePopupMessage(false, errorHandler(error));
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -166,14 +157,14 @@ const Modified = () => {
 
   const handleDaumPostOpne = useCallback(() => setIsDaumPostOpen(prve => !prve), []);
   const handlePasswordCheck = useCallback(async (password: string, token: string) => {
-    const response = await passwordCheck<Types.Response, Types.Request>({ password }, token);
+    const response = await getPasswordCheck<Types.Response, Types.Request>({ password }, token);
     const isSuccess = response.data.data;
     // 실패 시 false
     if (!isSuccess) throw new Error("비밀번호가 틀립니다.");
   }, []);
 
   const handlePasswordChange = useCallback(async (password: string, token: string) => {
-    const response = await passwordChange<Types.Response, Types.Request>({ password }, token);
+    const response = await getPasswordChange<Types.Response, Types.Request>({ password }, token);
     const isSuccess = response.data.data;
     // 실패 시 false
     if (!isSuccess) throw new Error("비밀번호 변경에 실패 했습니다.");
@@ -182,14 +173,6 @@ const Modified = () => {
   const handlePasswordCheckPass = useCallback(() => {
     if (user && user.loginType !== "LOCAL") setReconfirmation(true);
   }, [user]);
-
-  const handlePopUp = useCallback((message: string, isSuccess: boolean) => {
-    setPopUpState({
-      isSuccess,
-      message,
-    });
-    setIsOpen(true);
-  }, []);
 
   const modifiedConfirmFormSubmit = (data: Types.ModifiedConfirmForm) => {
     if (debounce.current) clearTimeout(debounce.current);
@@ -201,50 +184,51 @@ const Modified = () => {
           setReconfirmation(true);
         }
       } catch (error) {
-        handlePopUp(errorHandler(error), false);
+        handlePopupMessage(false, errorHandler(error));
       }
     }, 500);
   };
 
   // 유저 정보 수정
-  const modifiedFormSubmit = (formData: Types.ModifiedForm) => {
+  const modifiedFormSubmit = ({
+    newPassword,
+    detailAddress,
+    mainAddress,
+    postalCode,
+    name,
+    phone,
+    currentPassword,
+  }: Types.ModifiedForm) => {
     if (debounce.current) clearTimeout(debounce.current);
     debounce.current = setTimeout(async () => {
       try {
-        if (user && token) {
-          // 썽크함수 호출
-          const { currentPassword } = formData;
-          const { newPassword, detailAddress, mainAddress, postalCode, name, phone } = formData;
-          // 일반 회원으로 가입한 유저면 비밀번호 체크 및 비밀번호 변경
-          if (user.loginType === "LOCAL") {
-            await handlePasswordCheck(currentPassword, token);
-            await handlePasswordChange(newPassword, token);
-          }
-
-          const payload: Types.MyProfileUpdateRequest = {
-            name,
-            phone: hyphenRemoveFormat(phone),
-            address: {
-              postalCode,
-              mainAddress,
-              detailAddress,
-            },
-          };
-
-          const myProfileChangeResponse = await myInfoChange<Types.Response, Types.MyProfileUpdateRequest>(
-            payload,
-            token,
-          );
-
-          if (!myProfileChangeResponse.data.data) throw new Error("프로필 변경에 실패 했습니다.");
-          // 변경된 프로필 갱신
-          dispatch(myInfoAsync(token))
-            .unwrap()
-            .catch(error => handlePopUp(errorHandler(error), false));
-          history.replace("/");
+        if (!user || !token) throw new Error("로그인이 필요합니다.");
+        // 썽크함수 호출
+        // 일반 회원으로 가입한 유저면 비밀번호 체크 및 비밀번호 변경
+        if (user.loginType === "LOCAL") {
+          await handlePasswordCheck(currentPassword, token);
+          await handlePasswordChange(newPassword, token);
         }
+
+        const payload: Types.MyProfileUpdateRequest = {
+          name,
+          phone: hyphenRemoveFormat(phone),
+          address: {
+            postalCode,
+            mainAddress,
+            detailAddress,
+          },
+        };
+
+        const { data } = await getUserInfoUpdate<Types.Response, Types.MyProfileUpdateRequest>(payload, token);
+        const isTruthy = data.data;
+
+        if (!isTruthy) throw new Error("프로필 변경에 실패 했습니다.");
+        // 변경된 프로필 갱신
+        await dispatch(userInfoAsync(token));
+        history.replace("/");
       } catch (error) {
-        handlePopUp(errorHandler(error), false);
+        handlePopupMessage(false, errorHandler(error));
       }
     }, 500);
   };
@@ -270,18 +254,19 @@ const Modified = () => {
   }, [addressState, modifiedForm]);
 
   useEffect(() => {
-    if (user && user.address) {
-      const { address } = user;
+    if (!user) return;
+
+    const { address, phone, name } = user;
+
+    if (address) {
       const { postalCode, detailAddress, mainAddress } = address;
-      const { name } = user;
       modifiedForm.setValue("postalCode", postalCode);
       modifiedForm.setValue("mainAddress", mainAddress);
       modifiedForm.setValue("detailAddress", detailAddress);
       modifiedForm.setValue("name", name);
     }
 
-    if (user && user.phone) {
-      const { phone } = user;
+    if (phone) {
       modifiedForm.setValue("phone", phone);
     }
   }, [user, modifiedForm]);
@@ -299,8 +284,8 @@ const Modified = () => {
   return (
     <>
       {isOpen && (
-        <Popup isOpen={isOpen} setIsOpen={setIsOpen} className={popUpState.isSuccess ? "green" : "red"} autoClose>
-          {popUpState.message}
+        <Popup isOpen={isOpen} setIsOpen={handlePopupClose} className={isSuccess ? "green" : "red"} autoClose>
+          {message}
         </Popup>
       )}
       <Loading isLoading={isLoading} />

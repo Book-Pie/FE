@@ -1,13 +1,13 @@
-import { getStoreUserReviewList, usedBookSelector } from "src/modules/Slices/usedBookDetail/usedBookDetailSlice";
-import { useTypedSelector } from "src/modules/store";
-import profileImg from "src/assets/image/pie3x.png";
+import { getStoreUserReviewList, usedBookSelector } from "modules/Slices/usedBookDetail/usedBookDetailSlice";
+import { useTypedSelector } from "modules/store";
+import profileImg from "assets/image/pie3x.png";
 import Rating from "@mui/material/Rating";
 import Stack from "@mui/material/Stack";
 import Pagination from "@mui/material/Pagination";
-import { getShopPage, removeShopPage, setShopPage } from "src/utils/localStorageUtil";
+import { getShopPage, removeShopPage, setShopPage } from "utils/localStorageUtil";
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { ReviewListEmpty } from "src/components/Reviews/ReviewList/ReviewListEmpty";
+import { ReviewListEmpty } from "components/Reviews/ReviewList/ReviewListEmpty";
 import { useRouteMatch } from "react-router";
 import {
   FlexBox,

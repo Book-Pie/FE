@@ -1,9 +1,8 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Link, useRouteMatch } from "react-router-dom";
 import queryString from "query-string";
-import { getSaleList, getUsedbookLatest } from "src/api/my";
-import useSignIn from "hooks/useSignIn";
-import Popup from "src/elements/Popup";
+import { getSales, getUsedbooLatestUp } from "api/user";
+import Popup from "elements/Popup";
 import { errorHandler } from "api/http";
 import noComments from "assets/image/noComments.png";
 import { AutocompleteChangeReason, SelectChangeEvent, useMediaQuery } from "@mui/material";
@@ -19,14 +18,16 @@ import Stack from "@mui/material/Stack";
 import Select from "@mui/material/Select";
 import useDelay from "hooks/useDelay";
 import { getShopPage, removeShopPage, setShopPage } from "utils/localStorageUtil";
+import { userSelector } from "modules/Slices/user/userSlice";
+import { useTypedSelector } from "modules/store";
+import usePopup from "hooks/usePopup";
 import * as Styled from "./style";
 import * as Types from "./types";
 import Skeletons from "./Skeletons";
 import Content from "./Content";
 
 const SaleList = () => {
-  const { signIn } = useSignIn();
-  const { user } = signIn;
+  const user = useTypedSelector(userSelector);
   const [list, setList] = useState<Types.ListState>({
     page: getShopPage(1),
     pageCount: 0,
@@ -34,51 +35,38 @@ const SaleList = () => {
     isEmpty: false,
   });
   const [limit, setLimit] = useState(10);
-  const [isOpen, setIsOpen] = useState<boolean>(false);
   const [titleFilter, setTitleFilter] = useState<string | null>(null);
   const max950 = useMediaQuery("(max-width:950px)");
   const [select, setSelect] = useState<string>("NONE");
-  const [popUpState, setPopUpState] = useState({
-    isSuccess: false,
-    message: "",
-  });
+  const { handlePopupClose, handlePopupMessage, popupState } = usePopup();
+  const { isOpen, isSuccess, message } = popupState;
   const [isLoading, setIsLoading] = useState(false);
-
   const delay = useDelay(500);
   const { path } = useRouteMatch();
   const { pages, page, pageCount } = list;
 
-  const handlePopUp = useCallback((message: string, isSuccess: boolean) => {
-    setPopUpState({
-      isSuccess,
-      message,
-    });
-    setIsOpen(true);
-  }, []);
-
   const handleHasMoreList = useCallback(
     async (page: number, limit: number) => {
-      if (user) {
+      try {
+        if (!user) throw new Error("로그인이 필요합니다.");
         const query = queryString.stringify({ userId: user.id, page, limit });
-        try {
-          setIsLoading(true);
-          await delay();
-          const { data } = await getSaleList<Types.Response>(query);
-          const { pageCount, pages } = data.data;
-          setList({
-            pageCount,
-            pages,
-            page,
-            isEmpty: pages.length === 0 ? true : false,
-          });
-        } catch (error: any) {
-          handlePopUp(errorHandler(error), false);
-        } finally {
-          setIsLoading(false);
-        }
+        setIsLoading(true);
+        await delay();
+        const { data } = await getSales<Types.Response>(query);
+        const { pageCount, pages } = data.data;
+        setList({
+          pageCount,
+          pages,
+          page,
+          isEmpty: pages.length === 0 ? true : false,
+        });
+      } catch (error: any) {
+        handlePopupMessage(false, errorHandler(error));
+      } finally {
+        setIsLoading(false);
       }
     },
-    [user, handlePopUp, delay],
+    [user, handlePopupMessage, delay],
   );
 
   const handleLimitOnChange = useCallback(
@@ -101,7 +89,7 @@ const SaleList = () => {
 
   const handleLatestClick = useCallback(
     (id: number) => () => {
-      getUsedbookLatest(id);
+      getUsedbooLatestUp(id);
       handleHasMoreList(page, limit);
     },
     [page, handleHasMoreList, limit],
@@ -163,8 +151,8 @@ const SaleList = () => {
   return (
     <>
       {isOpen && (
-        <Popup isOpen={isOpen} setIsOpen={setIsOpen} autoClose className={popUpState.isSuccess ? "green" : "red"}>
-          {popUpState.message}
+        <Popup isOpen={isOpen} setIsOpen={handlePopupClose} autoClose className={isSuccess ? "green" : "red"}>
+          {message}
         </Popup>
       )}
       <Styled.SaleListWrapper>

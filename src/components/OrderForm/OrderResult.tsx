@@ -3,22 +3,22 @@ import ExpandMoreOutlinedIcon from "@mui/icons-material/ExpandMoreOutlined";
 import { Button } from "@mui/material";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getMyOrder } from "api/usedBook/usedBook";
-import { dateFormat2, make1000UnitsCommaFormet } from "utils/formatUtil";
+import { dateArrayFormat, make1000UnitsCommaFormet } from "utils/formatUtil";
 import { useTypedSelector } from "modules/store";
-import { signInSelector } from "modules/Slices/signIn/signInSlice";
+import { userReduceSelector } from "modules/Slices/user/userSlice";
+import { getOrderInfo } from "api/order";
 import * as Styled from "./style";
 import * as Types from "./types";
 
 const OrderResult = () => {
   const { state } = useLocation<number>();
   const [orderResult, setOrderResult] = useState<Types.IOrderResult>();
-  const { token } = useTypedSelector(signInSelector);
+  const { token } = useTypedSelector(userReduceSelector);
   const history = useHistory();
 
   useEffect(() => {
     if (state && token) {
-      getMyOrder(String(state), token).then(({ data }) => setOrderResult(data.data));
+      getOrderInfo(String(state), token).then(({ data }) => setOrderResult(data.data));
     } else {
       history.replace("/");
     }
@@ -38,7 +38,7 @@ const OrderResult = () => {
         <div className="result__info">
           <div>
             <span>주문날짜</span>
-            <span>{dateFormat2(orderResult.orderDate)[0]}</span>
+            <span>{dateArrayFormat(orderResult.orderDate)[0]}</span>
           </div>
           <div>
             <span>주문번호</span>

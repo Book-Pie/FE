@@ -16,11 +16,6 @@ export interface Page {
   replyCount: number;
 }
 
-export interface UsedBookData {
-  pages: Page[];
-  pageCount: number;
-}
-
 export interface ThunkApi {
   dispatch: AppDispatch;
   state: RootState;
@@ -54,6 +49,11 @@ export interface Item {
   mileage: number;
 }
 
+export interface UsedBookData {
+  pages: Page[];
+  pageCount: number;
+}
+
 export interface AladinData {
   totalResults: number;
   startIndex: number;
@@ -69,7 +69,7 @@ export interface AladinData {
   searchCategoryId: number;
 }
 
-export interface ISearchReduce {
+export interface SearchReduce {
   usedBook: {
     status: Status;
     pages: Page[] | null;
@@ -90,7 +90,8 @@ export interface AladinBookParam {
   isReload: boolean;
 }
 
-export interface AladinBookSucess {
+export type SearchUsedBooksAsyncSuccess = UsedBookData;
+export interface SearchAladinBooksAsyncSuccess {
   isReload: boolean;
   data: AladinData | null;
 }

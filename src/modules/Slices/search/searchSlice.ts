@@ -1,19 +1,18 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { errorHandler } from "api/http";
-import { getSearchAladinBooks, getSearchUsedBooks } from "api/search/seach";
+import { getSearchUsedBooks } from "api/usedBook";
+import { getSearchAladinBooks } from "api/book";
 import { RootState } from "modules/store";
-import * as T from "./types";
+import * as Types from "./types";
 
 const name = "searchReduce";
 
-export const searchUsedBookListAsync = createAsyncThunk<T.UsedBookData, string, T.ThunkApi>(
-  `${name}/searchUsedBookListAsync`,
+export const searchUsedBooksAsync = createAsyncThunk<Types.SearchUsedBooksAsyncSuccess, string, Types.ThunkApi>(
+  `${name}/searchUsedBooksAsync`,
   async (query, { rejectWithValue }) => {
     try {
       const { data } = await getSearchUsedBooks(query);
-      return {
-        ...data.data,
-      };
+      return data.data;
     } catch (error) {
       const message = errorHandler(error);
       return rejectWithValue(message);
@@ -21,23 +20,24 @@ export const searchUsedBookListAsync = createAsyncThunk<T.UsedBookData, string, 
   },
 );
 
-export const searchAladinBookListAsync = createAsyncThunk<T.AladinBookSucess, T.AladinBookParam, T.ThunkApi>(
-  `${name}/searchAladinListAsync`,
-  async ({ query, isReload }, { rejectWithValue }) => {
-    try {
-      const { data } = await getSearchAladinBooks(query);
-      return {
-        data: data.data,
-        isReload,
-      };
-    } catch (error) {
-      const message = errorHandler(error);
-      return rejectWithValue(message);
-    }
-  },
-);
+export const searchAladinBooksAsync = createAsyncThunk<
+  Types.SearchAladinBooksAsyncSuccess,
+  Types.AladinBookParam,
+  Types.ThunkApi
+>(`${name}/searchAladinBooksAsync`, async ({ query, isReload }, { rejectWithValue }) => {
+  try {
+    const { data } = await getSearchAladinBooks(query);
+    return {
+      data: data.data,
+      isReload,
+    };
+  } catch (error) {
+    const message = errorHandler(error);
+    return rejectWithValue(message);
+  }
+});
 
-const initialState: T.ISearchReduce = {
+const initialState: Types.SearchReduce = {
   usedBook: {
     status: "idle",
     pages: null,
@@ -64,23 +64,23 @@ const searchSlice = createSlice({
     },
   },
   extraReducers: builder => {
-    builder.addCase(searchUsedBookListAsync.pending, state => {
+    builder.addCase(searchUsedBooksAsync.pending, state => {
       state.usedBook.status = "loading";
     });
-    builder.addCase(searchUsedBookListAsync.fulfilled, (state, { payload }) => {
+    builder.addCase(searchUsedBooksAsync.fulfilled, (state, { payload }) => {
       const { pageCount, pages } = payload;
       state.usedBook.status = "idle";
       state.usedBook.pages = pages.length ? pages : null;
       state.usedBook.pageCount = pageCount;
     });
-    builder.addCase(searchUsedBookListAsync.rejected, (state, { payload }) => {
+    builder.addCase(searchUsedBooksAsync.rejected, (state, { payload }) => {
       state.usedBook.status = "idle";
       state.usedBook.error = payload ?? "클라이언트에서 문제가 발생했습니다.";
     });
-    builder.addCase(searchAladinBookListAsync.pending, state => {
+    builder.addCase(searchAladinBooksAsync.pending, state => {
       state.bookReview.status = "loading";
     });
-    builder.addCase(searchAladinBookListAsync.fulfilled, (state, { payload }) => {
+    builder.addCase(searchAladinBooksAsync.fulfilled, (state, { payload }) => {
       if (payload.data !== null) {
         const { item, totalResults, startIndex } = payload.data;
         if (payload.isReload === false) {
@@ -120,7 +120,7 @@ const searchSlice = createSlice({
 
       state.bookReview.status = "idle";
     });
-    builder.addCase(searchAladinBookListAsync.rejected, (state, { payload }) => {
+    builder.addCase(searchAladinBooksAsync.rejected, (state, { payload }) => {
       state.bookReview.status = "idle";
       state.bookReview.error = payload ?? "클라이언트에서 문제가 발생했습니다.";
     });

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { BookItemProps } from "src/modules/Slices/book/types";
+import { BookItemProps } from "modules/Slices/book/types";
 import StarRating from "../Rating/StarRating";
 import { BookReviewBox, BookReviewTitle, ImageItem, ImgWrapper } from "./styles";
 

@@ -1,7 +1,7 @@
 import { useHistory } from "react-router";
-import { signInSelector } from "src/modules/Slices/signIn/signInSlice";
-import { UsedBookDetailResponse } from "src/modules/Slices/usedBookDetail/types";
-import { useTypedSelector } from "src/modules/store";
+import { userReduceSelector } from "modules/Slices/user/userSlice";
+import { UsedBookDetailResponse } from "modules/Slices/usedBookDetail/types";
+import { useTypedSelector } from "modules/store";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
@@ -28,7 +28,7 @@ const UsedBookInformationTop = ({
   saleState,
 }: UsedBookDetailResponse) => {
   const history = useHistory();
-  const { isLoggedIn } = useTypedSelector(signInSelector);
+  const { isLoggedIn } = useTypedSelector(userReduceSelector);
 
   const swiperStyle = useMemo(
     () => ({

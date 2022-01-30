@@ -2,7 +2,7 @@ import myShop from "assets/image/myShop.png";
 import { useCallback, useEffect, useRef, useState } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { RegisterOptions, useForm, Controller } from "react-hook-form";
-import ErrorMessage from "src/elements/ErrorMessage";
+import ErrorMessage from "elements/ErrorMessage";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
@@ -10,16 +10,17 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import { makeOption } from "utils/hookFormUtil";
 import { FormControl, FormGroup, InputLabel, MenuItem, Select, SelectChangeEvent } from "@mui/material";
-import { getCategory } from "api/usedBook/usedBook";
-import Popup from "src/elements/Popup";
+import { getCategorys } from "api/usedBook";
+import Popup from "elements/Popup";
 import Editor from "components/Editor/Editor";
 import useDebounce from "hooks/useDebounce";
-import { getSaleInsert } from "src/api/my";
+import { getCreateSale } from "api/user";
 import { errorHandler } from "api/http";
 import { useHistory } from "react-router";
 import { CategoryState, CategoryResponse } from "components/UsedBookList/types";
 import { useTypedSelector } from "modules/store";
-import { signInSelector } from "modules/Slices/signIn/signInSlice";
+import { userReduceSelector } from "modules/Slices/user/userSlice";
+import usePopup from "hooks/usePopup";
 import * as Styled from "./style";
 import * as Types from "./types";
 
@@ -36,11 +37,7 @@ const SaleInsert = () => {
   const [imgBase64, setImgBase64] = useState<string[]>([]);
   const [form, setForm] = useState<Types.TagsType>({ tags: new Set<string>() });
   const [imgFiles, setImgFiles] = useState<File[]>([]);
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [popUpState, setPopUpState] = useState({
-    isSuccess: false,
-    message: "",
-  });
+
   const [categorys, setCategorys] = useState<CategoryState>({});
   const [currentFirstCategory, setCurrentFirstCategory] = useState("소설");
   const [currentSecondCategory, setCurrentSecondCategory] = useState("추리");
@@ -48,24 +45,21 @@ const SaleInsert = () => {
   const [usedBookState, setUsedBookState] = useState<Types.CheckBoxType>({
     UNRELEASED: true,
   });
-  const imgFilesRef = useRef<HTMLInputElement>(null);
-  const tagInputRef = useRef<HTMLInputElement>(null);
-  const history = useHistory();
-  const debounceRef = useDebounce();
-  const signIn = useTypedSelector(signInSelector);
-  const { tags } = form;
-
-  const {
-    handleSubmit,
-    formState: { errors },
-    reset,
-    control,
-  } = useForm<Types.SaleInsertForm>({
+  const { handleSubmit, formState, reset, control } = useForm<Types.SaleInsertForm>({
     defaultValues: {
       title: "",
       price: "",
     },
   });
+  const imgFilesRef = useRef<HTMLInputElement>(null);
+  const tagInputRef = useRef<HTMLInputElement>(null);
+  const { handlePopupClose, handlePopupMessage, popupState } = usePopup();
+  const { isOpen, isSuccess, message } = popupState;
+  const history = useHistory();
+  const debounceRef = useDebounce();
+  const { token } = useTypedSelector(userReduceSelector);
+  const { tags } = form;
+  const { errors } = formState;
 
   const titleOpions: RegisterOptions = {
     required: "필수입니다.",
@@ -83,14 +77,6 @@ const SaleInsert = () => {
     { id: 2, name: "ALMOST_NEW", label: "거의 새거" },
     { id: 3, name: "USED", label: "사용감 있음" },
   ];
-
-  const handlePopUp = useCallback((message: string, isSuccess: boolean) => {
-    setPopUpState({
-      isSuccess,
-      message,
-    });
-    setIsOpen(true);
-  }, []);
 
   const handleFilesOnChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -113,7 +99,6 @@ const SaleInsert = () => {
 
       try {
         const { files } = e.target;
-
         if (!files || files.length === 0) return;
         if (files.length > 5 || imgFiles.length >= 5) throw new Error("파일은 최대 5개 업로드 가능합니다.");
         if (!imgFilesRef.current) return;
@@ -129,10 +114,10 @@ const SaleInsert = () => {
         imgFilesRef.current.value = "";
       } catch (error) {
         const message = errorHandler(error);
-        handlePopUp(message, false);
+        handlePopupMessage(false, message);
       }
     },
-    [handlePopUp, imgFiles],
+    [handlePopupMessage, imgFiles],
   );
 
   const handleFilesUploadAllDelete = useCallback(() => {
@@ -164,15 +149,13 @@ const SaleInsert = () => {
 
   const handleOnChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) =>
-      setUsedBookState(prev => {
-        const { name } = e.target;
-        if (prev[name]) {
-          return prev;
-        }
-        return {
-          [e.target.name]: e.target.checked,
-        };
-      }),
+      setUsedBookState(prev =>
+        prev[e.target.name]
+          ? prev
+          : {
+              [e.target.name]: e.target.checked,
+            },
+      ),
     [],
   );
   const handleChange = useCallback(
@@ -183,12 +166,10 @@ const SaleInsert = () => {
     [],
   );
 
-  const handleOnSubmit = (data: Types.SaleInsertForm) => {
-    if (signIn.token) {
-      const { token } = signIn;
-      const { price, title } = data;
+  const handleOnSubmit = async ({ price, title }: Types.SaleInsertForm) => {
+    try {
+      if (!token) throw new Error("로그인이 필요합니다.");
       const [state] = Object.keys(usedBookState);
-
       const payload = {
         title,
         content: editorValue,
@@ -203,23 +184,17 @@ const SaleInsert = () => {
       const formData = new FormData();
       imgFiles.forEach(file => formData.append("images", file));
       formData.append("usedBook", JSON.stringify(payload));
-
-      getSaleInsert(formData, token)
-        .then(() => {
-          history.replace("/my/sale");
-        })
-        .catch(error => {
-          handlePopUp(errorHandler(error), false);
-        });
+      await getCreateSale(formData, token);
+      history.replace("/my/sale");
+    } catch (error) {
+      handlePopupMessage(false, errorHandler(error));
     }
   };
 
   const tagClick = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
       const { id } = e.currentTarget;
-      if (tags.delete(id)) {
-        setForm(() => ({ tags: new Set([...Array.from(tags)]) }));
-      }
+      if (tags.delete(id)) setForm(() => ({ tags: new Set([...Array.from(tags)]) }));
     },
     [tags],
   );
@@ -296,7 +271,7 @@ const SaleInsert = () => {
   }, [debounceRef]);
 
   const handleLoadCategory = useCallback(async () => {
-    const { data } = await getCategory<CategoryResponse>();
+    const { data } = await getCategorys<CategoryResponse>();
     setCategorys(data.data);
   }, []);
 
@@ -307,8 +282,8 @@ const SaleInsert = () => {
   return (
     <>
       {isOpen && (
-        <Popup isOpen={isOpen} setIsOpen={setIsOpen} className={popUpState.isSuccess ? "green" : "red"} autoClose>
-          {popUpState.message}
+        <Popup isOpen={isOpen} setIsOpen={handlePopupClose} className={isSuccess ? "green" : "red"} autoClose>
+          {message}
         </Popup>
       )}
       <Styled.SaleInsertWrapper onSubmit={handleSubmit(handleOnSubmit)}>

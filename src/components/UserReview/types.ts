@@ -1,4 +1,4 @@
-import { GetUserReceivedReviewListData } from "src/modules/Slices/userReview/types";
+import { GetUserReceivedReviewListData } from "modules/Slices/userReview/types";
 
 export interface ReceivedReviewList {
   pageCount: number;

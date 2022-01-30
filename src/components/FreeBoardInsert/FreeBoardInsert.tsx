@@ -3,49 +3,33 @@ import { useState } from "react";
 import { useForm, Controller, RegisterOptions } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { errorHandler } from "api/http";
-import ErrorMessage from "src/elements/ErrorMessage";
-import Loading from "src/elements/Loading";
-import Popup from "src/elements/Popup";
-import useSignIn from "hooks/useSignIn";
-import { freeBoardSelector, insertAsync } from "modules/Slices/freeBoard/freeBoardSlice";
-import { useTypedSelector } from "modules/store";
+import ErrorMessage from "elements/ErrorMessage";
+import Loading from "elements/Loading";
+import Popup from "elements/Popup";
+import { freeBoardSelector, freeboardInsertAsync } from "modules/Slices/freeBoard/freeBoardSlice";
+import { useAppDispatch, useTypedSelector } from "modules/store";
 import { FormErrorMessages, makeOption } from "utils/hookFormUtil";
+import { userSelector } from "modules/Slices/user/userSlice";
+import usePopup from "hooks/usePopup";
 import Editor from "../Editor/Editor";
 import * as Styled from "./style";
 import * as Types from "./types";
 
 const FreeBoardInsert = () => {
-  const {
-    handleSubmit,
-    control,
-    formState: { errors },
-  } = useForm<Types.FreeBoardInsertForm>({
+  const { handleSubmit, control, formState } = useForm<Types.FreeBoardInsertForm>({
     defaultValues: {
       title: "",
     },
   });
+  const { errors } = formState;
   const { status } = useTypedSelector(freeBoardSelector);
   const [editorValue, setEditorValue] = useState("");
   const [editorLength, setEditorLength] = useState(0);
   const isLoading = status === "loading";
-  const {
-    dispatch,
-    signIn: { user },
-  } = useSignIn();
-  const [isOpen, setIsOpen] = useState(false);
-  const [popUpState, setPopUpState] = useState({
-    isSuccess: false,
-    message: "",
-  });
-
-  const handlePopUp = (isSuccess: boolean, error: any) => {
-    const message = errorHandler(error);
-    setIsOpen(true);
-    setPopUpState({
-      isSuccess,
-      message,
-    });
-  };
+  const dispatch = useAppDispatch();
+  const user = useTypedSelector(userSelector);
+  const { handlePopupClose, handlePopupMessage, popupState } = usePopup();
+  const { isOpen, message } = popupState;
 
   const titleOptions: RegisterOptions = {
     required: makeOption<boolean>(true, FormErrorMessages.REQUIRED),
@@ -53,33 +37,30 @@ const FreeBoardInsert = () => {
     minLength: makeOption<number>(1, "최소 1자 입니다."),
   };
 
-  const onSumit = (formData: Types.FreeBoardInsertForm) => {
+  const onSumit = async ({ title }: Types.FreeBoardInsertForm) => {
     try {
       if (!user) throw new Error("로그인이 필요합니다.");
       if (editorLength === 0) throw new Error("게시글은 필수 입니다.");
-      const { title } = formData;
-      const userId = user.id;
       const content = editorValue.replaceAll("<", "&lt;");
-      dispatch(
-        insertAsync({
+      await dispatch(
+        freeboardInsertAsync({
           title,
           content,
-          userId,
+          userId: user.id,
           boardType: "FREE",
         }),
-      )
-        .unwrap()
-        .catch(e => handlePopUp(false, e));
-    } catch (e) {
-      handlePopUp(false, e);
+      );
+    } catch (error: any) {
+      const message = errorHandler(error);
+      handlePopupMessage(false, message);
     }
   };
 
   return (
     <div>
       {isOpen && (
-        <Popup isOpen={isOpen} setIsOpen={setIsOpen} autoClose className="red">
-          {popUpState.message}
+        <Popup isOpen={isOpen} setIsOpen={handlePopupClose} autoClose className="red">
+          {message}
         </Popup>
       )}
       <Loading isLoading={isLoading} />

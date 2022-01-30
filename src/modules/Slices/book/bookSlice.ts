@@ -1,14 +1,23 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 import { RootState } from "modules/store";
-import http from "src/api/http";
-import { makeTwoDimensionalArray } from "src/components/BookReviewList/BookReviewList";
-import { BookListReduceProps, GetBookAsyncFail, GetBookAsyncSuccess, GetCategoryAsyncSuccess } from "./types";
+import { getBestSeller } from "api/book";
+import http from "api/http";
+import { makeTwoDimensionalArray } from "components/BookReviewList/BookReviewList";
+import { paramProps } from "src/components/BookDetail/types";
+import { BookReduce, GetBookAsyncFail, GetBookAsyncSuccess, BookAsyncFail, BookAsyncSuccess } from "./types";
 
 const name = "bookReduce";
 
-const initialState: BookListReduceProps = {
-  bestSellerItem: [],
+const initialState: BookReduce = {
+  content: {
+    success: false,
+    data: {
+      item: [],
+    },
+    error: null,
+  },
+  bestSeller: [],
   status: "loading",
   error: null,
   item: [],
@@ -20,26 +29,11 @@ const initialState: BookListReduceProps = {
 };
 
 // 베스트셀러
-export const getBestSeller = createAsyncThunk<GetBookAsyncSuccess>(
+export const bestSellerAsync = createAsyncThunk<GetBookAsyncSuccess>(
   `${name}/bestSeller`,
   async (_, { rejectWithValue }) => {
     try {
-      const { data } = await http.get("/book/bestseller?page=1&size=9");
-      return data;
-    } catch (err) {
-      const error = err as AxiosError<GetBookAsyncFail>;
-      if (!error.response) throw err;
-      return rejectWithValue(error.response.data);
-    }
-  },
-);
-
-// 카테고리 리스트
-export const getCategoryList = createAsyncThunk<GetCategoryAsyncSuccess>(
-  `${name}/getCategoryList`,
-  async (_, { rejectWithValue }) => {
-    try {
-      const { data } = await http.get(`/book/category`);
+      const { data } = await getBestSeller();
       return data;
     } catch (err) {
       const error = err as AxiosError<GetBookAsyncFail>;
@@ -79,8 +73,29 @@ export const getReviewBook = createAsyncThunk<GetBookAsyncSuccess, string>(
   },
 );
 
+export const bookDetailAsync = createAsyncThunk<BookAsyncSuccess, paramProps>(
+  `${name}/bookDetailAsync`,
+  async ({ isbn13 }, { rejectWithValue }) => {
+    try {
+      const response = await http.get(`book/${isbn13}`);
+      const { data } = response;
+      const { success } = data;
+      if (!success) {
+        if (data.error.code === 200) {
+          return console.log(data);
+        }
+      }
+      return data;
+    } catch (err) {
+      const error = err as AxiosError<BookAsyncFail>;
+      if (!error.response) throw err;
+      return rejectWithValue(error.response.data);
+    }
+  },
+);
+
 // Slice
-export const getBookSlice = createSlice({
+export const bookSlice = createSlice({
   name: "bookList",
   initialState,
   reducers: {
@@ -92,16 +107,15 @@ export const getBookSlice = createSlice({
   },
   extraReducers: builder => {
     builder
-      // 베스트셀러
-      .addCase(getBestSeller.pending, state => {
+      .addCase(bestSellerAsync.pending, state => {
         state.error = null;
         state.status = "loading";
       })
-      .addCase(getBestSeller.fulfilled, (state, { payload }) => {
-        state.bestSellerItem = payload.data.item;
+      .addCase(bestSellerAsync.fulfilled, (state, { payload }) => {
+        state.bestSeller = payload.data.item;
         state.status = "idle";
       })
-      .addCase(getBestSeller.rejected, (state, { payload }) => {
+      .addCase(bestSellerAsync.rejected, (state, { payload }) => {
         state.status = "loading";
         // 에러핸들링
         if (!payload) {
@@ -160,11 +174,20 @@ export const getBookSlice = createSlice({
             message: "서버에서 데이터 못가져옴",
           };
         }
+      })
+      .addCase(bookDetailAsync.pending, state => {
+        state.status = "loading";
+      })
+      .addCase(bookDetailAsync.fulfilled, (state, { payload }) => {
+        state.status = "success";
+        state.content = payload;
+      })
+      .addCase(bookDetailAsync.rejected, state => {
+        state.status = "failed";
       });
   },
 });
-export const bestSellerItemSelector = ({ bookListReduce }: RootState) => bookListReduce.bestSellerItem;
-export const getBookSelector = (state: RootState) => state.bookListReduce;
-export const getBookItemList = (state: RootState) => state.bookListReduce.item;
-export const { setListInit } = getBookSlice.actions;
-export default getBookSlice;
+export const bestSellerSelector = ({ bookReduce }: RootState) => bookReduce.bestSeller;
+export const bookReduceSelector = ({ bookReduce }: RootState) => bookReduce;
+export const { setListInit } = bookSlice.actions;
+export default bookSlice;

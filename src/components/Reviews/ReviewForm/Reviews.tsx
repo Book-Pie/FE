@@ -1,12 +1,12 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { ReviewList } from "components/Reviews/ReviewList/ReviewList";
 import { ReviewWrite } from "components/Reviews/ReviewWrite";
-import { myReviewComment, reviewCommentList, commentsSelector } from "src/modules/Slices/comment/commentSlice";
-import { useTypedSelector } from "src/modules/store";
+import { myReviewComment, reviewCommentList, commentsSelector } from "modules/Slices/comment/commentSlice";
+import { useTypedSelector } from "modules/store";
 import queryString from "query-string";
 import { useHistory } from "react-router";
-import { getShopPage, removeShopPage, setShopPage } from "src/utils/localStorageUtil";
-import useSignIn from "src/hooks/useSignIn";
+import { getShopPage, removeShopPage, setShopPage } from "utils/localStorageUtil";
+import useSignIn from "hooks/useSignIn";
 import { ReviewsParams } from "./types";
 import { ReviewListEmpty } from "../ReviewList/ReviewListEmpty";
 

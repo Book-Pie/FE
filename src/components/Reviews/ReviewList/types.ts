@@ -1,4 +1,4 @@
-import { getCommentProps } from "src/modules/Slices/comment/types";
+import { getCommentProps } from "modules/Slices/comment/types";
 
 export type DateDTO = string;
 export type BookId = number;

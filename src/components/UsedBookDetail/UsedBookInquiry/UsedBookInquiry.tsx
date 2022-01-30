@@ -1,21 +1,21 @@
 import { useCallback, useEffect, useState } from "react";
 import { useHistory, useRouteMatch } from "react-router";
-import UsedBookReplyItem from "src/components/UsedBookDetail/UsedBookInquiry/UsedBookReplyItem";
-import { ReviewListEmpty } from "src/components/Reviews/ReviewList/ReviewListEmpty";
-import Textarea from "src/components/TextArea/Textarea";
-import { signInSelector } from "src/modules/Slices/signIn/signInSlice";
+import UsedBookReplyItem from "components/UsedBookDetail/UsedBookInquiry/UsedBookReplyItem";
+import { ReviewListEmpty } from "components/Reviews/ReviewList/ReviewListEmpty";
+import Textarea from "components/TextArea/Textarea";
+import { userReduceSelector } from "modules/Slices/user/userSlice";
 import {
   addUsedBookDetailReply,
   usedBookDetailReplyList,
   usedBookSelector,
-} from "src/modules/Slices/usedBookDetail/usedBookDetailSlice";
-import { useTypedSelector } from "src/modules/store";
+} from "modules/Slices/usedBookDetail/usedBookDetailSlice";
+import { useTypedSelector } from "modules/store";
 import Button from "@mui/material/Button";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import Stack from "@mui/material/Stack";
 import Pagination from "@mui/material/Pagination";
-import { getUsedBookReplyPage, removeUsedBookReplyPage, setUsedBookReplyPage } from "src/utils/localStorageUtil";
+import { getUsedBookReplyPage, removeUsedBookReplyPage, setUsedBookReplyPage } from "utils/localStorageUtil";
 import { CountWrapper, ProductDetailTitle, UsedBookStoreInformationWrapper, ReviewListEmptyWrapper } from "../style";
 
 export interface submitParam {
@@ -31,7 +31,7 @@ const UsedBookInquiry = () => {
   const { params } = useRouteMatch<{ id: string }>();
   const { id } = params;
   const { content, replyList, totalElements, totalPages } = useTypedSelector(usedBookSelector);
-  const { isLoggedIn, user } = useTypedSelector(signInSelector);
+  const { isLoggedIn, user } = useTypedSelector(userReduceSelector);
   const { usedBookId } = content;
   const [myContent, setContent] = useState<string>("");
   const [page, setPage] = useState(getUsedBookReplyPage());

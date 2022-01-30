@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
-import http from "src/api/http";
-import { RootState } from "src/modules/store";
+import http from "api/http";
+import { RootState } from "modules/store";
 import {
   AddUserReviewAsyncSuccess,
   AddUserReviewParam,

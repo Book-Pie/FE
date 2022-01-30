@@ -94,7 +94,7 @@ img{
 
 
 `;
-export const Container = styled.div`
+export const AppContainer = styled.div`
   max-width: 1200px;
   margin: 0 auto;
   min-width: 375px;

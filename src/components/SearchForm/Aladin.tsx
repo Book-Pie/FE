@@ -1,7 +1,7 @@
-import { searchAladinBookListAsync, searchAladinBookSelector } from "modules/Slices/search/searchSlice";
+import { searchAladinBooksAsync, searchAladinBookSelector } from "modules/Slices/search/searchSlice";
 import { useAppDispatch, useTypedSelector } from "modules/store";
 import { Typography, Grid } from "@mui/material";
-import Loading from "src/elements/Loading";
+import Loading from "elements/Loading";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import queryString from "query-string";
 import { useLocation } from "react-router";
@@ -43,7 +43,7 @@ const Aladin = () => {
           if (throttlingRef.current) return;
           throttlingRef.current = setTimeout(() => {
             dispatch(
-              searchAladinBookListAsync({
+              searchAladinBooksAsync({
                 query: makeQuery(query, page + 1),
                 isReload: false,
               }),
@@ -70,7 +70,7 @@ const Aladin = () => {
     if (pages !== null) return;
 
     dispatch(
-      searchAladinBookListAsync({
+      searchAladinBooksAsync({
         query: makeQuery(query, 1),
         isReload: true,
       }),

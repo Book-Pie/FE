@@ -1,4 +1,4 @@
-import { getCommentProps } from "src/modules/Slices/comment/types";
+import { getCommentProps } from "modules/Slices/comment/types";
 
 export interface ReviewTextareaProps {
   content?: string;
@@ -9,7 +9,7 @@ export interface ReviewTextareaProps {
 }
 
 export interface ReviewsParams {
-  bookId: string;
+  bookId: number;
   id: number;
   query?: string;
 }

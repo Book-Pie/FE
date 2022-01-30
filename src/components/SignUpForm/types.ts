@@ -1,5 +1,5 @@
 import { RegisterOptions } from "react-hook-form";
-import { FormInputProps } from "src/elements/FormInput";
+import { FormInputProps } from "elements/FormInput";
 
 export interface SignUpForm {
   name: string;
