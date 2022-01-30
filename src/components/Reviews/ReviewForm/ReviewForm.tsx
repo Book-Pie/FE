@@ -7,7 +7,7 @@ import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import { useTypedSelector } from "modules/store";
 import { userReduceSelector } from "modules/Slices/user/userSlice";
-import { getMyRating, getMyReview, setMyRating, setMyReview } from "utils/localStorageUtil";
+import { getMyRating, getMyReview, removeMyReview, setMyRating, setMyReview } from "utils/localStorageUtil";
 import { reviewDateFormat } from "utils/formatUtil";
 import Textarea from "components/TextArea/Textarea";
 import { ButtonArea, TextareaAutosize, TextWrapper, MyReviwContent } from "./style";
@@ -35,23 +35,6 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({ isbn, isMyReview, myComm
   const [ratingValue, setValue] = useState(myRatingDefault); // 별점 추가
   const [editDisabled, editEnabled] = useState(editStatus);
 
-  useEffect(() => {
-    if (isLoggedIn === true && myComment !== null) {
-      setMyReview(myComment.content);
-      setMyRating(String(myComment.rating));
-      const savedReview = getMyReview();
-      const savedRating = getMyRating();
-      if (savedReview !== "" && savedReview !== null) {
-        setContent(savedReview);
-        setValue(Number(savedRating));
-      }
-      editEnabled(true);
-    }
-    if (myComment === null) {
-      editEnabled(false);
-    }
-  }, [isLoggedIn, myComment, editEnabled]);
-
   const handleRatingChange = (event: any) => {
     setValue(event.target.value);
   };
@@ -69,7 +52,7 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({ isbn, isMyReview, myComm
         rating: ratingValue,
       }),
     );
-    setContent("");
+    editEnabled(true);
   };
 
   const editReview = () => {
@@ -81,7 +64,7 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({ isbn, isMyReview, myComm
         rating: ratingValue,
       }),
     );
-    editEnabled(prev => !prev);
+    editEnabled(true);
   };
 
   const handleEdit = () => {
@@ -95,6 +78,33 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({ isbn, isMyReview, myComm
       }
     }
   };
+
+  useEffect(() => {
+    if (isLoggedIn === true && myComment !== null) {
+      setMyReview(myComment.content);
+      setMyRating(String(myComment.rating));
+      const savedReview = getMyReview();
+      const savedRating = getMyRating();
+      if (savedReview !== "" && savedReview !== null) {
+        setContent(savedReview);
+        setValue(Number(savedRating));
+      }
+      editEnabled(true);
+    }
+    if (myComment === null) {
+      editEnabled(false);
+      setContent("");
+      removeMyReview();
+    }
+  }, [isLoggedIn, myComment, editEnabled]);
+
+  useEffect(() => {
+    if (!isMyReview) {
+      editEnabled(false);
+      setContent("");
+      setValue(3);
+    }
+  }, [isMyReview, isbn]);
 
   return isMyReview ? (
     <form onSubmit={handleSubmit(editReview)}>

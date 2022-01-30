@@ -16,16 +16,18 @@ export const Reviews: React.FC<ReviewsParams> = ({ bookId }) => {
   const reviewSelector = useTypedSelector(commentsSelector);
   const { user, isLoggedIn } = signIn;
   const { id } = user ?? -1;
-  const { myCommentCheck, content, myComment, pageable, totalElements, totalPages } = reviewSelector;
-  const { pageNumber } = pageable;
+  const { myCommentCheck, content, myComment, totalElements, totalPages } = reviewSelector;
   const [page, setPage] = useState(getShopPage(1));
 
   const handleHasMoreList = useCallback(
     async (page: number) => {
       if (user) {
         const { id } = user;
-        const query = queryString.stringify({ page });
+        const query = queryString.stringify({ page: page - 1 });
         dispatch(reviewCommentList({ bookId, id, query }));
+      } else {
+        const query = queryString.stringify({ page: page - 1 });
+        dispatch(reviewCommentList({ bookId, query }));
       }
     },
     [user, dispatch, bookId],
@@ -33,16 +35,21 @@ export const Reviews: React.FC<ReviewsParams> = ({ bookId }) => {
 
   const handlePaginationOnChange = useCallback(
     (_: React.ChangeEvent<unknown>, value: number) => {
-      handleHasMoreList(value - 1);
-      setPage(value - 1);
+      handleHasMoreList(value);
+      setPage(value);
     },
     [handleHasMoreList],
   );
 
   useEffect(() => {
-    dispatch(reviewCommentList({ bookId, id }));
-    if (myCommentCheck === true) {
-      dispatch(myReviewComment({ bookId, id }));
+    handleHasMoreList(1);
+  }, [dispatch, bookId, handleHasMoreList]);
+
+  useEffect(() => {
+    if (user) {
+      if (myCommentCheck === true) {
+        dispatch(myReviewComment({ bookId, id }));
+      }
     }
   }, [dispatch, myCommentCheck]);
 
@@ -52,7 +59,7 @@ export const Reviews: React.FC<ReviewsParams> = ({ bookId }) => {
   }, [handleHasMoreList, page]);
 
   useEffect(() => {
-    if (getShopPage() === 0) setShopPage(page);
+    if (getShopPage() === 1) setShopPage(page);
     return () => {
       removeShopPage();
     };
@@ -68,7 +75,7 @@ export const Reviews: React.FC<ReviewsParams> = ({ bookId }) => {
           myCommentId={id}
           pageCount={totalPages}
           totalCount={totalElements}
-          page={pageNumber}
+          page={page}
           onChange={handlePaginationOnChange}
         />
       ) : (

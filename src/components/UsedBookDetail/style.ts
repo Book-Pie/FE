@@ -1,5 +1,48 @@
 import styled from "styled-components";
 
+export const RelatedUsedBookSwiper = styled.div`
+  cursor: pointer;
+
+  .swiper-wrapper {
+    display: flex;
+  }
+
+  .swiper-slide {
+    width: 200px;
+    color: ${props => props.theme.colors.darkGrey};
+  }
+
+  .swiper-pagination {
+    bottom: 2.5rem;
+  }
+  .swiper-pagination-bullet {
+    background: ${props => props.theme.colors.mainDarkBrown} !important;
+    width: 15px;
+    height: 15px;
+    box-sizing: content-box;
+  }
+  .swiper-pagination-bullet-active {
+    background: ${props => props.theme.colors.mainDarkBrown} !important;
+  }
+
+  .swiper-button-next {
+    border-color: ${props => props.theme.colors.mainDarkBrown} !important;
+    color: ${props => props.theme.colors.mainDarkBrown} !important;
+  }
+  .swiper-button-prev {
+    border-color: ${props => props.theme.colors.mainDarkBrown} !important;
+    color: ${props => props.theme.colors.mainDarkBrown} !important;
+  }
+`;
+
+export const RelatedReviewWrapper = styled.div`
+  border-top: 1px solid #e6e8eb;
+  width: 100%;
+  height: 600px;
+  margin: 10px auto 0 auto;
+  // overflow-x: hidden;
+`;
+
 export const FlexBoxWrapper = styled.div`
   display: flex;
   justify-content: space-between;
@@ -220,7 +263,7 @@ export const UsedBookThumbnail = styled.img`
 `;
 
 export const RelatedUsedBookWrapper = styled.div`
-  border-top: 1px solid #4f3629;
+  border-top: 1px solid #e6e8eb;
   width: 100%;
   height: 600px;
   margin: 10px auto 0 auto;

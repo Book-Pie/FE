@@ -21,6 +21,8 @@
     "@mui/icons-material": "^5.2.5",
     "@mui/material": "^5.2.7",
     "@mui/styled-engine-sc": "^5.1.0",
+    "@nivo/core": "^0.79.0",
+    "@nivo/pie": "^0.79.1",
     "@reduxjs/toolkit": "^1.7.1",
     "@types/crypto-js": "^4.0.2",
     "@types/lodash": "^4.14.178",

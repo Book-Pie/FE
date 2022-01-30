@@ -5,7 +5,15 @@ import { getBestSeller } from "api/book";
 import http from "api/http";
 import { makeTwoDimensionalArray } from "components/BookReviewList/BookReviewList";
 import { paramProps } from "src/components/BookDetail/types";
-import { BookReduce, GetBookAsyncFail, GetBookAsyncSuccess, BookAsyncFail, BookAsyncSuccess } from "./types";
+import {
+  BookReduce,
+  GetBookAsyncFail,
+  GetBookAsyncSuccess,
+  BookAsyncFail,
+  BookAsyncSuccess,
+  GetBookRecommendListParam,
+  GetBookRecommendListAsyncSuccess,
+} from "./types";
 
 const name = "bookReduce";
 
@@ -21,6 +29,7 @@ const initialState: BookReduce = {
   status: "loading",
   error: null,
   item: [],
+  bookRecommendList: [],
   list: {
     pages: [],
     pageCount: 1,
@@ -88,6 +97,21 @@ export const bookDetailAsync = createAsyncThunk<BookAsyncSuccess, paramProps>(
       return data;
     } catch (err) {
       const error = err as AxiosError<BookAsyncFail>;
+      if (!error.response) throw err;
+      return rejectWithValue(error.response.data);
+    }
+  },
+);
+
+// 도서관 정보나루 추천목록
+export const getBookRecommendList = createAsyncThunk<GetBookRecommendListAsyncSuccess, GetBookRecommendListParam>(
+  `${name}/getBookRecommendList`,
+  async ({ isbn }, { rejectWithValue }) => {
+    try {
+      const { data } = await http.get(`/book/recommend?isbn=${isbn}`);
+      return data;
+    } catch (err) {
+      const error = err as AxiosError<GetBookAsyncFail>;
       if (!error.response) throw err;
       return rejectWithValue(error.response.data);
     }
@@ -183,6 +207,16 @@ export const bookSlice = createSlice({
         state.content = payload;
       })
       .addCase(bookDetailAsync.rejected, state => {
+        state.status = "failed";
+      })
+      .addCase(getBookRecommendList.pending, state => {
+        state.status = "loading";
+      })
+      .addCase(getBookRecommendList.fulfilled, (state, { payload }) => {
+        state.status = "success";
+        state.bookRecommendList = payload.data;
+      })
+      .addCase(getBookRecommendList.rejected, state => {
         state.status = "failed";
       });
   },
