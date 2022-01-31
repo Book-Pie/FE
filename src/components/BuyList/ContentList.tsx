@@ -103,6 +103,11 @@ const ContentList = ({ pages, select, titleFilter, open, setOpen }: IContent) =>
                     </Button>
                   )
                 ) : null}
+                <Link to={`buy/${item.orderId}`}>
+                  <Button variant="contained" color="inherit">
+                    구매상세
+                  </Button>
+                </Link>
               </ButtonArea>
             </BuyContent>
             {open ? <Modal open={open} handleClose={handleClose} item={selectedItem} /> : null}

@@ -75,7 +75,7 @@ export const ExpanderArea = styled.div`
 export const Container = styled.div`
   margin: 0 auto;
   width: 700px;
-  height: 1500px;
+  min-height: 1200px;
 `;
 
 export const A = styled.a`
@@ -111,4 +111,5 @@ export const P = styled.p`
 
 export const Wrapper = styled.div`
   overflow-y: auto;
+  margin-bottom: 100px;
 `;

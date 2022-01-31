@@ -8,6 +8,10 @@ export const ColorContent = styled.div`
   color: #52a4c3;
 `;
 
+export const BuyListWrapper = styled.div`
+  padding-top: 60px;
+`;
+
 export const HeaderTitle = styled.div`
   font-size: 18px;
   padding: 20px;
@@ -51,7 +55,7 @@ export const ContentText = styled.div`
 export const ButtonArea = styled.div`
   align-content: center;
   margin: 50px auto;
-  display: flex;
+  // display: flex;
 `;
 
 export const ModalContent = styled.div`
@@ -102,6 +106,7 @@ export const CancelButton = styled.button`
 export const UserReviewButtonArea = styled.div`
   display: flex;
   width: 300px;
+  margin-top: 60px;
   margin-bottom: 40px;
 `;
 

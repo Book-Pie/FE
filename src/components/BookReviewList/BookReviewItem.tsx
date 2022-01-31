@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { BookItemProps } from "modules/Slices/book/types";
 import StarRating from "../Rating/StarRating";
 import { BookReviewBox, BookReviewTitle, ImageItem, ImgWrapper } from "./styles";
+import { BookRatingContent } from "../BookDetail/style";
 
 export interface BookReviewItemParam {
   card: BookItemProps;
@@ -19,24 +20,24 @@ const BookReviewItem = ({ card }: BookReviewItemParam) => {
   return (
     <BookReviewBox>
       {isbn13 ? (
-        <Link to={`/book/${isbn13}`}>
+        <Link to={`/book/category/${isbn13}`}>
           <ImgWrapper>
             <ImageItem src={cover} alt={title} />
           </ImgWrapper>
           <BookReviewTitle>{title}</BookReviewTitle>
-          <div>
+          <BookRatingContent>
             <StarRating ReviewRank={ReviewRank} />
-          </div>
+          </BookRatingContent>
         </Link>
       ) : (
-        <Link to={`/book/${isbn}`}>
+        <Link to={`/book/category/${isbn}`}>
           <ImgWrapper>
             <ImageItem src={cover} alt={title} />
           </ImgWrapper>
           <BookReviewTitle>{title}</BookReviewTitle>
-          <div>
+          <BookRatingContent>
             <StarRating ReviewRank={ReviewRank} />
-          </div>
+          </BookRatingContent>
         </Link>
       )}
     </BookReviewBox>

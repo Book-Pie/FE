@@ -1,9 +1,11 @@
 import { usedBookLike } from "modules/Slices/usedBookDetail/usedBookDetailSlice";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { compareDateFormat, make1000UnitsCommaFormet } from "utils/formatUtil";
 import useSignIn from "hooks/useSignIn";
+import Button from "@mui/material/Button";
 import {
   BookPrice,
+  BookStatus,
   BuyButton,
   DeliveryArea,
   DeliverySpan,
@@ -31,6 +33,7 @@ export interface UsedBookAreaProps {
   usedBookId: number;
   sellerId: number;
   saleState: string;
+  bookState: string;
 }
 
 const UsedBookArea = ({
@@ -44,11 +47,13 @@ const UsedBookArea = ({
   usedBookId,
   sellerId,
   saleState,
+  bookState,
 }: UsedBookAreaProps) => {
   const date = compareDateFormat(String(uploadDate));
   const bookPrice = make1000UnitsCommaFormet(String(price));
   const { signIn, dispatch } = useSignIn();
-  const { user } = signIn;
+  const history = useHistory();
+  const { user, isLoggedIn } = signIn;
   const { id } = user ?? -1;
 
   let dayAgo = "일전";
@@ -56,11 +61,20 @@ const UsedBookArea = ({
     dayAgo = "오늘";
   }
   const likeClick = () => {
-    dispatch(
-      usedBookLike({
-        usedBookId,
-      }),
-    );
+    if (!isLoggedIn) {
+      if (window.confirm("로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?")) {
+        history.replace("/signIn");
+      }
+      return false;
+    }
+    if (user !== null) {
+      dispatch(
+        usedBookLike({
+          usedBookId,
+        }),
+      );
+    }
+    return false;
   };
 
   return (
@@ -93,6 +107,12 @@ const UsedBookArea = ({
       <DeliveryArea>
         <DeliverySpan>배송비 2500원</DeliverySpan>
         <DeliverySpan>배송방법 택배거래</DeliverySpan>
+        <BookStatus>상품상태</BookStatus>
+        <BookStatus>
+          {bookState === "UNRELEASED" && "미개봉"}
+          {bookState === "ALMOST_NEW" && "거의 새거"}
+          {bookState === "USED" && "사용감 있음"}
+        </BookStatus>
       </DeliveryArea>
       <ProductDetail>
         <ProductDetailTitle>상품정보</ProductDetailTitle>
@@ -100,7 +120,7 @@ const UsedBookArea = ({
         <ProductDetailContent dangerouslySetInnerHTML={{ __html: content }} />
       </ProductDetail>
       <TagArea>{tags && tags.map((tag, index) => <TagContent key={index}>#{tag}</TagContent>)}</TagArea>
-      {id !== sellerId && (
+      {id !== sellerId ? (
         <ButtonArea>
           <UsedBookDetailButton onClick={likeClick}>좋아요</UsedBookDetailButton>
           {saleState === "TRADING" && <DisabledButton>현재 거래중인 상품입니다.</DisabledButton>}
@@ -113,6 +133,15 @@ const UsedBookArea = ({
               </Link>
             </>
           )}
+        </ButtonArea>
+      ) : (
+        <ButtonArea>
+          <Button variant="outlined" color="mainDarkBrown" sx={{ mt: 1, height: 50, width: 200 }}>
+            수정
+          </Button>
+          <Button variant="outlined" color="error" sx={{ mt: 1, height: 50, width: 200 }}>
+            삭제
+          </Button>
         </ButtonArea>
       )}
     </UsedBookWrapper>
