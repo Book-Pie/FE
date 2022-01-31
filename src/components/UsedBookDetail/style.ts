@@ -224,7 +224,7 @@ export const BuyButton = styled.button`
 export const ProductDetailContent = styled.div`
   width: 533px;
   height: 327px;
-  margin: 16px 50px 87px 0px;
+  margin: 16px 50px 50px 0px;
   font-size: 16px;
   font-weight: normal;
   font-stretch: normal;
@@ -287,6 +287,19 @@ export const DeliverySpan = styled.div`
   letter-spacing: -0.4px;
   text-align: left;
   color: #525252;
+  padding-right: 10px;
+`;
+
+export const BookStatus = styled.span`
+  font-size: 16px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.75;
+  letter-spacing: -0.4px;
+  text-align: left;
+  color: #525252;
+  padding-right: 5px;
 `;
 
 export const DeliveryArea = styled.div``;

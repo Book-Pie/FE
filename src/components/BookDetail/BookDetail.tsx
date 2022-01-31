@@ -1,16 +1,18 @@
 import Skeleton from "@mui/material/Skeleton";
 import { useBookDetail } from "hooks/useBookDetail";
 import { useEffect } from "react";
-import { useLocation } from "react-router";
+import { useLocation, useParams } from "react-router";
 import BookDetailContent from "./BookDetailContent";
 import BookDetailHeader from "./BookDetailHeader";
 import BookRecommendList from "./BookRecommendList";
 import { FlexColum, FlexWrapper, Wrapper } from "./style";
-import { BookDetailProps } from "./types";
 
-const BookDetail = ({ match }: BookDetailProps) => {
-  const { id } = match.params;
-  const { isbn13 } = match.params;
+export interface BookDetailParam {
+  isbn13: string;
+}
+
+const BookDetail = () => {
+  const { isbn13 } = useParams<BookDetailParam>();
   const { pathname } = useLocation();
   const { bookContent } = useBookDetail({ isbn13 });
 
@@ -40,12 +42,7 @@ const BookDetail = ({ match }: BookDetailProps) => {
           publisher={publisher}
         />
         <Wrapper>
-          <BookDetailContent
-            bookIntroText={fullDescription}
-            authorIntroText={fullDescription2}
-            bookId={isbn13}
-            myUserId={id}
-          />
+          <BookDetailContent bookIntroText={fullDescription} authorIntroText={fullDescription2} bookId={isbn13} />
           <BookRecommendList isbn={isbn13} />
         </Wrapper>
       </>

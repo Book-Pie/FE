@@ -7,10 +7,10 @@ import queryString from "query-string";
 import { useHistory } from "react-router";
 import { getShopPage, removeShopPage, setShopPage } from "utils/localStorageUtil";
 import useSignIn from "hooks/useSignIn";
-import { ReviewsParams } from "./types";
+import { ReviewsParam } from "./types";
 import { ReviewListEmpty } from "../ReviewList/ReviewListEmpty";
 
-export const Reviews: React.FC<ReviewsParams> = ({ bookId }) => {
+export const Reviews: React.FC<ReviewsParam> = ({ bookId }) => {
   const { signIn, dispatch } = useSignIn();
   const history = useHistory();
   const reviewSelector = useTypedSelector(commentsSelector);

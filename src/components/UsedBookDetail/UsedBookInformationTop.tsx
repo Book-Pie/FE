@@ -26,6 +26,7 @@ const UsedBookInformationTop = ({
   usedBookId,
   sellerId,
   saleState,
+  bookState,
 }: UsedBookDetailResponse) => {
   const history = useHistory();
   const { isLoggedIn } = useTypedSelector(userReduceSelector);
@@ -69,6 +70,7 @@ const UsedBookInformationTop = ({
           price={price}
           sellerId={sellerId}
           saleState={saleState}
+          bookState={bookState}
           content={content}
           view={view}
           uploadDate={uploadDate}

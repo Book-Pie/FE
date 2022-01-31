@@ -13,6 +13,10 @@ export interface MyReviewCommentParam {
   id: number;
 }
 
+export interface ReviewsParam {
+  bookId: string;
+}
+
 export interface ReviewsParams {
   bookId: string;
   id?: number;

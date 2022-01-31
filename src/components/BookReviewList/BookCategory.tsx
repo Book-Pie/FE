@@ -1,7 +1,13 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import BookReviewItem from "components/BookReviewList/BookReviewItem";
-import { bookReduceSelector, getDefaultBookList, getReviewBook, setListInit } from "modules/Slices/book/bookSlice";
+import {
+  bestSellerAsync,
+  bookReduceSelector,
+  getDefaultBookList,
+  getReviewBook,
+  setListInit,
+} from "modules/Slices/book/bookSlice";
 import { useTypedSelector } from "modules/store";
 import queryString from "query-string";
 import { BookItemProps, GetCategoryAsyncSuccess, ParentsCategoryData } from "modules/Slices/book/types";
@@ -9,10 +15,10 @@ import Loading from "elements/Loading";
 import { useDispatch } from "react-redux";
 import { getCategoryReview } from "api/book";
 import ReviewCategorys from "components/BookReviewList/ReviewCategorys";
-import { BookReviewContainer, BookReviewListContainer, ReviewListWrapper, Text } from "./styles";
+import { BookReviewContainer, BookReviewListContainer, BookReviewMainTap, ReviewListWrapper, Title } from "./styles";
 import ReviewListSkeleton from "./ReviewListSkeleton";
 
-const BookReviewList = () => {
+const BookCategory = () => {
   const location = useLocation();
   const dispatch = useDispatch();
   const { list } = useTypedSelector(bookReduceSelector);
@@ -75,10 +81,11 @@ const BookReviewList = () => {
       dispatch(setListInit());
       handleHasMoreReviewList(1);
     }
-  }, [query, handleHasMoreReviewList]);
+  }, [query, handleHasMoreReviewList, dispatch]);
 
   useEffect(() => {
     dispatch(getDefaultBookList(1));
+    dispatch(bestSellerAsync());
   }, []);
 
   useEffect(() => {
@@ -93,9 +100,19 @@ const BookReviewList = () => {
   return (
     <ReviewListWrapper>
       <Loading isLoading={isLoading} />
+      <BookReviewMainTap>
+        <NavLink to="/book/" className="reviewHome">
+          리뷰 홈
+        </NavLink>
+        <NavLink to="/book/category" activeClassName="reviewMainButton--Active">
+          카테고리
+        </NavLink>
+      </BookReviewMainTap>
+
       <ReviewCategorys categorys={categorys} defaultLocation="book" />
+
       <div>
-        <Text>중고도서리뷰</Text>
+        <Title>도서리뷰</Title>
       </div>
       <BookReviewContainer>
         {pages.length !== 0 ? (
@@ -132,4 +149,4 @@ export const makeTwoDimensionalArray = (data: BookItemProps[]) => {
   return rowArray;
 };
 
-export default BookReviewList;
+export default BookCategory;

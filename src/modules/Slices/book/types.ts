@@ -42,6 +42,11 @@ export interface GetBookRecommendListParam {
   isbn: string;
 }
 
+export interface MainCategoryListParam {
+  categoryId: number;
+  page: number;
+}
+
 // 썽크함수 성공시 반환 타입
 export interface GetBookAsyncSuccess {
   success: boolean;
@@ -151,6 +156,9 @@ export interface GetBookRecommendListAsyncSuccess {
 export interface BookReduce {
   content: BookAsyncSuccess;
   bestSeller: BookItemProps[];
+  novelList: BookItemProps[];
+  magazineList: BookItemProps[];
+  economicList: BookItemProps[];
   status: "loading" | "idle" | "success" | "failed";
   error: null | {
     code: number;

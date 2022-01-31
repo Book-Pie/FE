@@ -5,9 +5,7 @@ export const TagContent = styled.span`
   color: #dd002c;
 `;
 
-export const TagArea = styled.div`
-  margin-bottom: 10px;
-`;
+export const TagArea = styled.div``;
 
 export const RedContent = styled.span`
   color: #dd002c;
