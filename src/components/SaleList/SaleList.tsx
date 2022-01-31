@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Link, useRouteMatch } from "react-router-dom";
 import queryString from "query-string";
-import { getSales, getUsedbooLatestUp } from "api/user";
 import Popup from "elements/Popup";
 import { errorHandler } from "api/http";
 import noComments from "assets/image/noComments.png";
@@ -21,6 +20,7 @@ import { getShopPage, removeShopPage, setShopPage } from "utils/localStorageUtil
 import { userSelector } from "modules/Slices/user/userSlice";
 import { useTypedSelector } from "modules/store";
 import usePopup from "hooks/usePopup";
+import { getSales, getUsedbooLatestUp } from "api/usedBook";
 import * as Styled from "./style";
 import * as Types from "./types";
 import Skeletons from "./Skeletons";

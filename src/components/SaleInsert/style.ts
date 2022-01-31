@@ -1,12 +1,117 @@
 import styled from "styled-components";
 
-export const SaleInsertWrapper = styled.form`
+export const SaleInsertWrapper = styled.div`
   width: 80%;
   margin-top: 2rem;
 
   @media screen and (max-width: 800px) {
     margin: 1rem 0;
     width: 95%;
+  }
+`;
+
+export const SaleInsertLeft = styled.div`
+  flex: 2;
+
+  & > div {
+    display: flex;
+    justify-content: center;
+  }
+
+  & > div:nth-child(1) {
+    gap: 0.7rem;
+
+    & > span:first-child {
+      font-size: 16px;
+      font-weight: 600;
+      & > span {
+        font-size: 14px;
+        color: ${props => props.theme.colors.error};
+      }
+    }
+    & > span:last-child {
+      font-size: 14px;
+      color: rgba(113, 128, 147, 0.8);
+    }
+
+    @media screen and (max-width: 1000px) {
+      & > div:first-child {
+        gap: 5px;
+      }
+    }
+    ${({ theme }) => theme.media.mobile} {
+      gap: 5px;
+      flex-direction: column;
+      span {
+        text-align: center;
+      }
+    }
+  }
+
+  & > div:nth-child(2) {
+    text-align: center;
+    & > span:first-child {
+      font-size: 16px;
+      font-weight: 600;
+    }
+    & > span:last-child {
+      font-size: 15px;
+      color: ${props => props.theme.colors.error};
+    }
+  }
+`;
+export const SaleInsertRight = styled.div`
+  flex: 8;
+  .upload {
+    display: grid;
+    justify-content: center;
+    grid-template-columns: repeat(3, 200px);
+    grid-template-rows: repeat(2, 200px);
+    gap: 15px;
+    img {
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+    }
+    .one {
+      border: 1px solid ${props => props.theme.colors.mainLightBrown};
+      background-color: rgba(236, 240, 241, 0.3);
+      position: relative;
+      label {
+        display: block;
+        cursor: pointer;
+      }
+      span {
+        position: absolute;
+        bottom: 15%;
+        left: 0;
+        right: 0;
+        margin: 0 auto;
+        width: 100px;
+        text-align: center;
+        color: rgba(44, 62, 80, 1);
+        font-weight: 600;
+      }
+      input {
+        display: none;
+      }
+    }
+
+    @media screen and (max-width: 1000px) {
+      grid-template-columns: repeat(2, 200px);
+      grid-template-rows: repeat(3, 200px);
+    }
+    ${({ theme }) => theme.media.mobile} {
+      grid-template-columns: repeat(2, 2fr);
+      grid-template-rows: repeat(3, 150px);
+      .one {
+        border: 1px solid ${props => props.theme.colors.mainLightBrown};
+        span {
+          font-size: 0.6rem;
+          bottom: 10%;
+        }
+      }
+    }
   }
 `;
 
@@ -159,25 +264,20 @@ export const ImgUpload = styled.div`
 `;
 
 export const ImgUploadText = styled.div`
-  display: flex;
-  justify-content: flex-end;
+  margin: 1.5rem;
+  padding: 1rem;
+  border-radius: 5px;
+  color: ${props => props.theme.colors.darkGrey};
+  border: 1px solid #edeae9;
+  background-color: rgba(236, 240, 241, 0.3);
+  div + div {
+    margin-top: 15px;
+  }
   & > div {
-    width: 80%;
-    margin: 1.5rem;
-    padding: 1rem;
-    border-radius: 5px;
-    color: ${props => props.theme.colors.darkGrey};
-    border: 1px solid #edeae9;
-    background-color: rgba(236, 240, 241, 0.3);
-    div + div {
-      margin-top: 15px;
-    }
-    & > div {
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
   }
 
   @media screen and (max-width: 700px) {
@@ -205,30 +305,28 @@ export const ImgUploadText = styled.div`
 
 export const Row = styled.div`
   border-top: 1px solid #edeae9;
-  & > div {
+  display: flex;
+  align-items: center;
+  padding: 35px 0;
+  gap: 15px;
+  & > div:first-child {
+    flex: 2;
+    text-align: center;
+    & > span:first-child {
+      font-size: 16px;
+      font-weight: 600;
+    }
+    & > span:last-child {
+      font-size: 15px;
+      color: ${props => props.theme.colors.error};
+    }
+  }
+  & > div:last-child {
+    flex: 8;
     display: flex;
     align-items: center;
-    margin: 35px 0;
-    gap: 15px;
-    & > div:first-child {
-      flex: 2;
-      text-align: center;
-      & > span:first-child {
-        font-size: 16px;
-        font-weight: 600;
-      }
-      & > span:last-child {
-        font-size: 15px;
-        color: ${props => props.theme.colors.error};
-      }
-    }
-    & > div:last-child {
-      flex: 8;
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
+    flex-wrap: wrap;
+    gap: 10px;
   }
   .title {
     width: 100%;
@@ -241,9 +339,9 @@ export const Row = styled.div`
       width: 100%;
     }
   }
-
-  @media screen and (max-width: 700px) {
-    .category {
+  .skeleton,
+  .category {
+    @media screen and (max-width: 700px) {
       flex: 1;
     }
   }

@@ -66,15 +66,15 @@ const FreeBoard = () => {
       if (!user) throw new Error("로그인이 필요합니다.");
       const content = editorValue.replaceAll("<", "&lt;");
 
-      const { payload } = await dispatch(
+      const message = await dispatch(
         freeboardUpdateAsync({
           boardType: "FREE",
           title,
           boardId,
           content,
         }),
-      );
-      handlePopupMessage(false, payload ?? "수정에 성공했습니다.");
+      ).unwrap();
+      handlePopupMessage(false, message);
     } catch (error: any) {
       const message = errorHandler(error);
       handlePopupMessage(false, message);

@@ -49,7 +49,7 @@ const FreeBoardInsert = () => {
           userId: user.id,
           boardType: "FREE",
         }),
-      );
+      ).unwrap();
     } catch (error: any) {
       const message = errorHandler(error);
       handlePopupMessage(false, message);

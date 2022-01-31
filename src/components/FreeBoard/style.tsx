@@ -37,11 +37,13 @@ export const FreeboardTop = styled.div`
       font-size: 2.2rem;
     }
     & > div + div {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
       margin-top: 15px;
-      gap: 10px;
+      ${({ theme }) => theme.media.mobile} {
+        gap: 10px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
     }
 
     span {
