@@ -1,4 +1,4 @@
-import { Suspense, useCallback, useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { getCategorys, getUsedBook } from "api/usedBook";
 import Popup from "elements/Popup";
 import { useParams } from "react-router";
@@ -92,14 +92,12 @@ const SaleInsert = () => {
         <span>기본정보</span>
         <span>*필수항목</span>
       </Styled.Title>
-      <Suspense fallback={<div>...로딩중</div>}>
-        <SaleInsertForm
-          bookId={bookId}
-          handlePopupMessage={handlePopupMessage}
-          usedBookResource={usedBookResource}
-          categoryResource={categoryResource}
-        />
-      </Suspense>
+      <SaleInsertForm
+        bookId={bookId}
+        handlePopupMessage={handlePopupMessage}
+        usedBookResource={usedBookResource}
+        categoryResource={categoryResource}
+      />
     </Styled.SaleInsertWrapper>
   );
 };

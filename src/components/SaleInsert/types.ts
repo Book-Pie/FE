@@ -1,3 +1,4 @@
+import { SelectChangeEvent } from "@mui/material";
 import { AxiosResponse } from "axios";
 import { Response } from "pages/Order/types";
 import { Control, FieldError } from "react-hook-form";
@@ -20,28 +21,35 @@ type ResourceType = {
   read: <T>() => AxiosResponse<T>;
 };
 
-export type CategoryResourceType = ResourceType;
-export type UsedBookResourceType = ResourceType | undefined;
-
 export type KeyEvent = React.KeyboardEvent<HTMLInputElement>;
 export type SaleInsertFormProps = {
   bookId?: string;
   handlePopupMessage: (isSuccess: boolean, message: string) => void;
-  categoryResource: CategoryResourceType;
-  usedBookResource: UsedBookResourceType;
+  categoryResource: ResourceType;
+  usedBookResource: ResourceType | undefined;
 };
 
 export interface SaleBeforeImgProps {
   usedBookResource: ResourceType;
 }
-export interface SaleInsertProps {
+export interface SaleInsertPriceProps {
   control: Control<SaleInsertForm, object>;
-  errors: {
-    title?: FieldError | undefined;
-    price?: FieldError | undefined;
-  };
+  error?: FieldError | undefined;
+  usedBookResource: ResourceType | undefined;
+}
+export interface SaleInsertTitleProps {
+  control: Control<SaleInsertForm, object>;
+  error?: FieldError | undefined;
+  usedBookResource: ResourceType | undefined;
 }
 export interface SaleInsertEditorProps {
   setEditorValue: (value: string) => void;
-  editorValue: string;
+  usedBookResource: ResourceType | undefined;
+}
+
+export interface SaleInsertCategorysProps {
+  categoryResource: ResourceType;
+  currentFirstCategory: string;
+  currentSecondCategory: string;
+  handleChange: (firstCategory: string) => (event: SelectChangeEvent) => void;
 }
