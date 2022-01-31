@@ -8,14 +8,14 @@ import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import { SelectChangeEvent } from "@mui/material";
-import Skeleton from "@mui/material/Skeleton";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import * as Types from "./types";
 import * as Styled from "./style";
 
-const UsedBookCategory = ({ categorys, defaultLocation }: Types.CategorysProps) => {
-  const location = useLocation();
+const UsedBookCategory = ({ defaultLocation, resource }: Types.UsedBookCategorysProps) => {
+  const { data } = resource.read<Types.CategorysResponse>();
   const matches = useMediaQuery("(max-width:500px)");
+  const location = useLocation();
   const { pathname, search } = location;
   const currentQuery = queryString.parse(search);
   const [currentFirstCategory, setCurrentFirstCategory] = useState("");
@@ -31,23 +31,9 @@ const UsedBookCategory = ({ categorys, defaultLocation }: Types.CategorysProps) 
 
   const sx = useMemo(() => (matches ? { minWidth: 100, height: 52 } : { minWidth: 150, height: 56 }), [matches]);
 
-  if (Object.keys(categorys).length === 0) {
-    return (
-      <Styled.UsedBookCategoryWrapper>
-        <Skeleton sx={sx} animation="wave" variant="rectangular" />
-        <Skeleton sx={sx} animation="wave" variant="rectangular" />
-        <Skeleton sx={sx} animation="wave" variant="rectangular" />
-        <Skeleton sx={sx} animation="wave" variant="rectangular" />
-        <Skeleton sx={sx} animation="wave" variant="rectangular" />
-        <Skeleton sx={sx} animation="wave" variant="rectangular" />
-        <Skeleton sx={sx} animation="wave" variant="rectangular" />
-      </Styled.UsedBookCategoryWrapper>
-    );
-  }
-
   return (
     <Styled.UsedBookCategoryWrapper>
-      {Object.entries(categorys).map(([first, second], idx) => (
+      {Object.entries(data.data).map(([first, second], idx) => (
         <FormControl key={idx} color="mainDarkBrown" sx={sx} size={matches ? "small" : "medium"}>
           <InputLabel id="category">{first}</InputLabel>
           <Select

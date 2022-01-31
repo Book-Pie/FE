@@ -61,9 +61,9 @@ const MyTop = () => {
     async ({ nickName }: Types.NickNameForm) => {
       try {
         if (!token) throw new Error("로그인을 해주세요.");
-        const { payload } = await dispatch(nickNameUpdateAsync({ nickName, token }));
+        const message = await dispatch(nickNameUpdateAsync({ nickName, token })).unwrap();
         setIsNickNameUpdateOpen(false);
-        handlePopupMessage(false, payload ?? "닉네임변경에 성공했습니다.");
+        handlePopupMessage(true, message);
       } catch (error: any) {
         handlePopupMessage(false, error);
       }

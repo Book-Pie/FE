@@ -13,12 +13,15 @@ const name = "userReduce";
 // 내 프로필 가져오기
 export const userInfoAsync = createAsyncThunk<Types.UserInfoAsyncSuccess, string, Types.ThunkApi>(
   `${name}/userInfoAsync`,
-  async (token, { rejectWithValue }) => {
+  async (token, { rejectWithValue, extra }) => {
+    const { history } = extra;
     try {
       const { data } = await getUserInfo<Types.UserInfoAsyncResponse>(token);
       return data.data;
     } catch (error: any) {
       const { message } = error;
+      history.replace("/signIn");
+      removeToken();
       return rejectWithValue(message);
     }
   },

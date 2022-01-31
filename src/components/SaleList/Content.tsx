@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useHistory } from "react-router";
 import { ButtonGroup, Button, useMediaQuery, Stack, Typography } from "@mui/material";
 import { dateArrayFormat, make1000UnitsCommaFormet } from "utils/formatUtil";
 import withLoading from "hoc/withLoading";
@@ -25,6 +26,11 @@ const STATE_CLASSNAME: Types.StateEnumType = {
 const Content = ({ pages, titleFilter, select, handleLatestClick }: Types.Content) => {
   const [header] = useState(["사진", "상품명", "가격", "찜 / 댓글", "판매상태", "등록일", "기능"]);
   const max950 = useMediaQuery("(max-width:950px)");
+  const history = useHistory();
+
+  const handleSaleUpdateOnClick = (usedBookId: number) => () => {
+    history.push(`/my/sale/insert/${usedBookId}`);
+  };
 
   const contetns = pages.filter(({ title, state }) => {
     if (titleFilter !== null && title.match(titleFilter) === null) return false;
@@ -77,7 +83,7 @@ const Content = ({ pages, titleFilter, select, handleLatestClick }: Types.Conten
                       <Button color="error" variant="contained" onClick={handleLatestClick(id)}>
                         최신글로 등록
                       </Button>
-                      <Button color="primary" variant="contained">
+                      <Button color="primary" variant="contained" onClick={handleSaleUpdateOnClick(id)}>
                         수정하기
                       </Button>
                     </>
@@ -85,16 +91,12 @@ const Content = ({ pages, titleFilter, select, handleLatestClick }: Types.Conten
 
                   {state === "TRADING" && (
                     <Button color="mainDarkBrown" variant="contained">
-                      <Link to={`sale/${id}`} style={{ color: "white" }}>
-                        판매상세보기
-                      </Link>
+                      <Link to={`sale/${id}`}>판매상세보기</Link>
                     </Button>
                   )}
                   {state === "SOLD_OUT" && (
                     <Button color="mainDarkBrown" variant="contained">
-                      <Link to={`sale/${id}`} style={{ color: "white" }}>
-                        판매상세보기
-                      </Link>
+                      <Link to={`sale/${id}`}>판매상세보기</Link>
                     </Button>
                   )}
                 </ButtonGroup>
@@ -173,7 +175,7 @@ const Content = ({ pages, titleFilter, select, handleLatestClick }: Types.Conten
                     <Button color="error" variant="contained" onClick={handleLatestClick(id)}>
                       최신글로 등록
                     </Button>
-                    <Button color="primary" variant="contained">
+                    <Button color="primary" variant="contained" onClick={handleSaleUpdateOnClick(id)}>
                       수정하기
                     </Button>
                   </>

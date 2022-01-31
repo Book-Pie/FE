@@ -26,11 +26,7 @@ export const getUserWithDrawal = <P>(payload: P, token: string) => {
     headers: { "X-AUTH-TOKEN": token },
   });
 };
-export const getCreateSale = (formData: FormData, token: string) =>
-  http.post("/usedbook", formData, makeAuthTokenHeader(token));
-export const getSales = <T>(query: string) => http.get<T>(`usedbook/user?${query}`);
-// 판매글을 최신상태로 올린다.
-export const getUsedbooLatestUp = (bookId: number) => http.put(`/usedbook/date/${bookId}`);
+
 export const getUserInfo = <T>(token: string) => http.get<T>("/user/me", makeAuthTokenHeader(token));
 export const getUserPoints = (userId: number) => http.get(`/point/${userId}`);
 export const getUserPointCancel = <P>(payload: P) => http.post("/point", payload);

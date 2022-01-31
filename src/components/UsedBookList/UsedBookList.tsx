@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { ChangeEvent, Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Popup from "elements/Popup";
 import UsedBookCard from "components/UsedBookList/UsedBookCard";
 import DropDown from "elements/DropDown";
@@ -21,10 +21,12 @@ import { FormErrorMessages, htmlTagPatternCheck } from "utils/hookFormUtil";
 import ErrorMessage from "elements/ErrorMessage";
 import { useTypedSelector } from "modules/store";
 import { isLoggedInSelector } from "modules/Slices/user/userSlice";
+import { AxiosResponse } from "axios";
 import UsedBookCategory from "./UsedBookCategory";
 import * as Types from "./types";
 import * as Styled from "./style";
 import Skeletons from "./Skeletons";
+import UsedBookCategorySkeleton from "./UsedBookCategorySkeleton";
 
 const initialState = {
   pages: [],
@@ -35,7 +37,6 @@ const initialState = {
 const UsedBookList = () => {
   const location = useLocation();
   const [usedBook, setUsedBook] = useState<Types.UsedBookState>(initialState);
-  const [categorys, setCategorys] = useState<Types.CategoryState>({});
   const [currentPage, setCurrentPage] = useState(1);
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState("");
@@ -49,10 +50,50 @@ const UsedBookList = () => {
   const { pages, pageCount, isEmpty } = usedBook;
   const { search, pathname } = location;
   const isLoggedIn = useTypedSelector(isLoggedInSelector);
+  const cache = useRef<Types.CacheRefType>({});
 
   const history = useHistory();
   const delay = useDelay(600);
   const query = useMemo(() => queryString.parse(search), [search]);
+
+  const createResource = useCallback(function createResource<T>(promise: Promise<AxiosResponse<T>>) {
+    let status: Types.CreateResourceStatusType = "pending";
+    let result: AxiosResponse<T>;
+
+    const suspender = promise
+      .then(resolved => {
+        status = "success";
+        result = resolved;
+      })
+      .catch(rejected => {
+        status = "error";
+        result = rejected;
+      });
+
+    return {
+      read() {
+        if (status === "pending") throw suspender;
+        if (status === "error") throw result;
+        if (status === "success") return result;
+        throw new Error("This should be impossible");
+      },
+    };
+  }, []);
+
+  const handleResourceCache = useCallback(
+    function handleResourceCache<T>(name: string, promise: <A>() => Promise<AxiosResponse<A>>) {
+      const lowerName = name.toLowerCase();
+
+      let resource = cache.current[lowerName];
+
+      if (!resource) {
+        resource = createResource(promise<T>());
+        cache.current[lowerName] = resource;
+      }
+      return resource;
+    },
+    [createResource],
+  );
 
   // 무한스크롤
   const handleObserver = (node: HTMLDivElement) => {
@@ -114,7 +155,7 @@ const UsedBookList = () => {
     [delay, query],
   );
 
-  const handleTitleOnChange = ({ target: { value } }: React.ChangeEvent<HTMLInputElement>) => {
+  const handleTitleOnChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
     if (debounce.current) clearTimeout(debounce.current);
     debounce.current = setTimeout(() => {
       if (value.length > 50) {
@@ -149,13 +190,9 @@ const UsedBookList = () => {
     return <UsedBookCard key={idx} card={card} />;
   });
 
+  const categorysResource = handleResourceCache<Types.CategorysResponse>("category", getCategorys);
+
   // ============================================ useEffect ============================================
-  useEffect(() => {
-    (async () => {
-      const { data } = await getCategorys<Types.CategoryResponse>();
-      setCategorys(data.data);
-    })();
-  }, []);
 
   useEffect(() => {
     setCurrentPage(1);
@@ -192,7 +229,9 @@ const UsedBookList = () => {
           </Link>
         ))}
       </Styled.UsedBookFilter>
-      <UsedBookCategory categorys={categorys} defaultLocation="usedBook" />
+      <Suspense fallback={<UsedBookCategorySkeleton />}>
+        <UsedBookCategory defaultLocation="usedBook" resource={categorysResource} />
+      </Suspense>
       <Styled.UsedBookSearchWrapper>
         <Typography variant="h4" mt={3} mb={2} fontWeight="bold" color={theme.colors.darkGrey}>
           중고도서 검색
