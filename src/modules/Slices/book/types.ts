@@ -38,6 +38,15 @@ export interface ParentsCategoryData {
   subCategory: SubCategoryData[];
 }
 
+export interface GetBookRecommendListParam {
+  isbn: string;
+}
+
+export interface MainCategoryListParam {
+  categoryId: number;
+  page: number;
+}
+
 // 썽크함수 성공시 반환 타입
 export interface GetBookAsyncSuccess {
   success: boolean;
@@ -59,6 +68,22 @@ export interface GetCategoryAsyncSuccess {
   success: boolean;
   data: ParentsCategoryData[];
   error: string;
+}
+
+export interface GetBookRecommendListResponse {
+  book: {
+    no: number;
+    publication_year: number;
+    vol: string;
+    addition_symbol: string;
+    class_nm: string;
+    bookImageURL: string;
+    isbn13: string;
+    publisher: string;
+    bookname: string;
+    class_no: number;
+    authors: string;
+  };
 }
 
 // 썽크함수가 실패시 반환 타입
@@ -121,17 +146,26 @@ export interface BookAsyncFail {
   };
 }
 
+export interface GetBookRecommendListAsyncSuccess {
+  success: boolean;
+  data: GetBookRecommendListResponse[];
+  error: string;
+}
+
 // 리듀가 사용할 데이터 타입
 export interface BookReduce {
   content: BookAsyncSuccess;
   bestSeller: BookItemProps[];
+  novelList: BookItemProps[];
+  magazineList: BookItemProps[];
+  economicList: BookItemProps[];
   status: "loading" | "idle" | "success" | "failed";
   error: null | {
     code: number;
     message: string;
   };
   item: BookItemProps[];
-
+  bookRecommendList: GetBookRecommendListResponse[];
   list: {
     pages: BookItemProps[][];
     pageCount: number;

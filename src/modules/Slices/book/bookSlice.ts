@@ -3,9 +3,17 @@ import { AxiosError } from "axios";
 import { RootState } from "modules/store";
 import { getBestSeller } from "api/book";
 import http from "api/http";
-import { makeTwoDimensionalArray } from "components/BookReviewList/BookReviewList";
+import { makeTwoDimensionalArray } from "src/components/BookReviewList/BookCategory";
 import { paramProps } from "src/components/BookDetail/types";
-import { BookReduce, GetBookAsyncFail, GetBookAsyncSuccess, BookAsyncFail, BookAsyncSuccess } from "./types";
+import {
+  BookReduce,
+  GetBookAsyncFail,
+  GetBookAsyncSuccess,
+  BookAsyncFail,
+  BookAsyncSuccess,
+  GetBookRecommendListParam,
+  GetBookRecommendListAsyncSuccess,
+} from "./types";
 
 const name = "bookReduce";
 
@@ -18,9 +26,13 @@ const initialState: BookReduce = {
     error: null,
   },
   bestSeller: [],
+  novelList: [],
+  magazineList: [],
+  economicList: [],
   status: "loading",
   error: null,
   item: [],
+  bookRecommendList: [],
   list: {
     pages: [],
     pageCount: 1,
@@ -34,6 +46,54 @@ export const bestSellerAsync = createAsyncThunk<GetBookAsyncSuccess>(
   async (_, { rejectWithValue }) => {
     try {
       const { data } = await getBestSeller();
+      return data;
+    } catch (err) {
+      const error = err as AxiosError<GetBookAsyncFail>;
+      if (!error.response) throw err;
+      return rejectWithValue(error.response.data);
+    }
+  },
+);
+
+// 리뷰홈 소설 리스트
+export const mainNovelList = createAsyncThunk<GetBookAsyncSuccess>(
+  `${name}/mainNovelList`,
+  async (_, { rejectWithValue }) => {
+    try {
+      const novel = 1;
+      const { data } = await http.get(`/book/byCategory?categoryId=${novel}&page=1`);
+      return data;
+    } catch (err) {
+      const error = err as AxiosError<GetBookAsyncFail>;
+      if (!error.response) throw err;
+      return rejectWithValue(error.response.data);
+    }
+  },
+);
+
+// 리뷰홈 잡지 리스트
+export const mainMagazineList = createAsyncThunk<GetBookAsyncSuccess>(
+  `${name}/mainMagazineList`,
+  async (_, { rejectWithValue }) => {
+    try {
+      const magazine = 2913;
+      const { data } = await http.get(`/book/byCategory?categoryId=${magazine}&page=1`);
+      return data;
+    } catch (err) {
+      const error = err as AxiosError<GetBookAsyncFail>;
+      if (!error.response) throw err;
+      return rejectWithValue(error.response.data);
+    }
+  },
+);
+
+// 리뷰홈 잡지 리스트
+export const mainEconomicList = createAsyncThunk<GetBookAsyncSuccess>(
+  `${name}/mainEconomicList`,
+  async (_, { rejectWithValue }) => {
+    try {
+      const economic = 656;
+      const { data } = await http.get(`/book/byCategory?categoryId=${economic}&page=1`);
       return data;
     } catch (err) {
       const error = err as AxiosError<GetBookAsyncFail>;
@@ -73,6 +133,7 @@ export const getReviewBook = createAsyncThunk<GetBookAsyncSuccess, string>(
   },
 );
 
+// 리뷰 상세페이지
 export const bookDetailAsync = createAsyncThunk<BookAsyncSuccess, paramProps>(
   `${name}/bookDetailAsync`,
   async ({ isbn13 }, { rejectWithValue }) => {
@@ -88,6 +149,21 @@ export const bookDetailAsync = createAsyncThunk<BookAsyncSuccess, paramProps>(
       return data;
     } catch (err) {
       const error = err as AxiosError<BookAsyncFail>;
+      if (!error.response) throw err;
+      return rejectWithValue(error.response.data);
+    }
+  },
+);
+
+// 도서관 정보나루 추천목록
+export const getBookRecommendList = createAsyncThunk<GetBookRecommendListAsyncSuccess, GetBookRecommendListParam>(
+  `${name}/getBookRecommendList`,
+  async ({ isbn }, { rejectWithValue }) => {
+    try {
+      const { data } = await http.get(`/book/recommend?isbn=${isbn}`);
+      return data;
+    } catch (err) {
+      const error = err as AxiosError<GetBookAsyncFail>;
       if (!error.response) throw err;
       return rejectWithValue(error.response.data);
     }
@@ -125,7 +201,62 @@ export const bookSlice = createSlice({
           };
         }
       })
-      // 카테고리 리스트
+      .addCase(mainNovelList.pending, state => {
+        state.error = null;
+        state.status = "loading";
+      })
+      .addCase(mainNovelList.fulfilled, (state, { payload }) => {
+        state.novelList = payload.data.item;
+        state.status = "idle";
+      })
+      .addCase(mainNovelList.rejected, (state, { payload }) => {
+        state.status = "loading";
+        // 에러핸들링
+        if (!payload) {
+          state.error = {
+            code: 500,
+            message: "서버에서 데이터 못가져옴",
+          };
+        }
+      })
+      .addCase(mainEconomicList.pending, state => {
+        state.error = null;
+        state.status = "loading";
+      })
+      .addCase(mainEconomicList.fulfilled, (state, { payload }) => {
+        state.economicList = payload.data.item;
+        state.status = "idle";
+      })
+      .addCase(mainEconomicList.rejected, (state, { payload }) => {
+        state.status = "loading";
+        // 에러핸들링
+        if (!payload) {
+          state.error = {
+            code: 500,
+            message: "서버에서 데이터 못가져옴",
+          };
+        }
+      })
+
+      .addCase(mainMagazineList.pending, state => {
+        state.error = null;
+        state.status = "loading";
+      })
+      .addCase(mainMagazineList.fulfilled, (state, { payload }) => {
+        state.magazineList = payload.data.item;
+        state.status = "idle";
+      })
+      .addCase(mainMagazineList.rejected, (state, { payload }) => {
+        state.status = "loading";
+        // 에러핸들링
+        if (!payload) {
+          state.error = {
+            code: 500,
+            message: "서버에서 데이터 못가져옴",
+          };
+        }
+      })
+      // 기본 리뷰 리스트
       .addCase(getDefaultBookList.pending, state => {
         state.error = null;
         state.status = "loading";
@@ -183,6 +314,16 @@ export const bookSlice = createSlice({
         state.content = payload;
       })
       .addCase(bookDetailAsync.rejected, state => {
+        state.status = "failed";
+      })
+      .addCase(getBookRecommendList.pending, state => {
+        state.status = "loading";
+      })
+      .addCase(getBookRecommendList.fulfilled, (state, { payload }) => {
+        state.status = "success";
+        state.bookRecommendList = payload.data;
+      })
+      .addCase(getBookRecommendList.rejected, state => {
         state.status = "failed";
       });
   },

@@ -8,10 +8,19 @@ export interface ReviewTextareaProps {
   isDisabled: boolean;
 }
 
-export interface ReviewsParams {
-  bookId: number;
+export interface MyReviewCommentParam {
+  bookId: string;
   id: number;
-  query?: string;
+}
+
+export interface ReviewsParam {
+  bookId: string;
+}
+
+export interface ReviewsParams {
+  bookId: string;
+  id?: number;
+  query: string;
 }
 
 export interface ReviewFormProps {

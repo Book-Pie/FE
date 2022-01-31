@@ -9,7 +9,6 @@ import "swiper/css/navigation";
 import { compareDateFormat, make1000UnitsCommaFormet } from "utils/formatUtil";
 import { Link, useRouteMatch } from "react-router-dom";
 import { Navigation } from "swiper";
-
 import {
   NormalTitle,
   RelatedUsedBookBoldTitle,

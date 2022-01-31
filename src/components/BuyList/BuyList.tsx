@@ -20,7 +20,7 @@ import { useTypedSelector } from "modules/store";
 import ContentList from "./ContentList";
 import MyPageSkeleton from "./MyPageSkeleton";
 import { ReviewListEmptyParagraph, ReviewListEmptyWrapper } from "../Reviews/ReviewList/style";
-import { FlexBox, HeaderTitle, HeaderWrapper } from "./styles";
+import { BuyListWrapper, FlexBox, HeaderTitle, HeaderWrapper } from "./styles";
 import { BuyListResponse } from "./types";
 
 export interface buyConfirmSubmitParam {
@@ -138,7 +138,7 @@ const BuyList = () => {
       ))
     );
   return (
-    <div>
+    <BuyListWrapper>
       <Stack direction="row" justifyContent="center" mb={2} spacing={2}>
         <Autocomplete
           sx={{ width: 250 }}
@@ -210,7 +210,7 @@ const BuyList = () => {
           />
         </Stack>
       )}
-    </div>
+    </BuyListWrapper>
   );
 };
 

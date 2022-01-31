@@ -55,6 +55,5 @@ export interface BookDetailProps {
 export interface bookDetailContentProps {
   bookIntroText: string;
   authorIntroText: string;
-  bookId: number;
-  myUserId: number | null;
+  bookId: string;
 }

@@ -29,7 +29,7 @@ export const ReviewList: React.FC<ReviewListProps> = ({
       <Stack mt={5} justifyContent="center" direction="row">
         <Pagination
           count={pageCount}
-          page={page + 1}
+          page={page}
           onChange={onChange}
           variant="outlined"
           shape="rounded"

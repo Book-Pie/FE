@@ -7,7 +7,7 @@ const Card = ({ bestRank, title, cover, index, isbn13 }: Types.CardProps) => {
   if (index === 0) {
     return (
       <Styled.FirstCardWrapper>
-        <Link to={`/book/${isbn13}`}>
+        <Link to={`/book/category/${isbn13}`}>
           <div>
             <div className="card__rank">{`0${bestRank}`}</div>
             <div className="card__title">{title}</div>
@@ -22,7 +22,7 @@ const Card = ({ bestRank, title, cover, index, isbn13 }: Types.CardProps) => {
 
   return (
     <Styled.CardWrapper>
-      <Link to={`/book/${isbn13}`}>
+      <Link to={`/book/category/${isbn13}`}>
         <div>
           <div className="card__rank">{`0${bestRank}`}</div>
           <div className="card__title">{title}</div>

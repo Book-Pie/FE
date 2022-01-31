@@ -14,6 +14,7 @@ export const UsedBookLikeListWrapper = styled.div`
 
 export const ContentWrapper = styled.div`
   flex-direction: column;
+  margin-top: 60px;
 `;
 
 export const TitleSpan = styled.span`

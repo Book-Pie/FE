@@ -89,6 +89,7 @@ export interface commentData {
 export interface commentReduceProps {
   myCommentCheck: boolean;
   myComment: getCommentProps | null;
+  bestComment: getCommentProps[];
   last: boolean;
   totalPages: number;
   pageable: pageableProps;

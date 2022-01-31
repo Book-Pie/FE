@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "modules/store";
 import http from "api/http";
-import { ReviewsParams } from "components/Reviews/ReviewForm/types";
+import { MyReviewCommentParam, ReviewsParams } from "components/Reviews/ReviewForm/types";
 import {
   commentAsyncSuccess,
   myCommentAsyncSuccess,
@@ -17,6 +17,7 @@ const initialState: commentReduceProps = {
   content: [],
   myCommentCheck: false,
   myComment: null,
+  bestComment: [],
   last: false,
   totalPages: 0,
   pageable: {
@@ -100,7 +101,7 @@ export const editComment = createAsyncThunk<myCommentAsyncSuccess, editCommentPr
 );
 
 // 나의 댓글
-export const myReviewComment = createAsyncThunk<myCommentAsyncSuccess, ReviewsParams>(
+export const myReviewComment = createAsyncThunk<myCommentAsyncSuccess, MyReviewCommentParam>(
   `${name}/myComment`,
   async ({ bookId, id }, { rejectWithValue }) => {
     try {
@@ -161,6 +162,7 @@ const commentSlice = createSlice({
         state.content.unshift(payload.data);
         state.status = "success";
         state.myComment = payload.data;
+        state.myCommentCheck = true;
       })
       .addCase(addComment.rejected, state => {
         state.status = "failed";
@@ -183,11 +185,12 @@ const commentSlice = createSlice({
         state.status = "loading";
       })
       .addCase(editComment.fulfilled, (state, { payload }) => {
+        state.status = "success";
         const { data } = payload;
         const { content, rating, reviewId, reviewDate } = data;
-        state.myComment = data;
-        state.status = "success";
         state.content = state.content.map(v => (v.reviewId !== reviewId ? v : { ...v, content, rating, reviewDate }));
+        state.myComment = data;
+        state.myCommentCheck = true;
       })
       .addCase(editComment.rejected, state => {
         state.status = "failed";
