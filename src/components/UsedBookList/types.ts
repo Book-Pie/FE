@@ -1,3 +1,5 @@
+import { AxiosResponse } from "axios";
+
 export type StateEnumType = {
   SALE: string;
   SOLD_OUT: string;
@@ -26,11 +28,13 @@ export interface CategoryState {
   [key: string]: string[];
 }
 
-export interface CategoryResponse {
+export interface CategorysResponse {
   success: boolean;
   data: CategoryState;
   error: null;
 }
+
+export type AxiosCategorysResponse<T> = Promise<AxiosResponse<T>>;
 
 export interface UsedBookResponse {
   data: {
@@ -40,7 +44,19 @@ export interface UsedBookResponse {
   success: boolean;
   erorr: null;
 }
-export interface CategorysProps {
-  categorys: CategoryState;
+
+export type ReadReturnType = {
+  read: <T = any>() => AxiosResponse<T>;
+};
+export interface UsedBookCategorysProps {
   defaultLocation: string;
+  resource: {
+    read: <T = any>() => AxiosResponse<T>;
+  };
 }
+export type CacheRefType = {
+  [key: string]: {
+    read: () => AxiosResponse;
+  };
+};
+export type CreateResourceStatusType = "success" | "pending" | "error";

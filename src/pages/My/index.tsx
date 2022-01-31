@@ -13,6 +13,7 @@ import BuyList from "components/BuyList/BuyList";
 import UserReview from "components/UserReview/UserReview";
 import MyReview from "components/MyReview/MyReview";
 import Point from "components/Point/Point";
+import SaleUpdate from "src/components/SaleUpdate/SaleUpdate";
 import * as Styled from "./style";
 
 const My = () => {
@@ -74,7 +75,7 @@ const My = () => {
         <Switch>
           <Route path={`${path}/point`} exact component={Point} />
           <Route path={`${path}/sale`} exact component={SaleList} />
-          <Route path={`${path}/sale/insert`} component={SaleInsert} />
+          <Route path={[`${path}/sale/insert/:bookId`, `${path}/sale/insert`]} component={SaleInsert} />
           <Route path={`${path}/sale/:bookId`} component={SaleInfo} />
           <Route path={`${path}/buy`} component={BuyList} exact />
           <Route path={`${path}/buy/:orderId`} component={BuyInfo} />

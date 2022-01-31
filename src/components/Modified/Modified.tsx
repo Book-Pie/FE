@@ -120,7 +120,7 @@ const Modified = () => {
 
         await delay();
         await getUserProfileImgUpload(formData, token);
-        await dispatch(userInfoAsync(token));
+        await dispatch(userInfoAsync(token)).unwrap();
         handleFileDelete();
         handlePopupMessage(true, "업로드에 성공했습니다.");
       }
@@ -225,7 +225,7 @@ const Modified = () => {
 
         if (!isTruthy) throw new Error("프로필 변경에 실패 했습니다.");
         // 변경된 프로필 갱신
-        await dispatch(userInfoAsync(token));
+        await dispatch(userInfoAsync(token)).unwrap();
         history.replace("/");
       } catch (error) {
         handlePopupMessage(false, errorHandler(error));
