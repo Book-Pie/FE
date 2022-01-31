@@ -172,7 +172,7 @@ export const getBookRecommendList = createAsyncThunk<GetBookRecommendListAsyncSu
 
 // Slice
 export const bookSlice = createSlice({
-  name: "bookList",
+  name,
   initialState,
   reducers: {
     setListInit: state => {

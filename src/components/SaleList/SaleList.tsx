@@ -17,7 +17,7 @@ import Stack from "@mui/material/Stack";
 import Select from "@mui/material/Select";
 import useDelay from "hooks/useDelay";
 import { getShopPage, removeShopPage, setShopPage } from "utils/localStorageUtil";
-import { userSelector } from "modules/Slices/user/userSlice";
+import { userReduceSelector } from "modules/Slices/user/userSlice";
 import { useTypedSelector } from "modules/store";
 import usePopup from "hooks/usePopup";
 import { getSales, getUsedbooLatestUp } from "api/usedBook";
@@ -27,7 +27,7 @@ import Skeletons from "./Skeletons";
 import Content from "./Content";
 
 const SaleList = () => {
-  const user = useTypedSelector(userSelector);
+  const { user, token } = useTypedSelector(userReduceSelector);
   const [list, setList] = useState<Types.ListState>({
     page: getShopPage(1),
     pageCount: 0,
@@ -48,11 +48,11 @@ const SaleList = () => {
   const handleHasMoreList = useCallback(
     async (page: number, limit: number) => {
       try {
-        if (!user) throw new Error("로그인이 필요합니다.");
+        if (!user || !token) throw new Error("로그인이 필요합니다.");
         const query = queryString.stringify({ userId: user.id, page, limit });
         setIsLoading(true);
         await delay();
-        const { data } = await getSales<Types.Response>(query);
+        const { data } = await getSales<Types.Response>(query, token);
         const { pageCount, pages } = data.data;
         setList({
           pageCount,
@@ -66,7 +66,7 @@ const SaleList = () => {
         setIsLoading(false);
       }
     },
-    [user, handlePopupMessage, delay],
+    [user, handlePopupMessage, token, delay],
   );
 
   const handleLimitOnChange = useCallback(
@@ -88,11 +88,16 @@ const SaleList = () => {
   );
 
   const handleLatestClick = useCallback(
-    (id: number) => () => {
-      getUsedbooLatestUp(id);
-      handleHasMoreList(page, limit);
+    (id: number) => async () => {
+      try {
+        if (!token) throw new Error("로그인이 필요합니다.");
+        await getUsedbooLatestUp(id, token);
+        handleHasMoreList(page, limit);
+      } catch (error: any) {
+        handlePopupMessage(false, errorHandler(error));
+      }
     },
-    [page, handleHasMoreList, limit],
+    [page, handleHasMoreList, handlePopupMessage, token, limit],
   );
 
   const handleTitlteFilterOnChange = useCallback(
