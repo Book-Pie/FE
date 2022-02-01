@@ -1,22 +1,24 @@
 import { Route, Switch, useRouteMatch } from "react-router";
-import Modified from "components/Modified/Modified";
-import Withdrawal from "components/Withdrawal/Withdrawal";
 import MyTop from "components/MyTop/MyTop";
 import { NavLink } from "react-router-dom";
-import { useMemo, useState } from "react";
-import SaleList from "components/SaleList/SaleList";
-import SaleInsert from "components/SaleInsert/SaleInsert";
-import BuyInfo from "components/BuyInfo/BuyInfo";
-import SaleInfo from "components/SaleInfo/SaleInfo";
-import BookLikeList from "components/UsedBookLike/BookLikeList";
-import BuyList from "components/BuyList/BuyList";
-import UserReview from "components/UserReview/UserReview";
-import MyReview from "components/MyReview/MyReview";
-import Point from "components/Point/Point";
+import { lazy, Suspense, useMemo, useState } from "react";
 import RootRedirect from "src/router/RootRedirect";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
+import Loading from "src/elements/Loading";
 import * as Styled from "./styles";
+
+const Point = lazy(() => import("components/Point/Point"));
+const SaleList = lazy(() => import("components/SaleList/SaleList"));
+const SaleInsert = lazy(() => import("components/SaleInsert/SaleInsert"));
+const SaleInfo = lazy(() => import("components/SaleInfo/SaleInfo"));
+const BuyList = lazy(() => import("components/BuyList/BuyList"));
+const UsedBookLikeList = lazy(() => import("src/components/UsedBookLikeList/UsedBookLikeList"));
+const UserReview = lazy(() => import("components/UserReview/UserReview"));
+const MyReview = lazy(() => import("components/MyReview/MyReview"));
+const Modified = lazy(() => import("components/Modified/Modified"));
+const Withdrawal = lazy(() => import("components/Withdrawal/Withdrawal"));
+const BuyInfo = lazy(() => import("components/BuyInfo/BuyInfo"));
 
 const My = () => {
   const { path } = useRouteMatch();
@@ -85,20 +87,22 @@ const My = () => {
         </Tabs>
       </Styled.MyMenuTabWrapper>
       <Styled.MyRouterWrapper>
-        <Switch>
-          <Route path={`${path}/point`} exact component={Point} />
-          <Route path={`${path}/sale`} exact component={SaleList} />
-          <Route path={[`${path}/sale/insert/:bookId`, `${path}/sale/insert`]} component={SaleInsert} />
-          <Route path={`${path}/sale/:bookId`} component={SaleInfo} />
-          <Route path={`${path}/buy`} component={BuyList} exact />
-          <Route path={`${path}/buy/:orderId`} component={BuyInfo} />
-          <Route path={`${path}/like`} component={BookLikeList} />
-          <Route path={`${path}/userReview`} component={UserReview} />
-          <Route path={`${path}/review`} component={MyReview} />
-          <Route path={`${path}/modified`} component={Modified} />
-          <Route path={`${path}/withdrawal`} component={Withdrawal} />
-          <Route path="*" component={RootRedirect} />
-        </Switch>
+        <Suspense fallback={<Loading isLoading />}>
+          <Switch>
+            <Route path={`${path}/point`} exact component={Point} />
+            <Route path={`${path}/sale`} exact component={SaleList} />
+            <Route path={[`${path}/sale/insert/:bookId`, `${path}/sale/insert`]} component={SaleInsert} />
+            <Route path={`${path}/sale/:bookId`} component={SaleInfo} />
+            <Route path={`${path}/buy`} component={BuyList} exact />
+            <Route path={`${path}/buy/:orderId`} component={BuyInfo} />
+            <Route path={`${path}/like`} component={UsedBookLikeList} />
+            <Route path={`${path}/userReview`} component={UserReview} />
+            <Route path={`${path}/review`} component={MyReview} />
+            <Route path={`${path}/modified`} component={Modified} />
+            <Route path={`${path}/withdrawal`} component={Withdrawal} />
+            <Route path="*" component={RootRedirect} />
+          </Switch>
+        </Suspense>
       </Styled.MyRouterWrapper>
     </Styled.MyContainer>
   );
