@@ -30,44 +30,44 @@ const My = () => {
         {
           id: 1,
           text: "판매",
-          endPoint: `${path}/sale`,
+          fullPath: `${path}/sale`,
         },
         {
           id: 2,
           text: "구매",
-          endPoint: `${path}/buy`,
+          fullPath: `${path}/buy`,
         },
         {
           id: 3,
           text: "찜",
-          endPoint: `${path}/like`,
+          fullPath: `${path}/like`,
         },
         {
           id: 4,
           text: "거래 후기",
-          endPoint: `${path}/userReview`,
+          fullPath: `${path}/userReview`,
         },
         {
           id: 5,
           text: "작성리뷰",
-          endPoint: `${path}/review`,
+          fullPath: `${path}/review`,
         },
         {
           id: 6,
           text: "회원정보수정",
-          endPoint: `${path}/modified`,
+          fullPath: `${path}/modified`,
         },
         {
           id: 7,
           text: "탈퇴하기",
-          endPoint: `${path}/withdrawal`,
+          fullPath: `${path}/withdrawal`,
         },
-      ].map(({ id, text, endPoint }) => (
+      ].map(({ id, text, fullPath }) => (
         <Tab
           key={id}
           value={id}
           label={
-            <NavLink to={endPoint} activeClassName="active">
+            <NavLink to={fullPath} activeClassName="active">
               {text}
             </NavLink>
           }
