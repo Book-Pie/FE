@@ -60,7 +60,7 @@ const Comment = ({
         </div>
         <ButtonGroup size="small" disableElevation variant="contained">
           {isLoggedIn && (
-            <Button color="mainDarkBrown" variant="contained" onClick={handleReplyAddOnClick}>
+            <Button color="darkgray" variant="contained" onClick={handleReplyAddOnClick}>
               댓글쓰기
             </Button>
           )}

@@ -11,7 +11,7 @@ export type ResponseEnum = {
   [key: number]: string;
 };
 
-export type Response = {
+export type SuccessResponse = {
   error: null;
   success: boolean;
   data: any;

@@ -1,8 +1,9 @@
-import { Redirect, Route, Switch } from "react-router";
+import { Route, Switch } from "react-router";
 import { logout } from "modules/Slices/user/userSlice";
 import { useCallback, lazy } from "react";
 import { useAppDispatch } from "modules/store";
 import PrivateRoute from "./PrivateRoute";
+import RootRedirect from "./RootRedirect";
 
 const Main = lazy(() => import("pages/Main"));
 const SignUp = lazy(() => import("pages/SignUp"));
@@ -20,7 +21,7 @@ const Routers = () => {
   const dispatch = useAppDispatch();
   const handleLogout = useCallback(() => {
     dispatch(logout());
-    return <Redirect to="/" />;
+    return <RootRedirect />;
   }, [dispatch]);
 
   return (
@@ -37,7 +38,7 @@ const Routers = () => {
       <Route path="/usedBook" component={UsedBook} />
       <Route path="/search" component={Search} />
       <Route path="/book" component={Book} />
-      <Route path="*" render={() => <Redirect to="/" />} />
+      <Route path="*" component={RootRedirect} />
     </Switch>
   );
 };

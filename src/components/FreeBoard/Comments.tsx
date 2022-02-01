@@ -110,28 +110,6 @@ const Comments = ({ boardId, userId }: Types.CommentsProps) => {
     if (!coList) dispatch(freeboardCommentsAsync({ boardId, page: 0 }));
   }, [dispatch, boardId, coList]);
 
-  const pagiNation = coList ? (
-    coList.empty ? null : (
-      <Stack justifyContent="center" direction="row">
-        <Pagination
-          siblingCount={0}
-          count={coList.totalPages}
-          page={coList.page + 1}
-          variant="outlined"
-          shape="rounded"
-          size="large"
-          onChange={handlePaginationOnChange}
-          sx={{
-            ".Mui-selected": {
-              background: theme => theme.colors.mainDarkBrown,
-              color: theme => theme.colors.white,
-            },
-          }}
-        />
-      </Stack>
-    )
-  ) : null;
-
   return (
     <Styled.CommentsWrapper>
       <Styled.CommentsTop>
@@ -171,7 +149,6 @@ const Comments = ({ boardId, userId }: Types.CommentsProps) => {
           ) : (
             coList.contents[coList.page].map(comment => {
               const { content, nickName, replyDate, replyId, userId: makeUserId, subReply } = comment;
-
               return (
                 <Comment
                   key={replyId}
@@ -190,7 +167,26 @@ const Comments = ({ boardId, userId }: Types.CommentsProps) => {
           )
         ) : null}
       </Styled.CommentsBottom>
-      {pagiNation}
+      {coList && coList.empty === false && (
+        <Stack justifyContent="center" direction="row">
+          <Pagination
+            siblingCount={0}
+            count={coList.totalPages}
+            page={coList.page + 1}
+            variant="outlined"
+            color="darkgray"
+            shape="rounded"
+            size="large"
+            onChange={handlePaginationOnChange}
+            sx={{
+              ".Mui-selected": {
+                background: theme => theme.colors.darkGrey,
+                color: theme => theme.colors.white,
+              },
+            }}
+          />
+        </Stack>
+      )}
     </Styled.CommentsWrapper>
   );
 };
