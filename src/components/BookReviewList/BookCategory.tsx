@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import BookReviewItem from "components/BookReviewList/BookReviewItem";
 import {
@@ -26,7 +26,6 @@ const BookCategory = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [categorys, setCategorys] = useState<ParentsCategoryData[]>([]);
-
   const observerRef = useRef<IntersectionObserver>();
   const throttlingRef = useRef<NodeJS.Timeout | null>();
   const { search } = location;
@@ -108,21 +107,20 @@ const BookCategory = () => {
           카테고리
         </NavLink>
       </BookReviewMainTap>
-
       <ReviewCategorys categorys={categorys} defaultLocation="book" />
-
       <div>
         <Title>도서리뷰</Title>
       </div>
       <BookReviewContainer>
         {pages.length !== 0 ? (
-          pages.map((page, index) => (
-            <BookReviewListContainer key={index} ref={pages.length - 1 === index ? handleObserver : undefined}>
-              {page.map((card, index) => (
+          <BookReviewListContainer>
+            {pages.map((card, index) => (
+              <React.Fragment key={index}>
+                <div ref={handleObserver} />
                 <BookReviewItem key={index} card={card} />
-              ))}
-            </BookReviewListContainer>
-          ))
+              </React.Fragment>
+            ))}
+          </BookReviewListContainer>
         ) : (
           <ReviewListSkeleton />
         )}

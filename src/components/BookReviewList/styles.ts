@@ -1,9 +1,17 @@
 import styled from "styled-components";
 
 export const BookReviewListContainer = styled.div`
-  display: grid;
-  grid-template-columns: repeat(4, 280px);
-  row-gap: 20px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+`;
+
+export const SmallCategoryWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 `;
 
 export const BookReviewContainer = styled.div`
@@ -46,9 +54,12 @@ export const CategoryWrapper = styled.div`
 
 export const ReviewHomeListWrapper = styled.div`
   margin-bottom: 150px;
+  padding: 0 16px 0 16px;
 `;
 
-export const ReviewListWrapper = styled.div``;
+export const ReviewListWrapper = styled.div`
+  padding: 0 16px 0 16px;
+`;
 
 export const ImgWrapper = styled.div``;
 
