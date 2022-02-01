@@ -7,7 +7,7 @@ import { ChangeEvent, useState } from "react";
 import { getRememberEmail } from "utils/localStorageUtil";
 import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import * as Styled from "./style";
+import * as Styled from "./styles";
 
 const kakaOauthUrl = process.env.KAKAO_OAUTH_URL ?? "";
 const naverOauthUrl = process.env.NAVER_OAUTH_URL ?? "";

@@ -5,7 +5,7 @@ import Aladin from "components/SearchForm/Aladin";
 import SearchBookReview from "components/SearchForm/SearchBookReview";
 import SearchUsedBook from "components/SearchForm/SearchUsedBook";
 import useScrollTop from "hooks/useScrollTop";
-import * as Styled from "./style";
+import * as Styled from "./styles";
 
 const Search = () => {
   useScrollTop();

@@ -1,18 +1,13 @@
 import { Backdrop, CircularProgress } from "@mui/material";
 
-interface LoadingProps {
-  isLoading: boolean;
-}
+const Loading = ({ isLoading }: { isLoading: boolean }) => {
+  if (!isLoading) return null;
 
-const Loading = ({ isLoading }: LoadingProps) => {
-  if (isLoading) {
-    return (
-      <Backdrop sx={{ zIndex: 1, color: theme => theme.colors.mainLightBrown }} open={isLoading}>
-        <CircularProgress color="inherit" />
-      </Backdrop>
-    );
-  }
-  return null;
+  return (
+    <Backdrop sx={{ zIndex: 5, color: theme => theme.colors.mainLightBrown }} open={isLoading}>
+      <CircularProgress color="inherit" />
+    </Backdrop>
+  );
 };
 
 export default Loading;

@@ -7,7 +7,7 @@ import logo from "assets/image/logo-removebg.png";
 import { useTypedSelector } from "modules/store";
 import { userSelector } from "modules/Slices/user/userSlice";
 import usePopup from "hooks/usePopup";
-import { Wrapper } from "./style";
+import * as Styled from "./styles";
 
 const { IMP } = window as any;
 
@@ -92,7 +92,7 @@ const Payment = () => {
   }, []);
 
   return (
-    <Wrapper>
+    <Styled.PaymentContainer>
       {isOpen && (
         <Popup
           isOpen={isOpen}
@@ -157,7 +157,7 @@ const Payment = () => {
           </div>
         )}
       </div>
-    </Wrapper>
+    </Styled.PaymentContainer>
   );
 };
 

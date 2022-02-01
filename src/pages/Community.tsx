@@ -9,7 +9,7 @@ import { Content } from "modules/Slices/freeBoard/types";
 import { dateArrayFormat } from "utils/formatUtil";
 import Grid from "@mui/material/Grid";
 import RootRedirect from "src/router/RootRedirect";
-import * as Styled from "./style";
+import * as Styled from "./styles";
 
 const Community = () => {
   const { path } = useRouteMatch();

@@ -1,6 +1,6 @@
 import { Route, useRouteMatch } from "react-router";
 import { lazy } from "react";
-import * as Styled from "./style";
+import * as Styled from "./styles";
 
 const UsedBookList = lazy(() => import("components/UsedBookList/UsedBookList"));
 const UsedBookDetail = lazy(() => import("components/UsedBookDetail/UsedBookDetail"));

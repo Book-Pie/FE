@@ -1,3 +1,13 @@
+export interface OauthParam {
+  name: "naver" | "kakao";
+}
+export interface KakaoRequest {
+  grant_type: string;
+  client_id: string;
+  redirect_uri: string;
+  code: string;
+}
+
 export interface Param {
   id: string;
 }

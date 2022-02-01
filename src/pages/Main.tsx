@@ -1,7 +1,7 @@
 import LatestSlider from "components/LatestSlider/LatestSlider";
 import MainBanner from "components/MainBanner/MainBanner";
 import BestSeller from "components/BestSeller/BestSeller";
-import * as Styled from "./style";
+import * as Styled from "./styles";
 
 const Main = () => {
   return (

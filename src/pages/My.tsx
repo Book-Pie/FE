@@ -16,7 +16,7 @@ import Point from "components/Point/Point";
 import RootRedirect from "src/router/RootRedirect";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-import * as Styled from "./style";
+import * as Styled from "./styles";
 
 const My = () => {
   const { path } = useRouteMatch();
