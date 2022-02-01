@@ -34,6 +34,8 @@ const initialState = {
   isEmpty: false,
 };
 
+const usedbookCache: Types.CacheRefType = {};
+
 const UsedBookList = () => {
   const location = useLocation();
   const [usedBook, setUsedBook] = useState<Types.UsedBookState>(initialState);
@@ -50,7 +52,6 @@ const UsedBookList = () => {
   const { pages, pageCount, isEmpty } = usedBook;
   const { search, pathname } = location;
   const isLoggedIn = useTypedSelector(isLoggedInSelector);
-  const cache = useRef<Types.CacheRefType>({});
 
   const history = useHistory();
   const delay = useDelay(600);
@@ -84,11 +85,11 @@ const UsedBookList = () => {
     function handleResourceCache<T>(name: string, promise: <A>() => Promise<AxiosResponse<A>>) {
       const lowerName = name.toLowerCase();
 
-      let resource = cache.current[lowerName];
+      let resource = usedbookCache[lowerName];
 
       if (!resource) {
         resource = createResource(promise<T>());
-        cache.current[lowerName] = resource;
+        usedbookCache[lowerName] = resource;
       }
       return resource;
     },

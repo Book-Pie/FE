@@ -83,7 +83,7 @@ const Content = ({ pages, titleFilter, select, handleLatestClick }: Types.Conten
                       <Button color="error" variant="contained" onClick={handleLatestClick(id)}>
                         최신글로 등록
                       </Button>
-                      <Button color="primary" variant="contained" onClick={handleSaleUpdateOnClick(id)}>
+                      <Button color="info" variant="contained" onClick={handleSaleUpdateOnClick(id)}>
                         수정하기
                       </Button>
                     </>
@@ -175,7 +175,7 @@ const Content = ({ pages, titleFilter, select, handleLatestClick }: Types.Conten
                     <Button color="error" variant="contained" onClick={handleLatestClick(id)}>
                       최신글로 등록
                     </Button>
-                    <Button color="primary" variant="contained" onClick={handleSaleUpdateOnClick(id)}>
+                    <Button color="info" variant="contained" onClick={handleSaleUpdateOnClick(id)}>
                       수정하기
                     </Button>
                   </>

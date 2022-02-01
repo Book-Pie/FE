@@ -6,7 +6,8 @@ import { memo } from "react";
 import * as Styled from "./style";
 import * as Types from "./types";
 
-const SaleInsertTitle = ({ errors, control }: Types.SaleInsertProps) => {
+const SaleInsertTitle = ({ control, error, usedBookResource }: Types.SaleInsertTitleProps) => {
+  usedBookResource?.read();
   const titleOpions: RegisterOptions = {
     required: "필수입니다.",
     maxLength: makeOption<number>(40, "최대 40자입니다"),
@@ -14,25 +15,19 @@ const SaleInsertTitle = ({ errors, control }: Types.SaleInsertProps) => {
   };
 
   return (
-    <Styled.Row>
-      <div>
-        <span>제목</span>
-        <span>*</span>
-      </div>
-      <div className="title">
-        <Controller
-          name="title"
-          control={control}
-          rules={titleOpions}
-          render={({ field }) => (
-            <TextField {...field} type="text" fullWidth color="mainDarkBrown" error={errors.title ? true : false} />
-          )}
-        />
-        <Styled.ErrorMessageWrapper>
-          <ErrorMessage message={errors.title?.message} />
-        </Styled.ErrorMessageWrapper>
-      </div>
-    </Styled.Row>
+    <div className="title">
+      <Controller
+        name="title"
+        control={control}
+        rules={titleOpions}
+        render={({ field }) => (
+          <TextField {...field} type="text" fullWidth color="mainDarkBrown" error={error ? true : false} />
+        )}
+      />
+      <Styled.ErrorMessageWrapper>
+        <ErrorMessage message={error?.message} />
+      </Styled.ErrorMessageWrapper>
+    </div>
   );
 };
 

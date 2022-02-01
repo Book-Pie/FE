@@ -8,6 +8,22 @@ export const SaleInsertWrapper = styled.div`
     margin: 1rem 0;
     width: 95%;
   }
+  .notFound {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    padding: 2rem 0;
+    line-height: 1.2;
+    gap: 10px;
+    align-items: center;
+    p {
+      font-size: 18px;
+    }
+    button {
+      height: 40px;
+      font-size: 16px;
+    }
+  }
 `;
 
 export const SaleInsertLeft = styled.div`

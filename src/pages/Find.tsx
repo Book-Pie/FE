@@ -3,7 +3,7 @@ import { Route, Switch, useRouteMatch } from "react-router";
 import { Link } from "react-router-dom";
 import FindEmail from "components/FindEmail/FindEmail";
 import FindPasssword from "components/FindPasssword/FindPasssword";
-import * as Styled from "./style";
+import * as Styled from "./styles";
 
 const Find = () => {
   const { path } = useRouteMatch();

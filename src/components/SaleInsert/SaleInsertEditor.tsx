@@ -1,19 +1,14 @@
 import Editor from "components/Editor/Editor";
 import { memo } from "react";
-import * as Styled from "./style";
 import * as Types from "./types";
 
-const SaleInsertEditor = ({ setEditorValue, editorValue }: Types.SaleInsertEditorProps) => {
+const SaleInsertEditor = ({ setEditorValue, usedBookResource }: Types.SaleInsertEditorProps) => {
+  const axioseReponse = usedBookResource?.read<Types.UsedBookResponseType>();
+
   return (
-    <Styled.Row>
-      <div>
-        <span>내용</span>
-        <span>*</span>
-      </div>
-      <div className="editor">
-        <Editor limit={2000} height={200} setEditorValue={setEditorValue} />
-      </div>
-    </Styled.Row>
+    <div className="editor">
+      <Editor limit={2000} height={200} setEditorValue={setEditorValue} value={axioseReponse?.data.data.content} />
+    </div>
   );
 };
 

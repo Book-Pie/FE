@@ -8,7 +8,7 @@ import { make1000UnitsCommaFormet } from "utils/formatUtil";
 import { getUsedBookOrder, removeUsedBookOrder, setUsedBookOrder } from "utils/localStorageUtil";
 import { useTypedSelector } from "modules/store";
 import { userSelector } from "modules/Slices/user/userSlice";
-import * as Styled from "./style";
+import * as Styled from "./styles";
 import * as Types from "./types";
 
 const init: Types.UsedBook = {
@@ -78,7 +78,7 @@ const Order = () => {
   }
 
   return (
-    <Styled.OrderWrapper>
+    <Styled.OrderContainer>
       <Switch>
         <Route path={`${path}/result`} component={OrderResult} />
         <Route path={path}>
@@ -101,7 +101,7 @@ const Order = () => {
           <OrderForm usedBook={usedBook} />
         </Route>
       </Switch>
-    </Styled.OrderWrapper>
+    </Styled.OrderContainer>
   );
 };
 

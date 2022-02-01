@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Redirect, Route, Switch, useRouteMatch } from "react-router";
+import { Route, Switch, useRouteMatch } from "react-router";
 import { Link } from "react-router-dom";
 import http from "api/http";
 import FreeBoard from "components/FreeBoard/FreeBoard";
@@ -8,7 +8,8 @@ import FreeBoardList from "components/FreeBoardList/FreeBoardList";
 import { Content } from "modules/Slices/freeBoard/types";
 import { dateArrayFormat } from "utils/formatUtil";
 import Grid from "@mui/material/Grid";
-import * as Styled from "./style";
+import RootRedirect from "src/router/RootRedirect";
+import * as Styled from "./styles";
 
 const Community = () => {
   const { path } = useRouteMatch();
@@ -60,7 +61,7 @@ const Community = () => {
         <Route path={`${path}/freeboard`} component={FreeBoardList} exact />
         <Route path={`${path}/freeboard/insert`} component={FreeBoardInsert} exact />
         <Route path={`${path}/freeboard/:boardId`} component={FreeBoard} exact />
-        <Route path="*" render={() => <Redirect to="/" />} />
+        <Route path="*" component={RootRedirect} />
       </Switch>
     </Styled.CommunityContainer>
   );

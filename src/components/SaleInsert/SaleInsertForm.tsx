@@ -19,8 +19,7 @@ import SaleInsertTags from "./SaleInsertTags";
 import SaleBeforeImgProps from "./SaleBeforeImg";
 import SaleInsertCategorys from "./SaleInsertCategorys";
 import SaleInsertTitle from "./SaleInsertTitle";
-import SaleCategorysSkeleton from "./SaleCategorysSkeleton";
-import SaleBeforeImgSkeleton from "./SaleBeforeImgSkeleton";
+import SaleInsertSkeleton from "./SaleInsertSkeleton";
 
 const SaleInsertForm = ({
   handlePopupMessage,
@@ -68,6 +67,7 @@ const SaleInsertForm = ({
   const handleOnSubmit = async ({ price, title }: Types.SaleInsertForm) => {
     try {
       if (!token) throw new Error("로그인이 필요합니다.");
+      if (imgFiles.length === 0) throw new Error("이미지는 필수입니다.");
       const state = usedBookState;
       const payload = {
         title,
@@ -161,47 +161,35 @@ const SaleInsertForm = ({
   useEffect(() => {
     try {
       if (usedBookResource) usedBookResource.read<Types.UsedBookResponseType>();
-    } catch (e: any) {
-      e.then((response: AxiosResponse<Types.UsedBookResponseType>) => {
+    } catch (promise: any) {
+      promise.then((response: AxiosResponse<Types.UsedBookResponseType>) => {
         const { data } = response;
-        setCurrentFirstCategory(data.data.fstCategory);
-        setCurrentSecondCategory(data.data.sndCategory);
-        setValue("price", String(data.data.price));
-        setValue("title", String(data.data.title));
-        setEditorValue(data.data.content);
-        setUsedBookState(data.data.bookState);
+        const usedbook = data.data;
+        setCurrentFirstCategory(usedbook.fstCategory);
+        setCurrentSecondCategory(usedbook.sndCategory);
+        setValue("price", String(usedbook.price));
+        setValue("title", String(usedbook.title));
+        setUsedBookState(usedbook.bookState);
       });
     }
   }, [usedBookResource, setValue]);
+
   return (
     <form onSubmit={handleSubmit(handleOnSubmit)}>
       {usedBookResource && (
-        <Styled.ImgUpload>
-          <div>
-            <span>
-              이전 이미지<span>*</span>
-            </span>
-            <span>({imgFiles.length}/5)</span>
-          </div>
-          <Suspense fallback={<SaleBeforeImgSkeleton />}>
-            <SaleBeforeImgProps usedBookResource={usedBookResource} />
-          </Suspense>
-        </Styled.ImgUpload>
+        <Suspense fallback={<SaleInsertSkeleton type="image" />}>
+          <SaleBeforeImgProps usedBookResource={usedBookResource} />
+        </Suspense>
       )}
       <Styled.ImgDelete>
         {imgFiles.length !== 0 && <span onClick={handleFilesUploadAllDelete}>모두 제거</span>}
       </Styled.ImgDelete>
       <Styled.ImgUpload>
         <div>
-          {usedBookResource ? (
-            <span>
-              새 이미지<span>*</span>
-            </span>
-          ) : (
-            <span>
-              상품이미지<span>*</span>
-            </span>
-          )}
+          <span>
+            {usedBookResource ? "새 이미지" : "상품이미지"}
+            <span>*</span>
+          </span>
           <span>({imgFiles.length}/5)</span>
         </div>
         <div>
@@ -226,7 +214,7 @@ const SaleInsertForm = ({
           ))}
         </div>
       </Styled.ImgUpload>
-      {imgFiles.length !== 0 && (
+      {imgFiles.length > 0 && (
         <Styled.ImgUploadText>
           {imgFiles.map((file, idx) => (
             <div key={file.name} onClick={handleFileDelete(idx)}>
@@ -236,26 +224,48 @@ const SaleInsertForm = ({
           ))}
         </Styled.ImgUploadText>
       )}
-      <SaleInsertTitle errors={errors} control={control} />
+      <Styled.Row>
+        <div>
+          <span>제목</span>
+          <span>*</span>
+        </div>
+        <Suspense fallback={<SaleInsertSkeleton type="input" />}>
+          <SaleInsertTitle error={errors?.title} control={control} usedBookResource={usedBookResource} />
+        </Suspense>
+      </Styled.Row>
       <Styled.Row>
         <div>
           <span>카테고리</span>
           <span>*</span>
         </div>
-        <div>
-          <Suspense fallback={<SaleCategorysSkeleton />}>
-            <SaleInsertCategorys
-              handleChange={handleChange}
-              currentFirstCategory={currentFirstCategory}
-              currentSecondCategory={currentSecondCategory}
-              resource={categoryResource}
-            />
-          </Suspense>
-        </div>
+        <Suspense fallback={<SaleInsertSkeleton type="category" />}>
+          <SaleInsertCategorys
+            handleChange={handleChange}
+            currentFirstCategory={currentFirstCategory}
+            currentSecondCategory={currentSecondCategory}
+            categoryResource={categoryResource}
+          />
+        </Suspense>
       </Styled.Row>
       <SaleInsertCheckBox setUsedBookState={setUsedBookState} defaultValue={usedBookState} />
-      <SaleInsertPrice errors={errors} control={control} />
-      <SaleInsertEditor setEditorValue={setEditorValue} editorValue={editorValue} />
+      <Styled.Row>
+        <div>
+          <span>가격</span>
+          <span>*</span>
+        </div>
+        <Suspense fallback={<SaleInsertSkeleton type="input" />}>
+          <SaleInsertPrice error={errors?.price} control={control} usedBookResource={usedBookResource} />
+        </Suspense>
+      </Styled.Row>
+      <Styled.Row>
+        <div>
+          <span>내용</span>
+          <span>*</span>
+        </div>
+        <Suspense fallback={<SaleInsertSkeleton type="editor" />}>
+          <SaleInsertEditor setEditorValue={setEditorValue} usedBookResource={usedBookResource} />
+        </Suspense>
+      </Styled.Row>
       <SaleInsertTags tags={tags} setForm={setForm} />
       <Buttons handleReset={handleReset} />
     </form>

@@ -10,7 +10,7 @@ import { ReviewListEmptyParagraph, ReviewListEmptyWrapper } from "../Reviews/Rev
 import { CountWrapper } from "../UsedBookDetail/style";
 import { ContentWrapper, Title, UsedBookLikeListWrapper, TitleSpan } from "./styles";
 
-const BookLikeList = () => {
+const UsedBookLikeList = () => {
   const dispatch = useDispatch();
   const { signIn } = useSignIn();
   const { isLoggedIn } = signIn;
@@ -55,4 +55,4 @@ export const GridEmpty = styled.div`
   justify-content: center;
 `;
 
-export default BookLikeList;
+export default UsedBookLikeList;

@@ -1,24 +1,15 @@
-import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, SxProps, Theme } from "@mui/material";
-import { AxiosResponse } from "axios";
+import { FormControl, InputLabel, MenuItem, Select, SxProps, Theme } from "@mui/material";
 import { memo, useMemo } from "react";
 import { CategorysResponse } from "../UsedBookList/types";
-
-interface categorysProps {
-  resource: {
-    read: <T>() => AxiosResponse<T>;
-  };
-  currentFirstCategory: string;
-  currentSecondCategory: string;
-  handleChange: (firstCategory: string) => (event: SelectChangeEvent) => void;
-}
+import * as Types from "./types";
 
 const SaleInsertCategorys = ({
-  resource,
+  categoryResource,
   currentFirstCategory,
   currentSecondCategory,
   handleChange,
-}: categorysProps) => {
-  const { data } = resource.read<CategorysResponse>();
+}: Types.SaleInsertCategorysProps) => {
+  const { data } = categoryResource.read<CategorysResponse>();
 
   const sx = useMemo<SxProps<Theme>>(
     () => ({
@@ -30,7 +21,7 @@ const SaleInsertCategorys = ({
   );
 
   return (
-    <>
+    <div>
       {Object.entries(data.data).map(([first, second], idx) => (
         <FormControl className="category" sx={{ minWidth: 130 }} key={idx} color="mainDarkBrown">
           <InputLabel id="category">{first}</InputLabel>
@@ -53,7 +44,7 @@ const SaleInsertCategorys = ({
           </Select>
         </FormControl>
       ))}
-    </>
+    </div>
   );
 };
 
