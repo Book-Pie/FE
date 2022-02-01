@@ -1,6 +1,6 @@
 import { SelectChangeEvent } from "@mui/material";
 import { AxiosResponse } from "axios";
-import { Response } from "pages/Order/types";
+import { Response } from "pages/types";
 import { Control, FieldError } from "react-hook-form";
 
 export interface SaleInsertForm {

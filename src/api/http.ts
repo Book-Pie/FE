@@ -4,7 +4,7 @@ import * as Types from "./types";
 
 const RESPONSE_STATUS_ENUM: Types.ResponseEnum = {
   400: "클라이언트에서 잘못된 요청을 보냈습니다.",
-  403: "유효하지 않는 토큰값입니다. 다시 로그인해주세요.",
+  403: "다시 로그인해주세요.",
   404: "유효하지 않는 자원입니다.",
   500: "서버에서 문제가 발생했습니다.",
   504: "타임 아웃이 발생했습니다.",
@@ -54,7 +54,7 @@ http.interceptors.response.use(
       return Promise.reject(new Error(RESPONSE_STATUS_ENUM[status]));
     }
 
-    return Promise.reject(new Error("타임 아웃이 발생했습니다."));
+    return Promise.reject(new Error(RESPONSE_STATUS_ENUM[504]));
   },
 );
 

@@ -3,6 +3,8 @@ import { Link, useHistory } from "react-router-dom";
 import { compareDateFormat, make1000UnitsCommaFormet } from "utils/formatUtil";
 import useSignIn from "hooks/useSignIn";
 import Button from "@mui/material/Button";
+import { getUsedBookDelete } from "api/usedBook";
+import { errorHandler } from "src/api/http";
 import {
   BookPrice,
   BookStatus,
@@ -53,8 +55,20 @@ const UsedBookArea = ({
   const bookPrice = make1000UnitsCommaFormet(String(price));
   const { signIn, dispatch } = useSignIn();
   const history = useHistory();
-  const { user, isLoggedIn } = signIn;
-  const { id } = user ?? -1;
+  const { user, isLoggedIn, token } = signIn;
+
+  const handleUsedBookDeleteOnClick = async () => {
+    try {
+      if (saleState !== "SALE") throw new Error("판매 중인 상품은 삭제가 불가능합니다.");
+      if (!window.confirm("정말로 삭제하시겠습니까?")) return;
+      if (!token) throw new Error("로그인이 필요합니다.");
+      await getUsedBookDelete(usedBookId, token);
+      history.replace("/usedBook");
+    } catch (error: any) {
+      const message = errorHandler(error);
+      alert(message);
+    }
+  };
 
   let dayAgo = "일전";
   if (date === 0) {
@@ -120,7 +134,7 @@ const UsedBookArea = ({
         <ProductDetailContent dangerouslySetInnerHTML={{ __html: content }} />
       </ProductDetail>
       <TagArea>{tags && tags.map((tag, index) => <TagContent key={index}>#{tag}</TagContent>)}</TagArea>
-      {id !== sellerId ? (
+      {user?.id !== sellerId ? (
         <ButtonArea>
           <UsedBookDetailButton onClick={likeClick}>좋아요</UsedBookDetailButton>
           {saleState === "TRADING" && <DisabledButton>현재 거래중인 상품입니다.</DisabledButton>}
@@ -136,12 +150,23 @@ const UsedBookArea = ({
         </ButtonArea>
       ) : (
         <ButtonArea>
-          <Button variant="outlined" color="mainDarkBrown" sx={{ mt: 1, height: 50, width: 200 }}>
-            수정
-          </Button>
-          <Button variant="outlined" color="error" sx={{ mt: 1, height: 50, width: 200 }}>
-            삭제
-          </Button>
+          {saleState === "SALE" ? (
+            <>
+              <Button variant="outlined" color="mainDarkBrown" sx={{ mt: 1, height: 50, width: 200 }}>
+                <Link to={{ pathname: `/my/sale/insert/${usedBookId}`, state: { saleState } }}>수정</Link>
+              </Button>
+              <Button
+                variant="outlined"
+                onClick={handleUsedBookDeleteOnClick}
+                color="error"
+                sx={{ mt: 1, height: 50, width: 200 }}
+              >
+                삭제
+              </Button>
+            </>
+          ) : (
+            <DisabledButton>현재 거래중인 상품입니다.</DisabledButton>
+          )}
         </ButtonArea>
       )}
     </UsedBookWrapper>

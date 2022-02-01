@@ -184,7 +184,7 @@ export const MyMenuTabWrapper = styled.section`
 `;
 
 export const MyRouterWrapper = styled.section`
-  min-height: 400px;
+  min-height: 500px;
   display: flex;
   justify-content: center;
   align-items: center;

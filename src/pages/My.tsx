@@ -22,9 +22,7 @@ const BuyInfo = lazy(() => import("components/BuyInfo/BuyInfo"));
 
 const My = () => {
   const { path } = useRouteMatch();
-  const [value, setValue] = useState(1);
-
-  const handleChange = (_: any, newValue: number) => setValue(newValue);
+  const [value, setValue] = useState(6);
 
   const myMenus = useMemo(
     () =>
@@ -77,6 +75,7 @@ const My = () => {
       )),
     [path],
   );
+  const handleChange = (_: any, newValue: number) => setValue(newValue);
 
   return (
     <Styled.MyContainer>
