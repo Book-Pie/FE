@@ -76,6 +76,7 @@
     "file-loader": "6.2.0",
     "fork-ts-checker-webpack-plugin": "^6.5.0",
     "html-webpack-plugin": "^5.5.0",
+    "lodash-webpack-plugin": "^0.11.6",
     "prettier": "^2.5.1",
     "react-refresh": "^0.11.0",
     "serve": "^13.0.2",

@@ -1,6 +1,7 @@
 import { History } from "history";
 import { AppDispatch, RootState } from "modules/store";
-import { IOrderResult } from "components/OrderForm/types";
+import { OrderResult } from "components/OrderForm/types";
+import { SuccessResponse } from "src/api/types";
 
 export interface Content {
   reviewId: number;
@@ -34,11 +35,6 @@ export interface Pageable {
 export interface SignInAsyncParam {
   email: string;
   password: string;
-  isRemember: boolean;
-}
-export interface NickNameUpdateParam {
-  nickName: string;
-  token: string;
 }
 // =========================== 썽크함수 파라미터 타입 ===========================
 
@@ -67,8 +63,11 @@ export interface UserInfo {
   createDate: string;
 }
 export type UserInfoAsyncSuccess = UserInfo;
-export type SaleInfoAsyncSuccess = IOrderResult;
-export type BuyInfoAsyncSuccess = IOrderResult;
+export type SaleInfoAsyncResponse = {
+  sucess: boolean;
+  data: OrderResult;
+  error: null;
+};
 export type ReviewListAsyncSuccess = {
   content: Content[];
   pageable: Pageable;
@@ -85,19 +84,18 @@ export type ReviewListAsyncSuccess = {
 // =========================== 썽크함수 성공 시 리턴 타입 ===========================
 
 // =========================== axios 요청 제네릭 ===========================
-export interface SignInAsyncRequest {
+export interface SignInAsyncRequestBodoy {
   email: string;
   password: string;
 }
-export interface SignInAsyncResponse {
-  success: boolean;
-  data: string;
-  error: null;
+export interface BuyInfoAsyncResponse extends SuccessResponse {
+  data: OrderResult;
 }
-export interface UserInfoAsyncResponse {
+export interface SignInAsyncResponse extends SuccessResponse {
+  data: string;
+}
+export interface UserInfoAsyncResponse extends SuccessResponse {
   data: UserInfo;
-  error: null;
-  success: boolean;
 }
 
 // =========================== ThunkApi 제네릭 ===========================
@@ -114,8 +112,8 @@ export interface SignInReduce {
   isLoggedIn: boolean;
   status: "loading" | "idle";
   error: null | string;
-  saleInfos: IOrderResult[];
-  buyInfos: IOrderResult[];
+  saleInfos: OrderResult[];
+  buyInfos: OrderResult[];
   reviews: {
     page: number;
     pageCount: number;

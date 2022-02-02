@@ -2,7 +2,7 @@ import React, { ChangeEvent, Suspense, useCallback, useEffect, useMemo, useRef, 
 import Popup from "elements/Popup";
 import UsedBookCard from "components/UsedBookList/UsedBookCard";
 import DropDown from "elements/DropDown";
-import { getCategorys, getUsedBooks } from "api/usedBook";
+import { getCategorys } from "api/usedBook";
 import { errorHandler } from "api/http";
 import { Link } from "react-router-dom";
 import { useHistory, useLocation } from "react-router";
@@ -22,6 +22,7 @@ import ErrorMessage from "elements/ErrorMessage";
 import { useTypedSelector } from "modules/store";
 import { isLoggedInSelector } from "modules/Slices/user/userSlice";
 import { AxiosResponse } from "axios";
+import client from "api/client";
 import UsedBookCategory from "./UsedBookCategory";
 import * as Types from "./types";
 import * as Styled from "./style";
@@ -131,27 +132,29 @@ const UsedBookList = () => {
   };
 
   const handleGetMoreUsedBooks = useCallback(
-    async (page: number) => {
-      try {
-        setIsLoading(true);
+    (page: number) => {
+      setIsLoading(true);
+      const url = `/usedbook?${queryString.stringify({ ...query, page })}`;
 
-        const { data } = await getUsedBooks<Types.UsedBookResponse>(queryString.stringify({ ...query, page }));
-        const { pageCount, pages } = data.data;
+      const promise = client.get<Types.UsedBookResponse>(url);
 
-        await delay();
-        setUsedBook(prev => ({
-          ...prev,
-          pageCount,
-          pages: [...prev.pages, ...pages],
-          isEmpty: pages.length === 0,
-        }));
-      } catch (error) {
-        const message = errorHandler(error);
-        setIsOpen(true);
-        setMessage(message);
-      } finally {
-        setIsLoading(false);
-      }
+      promise
+        .then(async ({ data }) => {
+          await delay();
+          const { pageCount, pages } = data;
+          setUsedBook(prev => ({
+            ...prev,
+            pageCount,
+            pages: [...prev.pages, ...pages],
+            isEmpty: pages.length === 0,
+          }));
+        })
+        .catch(error => {
+          const message = errorHandler(error);
+          setIsOpen(true);
+          setMessage(message);
+        })
+        .finally(() => setIsLoading(false));
     },
     [delay, query],
   );
