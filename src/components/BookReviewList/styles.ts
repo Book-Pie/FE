@@ -54,7 +54,6 @@ export const CategoryWrapper = styled.div`
 
 export const ReviewHomeListWrapper = styled.div`
   margin-bottom: 150px;
-  padding: 0 16px 0 16px;
 `;
 
 export const ReviewListWrapper = styled.div`
@@ -123,16 +122,29 @@ export const ListTitle = styled.div`
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+  font-size: 18px;
 `;
 
 export const BestSellerWrapper = styled.div`
-  width: 100%;
-  height: 420px;
+  height: 480px;
   margin: 10px auto 0 auto;
 `;
 
 export const BestSellerListWrapper = styled.div`
   display: flex;
+  overflow: hidden;
+
+  @media screen and (max-width: 650px) {
+    width: 480px;
+  }
+
+  @media all and (min-width: 660px) and (max-width: 850px) {
+    width: 730px;
+  }
+
+  @media all and (min-width: 850px) and (max-width: 1200px) {
+    width: 970px;
+  }
 `;
 
 export const BookReviewMainTap = styled.div`
@@ -157,7 +169,6 @@ export const BookReviewMainTap = styled.div`
   a {
     padding: 1rem;
     align-items: center;
-    // font-weight: bold;
     opacity: 0.5;
     text-align: center;
   }
@@ -168,17 +179,7 @@ export const SwiperWrapper = styled.div`
 
   .swiper {
     width: 100%;
-    height: 100%;
-  }
-
-  .swiper-wrapper {
-    width: 1200px;
-    display: flex;
-  }
-
-  .swiper-slide {
-    width: 200px;
-    color: ${props => props.theme.colors.darkGrey};
+    height: 80%;
   }
 
   .swiper-pagination {
@@ -195,11 +196,71 @@ export const SwiperWrapper = styled.div`
   }
 
   .swiper-button-next {
-    border-color: ${props => props.theme.colors.mainDarkBrown} !important;
     color: ${props => props.theme.colors.mainDarkBrown} !important;
   }
   .swiper-button-prev {
-    border-color: ${props => props.theme.colors.mainDarkBrown} !important;
     color: ${props => props.theme.colors.mainDarkBrown} !important;
+  }
+
+  .swiper-button-next {
+    align-items: center;
+    background-color: rgb(255, 255, 255);
+    box-sizing: border-box;
+    border: 1px solid rgb(249, 249, 249);
+    border-radius: 50%;
+    box-shadow: rgb(0 0 0 / 20%) 0px 0px 4px 0px;
+    background-size: 12px;
+    width: 25px;
+    height: 25px;
+    background-size: 50% auto;
+    background-position: center;
+  }
+
+  .swiper-button-prev {
+    align-items: center;
+    background-color: rgb(255, 255, 255);
+    box-sizing: border-box;
+    border: 1px solid rgb(249, 249, 249);
+    border-radius: 50%;
+    box-shadow: rgb(0 0 0 / 20%) 0px 0px 4px 0px;
+    background-size: 12px;
+    width: 25px;
+    height: 25px;
+    background-size: 50% auto;
+    background-position: center;
+  }
+  --swiper-navigation-size: 12px;
+`;
+
+export const CategorySwiperWrapper = styled(SwiperWrapper)`
+  .swiper-wrapper {
+    width: 1100px;
+    display: flex;
+  }
+
+  .swiper-slide {
+    width: 200px;
+    margin-left: 1.5px;
+    color: ${props => props.theme.colors.darkGrey};
+  }
+`;
+
+export const MainSwiperWrapper = styled(SwiperWrapper)`
+  heigth: 460px;
+
+  .swiper {
+    margin-bottom: 30px;
+  }
+
+  .swiper-button-next {
+    position: relative;
+    top: -10px;
+    left: 30px;
+  }
+
+  .swiper-button-prev {
+    position: relative;
+    top: 10px;
+    left: 1px;
   }
 `;

@@ -6,7 +6,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
-import { Wrapper, CategoryWrapper, SwiperWrapper, SmallCategoryWrapper } from "./styles";
+import { Wrapper, CategoryWrapper, SmallCategoryWrapper, CategorySwiperWrapper } from "./styles";
 import Category from "./Category";
 
 export interface CategorysProps {
@@ -53,7 +53,7 @@ const ReviewCategorys = ({ categorys }: CategorysProps) => {
         </Wrapper>
       ) : (
         <Wrapper>
-          <SwiperWrapper>
+          <CategorySwiperWrapper>
             <Swiper
               slidesPerView={6}
               slidesPerGroup={6}
@@ -70,7 +70,7 @@ const ReviewCategorys = ({ categorys }: CategorysProps) => {
                 </SwiperSlide>
               ))}
             </Swiper>
-          </SwiperWrapper>
+          </CategorySwiperWrapper>
         </Wrapper>
       )}
     </CategoryWrapper>

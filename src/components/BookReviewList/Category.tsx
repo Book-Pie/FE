@@ -25,38 +25,36 @@ const Category = ({ item, key }: CategoryParams) => {
   );
 
   return (
-    <div key={key}>
-      <FormControl sx={{ m: 1, minWidth: 150 }} color="mainDarkBrown">
-        <InputLabel id="category">{categoryName}</InputLabel>
-        <Select
-          labelId="category"
-          label={categoryName}
-          value={currentFirstCategory === categoryName ? currentSecondCategory : ""}
-          onChange={handleChange(categoryName)}
-        >
-          <MenuItem value="">
-            <LinkWrapper>
-              <Link to={`/${defaultLocation}`}>전체</Link>
-            </LinkWrapper>
-          </MenuItem>
-          {subCategory.map((value, index) => {
-            return (
-              <MenuItem key={index} value={value.categoryName}>
-                <LinkWrapper>
-                  <Link
-                    to={makeNewQueryString(`${pathname}`, currentQuery, {
-                      categoryId: value.categoryId,
-                    })}
-                  >
-                    {value.categoryName}
-                  </Link>
-                </LinkWrapper>
-              </MenuItem>
-            );
-          })}
-        </Select>
-      </FormControl>
-    </div>
+    <FormControl sx={{ m: 2.3, minWidth: 150 }} color="mainDarkBrown" key={key}>
+      <InputLabel id="category">{categoryName}</InputLabel>
+      <Select
+        labelId="category"
+        label={categoryName}
+        value={currentFirstCategory === categoryName ? currentSecondCategory : ""}
+        onChange={handleChange(categoryName)}
+      >
+        <MenuItem value="">
+          <LinkWrapper>
+            <Link to={`/${defaultLocation}`}>전체</Link>
+          </LinkWrapper>
+        </MenuItem>
+        {subCategory.map((value, index) => {
+          return (
+            <MenuItem key={index} value={value.categoryName}>
+              <LinkWrapper>
+                <Link
+                  to={makeNewQueryString(`${pathname}`, currentQuery, {
+                    categoryId: value.categoryId,
+                  })}
+                >
+                  {value.categoryName}
+                </Link>
+              </LinkWrapper>
+            </MenuItem>
+          );
+        })}
+      </Select>
+    </FormControl>
   );
 };
 
