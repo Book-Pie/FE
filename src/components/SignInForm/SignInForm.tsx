@@ -9,7 +9,7 @@ import {
 import { useForm, Controller } from "react-hook-form";
 import { setClearError, signInAsync, userReduceSelector } from "modules/Slices/user/userSlice";
 import { useCallback, useEffect, useState } from "react";
-import { getRememberEmail } from "utils/localStorageUtil";
+import { getRememberEmail, removeEmail, setRememberEmail } from "utils/localStorageUtil";
 import Popup from "elements/Popup";
 import useDebounce from "hooks/useDebounce";
 import TextField from "@mui/material/TextField";
@@ -34,7 +34,9 @@ const SignInForm = ({ isRemember }: Types.SignInFormProps) => {
     const { email, password } = data;
     if (debouncdRef.current) clearTimeout(debouncdRef.current);
     debouncdRef.current = setTimeout(() => {
-      dispatch(signInAsync({ isRemember, password, email }));
+      setRememberEmail(email);
+      if (!isRemember) removeEmail();
+      dispatch(signInAsync({ password, email }));
     }, 1000);
   };
 

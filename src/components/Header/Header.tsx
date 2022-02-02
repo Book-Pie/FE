@@ -116,8 +116,8 @@ const Header = () => {
           <MenuIcon fontSize="large" />
         </span>
         <ul>
-          {infos.map(({ endPoint, text }, idx) => (
-            <li key={idx}>
+          {infos.map(({ endPoint, text, onClick }, idx) => (
+            <li key={idx} onClick={onClick}>
               <Link to={endPoint}>{text}</Link>
             </li>
           ))}

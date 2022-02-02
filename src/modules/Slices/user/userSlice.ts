@@ -1,61 +1,71 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { removeEmail, removeToken, setRememberEmail, setAccessToken, getAccessToken } from "utils/localStorageUtil";
-import { getSignIn, getUserNickNameUpdate, getUserInfo } from "api/user";
+import { removeToken, setAccessToken, getAccessToken } from "utils/localStorageUtil";
 import { hyphenFormat } from "utils/formatUtil";
 import { RootState } from "modules/store";
-
+import client, { makeAuthTokenHeader } from "api/client";
 import http, { errorHandler } from "api/http";
-import { getOrderInfo, getUserOrderByUsedBookId } from "api/order";
+import { OrderResult } from "src/components/OrderForm/types";
 import * as Types from "./types";
 
-const name = "userReduce";
+const NAME = "userReduce";
 
-// 내 프로필 가져오기
+/**
+ *   유저 정보 가져오기
+ *   @param  X-AUTH-TOKEN
+ *   @return 유저 정보
+ */
 export const userInfoAsync = createAsyncThunk<Types.UserInfoAsyncSuccess, string, Types.ThunkApi>(
-  `${name}/userInfoAsync`,
+  `${NAME}/userInfoAsync`,
   async (token, { rejectWithValue, extra }) => {
     const { history } = extra;
     try {
-      const { data } = await getUserInfo<Types.UserInfoAsyncResponse>(token);
-      return data.data;
-    } catch (error: any) {
-      const { message } = error;
+      const { data } = await client.get<Types.UserInfoAsyncResponse>("/user/me", makeAuthTokenHeader(token));
+      return data;
+    } catch (e) {
       history.replace("/signIn");
       removeToken();
-      return rejectWithValue(message);
+      return rejectWithValue(errorHandler(e));
     }
   },
 );
 
-// 썽크 생성 함수의 첫번째 제너릭은 반환 타입을 준다.
-// 썽크 생성 함수의 두번째 제너릭은 파라미터의 타입을 준다.
-// 썽크 생성 함수의 세번째 제너릭은 {dispatch?, state?, extra?, rejectValue?}에 타입을 설정해줄 수 있다.
-// 로그인
-export const signInAsync = createAsyncThunk<string, Types.SignInAsyncParam, Types.ThunkApi>(
-  `${name}/signInAsync`,
-  async ({ email, password, isRemember }, { dispatch, extra, rejectWithValue }) => {
+/**
+ *   1. 썽크 생성 함수의 첫번째 제너릭은 반환 타입을 준다.
+ *   2. 썽크 생성 함수의 두번째 제너릭은 파라미터의 타입을 준다.
+ *   3. 썽크 생성 함수의 세번째 제너릭은 {dispatch?, state?, extra?, rejectValue?}에 타입을 설정해줄 수 있다.
+ *   유저 로그인
+ *   @param  이메일, 비밀번호
+ *   @return 로그인 토큰
+ */
+export const signInAsync = createAsyncThunk<string, Types.SignInAsyncRequestBodoy, Types.ThunkApi>(
+  `${NAME}/signInAsync`,
+  async ({ email, password }, { dispatch, extra, rejectWithValue }) => {
+    const { history } = extra;
     try {
-      const { data } = await getSignIn<Types.SignInAsyncResponse, Types.SignInAsyncRequest>({ email, password });
-      const token = data.data;
-      setRememberEmail(email);
-      if (!isRemember) removeEmail();
+      const payload = { email, password };
+      const { data: token } = await client.post<Types.SignInAsyncRequestBodoy, Types.SignInAsyncResponse>(
+        "/user/login",
+        payload,
+      );
       dispatch(userInfoAsync(token));
-      const { history } = extra;
       history.push("/");
       return token;
-    } catch (error: any) {
-      const { message } = error;
-      return rejectWithValue(message);
+    } catch (e) {
+      return rejectWithValue(errorHandler(e));
     }
   },
 );
 
-// 닉네임 수정
-export const nickNameUpdateAsync = createAsyncThunk<string, Types.NickNameUpdateParam, Types.ThunkApi>(
-  `${name}/nickNameUpdateAsync`,
+/**
+ *   유저 닉네임 수정
+ *   @param  변경 할 닉네임, 토큰
+ *   @return 변경완료 메세지
+ */
+export const nickNameUpdateAsync = createAsyncThunk<string, { nickName: string; token: string }, Types.ThunkApi>(
+  `${NAME}/nickNameUpdateAsync`,
   async ({ nickName, token }, { rejectWithValue, dispatch }) => {
     try {
-      await getUserNickNameUpdate(nickName, token);
+      await client.put(`/user/nickname/${nickName}`, {}, makeAuthTokenHeader(token));
       dispatch(userInfoAsync(token));
       return "닉네임이 변경 되었습니다.";
     } catch (error) {
@@ -65,16 +75,22 @@ export const nickNameUpdateAsync = createAsyncThunk<string, Types.NickNameUpdate
   },
 );
 
-// 판매상세보기
-export const saleInfoAsync = createAsyncThunk<Types.SaleInfoAsyncSuccess, string, Types.ThunkApi>(
-  `${name}/saleInfoAsync`,
-  async (userdBookId, { getState, rejectWithValue }) => {
-    const { userReduce } = getState();
-    const { user, token } = userReduce;
+/**
+ *   유저가 판매한 중고도서 판매내역보기
+ *   @param  중고도서번호
+ *   @return 판매내역
+ */
+export const saleInfoAsync = createAsyncThunk<OrderResult, string, Types.ThunkApi>(
+  `${NAME}/saleInfoAsync`,
+  async (usedBookId, { getState, rejectWithValue }) => {
+    const { isLoggedIn, token } = getState().userReduce;
     try {
-      if (!user || !token) throw new Error("로그인이 필요합니다.");
-      const { data } = await getUserOrderByUsedBookId(userdBookId, token);
-      return data.data as Types.SaleInfoAsyncSuccess;
+      if (!isLoggedIn || !token) throw new Error("로그인이 필요합니다.");
+      const { data } = await client.get<Types.SaleInfoAsyncResponse>(
+        `/order/book/${usedBookId}`,
+        makeAuthTokenHeader(token),
+      );
+      return data;
     } catch (error) {
       const message = errorHandler(error);
       return rejectWithValue(message);
@@ -82,15 +98,19 @@ export const saleInfoAsync = createAsyncThunk<Types.SaleInfoAsyncSuccess, string
   },
 );
 
-export const buyInfoAsync = createAsyncThunk<Types.BuyInfoAsyncSuccess, string, Types.ThunkApi>(
-  `${name}/buyInfoAsync`,
+/**
+ *   유저가 구매한 중고도서 구매내역보기
+ *   @param  주문번호
+ *   @return 구매내역
+ */
+export const buyInfoAsync = createAsyncThunk<OrderResult, string, Types.ThunkApi>(
+  `${NAME}/buyInfoAsync`,
   async (orderId, { getState, rejectWithValue }) => {
-    const { userReduce } = getState();
-    const { user, token } = userReduce;
+    const { isLoggedIn, token } = getState().userReduce;
     try {
-      if (!user || !token) throw new Error("로그인이 필요합니다.");
-      const { data } = await getOrderInfo(orderId, token);
-      return data.data;
+      if (!isLoggedIn || !token) throw new Error("로그인이 필요합니다.");
+      const { data } = await client.get<Types.BuyInfoAsyncResponse>(`/order/${orderId}`, makeAuthTokenHeader(token));
+      return data;
     } catch (error) {
       const message = errorHandler(error);
       return rejectWithValue(message);
@@ -99,7 +119,7 @@ export const buyInfoAsync = createAsyncThunk<Types.BuyInfoAsyncSuccess, string, 
 );
 
 export const reviewListAsync = createAsyncThunk<Types.ReviewListAsyncSuccess, string, Types.ThunkApi>(
-  `${name}/reviewListAsync`,
+  `${NAME}/reviewListAsync`,
   async (query, { rejectWithValue }) => {
     try {
       const { data } = await http.get(`/book-review/my?${query}`);
@@ -131,9 +151,11 @@ const initialState: Types.SignInReduce = {
 };
 
 const userSlice = createSlice({
-  name,
+  name: NAME,
   initialState,
   reducers: {
+    // 액션함수 이름 logout
+    // 함수 내용 리듀서
     logout: state => {
       state.user = null;
       state.token = null;
@@ -177,9 +199,7 @@ const userSlice = createSlice({
       state.token = getAccessToken();
     });
     builder.addCase(userInfoAsync.rejected, (state, { payload }) => {
-      state.user = null;
       state.token = null;
-      state.isLoggedIn = false;
       state.status = "idle";
       state.error = payload ?? "프로필 가져오기를 실패했습니다.";
     });

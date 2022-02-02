@@ -6,19 +6,21 @@ import { useEffect, useState } from "react";
 import { dateArrayFormat, make1000UnitsCommaFormet } from "utils/formatUtil";
 import { useTypedSelector } from "modules/store";
 import { userReduceSelector } from "modules/Slices/user/userSlice";
-import { getOrderInfo } from "api/order";
+import client, { makeAuthTokenHeader } from "api/client";
 import * as Styled from "./style";
 import * as Types from "./types";
 
 const OrderResult = () => {
   const { state } = useLocation<number>();
-  const [orderResult, setOrderResult] = useState<Types.IOrderResult>();
+  const [orderResult, setOrderResult] = useState<Types.OrderResult>();
   const { token } = useTypedSelector(userReduceSelector);
   const history = useHistory();
 
   useEffect(() => {
     if (state && token) {
-      getOrderInfo(String(state), token).then(({ data }) => setOrderResult(data.data));
+      client
+        .get<Types.BuyInfoAsyncResponse>(`/order/${state}`, makeAuthTokenHeader(token))
+        .then(({ data }) => setOrderResult(data));
     } else {
       history.replace("/");
     }
