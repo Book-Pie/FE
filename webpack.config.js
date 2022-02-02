@@ -7,7 +7,10 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 // 웹팩 build시 이전 build 내용물을 제거해준다.
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 // 웹팩 데브서버 핫 리로딩 시 필요한 플러그인
+// 로대시에는 다양한 유틸함수가 있지만 우리는 그것을 다 사용하지 않는다.
+// 빌드시 사용 안하는 유틸함수는 제외하고 빌드해준다.
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
+const LodashModuleReplacementPlugin = require("lodash-webpack-plugin");
 require("dotenv").config();
 
 // 절대 경로로 바꿔주는 기능
@@ -27,7 +30,7 @@ const NAVER_OAUTH_URL_PRO =
 const BASE_URL_DEV = "http://localhost:3000/api";
 const BASE_URL_PRO = "http://3.34.100.122:8080/api";
 
-module.exports = (_, argv) => {
+module.exports = (env, argv) => {
   const { mode } = argv;
   const config = {
     // 프로젝트 이름
@@ -175,6 +178,7 @@ module.exports = (_, argv) => {
       // open: true,
       // 제공되는 모든 항목에 대해 gzip 압축을 활성화합니다.
       compress: true,
+      hot: true,
       // dev-serve에 없는 라우팅에 대해서는 index.html를 반환
       historyApiFallback: true,
       devMiddleware: {
@@ -188,7 +192,29 @@ module.exports = (_, argv) => {
         },
       },
     },
+
+    // venders라는 이름으로 의존성이 한곳으로 다 모인다. 유저가 사이트에 첫 방문 시 의존성을 한번에 받기때문에 첫 방문은 느릴 수가 있다
+    // 하지만 첫 방문 이유 venders는 캐시가 되어서 재사용이 된다.
+    // 의존성을 venders에 모으지 않는다면 웹팩은 빌드 시 코드 스플릿된 파일안에 의존성을 쪼개서 담는다. 그래서 스플릿된 파일에 각각 의존성이 파편화되어있는다.
+    // 하지만 venders에 모아 두면 코드스플릿된 파일에는 의존성이 제외가 되어 코드 스플릿된 파일의 용량은 가벼워진다.
+    // 의존성 캐시를 이용한다면 main 파일은 커진다. 그말은 유저가 첫 방문 시 로드 해야되는 파일용량도 커진다는거다. 첫 방문 시 빠른 화면을 보여줘야된다면 의존성 캐시를 이용안하고 빌드를 하면 될꺼같다.
+    optimization: {
+      runtimeChunk: "single",
+      splitChunks: {
+        cacheGroups: {
+          vendor: {
+            test: /[\\/]node_modules[\\/]/,
+            name: "vendors",
+            chunks: "all",
+          },
+        },
+      },
+    },
   };
+
+  if (argv.hot) {
+    config.output.filename = "[name].[hash].js";
+  }
 
   // 배포 환경
   if (mode === PRODUCTION && config.plugins) {
@@ -205,6 +231,7 @@ module.exports = (_, argv) => {
         "process.env.PAYMENT_IMP_KEY": JSON.stringify(PAYMENT_IMP_KEY),
       }),
     );
+    config.plugins.push(new LodashModuleReplacementPlugin());
   }
 
   // 개발환경
