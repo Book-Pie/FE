@@ -9,6 +9,8 @@ import {
   usedBookDetailReplyList,
   usedBookSelector,
 } from "modules/Slices/usedBookDetail/usedBookDetailSlice";
+import Checkbox from "@mui/material/Checkbox";
+import LockIcon from "@mui/icons-material/Lock";
 import { useTypedSelector } from "modules/store";
 import Button from "@mui/material/Button";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -16,6 +18,7 @@ import { useDispatch } from "react-redux";
 import Stack from "@mui/material/Stack";
 import Pagination from "@mui/material/Pagination";
 import { getUsedBookReplyPage, removeUsedBookReplyPage, setUsedBookReplyPage } from "utils/localStorageUtil";
+import { Box, FormControlLabel } from "@mui/material";
 import { CountWrapper, ProductDetailTitle, UsedBookStoreInformationWrapper, ReviewListEmptyWrapper } from "../style";
 
 export interface submitParam {
@@ -35,6 +38,11 @@ const UsedBookInquiry = () => {
   const { usedBookId } = content;
   const [myContent, setContent] = useState<string>("");
   const [page, setPage] = useState(getUsedBookReplyPage());
+  const [isChecked, setIsChecked] = useState(false);
+
+  const handleCheck = () => {
+    setIsChecked(!isChecked);
+  };
 
   const handleReviewChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setContent(event.target.value);
@@ -51,7 +59,7 @@ const UsedBookInquiry = () => {
 
   useEffect(() => {
     if (Number(id) === usedBookId && totalPages !== 0 && replyList.length !== 0) {
-      handleHasMoreList(1);
+      handleHasMoreList(0);
     }
   }, [usedBookId]);
 
@@ -68,7 +76,7 @@ const UsedBookInquiry = () => {
     };
   });
 
-  const handlePaginationOnChange1 = useCallback(
+  const handlePaginationOnChange = useCallback(
     (_: React.ChangeEvent<unknown>, value: number) => {
       if (totalPages === 1) return;
       handleHasMoreList(value - 1);
@@ -90,6 +98,7 @@ const UsedBookInquiry = () => {
           usedBookId,
           userId: user.id,
           content: myContent,
+          secret: isChecked,
         }),
       );
       return setContent("");
@@ -104,13 +113,41 @@ const UsedBookInquiry = () => {
           <div>
             상품 문의 <CountWrapper>{totalElements}</CountWrapper>
           </div>
-          <Button variant="outlined" type="submit">
-            문의하기
-          </Button>
+          <div>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  icon={<LockIcon fontSize="small" color="disabled" />}
+                  checkedIcon={<LockIcon fontSize="small" color="action" />}
+                  name="secret"
+                  onChange={handleCheck}
+                  checked={isChecked}
+                />
+              }
+              label={
+                <Box component="div" fontSize={14} color="#717374">
+                  비밀댓글
+                </Box>
+              }
+            />
+            {myContent.length >= 10 ? (
+              <Button variant="contained" type="submit" color="mainDarkBrown">
+                문의하기
+              </Button>
+            ) : (
+              <Button variant="contained" type="submit" color="mainLightBrown" disabled>
+                문의하기
+              </Button>
+            )}
+          </div>
         </ProductDetailTitle>
         <Textarea
           isLoggedIn={isLoggedIn}
           onChange={handleReviewChange}
+          value={myContent}
+          limit={100}
+          height={100}
+          placeholder="상품 문의 작성 시 10자 이상 작성해주세요."
           checkAuth={() => {
             if (isLoggedIn) {
               return true;
@@ -120,10 +157,6 @@ const UsedBookInquiry = () => {
             }
             return false;
           }}
-          value={myContent}
-          limit={100}
-          height={100}
-          placeholder="상품 문의 작성 시 10자 이상 작성해주세요."
         />
       </form>
       {replyList.length !== 0 ? (
@@ -137,7 +170,7 @@ const UsedBookInquiry = () => {
             <Pagination
               count={totalPages}
               page={page + 1}
-              onChange={handlePaginationOnChange1}
+              onChange={handlePaginationOnChange}
               variant="outlined"
               shape="rounded"
               size="large"

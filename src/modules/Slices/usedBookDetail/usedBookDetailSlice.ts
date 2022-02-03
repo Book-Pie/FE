@@ -15,6 +15,7 @@ import {
   AddUsedBookDetailReplyAsyncSuccess,
   AddUsedBookDetailReplyParam,
   DeleteUsedBookDetailParam,
+  editUsedBookDetailReplyParam,
   GetUsedBookBuyConfirmParam,
   getUsedBookBuyListAsyncSuccess,
   getUsedBookLikeListAsyncSuccess,
@@ -133,6 +134,20 @@ export const addUsedBookDetailReply = createAsyncThunk<AddUsedBookDetailReplyAsy
     }
   },
 );
+
+// 중고장터 댓글 수정
+export const editUsedBookDetailReply = createAsyncThunk<
+  AddUsedBookDetailReplyAsyncSuccess,
+  editUsedBookDetailReplyParam
+>(`${name}/editReply`, async (data, { rejectWithValue }) => {
+  try {
+    const response = await http.put(`/reply/usedbook/`, data);
+    return response.data;
+  } catch (error: any) {
+    console.error(error);
+    return rejectWithValue(error.response.data);
+  }
+});
 
 // 중고장터 댓글 삭제
 export const deleteUsedBookDetailReply = createAsyncThunk(
@@ -308,6 +323,18 @@ const usedBookDetailSlice = createSlice({
         state.totalElements += 1;
       })
       .addCase(addUsedBookDetailReply.rejected, state => {
+        state.status = "failed";
+      })
+      // 중고장터 댓글 수정
+      .addCase(editUsedBookDetailReply.pending, state => {
+        state.status = "loading";
+      })
+      .addCase(editUsedBookDetailReply.fulfilled, (state, { payload }) => {
+        state.status = "success";
+        const { replyId, content, secret } = payload.data;
+        state.replyList = state.replyList.map(v => (v.replyId !== replyId ? v : { ...v, content, secret }));
+      })
+      .addCase(editUsedBookDetailReply.rejected, state => {
         state.status = "failed";
       })
       // 중고장터 댓글 삭제

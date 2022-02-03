@@ -4,15 +4,15 @@ import { useTypedSelector } from "modules/store";
 import {
   ProductDetailCardWrapper,
   UsedStoreUserThumbnail,
-  FlexWrapper,
   UsedBookDetailButton,
   BigPieImg,
+  FlexWrapper,
 } from "../style";
 import UsedStoreUserContent from "./UsedStoreUserContent";
 
 const ProductDetailCard = () => {
   const { content } = useTypedSelector(usedBookSelector);
-  const { sellerId, sellerName } = content;
+  const { sellerName } = content;
 
   return (
     <ProductDetailCardWrapper>
@@ -20,7 +20,7 @@ const ProductDetailCard = () => {
         <UsedStoreUserThumbnail>
           <BigPieImg src={profileImg} alt="profileImg" />
         </UsedStoreUserThumbnail>
-        <UsedStoreUserContent sellerId={sellerId} sellerName={sellerName} />
+        <UsedStoreUserContent sellerName={sellerName} />
       </FlexWrapper>
       <UsedBookDetailButton small>팔로우</UsedBookDetailButton>
     </ProductDetailCardWrapper>

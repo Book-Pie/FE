@@ -63,6 +63,7 @@ export const BigPieImg = styled.img`
 `;
 
 export const ContentWrapper = styled.div`
+  width: 400px;
   padding-left: 20px;
 `;
 
@@ -92,12 +93,13 @@ export const ProductDetailTitle = styled.div`
 `;
 
 export const ReplyItemWrapper = styled.div`
-  height: 112px;
+  min-height: 112px;
   margin: 0 0 24px;
   padding: 16px;
   border: solid 1px #51382b;
   border-radius: 10px;
   background-color: #fff;
+  overflow-wrap: anywhere;
 `;
 
 export const ReplyItemNickName = styled.p`
@@ -143,6 +145,7 @@ export const CategoryArea = styled.div`
 
 export const FlexWrapper = styled.div`
   display: flex;
+  margin-bottom: 100px;
 `;
 
 export const UsedBookStoreInformationLeftWrapper = styled.div`

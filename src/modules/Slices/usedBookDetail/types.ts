@@ -29,6 +29,14 @@ export interface AddUsedBookDetailReplyParam {
   usedBookId: number;
   userId: number;
   content: string;
+  secret: boolean;
+}
+
+export interface editUsedBookDetailReplyParam {
+  userId: number;
+  replyId: number;
+  content: string;
+  secret: boolean;
 }
 
 export interface UsedBookLikeParam {
@@ -77,7 +85,7 @@ export interface UsedBookDetailReplyResponse {
   content: string;
   replyDate: string;
   nickName: string;
-  secret: boolean | null;
+  secret: boolean;
   subReply: [];
 }
 

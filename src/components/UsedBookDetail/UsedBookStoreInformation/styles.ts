@@ -5,6 +5,10 @@ export const ReviewDate = styled.div`
   margin-right: 50px;
 `;
 
+export const FlexWrapper = styled.div`
+  display: flex;
+`;
+
 export const RatingContent = styled.span`
   font-size: 15px;
   margin-bottom: 10px;
