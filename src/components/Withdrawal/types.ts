@@ -1,14 +1,17 @@
+import { SuccessResponse } from "src/api/types";
+
 export interface WithdrawalForm {
   password: string;
   confirmPassword: string;
 }
 
-export interface Response {
+export interface PasswordCheckResponse extends SuccessResponse {
   data: boolean;
-  error: null;
-  success: boolean;
+}
+export interface WithdrawalResponse extends SuccessResponse {
+  data: boolean;
 }
 
-export interface Requset {
+export interface PasswordCheckRequset {
   password: string;
 }

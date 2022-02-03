@@ -1,14 +1,14 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { getUserPointCancel, getUserPoints } from "api/user";
 import { Typography, Button, FormGroup, FormControlLabel, Checkbox, Grid } from "@mui/material";
 import { useAppDispatch, useTypedSelector } from "modules/store";
-import { userInfoAsync, userReduceSelector } from "modules/Slices/user/userSlice";
+import { fetchUserInfoAsync, userReduceSelector } from "modules/Slices/user/userSlice";
 import { dateArrayFormat, make1000UnitsCommaFormet } from "utils/formatUtil";
 import Loading from "elements/Loading";
 import { errorHandler } from "api/http";
 import useFetch, { errorAction } from "hooks/useFetch";
 import PointInfo from "components/MyTop/PointInfo";
 import Popup from "elements/Popup";
+import client from "api/client";
 import * as Styled from "./styles";
 import * as Types from "./types";
 
@@ -67,29 +67,27 @@ const Point = () => {
           pointId,
           cancelAmount: amount,
         };
-        await getUserPointCancel(payload);
+        await client.post("/point", payload);
         alert("환불이 되었습니다.");
-        fetcher();
-        reduxDispatch(userInfoAsync(token));
+        handlePointFetch();
+        reduxDispatch(fetchUserInfoAsync(token));
       }
     } catch (error: any) {
       const message = errorHandler(error);
       handlePopUp(message);
     }
   };
-  const fetcher = useCallback(async () => {
-    if (user) {
-      const data = await callApi(getUserPoints(user.id));
+  const handlePointFetch = useCallback(() => {
+    if (!user) return;
+    callApi(client.get(`/point/${user.id}`)).then(data => {
       const pointCancelList = data.filter(item => item.cancelAmount !== 0);
       const pointList = data.filter(item => item.cancelAmount === 0);
       setPointList(pointList);
       setPointCancelList(pointCancelList);
-    }
+    });
   }, [callApi, user]);
 
-  useEffect(() => {
-    fetcher();
-  }, [fetcher]);
+  useEffect(handlePointFetch, [handlePointFetch]);
 
   useEffect(() => {
     setList(() => {
@@ -173,9 +171,10 @@ const Point = () => {
               </div>
               {user && (
                 <Button
-                  variant="outlined"
+                  variant="contained"
                   disabled={amount < user.point.holdPoint ? (cancelAmount !== 0 ? true : false) : true}
                   onClick={handleCancelOnClick(pointId, amount)}
+                  color="info"
                 >
                   {amount < user.point.holdPoint ? (cancelAmount ? "환불완료" : "환불하기") : "남은 금액이 부족합니다."}
                 </Button>

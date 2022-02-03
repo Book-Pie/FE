@@ -1,11 +1,14 @@
 import { useCallback } from "react";
 
 const useDelay = (delayTime: number) => {
-  const delay = useCallback(() => {
-    return new Promise(res => {
-      setTimeout(res, delayTime);
-    });
-  }, [delayTime]);
+  const delay = useCallback(
+    (time?: number) => {
+      return new Promise(res => {
+        setTimeout(res, time ?? delayTime);
+      });
+    },
+    [delayTime],
+  );
   return delay;
 };
 

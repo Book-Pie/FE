@@ -8,14 +8,15 @@ import { makeOption, FormErrorMessages } from "utils/hookFormUtil";
 import ErrorMessage from "elements/ErrorMessage";
 import Button from "@mui/material/Button";
 import Popup from "elements/Popup";
-import { getOrder } from "api/order";
 import { useHistory } from "react-router";
 import Loading from "elements/Loading";
 import useDelay from "hooks/useDelay";
 import DaumPostModal from "elements/DaumPostModal";
-import { userInfoAsync, userReduceSelector } from "modules/Slices/user/userSlice";
+import { fetchUserInfoAsync, userReduceSelector } from "modules/Slices/user/userSlice";
 import { useAppDispatch, useTypedSelector } from "modules/store";
 import usePopup from "hooks/usePopup";
+import client, { errorHandler } from "api/client";
+import { makeAuthTokenHeader } from "src/api/http";
 import * as Styled from "./style";
 import * as Types from "./types";
 
@@ -31,7 +32,7 @@ const OrderForm = ({ usedBook }: Types.OrderFormProps) => {
 
   const { handlePopupClose, handlePopupMessage, popupState } = usePopup();
   const { isOpen, isSuccess, message } = popupState;
-
+  const delay = useDelay(500);
   const [isDaumPostcodeOpen, setIsDaumPostcodeOpen] = useState(false);
   const [deliveryText, setDeliveryText] = useState(deliveryTextInit);
   const dispatch = useAppDispatch();
@@ -40,7 +41,6 @@ const OrderForm = ({ usedBook }: Types.OrderFormProps) => {
   const { price } = usedBook;
   const { errors } = formState;
   const history = useHistory();
-  const delay = useDelay(600);
 
   const addressOptions: RegisterOptions = {
     required: makeOption<boolean>(true, FormErrorMessages.REQUIRED),
@@ -61,25 +61,20 @@ const OrderForm = ({ usedBook }: Types.OrderFormProps) => {
     const option = `width = 850, height = 600, top = ${popupY}, left = ${popupX}, screenX=${popupX} screenY=${popupY} resizable=no`;
     const win = window.open(url, name, option);
     win?.addEventListener("beforeunload", () => {
-      if (token) dispatch(userInfoAsync(token));
+      if (token) dispatch(fetchUserInfoAsync(token));
     });
   }, [token, dispatch]);
 
-  const onSumit = async (formData: Types.IOrderForm) => {
+  const onSumit = async ({ detailAddress, mainAddress, postalCode }: Types.IOrderForm) => {
     try {
+      if (!user || !token) throw new Error("로그인이 필요합니다.");
+      if (user.point.holdPoint - price < 0) throw new Error("금액이 부족합니다.");
+      if (deliveryText === deliveryTextInit) throw new Error("배송요청사항을 선택해주세요.");
       setIsLoading(true);
-      if (user && token) {
-        const { detailAddress, mainAddress, postalCode } = formData;
-        if (user.point.holdPoint - price < 0) {
-          handlePopupMessage(false, "금액이 부족합니다.");
-          return;
-        }
-        if (deliveryText === deliveryTextInit) {
-          handlePopupMessage(false, "배송요청사항을 선택해주세요.");
-          return;
-        }
 
-        const payload: Types.OrderRequest = {
+      const { data } = await client.post<Types.OrderPayload, Types.OrderResponse>(
+        "/order",
+        {
           usedBookId: usedBook.usedBookId,
           address: {
             detailAddress,
@@ -87,19 +82,19 @@ const OrderForm = ({ usedBook }: Types.OrderFormProps) => {
             postalCode,
           },
           deliveryRequest: deliveryText,
-        };
-
-        const { data } = await getOrder<Types.OrderRequest>(payload, token);
-        await delay();
-        history.replace({
-          pathname: `/order/${usedBook.usedBookId}/result`,
-          state: data.data,
-        });
-      }
-    } catch (error: any) {
-      handlePopupMessage(false, error);
+        },
+        makeAuthTokenHeader(token),
+      );
+      await delay();
+      history.replace({
+        pathname: `/order/${usedBook.usedBookId}/result`,
+        state: data,
+      });
+    } catch (e) {
+      const message = errorHandler(e);
+      handlePopupMessage(false, message);
     } finally {
-      setIsLoading(false);
+      setIsLoading(true);
     }
   };
 

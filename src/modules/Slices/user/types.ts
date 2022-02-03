@@ -30,15 +30,19 @@ export interface Pageable {
   unpaged: boolean;
 }
 
-// =========================== 썽크함수 파라미터 타입 ===========================
-
-export interface SignInAsyncParam {
-  email: string;
-  password: string;
-}
-// =========================== 썽크함수 파라미터 타입 ===========================
-
-// =========================== 썽크함수 성공 시 리턴 타입 ===========================
+export type Review = {
+  content: Content[];
+  pageable: Pageable;
+  totalElements: number;
+  totalPages: number;
+  last: boolean;
+  number: number;
+  sort: Sort;
+  size: number;
+  numberOfElements: number;
+  first: boolean;
+  empty: boolean;
+};
 
 export interface UserInfo {
   id: number;
@@ -62,33 +66,11 @@ export interface UserInfo {
   image: null | string;
   createDate: string;
 }
-export type UserInfoAsyncSuccess = UserInfo;
-export type SaleInfoAsyncResponse = {
-  sucess: boolean;
-  data: OrderResult;
-  error: null;
-};
-export type ReviewListAsyncSuccess = {
-  content: Content[];
-  pageable: Pageable;
-  totalElements: number;
-  totalPages: number;
-  last: boolean;
-  number: number;
-  sort: Sort;
-  size: number;
-  numberOfElements: number;
-  first: boolean;
-  empty: boolean;
-};
-// =========================== 썽크함수 성공 시 리턴 타입 ===========================
 
-// =========================== axios 요청 제네릭 ===========================
-export interface SignInAsyncRequestBodoy {
-  email: string;
-  password: string;
-}
 export interface BuyInfoAsyncResponse extends SuccessResponse {
+  data: OrderResult;
+}
+export interface SaleInfoAsyncResponse extends SuccessResponse {
   data: OrderResult;
 }
 export interface SignInAsyncResponse extends SuccessResponse {
@@ -96,6 +78,9 @@ export interface SignInAsyncResponse extends SuccessResponse {
 }
 export interface UserInfoAsyncResponse extends SuccessResponse {
   data: UserInfo;
+}
+export interface ReviewAsyncReponse extends SuccessResponse {
+  data: Review;
 }
 
 // =========================== ThunkApi 제네릭 ===========================
@@ -106,7 +91,7 @@ export interface ThunkApi {
   state: RootState;
 }
 
-export interface SignInReduce {
+export interface UserReduce {
   user: UserInfo | null;
   token: string | null;
   isLoggedIn: boolean;

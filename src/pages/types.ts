@@ -1,16 +1,22 @@
+import { SuccessResponse } from "src/api/types";
+
 export interface OauthParam {
   name: "naver" | "kakao";
 }
-export interface KakaoRequest {
+export interface Param {
+  id: string;
+}
+export interface KakaoPayload {
   grant_type: string;
   client_id: string;
   redirect_uri: string;
   code: string;
 }
 
-export interface Param {
-  id: string;
+export interface OauthAccessTokenResponse extends SuccessResponse {
+  data: string;
 }
+
 export interface UsedBook {
   bookState: string;
   content: string;

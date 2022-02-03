@@ -3,19 +3,30 @@ import { removeToken, setAccessToken, getAccessToken } from "utils/localStorageU
 import { hyphenFormat } from "utils/formatUtil";
 import { RootState } from "modules/store";
 import client, { makeAuthTokenHeader } from "api/client";
-import http, { errorHandler } from "api/http";
+import { errorHandler } from "api/http";
 import { OrderResult } from "src/components/OrderForm/types";
 import * as Types from "./types";
 
 const NAME = "userReduce";
 
 /**
+ *   유저가 로그인한 상태인지 확인한다.
+ *   @param  userReduece state
+ *   @return 로그인 상태라면 유효한 토큰값, 아니라면 throw
+ */
+const isLoggedInCheck = (useReduce: Types.UserReduce) => {
+  const { isLoggedIn, token } = useReduce;
+  if (!isLoggedIn || !token) throw new Error("로그인이 필요합니다.");
+  return token;
+};
+
+/**
  *   유저 정보 가져오기
  *   @param  X-AUTH-TOKEN
  *   @return 유저 정보
  */
-export const userInfoAsync = createAsyncThunk<Types.UserInfoAsyncSuccess, string, Types.ThunkApi>(
-  `${NAME}/userInfoAsync`,
+export const fetchUserInfoAsync = createAsyncThunk<Types.UserInfo, string, Types.ThunkApi>(
+  `${NAME}/fetchUserInfoAsync`,
   async (token, { rejectWithValue, extra }) => {
     const { history } = extra;
     try {
@@ -37,17 +48,17 @@ export const userInfoAsync = createAsyncThunk<Types.UserInfoAsyncSuccess, string
  *   @param  이메일, 비밀번호
  *   @return 로그인 토큰
  */
-export const signInAsync = createAsyncThunk<string, Types.SignInAsyncRequestBodoy, Types.ThunkApi>(
-  `${NAME}/signInAsync`,
+export const fetchSignInAsync = createAsyncThunk<string, { email: string; password: string }, Types.ThunkApi>(
+  `${NAME}/fetchSignInAsync`,
   async ({ email, password }, { dispatch, extra, rejectWithValue }) => {
     const { history } = extra;
     try {
       const payload = { email, password };
-      const { data: token } = await client.post<Types.SignInAsyncRequestBodoy, Types.SignInAsyncResponse>(
+      const { data: token } = await client.post<{ email: string; password: string }, Types.SignInAsyncResponse>(
         "/user/login",
         payload,
       );
-      dispatch(userInfoAsync(token));
+      dispatch(fetchUserInfoAsync(token));
       history.push("/");
       return token;
     } catch (e) {
@@ -61,12 +72,12 @@ export const signInAsync = createAsyncThunk<string, Types.SignInAsyncRequestBodo
  *   @param  변경 할 닉네임, 토큰
  *   @return 변경완료 메세지
  */
-export const nickNameUpdateAsync = createAsyncThunk<string, { nickName: string; token: string }, Types.ThunkApi>(
-  `${NAME}/nickNameUpdateAsync`,
+export const fetchNickNameUpdateAsync = createAsyncThunk<string, { nickName: string; token: string }, Types.ThunkApi>(
+  `${NAME}/fetchNickNameUpdateAsync`,
   async ({ nickName, token }, { rejectWithValue, dispatch }) => {
     try {
       await client.put(`/user/nickname/${nickName}`, {}, makeAuthTokenHeader(token));
-      dispatch(userInfoAsync(token));
+      dispatch(fetchUserInfoAsync(token));
       return "닉네임이 변경 되었습니다.";
     } catch (error) {
       const message = errorHandler(error);
@@ -80,12 +91,11 @@ export const nickNameUpdateAsync = createAsyncThunk<string, { nickName: string; 
  *   @param  중고도서번호
  *   @return 판매내역
  */
-export const saleInfoAsync = createAsyncThunk<OrderResult, string, Types.ThunkApi>(
-  `${NAME}/saleInfoAsync`,
+export const fetchSaleInfoAsync = createAsyncThunk<OrderResult, string, Types.ThunkApi>(
+  `${NAME}/fetchSaleInfoAsync`,
   async (usedBookId, { getState, rejectWithValue }) => {
-    const { isLoggedIn, token } = getState().userReduce;
     try {
-      if (!isLoggedIn || !token) throw new Error("로그인이 필요합니다.");
+      const token = isLoggedInCheck(getState().userReduce);
       const { data } = await client.get<Types.SaleInfoAsyncResponse>(
         `/order/book/${usedBookId}`,
         makeAuthTokenHeader(token),
@@ -103,12 +113,11 @@ export const saleInfoAsync = createAsyncThunk<OrderResult, string, Types.ThunkAp
  *   @param  주문번호
  *   @return 구매내역
  */
-export const buyInfoAsync = createAsyncThunk<OrderResult, string, Types.ThunkApi>(
-  `${NAME}/buyInfoAsync`,
+export const fetchBuyInfoAsync = createAsyncThunk<OrderResult, string, Types.ThunkApi>(
+  `${NAME}/fetchBuyInfoAsync`,
   async (orderId, { getState, rejectWithValue }) => {
-    const { isLoggedIn, token } = getState().userReduce;
     try {
-      if (!isLoggedIn || !token) throw new Error("로그인이 필요합니다.");
+      const token = isLoggedInCheck(getState().userReduce);
       const { data } = await client.get<Types.BuyInfoAsyncResponse>(`/order/${orderId}`, makeAuthTokenHeader(token));
       return data;
     } catch (error) {
@@ -118,12 +127,18 @@ export const buyInfoAsync = createAsyncThunk<OrderResult, string, Types.ThunkApi
   },
 );
 
-export const reviewListAsync = createAsyncThunk<Types.ReviewListAsyncSuccess, string, Types.ThunkApi>(
-  `${NAME}/reviewListAsync`,
-  async (query, { rejectWithValue }) => {
+/**
+ *   유저가 작성한 도서 리뷰 가져오기
+ *   @param  url 쿼리 스트링
+ *   @return 도서 리뷰
+ */
+export const fetchReviewAsync = createAsyncThunk<Types.Review, string, Types.ThunkApi>(
+  `${NAME}/fetchReviewAsync`,
+  async (query, { getState, rejectWithValue }) => {
     try {
-      const { data } = await http.get(`/book-review/my?${query}`);
-      return data.data;
+      isLoggedInCheck(getState().userReduce);
+      const { data } = await client.get<Types.ReviewAsyncReponse>(`/book-review/my?${query}`);
+      return data;
     } catch (error) {
       const message = errorHandler(error);
       return rejectWithValue(message);
@@ -131,7 +146,7 @@ export const reviewListAsync = createAsyncThunk<Types.ReviewListAsyncSuccess, st
   },
 );
 
-const initialState: Types.SignInReduce = {
+const initialState: Types.UserReduce = {
   user: null,
   token: null,
   isLoggedIn: false,
@@ -172,68 +187,68 @@ const userSlice = createSlice({
     },
   },
   extraReducers: builder => {
-    builder.addCase(signInAsync.pending, state => {
+    builder.addCase(fetchSignInAsync.pending, state => {
       state.error = null;
       state.status = "loading";
     });
-    builder.addCase(signInAsync.fulfilled, (state, { payload }) => {
+    builder.addCase(fetchSignInAsync.fulfilled, (state, { payload }) => {
       setAccessToken(payload);
       state.token = payload;
       state.error = null;
       state.status = "idle";
     });
-    builder.addCase(signInAsync.rejected, (state, { payload }) => {
+    builder.addCase(fetchSignInAsync.rejected, (state, { payload }) => {
       state.error = payload ?? "로그인에 실패했습니다.";
       state.token = null;
       state.status = "idle";
     });
-    builder.addCase(userInfoAsync.pending, state => {
+    builder.addCase(fetchUserInfoAsync.pending, state => {
       state.error = null;
       state.status = "loading";
     });
-    builder.addCase(userInfoAsync.fulfilled, (state, { payload }) => {
+    builder.addCase(fetchUserInfoAsync.fulfilled, (state, { payload }) => {
       state.isLoggedIn = true;
       state.user = payload;
       state.status = "idle";
       if (payload.phone !== null) state.user.phone = hyphenFormat(payload.phone);
       state.token = getAccessToken();
     });
-    builder.addCase(userInfoAsync.rejected, (state, { payload }) => {
+    builder.addCase(fetchUserInfoAsync.rejected, (state, { payload }) => {
       state.token = null;
       state.status = "idle";
       state.error = payload ?? "프로필 가져오기를 실패했습니다.";
     });
-    builder.addCase(buyInfoAsync.pending, state => {
+    builder.addCase(fetchBuyInfoAsync.pending, state => {
       state.status = "loading";
     });
-    builder.addCase(buyInfoAsync.fulfilled, (state, { payload }) => {
+    builder.addCase(fetchBuyInfoAsync.fulfilled, (state, { payload }) => {
       state.status = "idle";
       if (state.buyInfos.find(({ orderId }) => orderId === payload.orderId) === undefined) {
         state.buyInfos = [...state.buyInfos, payload];
       }
     });
-    builder.addCase(buyInfoAsync.rejected, (state, action) => {
+    builder.addCase(fetchBuyInfoAsync.rejected, (state, action) => {
       state.status = "idle";
       state.error = action.payload ?? "클라이언트에서 문제가 발생했습니다.";
     });
-    builder.addCase(saleInfoAsync.pending, state => {
+    builder.addCase(fetchSaleInfoAsync.pending, state => {
       state.status = "loading";
     });
-    builder.addCase(saleInfoAsync.fulfilled, (state, { payload }) => {
+    builder.addCase(fetchSaleInfoAsync.fulfilled, (state, { payload }) => {
       if (state.saleInfos.find(({ book }) => book.bookId === payload.book.bookId) === undefined) {
         state.saleInfos = [...state.saleInfos, payload];
       }
       state.status = "idle";
     });
-    builder.addCase(saleInfoAsync.rejected, (state, action) => {
+    builder.addCase(fetchSaleInfoAsync.rejected, (state, action) => {
       state.status = "idle";
       state.error = action.payload ?? "클라이언트에서 문제가 발생했습니다.";
     });
-    builder.addCase(reviewListAsync.pending, state => {
+    builder.addCase(fetchReviewAsync.pending, state => {
       state.reviews.status = "loading";
       state.reviews.error = null;
     });
-    builder.addCase(reviewListAsync.fulfilled, (state, { payload }) => {
+    builder.addCase(fetchReviewAsync.fulfilled, (state, { payload }) => {
       const {
         content,
         empty,
@@ -256,7 +271,7 @@ const userSlice = createSlice({
 
       state.reviews.status = "idle";
     });
-    builder.addCase(reviewListAsync.rejected, (state, action) => {
+    builder.addCase(fetchReviewAsync.rejected, (state, action) => {
       state.status = "idle";
       state.error = action.payload ?? "클라이언트에서 문제가 발생했습니다.";
     });

@@ -19,7 +19,7 @@ const OrderResult = () => {
   useEffect(() => {
     if (state && token) {
       client
-        .get<Types.BuyInfoAsyncResponse>(`/order/${state}`, makeAuthTokenHeader(token))
+        .get<Types.BuyInfoResponse>(`/order/${state}`, makeAuthTokenHeader(token))
         .then(({ data }) => setOrderResult(data));
     } else {
       history.replace("/");

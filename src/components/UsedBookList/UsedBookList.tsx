@@ -135,7 +135,6 @@ const UsedBookList = () => {
     (page: number) => {
       setIsLoading(true);
       const url = `/usedbook?${queryString.stringify({ ...query, page })}`;
-
       const promise = client.get<Types.UsedBookResponse>(url);
 
       promise
@@ -181,19 +180,6 @@ const UsedBookList = () => {
     return 1;
   };
 
-  const usedBookCards = pages.map((card, idx) => {
-    if (pages.length - 5 === idx) {
-      return (
-        <React.Fragment key={idx}>
-          <div ref={handleObserver} />
-          <UsedBookCard card={card} />
-        </React.Fragment>
-      );
-    }
-
-    return <UsedBookCard key={idx} card={card} />;
-  });
-
   const categorysResource = handleResourceCache<Types.CategorysResponse>("category", getCategorys);
 
   // ============================================ useEffect ============================================
@@ -207,7 +193,20 @@ const UsedBookList = () => {
   useEffect(() => {
     if (currentPage !== 1) handleGetMoreUsedBooks(currentPage);
   }, [currentPage]);
+
   // ============================================ useEffect ============================================
+  const usedBookCards = pages.map((card, idx) => {
+    if (pages.length - 5 === idx) {
+      return (
+        <React.Fragment key={idx}>
+          <div ref={handleObserver} />
+          <UsedBookCard card={card} />
+        </React.Fragment>
+      );
+    }
+
+    return <UsedBookCard key={idx} card={card} />;
+  });
 
   return (
     <section>

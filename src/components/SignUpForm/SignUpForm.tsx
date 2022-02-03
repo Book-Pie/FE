@@ -12,11 +12,10 @@ import {
 import FormInput from "elements/FormInput";
 import ErrorMessage from "elements/ErrorMessage";
 import FormLabel from "elements/FormLabel";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import useDaumPost from "hooks/useDaumPost";
 import { errorHandler } from "api/http";
 import axios from "axios";
-import { getEmailDuplicateCheck, getNickNameDuplicateCheck, getSignUp } from "api/user";
 import { useHistory } from "react-router";
 import Popup from "elements/Popup";
 import { hyphenRemoveFormat } from "utils/formatUtil";
@@ -25,6 +24,8 @@ import naverImg from "assets/image/naver_oauth.png";
 import kakaoImg from "assets/image/kakao_oauth.png";
 import { Link } from "react-router-dom";
 import DaumPostModal from "elements/DaumPostModal";
+import client from "api/client";
+import usePopup from "src/hooks/usePopup";
 import * as Types from "./types";
 import * as Styled from "./style";
 
@@ -53,27 +54,24 @@ const SignUpForm = () => {
   const { addressState, handleComplete } = useDaumPost();
   const [password, confirmPassword] = watch(["password", "confirmPassword"]);
   const { errors } = formState;
-  const [isOpen, setIsOpen] = useState(false);
-  const [message, setMessage] = useState("");
+  const { handlePopupClose, handlePopupMessage, popupState } = usePopup();
   const history = useHistory();
 
   const onSubmit = async (data: Types.SignUpForm) => {
     try {
       const { mainAddress, detailAddress, email, phone, nickName, password, postalCode, name } = data;
 
-      const validationReponse = await axios.all([
-        getEmailDuplicateCheck<Types.Reponse>(email),
-        getNickNameDuplicateCheck<Types.Reponse>(nickName),
+      const validationResponse = await axios.all([
+        client.get<Types.CheckReponse>(`/user/nickname/${nickName}`),
+        client.get<Types.CheckReponse>(`/user/email/${email}`),
       ]);
 
-      // validation 모두 성공했을때 요청을 한다.
-      const [emailDuplicate, nickNameDuplicate] = validationReponse;
+      const [emailDuplicate, nickNameDuplicate] = validationResponse;
 
-      // 중복은 false
-      if (emailDuplicate.data.data === false) throw new Error("이미 가입한 이메일입니다.");
-      if (nickNameDuplicate.data.data === false) throw new Error("사용중인 닉네임입니다.");
+      if (!emailDuplicate.data) throw new Error("이미 가입한 이메일입니다.");
+      if (!nickNameDuplicate.data) throw new Error("사용중인 닉네임입니다.");
 
-      await getSignUp<Types.RequestPayload>({
+      await client.post<Types.SignUpPayload>("/user/signup", {
         password,
         name,
         phone: hyphenRemoveFormat(phone),
@@ -89,13 +87,12 @@ const SignUpForm = () => {
       history.replace("/signIn");
     } catch (error) {
       const message = errorHandler(error);
-      setIsOpen(true);
-      setMessage(message);
+      handlePopupMessage(false, message);
     }
   };
 
-  const handleReset = () => reset(init);
-  const handleDaumPostOpne = () => setIsDaumPostOpen(prve => !prve);
+  const handleReset = useCallback(() => reset(init), [reset]);
+  const handleDaumPostOpne = useCallback(() => setIsDaumPostOpen(prve => !prve), []);
 
   const inputOptions = useMemo((): Types.Row[] => {
     return [
@@ -247,9 +244,9 @@ const SignUpForm = () => {
 
   return (
     <Styled.SignUpWrapper>
-      {isOpen && (
-        <Popup isOpen={isOpen} setIsOpen={setIsOpen} autoClose className="red">
-          {message}
+      {popupState.isOpen && (
+        <Popup isOpen={popupState.isOpen} setIsOpen={handlePopupClose} autoClose className="red">
+          {popupState.message}
         </Popup>
       )}
       <DaumPostModal

@@ -8,8 +8,11 @@ import React from "react";
 import GlobalStyle from "assets/style/global";
 import styledTheme from "assets/style/styledTheme";
 import materialThme from "assets/style/muiTheme";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { ReactQueryDevtools } from "react-query/devtools";
 import App from "./App";
 
+const queryClient = new QueryClient();
 const rootElement = document.getElementById("root");
 
 ReactDOM.render(
@@ -17,10 +20,13 @@ ReactDOM.render(
     <MaterialThemeProvider theme={materialThme}>
       <StyledThemeProvider theme={styledTheme}>
         <Provider store={store}>
-          <Router history={customHistory}>
-            <GlobalStyle />
-            <App />
-          </Router>
+          <QueryClientProvider client={queryClient}>
+            <Router history={customHistory}>
+              <GlobalStyle />
+              <ReactQueryDevtools initialIsOpen />
+              <App />
+            </Router>
+          </QueryClientProvider>
         </Provider>
       </StyledThemeProvider>
     </MaterialThemeProvider>

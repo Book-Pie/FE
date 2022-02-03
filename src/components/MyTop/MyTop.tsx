@@ -1,7 +1,7 @@
 import noProfileImg from "assets/image/noProfile.jpg";
 import Button from "@mui/material/Button";
 import { useState, useCallback, useMemo } from "react";
-import { userInfoAsync, nickNameUpdateAsync, userReduceSelector } from "modules/Slices/user/userSlice";
+import { fetchUserInfoAsync, fetchNickNameUpdateAsync, userReduceSelector } from "modules/Slices/user/userSlice";
 import { useForm, Controller, RegisterOptions } from "react-hook-form";
 import { hookFormSpecialChractersCheck, makeOption, FormErrorMessages } from "utils/hookFormUtil";
 import ErrorMessage from "elements/ErrorMessage";
@@ -48,7 +48,7 @@ const MyTop = () => {
     const option = `width = 850, height = 600, top = ${popupY}, left = ${popupX}, screenX=${popupX} screenY=${popupY} resizable=no`;
     const win = window.open(url, name, option);
     win?.addEventListener("beforeunload", () => {
-      if (token) dispatch(userInfoAsync(token));
+      if (token) dispatch(fetchUserInfoAsync(token));
     });
   }, [token, dispatch]);
 
@@ -61,7 +61,7 @@ const MyTop = () => {
     async ({ nickName }: Types.NickNameForm) => {
       try {
         if (!token) throw new Error("로그인을 해주세요.");
-        const message = await dispatch(nickNameUpdateAsync({ nickName, token })).unwrap();
+        const message = await dispatch(fetchNickNameUpdateAsync({ nickName, token })).unwrap();
         setIsNickNameUpdateOpen(false);
         handlePopupMessage(true, message);
       } catch (error: any) {

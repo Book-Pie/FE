@@ -59,12 +59,30 @@ export const errorHandler = (error: any) => {
 export const makeAuthTokenHeader = (token: string): AxiosRequestConfig => ({
   headers: { "X-AUTH-TOKEN": token },
 });
+export const makeKaKaoOauthHeader = (): AxiosRequestConfig => ({
+  headers: { "Content-type": "application/x-www-form-urlencoded;charset=utf-8" },
+});
+
+export const makeFormDataHeader = (token: string): AxiosRequestConfig => ({
+  headers: {
+    "Content-Type": "multipart/form-data",
+    "X-AUTH-TOKEN": token,
+  },
+});
 
 /* 
  비동기 작업이 한번일 때 불필요하게 함수를 async로 만들 수고가 없어진다.
  비동기작업이 여러개라면 프로미스 체인으로 처리하거나 비동기작업을 하는 메소드 안에서 async로 동기적으로 실행하면된다.
 */
 export default {
+  async get<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
+    try {
+      const res = await client.get(url, config);
+      return res.data;
+    } catch (e) {
+      throw new Error(errorHandler(e));
+    }
+  },
   async post<P, R = void>(url: string, body?: P, config?: AxiosRequestConfig): Promise<R> {
     try {
       const res = await client.post(url, body, config);
@@ -74,25 +92,16 @@ export default {
     }
   },
 
-  async get<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
+  async delete<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
     try {
-      const res = await client.get(url, config);
+      const res = await client.delete(url, config);
       return res.data;
     } catch (e) {
       throw new Error(errorHandler(e));
     }
   },
 
-  async delete<T>(url: string): Promise<T> {
-    try {
-      const res = await client.delete(url);
-      return res.data;
-    } catch (e) {
-      throw new Error(errorHandler(e));
-    }
-  },
-
-  async put<T>(url: string, body: T, config?: AxiosRequestConfig) {
+  async put<P, R = void>(url: string, body: P, config?: AxiosRequestConfig): Promise<R> {
     try {
       const res = await client.put(url, body, config);
       return res.data;

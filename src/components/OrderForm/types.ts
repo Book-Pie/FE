@@ -9,7 +9,7 @@ export interface IOrderForm {
   mainAddress: string;
   postalCode: string;
 }
-export interface OrderRequest {
+export interface OrderPayload {
   usedBookId: number;
   address: {
     postalCode: string;
@@ -53,6 +53,9 @@ export interface OrderResult {
   deliveryRequest: string;
 }
 
-export interface BuyInfoAsyncResponse extends SuccessResponse {
+export interface BuyInfoResponse extends SuccessResponse {
+  data: OrderResult;
+}
+export interface OrderResponse extends SuccessResponse {
   data: OrderResult;
 }
