@@ -1,4 +1,4 @@
-import { getStoreUserReviewList, usedBookSelector } from "modules/Slices/usedBookDetail/usedBookDetailSlice";
+import { getStoreUserReviewList, usedBookDetailSelector } from "modules/Slices/usedBookDetail/usedBookDetailSlice";
 import { useTypedSelector } from "modules/store";
 import profileImg from "assets/image/pie3x.png";
 import Rating from "@mui/material/Rating";
@@ -29,7 +29,7 @@ import {
 } from "../style";
 
 const UsedBookStoreReview = () => {
-  const { storeReviewList, pageCount, content } = useTypedSelector(usedBookSelector);
+  const { storeReviewList, pageCount, content } = useTypedSelector(usedBookDetailSelector);
   const { params } = useRouteMatch<{ id: string }>();
   const { id } = params;
   const [page, setPage] = useState(getShopPage(1));

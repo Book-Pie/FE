@@ -1,6 +1,6 @@
 import { Button, Stack } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
-import { errorHandler } from "api/http";
+import { errorHandler } from "api/client";
 import useDebounce from "hooks/useDebounce";
 import {
   freeboardCommentDeleteAsync,

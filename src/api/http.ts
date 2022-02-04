@@ -2,7 +2,7 @@ import axios, { AxiosError } from "axios";
 import { removeToken } from "utils/localStorageUtil";
 import * as Types from "./types";
 
-const RESPONSE_STATUS_ENUM: Types.ResponseEnum = {
+const RESPONSE_STATUS_ENUM: { [key: number]: string } = {
   400: "클라이언트에서 잘못된 요청을 보냈습니다.",
   403: "권한이 없습니다.",
   404: "유효하지 않는 자원입니다.",

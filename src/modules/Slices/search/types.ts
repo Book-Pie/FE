@@ -1,5 +1,6 @@
 import { AppDispatch, RootState } from "modules/store";
 import { History } from "history";
+import { SuccessResponse } from "api/types";
 
 type Status = "idle" | "loading";
 type Error = string | null;
@@ -25,7 +26,7 @@ export interface ThunkApi {
   rejectValue: string;
 }
 
-export interface Item {
+export interface AladinItem {
   author: string;
   isbn: string;
   link: string;
@@ -49,15 +50,15 @@ export interface Item {
   mileage: number;
 }
 
-export interface UsedBookData {
+export interface UsedBookResponseData {
   pages: Page[];
   pageCount: number;
 }
 
-export interface AladinData {
+export interface AladinResponseData {
   totalResults: number;
   startIndex: number;
-  item: Item[];
+  item: AladinItem[];
   itemsPerPage: number;
   searchCategoryName: string;
   query: string;
@@ -79,7 +80,7 @@ export interface SearchReduce {
   bookReview: {
     status: Status;
     error: Error;
-    pages: Item[] | null;
+    pages: AladinItem[] | null;
     pageCount: number;
     page: number;
   };
@@ -90,8 +91,15 @@ export interface AladinBookParam {
   isReload: boolean;
 }
 
-export type SearchUsedBooksAsyncSuccess = UsedBookData;
+export interface SearchUsedBooksAsyncReponse extends SuccessResponse {
+  data: UsedBookResponseData;
+}
+export interface SearchAladinBooksAsyncReponse extends SuccessResponse {
+  data: AladinResponseData;
+}
+
+export type SearchUsedBooksAsyncSuccess = UsedBookResponseData;
 export interface SearchAladinBooksAsyncSuccess {
   isReload: boolean;
-  data: AladinData | null;
+  data: AladinResponseData | null;
 }

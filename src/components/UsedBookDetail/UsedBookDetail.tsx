@@ -3,7 +3,7 @@ import UsedBookStoreInformationBottom from "components/UsedBookDetail/UsedBookSt
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useLocation, useRouteMatch } from "react-router";
-import { usedBookDetailAsync, usedBookSelector } from "modules/Slices/usedBookDetail/usedBookDetailSlice";
+import { usedBookDetailAsync, usedBookDetailSelector } from "modules/Slices/usedBookDetail/usedBookDetailSlice";
 import { useTypedSelector } from "modules/store";
 
 const UsedBookDetail = () => {
@@ -11,7 +11,7 @@ const UsedBookDetail = () => {
   const { pathname } = useLocation();
   const { params } = useRouteMatch<{ id: string }>();
   const { id } = params;
-  const usedBookContent = useTypedSelector(usedBookSelector);
+  const usedBookContent = useTypedSelector(usedBookDetailSelector);
 
   useEffect(() => {
     window.scrollTo(0, 0);

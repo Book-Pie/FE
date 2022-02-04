@@ -28,8 +28,13 @@ const Content = ({ pages, titleFilter, select, handleLatestClick }: Types.Conten
   const max950 = useMediaQuery("(max-width:950px)");
   const history = useHistory();
 
-  const handleSaleUpdateOnClick = (usedBookId: number) => () => {
-    history.push(`/my/sale/insert/${usedBookId}`);
+  const handleSaleUpdateOnClick = (usedBookId: number, usedBookState: string) => () => {
+    history.push({
+      pathname: `/my/sale/insert/${usedBookId}`,
+      state: {
+        saleState: usedBookState,
+      },
+    });
   };
 
   const contetns = pages.filter(({ title, state }) => {
@@ -83,7 +88,7 @@ const Content = ({ pages, titleFilter, select, handleLatestClick }: Types.Conten
                       <Button color="error" variant="contained" onClick={handleLatestClick(id)}>
                         최신글로 등록
                       </Button>
-                      <Button color="info" variant="contained" onClick={handleSaleUpdateOnClick(id)}>
+                      <Button color="info" variant="contained" onClick={handleSaleUpdateOnClick(id, state)}>
                         수정하기
                       </Button>
                     </>
@@ -91,12 +96,16 @@ const Content = ({ pages, titleFilter, select, handleLatestClick }: Types.Conten
 
                   {state === "TRADING" && (
                     <Button color="mainDarkBrown" variant="contained">
-                      <Link to={`sale/${id}`}>판매상세보기</Link>
+                      <Link to={`sale/${id}`} style={{ color: "white" }}>
+                        판매상세보기
+                      </Link>
                     </Button>
                   )}
                   {state === "SOLD_OUT" && (
                     <Button color="mainDarkBrown" variant="contained">
-                      <Link to={`sale/${id}`}>판매상세보기</Link>
+                      <Link to={`sale/${id}`} style={{ color: "white" }}>
+                        판매상세보기
+                      </Link>
                     </Button>
                   )}
                 </ButtonGroup>
@@ -175,7 +184,7 @@ const Content = ({ pages, titleFilter, select, handleLatestClick }: Types.Conten
                     <Button color="error" variant="contained" onClick={handleLatestClick(id)}>
                       최신글로 등록
                     </Button>
-                    <Button color="info" variant="contained" onClick={handleSaleUpdateOnClick(id)}>
+                    <Button color="info" variant="contained" onClick={handleSaleUpdateOnClick(id, state)}>
                       수정하기
                     </Button>
                   </>

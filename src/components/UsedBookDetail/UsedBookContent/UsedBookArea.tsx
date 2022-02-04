@@ -3,8 +3,7 @@ import { Link, useHistory } from "react-router-dom";
 import { compareDateFormat, make1000UnitsCommaFormet } from "utils/formatUtil";
 import useSignIn from "hooks/useSignIn";
 import Button from "@mui/material/Button";
-import { getUsedBookDelete } from "api/usedBook";
-import { errorHandler } from "src/api/http";
+import client, { errorHandler, makeAuthTokenHeader } from "api/client";
 import {
   BookPrice,
   BookStatus,
@@ -62,7 +61,7 @@ const UsedBookArea = ({
       if (saleState !== "SALE") throw new Error("판매 중인 상품은 삭제가 불가능합니다.");
       if (!window.confirm("정말로 삭제하시겠습니까?")) return;
       if (!token) throw new Error("로그인이 필요합니다.");
-      await getUsedBookDelete(usedBookId, token);
+      await client.delete(`/usedbook/${usedBookId}`, makeAuthTokenHeader(token));
       history.replace("/usedBook");
     } catch (error: any) {
       const message = errorHandler(error);

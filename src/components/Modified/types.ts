@@ -1,3 +1,7 @@
+import { SuccessResponse } from "api/types";
+import { Dispatch, SetStateAction } from "react";
+import { RegisterOptions } from "react-hook-form";
+
 export interface ModifiedConfirmForm {
   password: string;
 }
@@ -12,17 +16,14 @@ export interface ModifiedForm {
   detailAddress: string;
 }
 
-export interface Request {
+export interface PasswordCheckResponse extends SuccessResponse {
+  data: boolean;
+}
+
+export type PasswordCheckPayload = {
   password: string;
-}
-
-export interface Response {
-  data: string;
-  success: boolean;
-  error: null;
-}
-
-export interface MyProfileUpdateRequest {
+};
+export interface ProfileImgUpdatePayload {
   name: string;
   phone: string;
   address: {
@@ -30,4 +31,11 @@ export interface MyProfileUpdateRequest {
     mainAddress: string;
     detailAddress: string;
   };
+}
+
+export interface ModifiedConfirmProps {
+  passwordOpions: RegisterOptions;
+  setReconfirmation: Dispatch<SetStateAction<boolean>>;
+  handlePassword: (password: string, token: string, methodType: "put" | "post") => Promise<void>;
+  handlePopupMessage: (isSuccess: boolean, message: string) => void;
 }

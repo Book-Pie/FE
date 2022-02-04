@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { bookDetailAsync } from "modules/Slices/book/bookSlice";
 import { useTypedSelector } from "modules/store";
 import { bookInfo } from "modules/Slices/book/types";
-import { paramProps } from "src/components/BookDetail/types";
+import { paramProps } from "components/BookDetail/types";
 
 export const useBookDetail = ({ isbn13 }: paramProps) => {
   const dispatch = useDispatch();

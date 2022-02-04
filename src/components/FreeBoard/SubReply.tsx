@@ -6,7 +6,7 @@ import { memo, useCallback, useState } from "react";
 import { useAppDispatch } from "modules/store";
 import { useParams } from "react-router";
 import { subReplyDeleteAsync, subReplyUpdateAsync } from "modules/Slices/freeBoard/freeBoardSlice";
-import { errorHandler } from "api/http";
+import { errorHandler } from "api/client";
 import Editor from "components/Editor/Editor";
 import * as Types from "./types";
 

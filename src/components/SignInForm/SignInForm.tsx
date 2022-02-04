@@ -7,7 +7,7 @@ import {
   makeOption,
 } from "utils/hookFormUtil";
 import { useForm, Controller } from "react-hook-form";
-import { setClearError, signInAsync, userReduceSelector } from "modules/Slices/user/userSlice";
+import { setClearError, fetchSignInAsync, userReduceSelector } from "modules/Slices/user/userSlice";
 import { useCallback, useEffect, useState } from "react";
 import { getRememberEmail, removeEmail, setRememberEmail } from "utils/localStorageUtil";
 import Popup from "elements/Popup";
@@ -36,7 +36,7 @@ const SignInForm = ({ isRemember }: Types.SignInFormProps) => {
     debouncdRef.current = setTimeout(() => {
       setRememberEmail(email);
       if (!isRemember) removeEmail();
-      dispatch(signInAsync({ password, email }));
+      dispatch(fetchSignInAsync({ password, email }));
     }, 1000);
   };
 

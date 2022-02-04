@@ -1,4 +1,4 @@
-import { userInfoAsync, userReduceSelector } from "modules/Slices/user/userSlice";
+import { fetchUserInfoAsync, userReduceSelector } from "modules/Slices/user/userSlice";
 import { SignInReduce } from "modules/Slices/user/types";
 import { AppDispatch, useAppDispatch, useTypedSelector } from "modules/store";
 import { useEffect } from "react";
@@ -11,7 +11,7 @@ const useSignIn = () => {
 
   useEffect(() => {
     const accessToken = getAccessToken();
-    if (accessToken && isLoggedIn === false) dispatch(userInfoAsync(accessToken));
+    if (accessToken && isLoggedIn === false) dispatch(fetchUserInfoAsync(accessToken));
   }, [dispatch, isLoggedIn]);
 
   return {

@@ -1,6 +1,5 @@
 import { Reducer, useCallback, useReducer } from "react";
-import { errorHandler } from "api/http";
-import { AxiosResponse } from "axios";
+import { errorHandler } from "api/client";
 import useDelay from "./useDelay";
 
 const LOADING = "LOADING";
@@ -69,13 +68,13 @@ const useFetch = <T = any>(defaultDelay = 500, init: Init<T> = INIT) => {
   };
 
   const callApi = useCallback(
-    async (fetcher: Promise<AxiosResponse<{ data: T }>>) => {
+    async (fetcher: Promise<{ data: T }>) => {
       dispatch(loadingAction(true));
       try {
         await delay();
         const { data } = await fetcher;
-        dispatch(successAction<T>(data.data));
-        return Promise.resolve(data.data);
+        dispatch(successAction<T>(data));
+        return Promise.resolve(data);
       } catch (error: any) {
         const message = errorHandler(error);
         dispatch(errorAction(message));

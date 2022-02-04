@@ -1,8 +1,8 @@
 import axios, { AxiosError, AxiosRequestConfig } from "axios";
-import { removeToken } from "src/utils/localStorageUtil";
+import { removeToken } from "utils/localStorageUtil";
 import * as Types from "./types";
 
-const RESPONSE_STATUS_ENUM: Types.ResponseEnum = {
+const RESPONSE_STATUS_ENUM: { [key: number]: string } = {
   400: "클라이언트에서 잘못된 요청을 보냈습니다.",
   403: "권한이 없습니다.",
   404: "유효하지 않는 자원입니다.",
@@ -59,21 +59,22 @@ export const errorHandler = (error: any) => {
 export const makeAuthTokenHeader = (token: string): AxiosRequestConfig => ({
   headers: { "X-AUTH-TOKEN": token },
 });
+export const makeKaKaoOauthHeader = (): AxiosRequestConfig => ({
+  headers: { "Content-type": "application/x-www-form-urlencoded;charset=utf-8" },
+});
+
+export const makeFormDataHeader = (token: string): AxiosRequestConfig => ({
+  headers: {
+    "Content-Type": "multipart/form-data",
+    "X-AUTH-TOKEN": token,
+  },
+});
 
 /* 
  비동기 작업이 한번일 때 불필요하게 함수를 async로 만들 수고가 없어진다.
  비동기작업이 여러개라면 프로미스 체인으로 처리하거나 비동기작업을 하는 메소드 안에서 async로 동기적으로 실행하면된다.
 */
 export default {
-  async post<P, R = void>(url: string, body?: P, config?: AxiosRequestConfig): Promise<R> {
-    try {
-      const res = await client.post(url, body, config);
-      return res.data;
-    } catch (e) {
-      throw new Error(errorHandler(e));
-    }
-  },
-
   async get<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
     try {
       const res = await client.get(url, config);
@@ -82,17 +83,26 @@ export default {
       throw new Error(errorHandler(e));
     }
   },
-
-  async delete<T>(url: string): Promise<T> {
+  async post<P, R = void>(url: string, body?: P, config?: AxiosRequestConfig): Promise<R> {
     try {
-      const res = await client.delete(url);
+      const res = await client.post(url, body, config);
+
       return res.data;
     } catch (e) {
       throw new Error(errorHandler(e));
     }
   },
 
-  async put<T>(url: string, body: T, config?: AxiosRequestConfig) {
+  async delete<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
+    try {
+      const res = await client.delete(url, config);
+      return res.data;
+    } catch (e) {
+      throw new Error(errorHandler(e));
+    }
+  },
+
+  async put<P, R = void>(url: string, body: P, config?: AxiosRequestConfig): Promise<R> {
     try {
       const res = await client.put(url, body, config);
       return res.data;
@@ -100,4 +110,45 @@ export default {
       throw new Error(errorHandler(e));
     }
   },
+};
+
+export const createResource = <T>(promise: Promise<T>) => {
+  let status: "success" | "pending" | "error" = "pending";
+  let result: T;
+
+  const suspender = promise
+    .then(resolved => {
+      status = "success";
+      result = resolved;
+      return resolved;
+    })
+    .catch(rejected => {
+      status = "error";
+      result = rejected;
+      return rejected;
+    });
+
+  return {
+    read() {
+      if (status === "pending") throw suspender;
+      if (status === "error") throw result;
+      if (status === "success") return result;
+      throw new Error("This should be impossible");
+    },
+  };
+};
+
+export const handleResourceCache = (
+  cache: Types.CacheRefType,
+  url: string,
+  name: string,
+  promise: (url: string) => Promise<any>,
+) => {
+  const lowerName = name.toLowerCase();
+  let resource = cache[lowerName];
+  if (!resource) {
+    resource = createResource(promise(url));
+    cache[lowerName] = resource;
+  }
+  return resource;
 };

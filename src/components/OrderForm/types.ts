@@ -1,15 +1,15 @@
 import { UsedBook } from "pages/types";
-import { SuccessResponse } from "src/api/types";
+import { SuccessResponse } from "api/types";
 
 export interface OrderFormProps {
   usedBook: UsedBook;
 }
-export interface IOrderForm {
+export interface OrderForm {
   detailAddress: string;
   mainAddress: string;
   postalCode: string;
 }
-export interface OrderRequest {
+export interface OrderPayload {
   usedBookId: number;
   address: {
     postalCode: string;
@@ -53,6 +53,9 @@ export interface OrderResult {
   deliveryRequest: string;
 }
 
-export interface BuyInfoAsyncResponse extends SuccessResponse {
+export interface BuyInfoResponse extends SuccessResponse {
+  data: OrderResult;
+}
+export interface OrderResponse extends SuccessResponse {
   data: OrderResult;
 }

@@ -1,5 +1,6 @@
 import { RegisterOptions } from "react-hook-form";
 import { FormInputProps } from "elements/FormInput";
+import { SuccessResponse } from "api/types";
 
 export interface SignUpForm {
   name: string;
@@ -19,13 +20,11 @@ export interface Row extends FormInputProps {
   options?: RegisterOptions;
 }
 
-export interface Reponse {
-  success: boolean;
-  error: null;
+export interface CheckReponse extends SuccessResponse {
   data: boolean;
 }
 
-export interface RequestPayload {
+export interface SignUpPayload {
   email: string;
   password: string;
   name: string;

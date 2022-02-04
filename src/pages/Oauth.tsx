@@ -1,35 +1,32 @@
 import { useHistory, useParams } from "react-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import queryString from "query-string";
-import { getKakaoOauth, getKakaoOauthAccessToken, getNaverOauthAccessToken } from "api/oauth";
-import { userInfoAsync } from "modules/Slices/user/userSlice";
+import { fetchUserInfoAsync } from "modules/Slices/user/userSlice";
 import { setAccessToken } from "utils/localStorageUtil";
 import { useDispatch } from "react-redux";
-import { errorHandler } from "api/http";
 import Popup from "elements/Popup";
 import { Link } from "react-router-dom";
 import Loading from "elements/Loading";
 import { Button } from "@mui/material";
 import { getKakaoUnlink, setKakaoAccessToken } from "utils/oAuthUtil";
+import client, { makeKaKaoOauthHeader, errorHandler } from "api/client";
+import usePopup from "hooks/usePopup";
 import * as Types from "./types";
 import * as Styled from "./styles";
 
 const Oauth = () => {
   const param = useParams<Types.OauthParam>();
   const query = useMemo(() => queryString.parse(window.location.search), []);
-  const [popUpState, setPopUpstate] = useState({
-    isSuccess: true,
-    message: "",
-  });
-  const [isOpen, setIsOpen] = useState(false);
+  const { handlePopupClose, handlePopupMessage, popupState } = usePopup();
+  const { isOpen, isSuccess, message } = popupState;
   const [isLoading, setIsLoading] = useState(true);
   const history = useHistory();
   const dispatch = useDispatch();
   const oAuthFirstApiRef = useRef(false);
 
-  const handleMyInfo = useCallback(
+  const handleFatchUserInfo = useCallback(
     (token: string) => {
-      dispatch(userInfoAsync(token));
+      dispatch(fetchUserInfoAsync(token));
       setAccessToken(token);
       history.replace("/");
     },
@@ -41,12 +38,13 @@ const Oauth = () => {
       try {
         if (typeof query.code !== "string") throw new Error("옳바른 요청이 아닙니다.");
         oAuthFirstApiRef.current = true;
-
         if (name === "naver") {
-          const response = await getNaverOauthAccessToken(queryString.stringify(query));
-          handleMyInfo(response.data.data);
+          const { data } = await client.get<Types.OauthAccessTokenResponse>(
+            `/oauth/login/naver?${queryString.stringify(query)}`,
+          );
+          handleFatchUserInfo(data);
         } else if (name === "kakao") {
-          const kakaoRequestData: Types.KakaoRequest = {
+          const kakaoRequestData: Types.KakaoPayload = {
             grant_type: "authorization_code",
             client_id: process.env.KAKAO_CLIENT_ID ?? "",
             redirect_uri: process.env.KAKAO_REDIRECT_PATH ?? "",
@@ -56,26 +54,23 @@ const Oauth = () => {
             .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`)
             .join("&");
 
-          const kakaoOauthResponse = await getKakaoOauth(kakaoRequestQeury);
-
-          const { data } = kakaoOauthResponse;
-          const token = data.access_token;
+          const { access_token: token } = await client.post<string, any>(
+            "https://kauth.kakao.com/oauth/token",
+            kakaoRequestQeury,
+            makeKaKaoOauthHeader(),
+          );
           setKakaoAccessToken(token);
-          const response = await getKakaoOauthAccessToken(token);
-          handleMyInfo(response.data.data);
+          const { data } = await client.get<Types.OauthAccessTokenResponse>(`/oauth/login/kakao/${token}`);
+          handleFatchUserInfo(data);
         }
       } catch (error: any) {
-        setIsOpen(true);
-        setPopUpstate({
-          isSuccess: false,
-          message: errorHandler(error),
-        });
+        handlePopupMessage(false, errorHandler(error));
         if (name === "kakao") getKakaoUnlink();
       } finally {
         setIsLoading(false);
       }
     },
-    [query, handleMyInfo],
+    [query, handleFatchUserInfo, handlePopupMessage],
   );
 
   useEffect(() => {
@@ -85,17 +80,16 @@ const Oauth = () => {
   return (
     <Styled.OauthContainer>
       {isOpen && (
-        <Popup autoClose className="red" isOpen={isOpen} setIsOpen={setIsOpen}>
-          {popUpState.message}
+        <Popup autoClose className="red" isOpen={isOpen} setIsOpen={handlePopupClose}>
+          {message}
         </Popup>
       )}
       <Loading isLoading={isLoading} />
       <div id="naverIdLogin" />
-      {popUpState.isSuccess || (
+      {isSuccess || (
         <div className="isError">
           <p>
-            <strong className={param.name === "naver" ? "naver" : ""}>{String(param.name).toUpperCase()}</strong>{" "}
-            로그인에 실패했습니다.
+            <strong className={param.name}>{param.name.toUpperCase()}</strong> 로그인에 실패했습니다.
           </p>
           <p>에러가 발생했습니다.</p>
           <p>빠르게 조치하겠습니다.</p>

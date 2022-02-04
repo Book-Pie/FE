@@ -13,15 +13,13 @@ import {
   FormErrorMessages,
 } from "utils/hookFormUtil";
 import useDebounce from "hooks/useDebounce";
-import { errorHandler } from "api/http";
+import client, { errorHandler, makeAuthTokenHeader, makeFormDataHeader } from "api/client";
 import FormInput from "elements/FormInput";
 import Popup from "elements/Popup";
 import useDaumPost from "hooks/useDaumPost";
-import { getUserProfileImgUpload, getUserInfoUpdate, getPasswordChange, getPasswordCheck } from "api/user";
-import { userInfoAsync, userReduceSelector } from "modules/Slices/user/userSlice";
+import { fetchUserInfoAsync, userReduceSelector } from "modules/Slices/user/userSlice";
 import { hyphenRemoveFormat } from "utils/formatUtil";
 import { useHistory } from "react-router";
-import Skeleton from "@mui/material/Skeleton";
 import Button from "@mui/material/Button";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Loading from "elements/Loading";
@@ -30,16 +28,18 @@ import useDelay from "hooks/useDelay";
 import DaumPostModal from "elements/DaumPostModal";
 import { useAppDispatch, useTypedSelector } from "modules/store";
 import usePopup from "hooks/usePopup";
+
 import * as Styled from "./style";
 import * as Types from "./types";
+import ModifiedConfirm from "./ModifiedConfirm";
 
 const Modified = () => {
   const dispatch = useAppDispatch();
-  const { user, token } = useTypedSelector(userReduceSelector);
+  const { user, token, isLoggedIn } = useTypedSelector(userReduceSelector);
 
   const [isDaumPostOpen, setIsDaumPostOpen] = useState(false);
-  const modifiedConfirmForm = useForm<Types.ModifiedConfirmForm>();
-  const modifiedForm = useForm<Types.ModifiedForm>();
+  const { watch, formState, handleSubmit, clearErrors, register, reset, setValue, setFocus } =
+    useForm<Types.ModifiedForm>();
   const [reconfirmation, setReconfirmation] = useState<boolean>(false);
   const [imgBase64, setImgBase64] = useState<string>(""); // 파일 base64
   const [imgFile, setImgFile] = useState<File | null>(null); // 파일
@@ -48,19 +48,17 @@ const Modified = () => {
   const { handlePopupClose, handlePopupMessage, popupState } = usePopup();
   const { isOpen, isSuccess, message } = popupState;
 
-  const [newPassword, confirmPassword] = modifiedForm.watch(["newPassword", "confirmPassword"]);
+  const [newPassword, confirmPassword] = watch(["newPassword", "confirmPassword"]);
   const [isLoading, setIsLoading] = useState(false);
   const { addressState, handleComplete } = useDaumPost();
   const debounce = useDebounce();
   const history = useHistory();
   const delay = useDelay(600);
-  const modifiedConfirmFormErrors = modifiedConfirmForm.formState.errors;
-  const modifiedFormErrors = modifiedForm.formState.errors;
+  const { errors } = formState;
 
   const addressOptions: RegisterOptions = {
     required: makeOption<boolean>(true, FormErrorMessages.REQUIRED),
   };
-
   const passwordOpions: RegisterOptions = {
     maxLength: makeOption<number>(20, FormErrorMessages.MAX_LENGTH),
     minLength: makeOption<number>(5, FormErrorMessages.MIN_LENGTH),
@@ -90,7 +88,6 @@ const Modified = () => {
       misMatch: value => hookFormMisMatchCheck(value, newPassword, FormErrorMessages.PASSWORD_MISMATCH),
     },
   };
-
   const nameOptions: RegisterOptions = {
     maxLength: makeOption<number>(10, FormErrorMessages.MAX_LENGTH),
     minLength: makeOption<number>(3, FormErrorMessages.MIN_LENGTH),
@@ -100,7 +97,6 @@ const Modified = () => {
       specialChracters: value => hookFormSpecialChractersCheck(value, FormErrorMessages.SPECIAL_CHARACTERS),
     },
   };
-
   const phoneOptions: RegisterOptions = {
     maxLength: makeOption<number>(14, FormErrorMessages.MAX_LENGTH),
     minLength: makeOption<number>(10, FormErrorMessages.MIN_LENGTH),
@@ -110,32 +106,12 @@ const Modified = () => {
     },
   };
 
-  const handleFileUpload = async () => {
-    try {
-      if (!imgFile) throw new Error("사진을 업로드해주세요");
-      if (imgFile && token) {
-        setIsLoading(true);
-        const formData = new FormData();
-        formData.append("image", imgFile);
+  const handleModifiedValueReset = useCallback(() => reset(), [reset]);
+  const handleDaumPostOpne = useCallback(() => setIsDaumPostOpen(prve => !prve), []);
 
-        await delay();
-        await getUserProfileImgUpload(formData, token);
-        await dispatch(userInfoAsync(token)).unwrap();
-        handleFileDelete();
-        handlePopupMessage(true, "업로드에 성공했습니다.");
-      }
-    } catch (error) {
-      handlePopupMessage(false, errorHandler(error));
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleFileOnChange = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files === null) return;
-    if (e.target.files.length === 0) return;
-
-    const file = e.target.files[0];
+  const handleFileOnChange = useCallback(async ({ target: { files } }: React.ChangeEvent<HTMLInputElement>) => {
+    if (files === null || files.length === 0) return;
+    const file = files[0];
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onloadend = () => {
@@ -155,42 +131,38 @@ const Modified = () => {
     imgFileRef.current.value = "";
   }, [imgFile]);
 
-  const handleDaumPostOpne = useCallback(() => setIsDaumPostOpen(prve => !prve), []);
-  const handlePasswordCheck = useCallback(async (password: string, token: string) => {
-    const response = await getPasswordCheck<Types.Response, Types.Request>({ password }, token);
-    const isSuccess = response.data.data;
-    // 실패 시 false
-    if (!isSuccess) throw new Error("비밀번호가 틀립니다.");
+  const handlePassword = useCallback(async (password: string, token: string, methodType: "put" | "post") => {
+    const handleThen = ({ data }: { data: boolean }) => {
+      if (!data) throw new Error(methodType === "put" ? "비밀번호 변경에 실패 했습니다." : "비밀번호가 틀립니다.");
+    };
+    const url = "/user/password";
+    const config = makeAuthTokenHeader(token);
+    const payload = { password };
+    return methodType === "put"
+      ? client.put<Types.PasswordCheckPayload, Types.PasswordCheckResponse>(url, payload, config).then(handleThen)
+      : client.post<Types.PasswordCheckPayload, Types.PasswordCheckResponse>(url, payload, config).then(handleThen);
   }, []);
 
-  const handlePasswordChange = useCallback(async (password: string, token: string) => {
-    const response = await getPasswordChange<Types.Response, Types.Request>({ password }, token);
-    const isSuccess = response.data.data;
-    // 실패 시 false
-    if (!isSuccess) throw new Error("비밀번호 변경에 실패 했습니다.");
-  }, []);
-
-  const handlePasswordCheckPass = useCallback(() => {
-    if (user && user.loginType !== "LOCAL") setReconfirmation(true);
-  }, [user]);
-
-  const modifiedConfirmFormSubmit = (data: Types.ModifiedConfirmForm) => {
-    if (debounce.current) clearTimeout(debounce.current);
-    debounce.current = setTimeout(async () => {
-      try {
-        if (user && token) {
-          const { password } = data;
-          await handlePasswordCheck(password, token);
-          setReconfirmation(true);
-        }
-      } catch (error) {
-        handlePopupMessage(false, errorHandler(error));
-      }
-    }, 500);
+  const handleFileUpload = async () => {
+    try {
+      if (!imgFile) throw new Error("사진을 업로드해주세요");
+      if (!token) throw new Error("로그인이 필요합니다.");
+      setIsLoading(true);
+      const formData = new FormData();
+      formData.append("image", imgFile);
+      await delay();
+      await client.post("/user/image", formData, makeFormDataHeader(token));
+      await dispatch(fetchUserInfoAsync(token)).unwrap();
+      handleFileDelete();
+      handlePopupMessage(true, "업로드에 성공했습니다.");
+    } catch (error) {
+      handlePopupMessage(false, errorHandler(error));
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  // 유저 정보 수정
-  const modifiedFormSubmit = ({
+  const handleModifiedSubmit = ({
     newPassword,
     detailAddress,
     mainAddress,
@@ -203,29 +175,27 @@ const Modified = () => {
     debounce.current = setTimeout(async () => {
       try {
         if (!user || !token) throw new Error("로그인이 필요합니다.");
-        // 썽크함수 호출
         // 일반 회원으로 가입한 유저면 비밀번호 체크 및 비밀번호 변경
+        // oauth 유저라면 그냥 통과
         if (user.loginType === "LOCAL") {
-          await handlePasswordCheck(currentPassword, token);
-          await handlePasswordChange(newPassword, token);
+          await handlePassword(currentPassword, token, "post");
+          await handlePassword(newPassword, token, "put");
         }
-
-        const payload: Types.MyProfileUpdateRequest = {
-          name,
-          phone: hyphenRemoveFormat(phone),
-          address: {
-            postalCode,
-            mainAddress,
-            detailAddress,
+        const { data } = await client.put<Types.ProfileImgUpdatePayload, Types.PasswordCheckResponse>(
+          "/user/me",
+          {
+            name,
+            phone: hyphenRemoveFormat(phone),
+            address: {
+              postalCode,
+              mainAddress,
+              detailAddress,
+            },
           },
-        };
-
-        const { data } = await getUserInfoUpdate<Types.Response, Types.MyProfileUpdateRequest>(payload, token);
-        const isTruthy = data.data;
-
-        if (!isTruthy) throw new Error("프로필 변경에 실패 했습니다.");
-        // 변경된 프로필 갱신
-        await dispatch(userInfoAsync(token)).unwrap();
+          makeAuthTokenHeader(token),
+        );
+        if (!data) throw new Error("프로필 변경에 실패 했습니다.");
+        await dispatch(fetchUserInfoAsync(token)).unwrap();
         history.replace("/");
       } catch (error) {
         handlePopupMessage(false, errorHandler(error));
@@ -233,25 +203,20 @@ const Modified = () => {
     }, 500);
   };
 
-  const handleMisMatchReset = useCallback(() => {
-    if (newPassword === confirmPassword && newPassword !== "" && confirmPassword !== "")
-      modifiedForm.clearErrors(["newPassword", "confirmPassword"]);
-  }, [modifiedForm, newPassword, confirmPassword]);
-
   useEffect(() => {
     const { addr, extraAddr, zonecode } = addressState;
-    const { mainAddress, postalCode } = modifiedForm.formState.errors;
+    const { mainAddress, postalCode } = errors;
 
     if (addr && zonecode) {
       if (mainAddress || postalCode) {
-        modifiedForm.clearErrors(["postalCode", "mainAddress"]);
+        clearErrors(["postalCode", "mainAddress"]);
       }
-      modifiedForm.setValue("postalCode", zonecode);
-      modifiedForm.setValue("mainAddress", `${addr} ${extraAddr}`);
-      modifiedForm.setValue("detailAddress", "");
-      modifiedForm.setFocus("detailAddress");
+      setValue("postalCode", zonecode);
+      setValue("mainAddress", `${addr} ${extraAddr}`);
+      setValue("detailAddress", "");
+      setFocus("detailAddress");
     }
-  }, [addressState, modifiedForm]);
+  }, [addressState, setFocus, setValue, clearErrors, errors]);
 
   useEffect(() => {
     if (!user) return;
@@ -260,16 +225,16 @@ const Modified = () => {
 
     if (address) {
       const { postalCode, detailAddress, mainAddress } = address;
-      modifiedForm.setValue("postalCode", postalCode);
-      modifiedForm.setValue("mainAddress", mainAddress);
-      modifiedForm.setValue("detailAddress", detailAddress);
-      modifiedForm.setValue("name", name);
+      setValue("postalCode", postalCode);
+      setValue("mainAddress", mainAddress);
+      setValue("detailAddress", detailAddress);
+      setValue("name", name);
     }
 
     if (phone) {
-      modifiedForm.setValue("phone", phone);
+      setValue("phone", phone);
     }
-  }, [user, modifiedForm]);
+  }, [user, setValue]);
 
   useEffect(
     () => () => {
@@ -278,8 +243,17 @@ const Modified = () => {
     [debounce],
   );
 
-  useLayoutEffect(handlePasswordCheckPass, [handlePasswordCheckPass]);
-  useEffect(handleMisMatchReset, [handleMisMatchReset]);
+  useLayoutEffect(() => {
+    if (isLoggedIn && user?.loginType !== "LOCAL") setReconfirmation(true);
+  }, [isLoggedIn, user]);
+
+  useEffect(() => {
+    const handlePasswordMisMatchReset = () => {
+      if (newPassword === confirmPassword && newPassword !== "" && confirmPassword !== "")
+        clearErrors(["newPassword", "confirmPassword"]);
+    };
+    handlePasswordMisMatchReset();
+  }, [newPassword, confirmPassword, clearErrors]);
 
   return (
     <>
@@ -324,7 +298,7 @@ const Modified = () => {
               )}
             </Stack>
           </div>
-          <form className="modified__form" onSubmit={modifiedForm.handleSubmit(modifiedFormSubmit)}>
+          <form className="modified__form" onSubmit={handleSubmit(handleModifiedSubmit)}>
             <div className="modified__form__row">
               <div className="modified__form__cell">
                 <span>이메일</span>
@@ -338,8 +312,8 @@ const Modified = () => {
                 <span>이름</span>
               </div>
               <div className="modified__form__cell">
-                <FormInput type="text" id="name" register={modifiedForm.register("name", nameOptions)} />
-                <ErrorMessage message={modifiedFormErrors.name?.message} />
+                <FormInput type="text" id="name" register={register("name", nameOptions)} />
+                <ErrorMessage message={errors.name?.message} />
               </div>
             </div>
             <div className="modified__form__row">
@@ -350,10 +324,10 @@ const Modified = () => {
                 <FormInput
                   type="text"
                   id="phone"
-                  register={modifiedForm.register("phone", phoneOptions)}
+                  register={register("phone", phoneOptions)}
                   placeholder="ex) 010-000-0000"
                 />
-                <ErrorMessage message={modifiedFormErrors.phone?.message} />
+                <ErrorMessage message={errors.phone?.message} />
               </div>
             </div>
             {user?.loginType === "LOCAL" && (
@@ -367,33 +341,29 @@ const Modified = () => {
                     <FormInput
                       type="password"
                       id="currentPassword"
-                      register={modifiedForm.register("currentPassword", passwordOpions)}
+                      register={register("currentPassword", passwordOpions)}
                     />
                   </div>
                   <div className="modified__errorbox">
-                    <ErrorMessage message={modifiedFormErrors.currentPassword?.message} />
+                    <ErrorMessage message={errors.currentPassword?.message} />
                   </div>
                   <div>
                     <FormLabel id="newPassword" text="새 비밀번호" />
-                    <FormInput
-                      type="password"
-                      id="newPassword"
-                      register={modifiedForm.register("newPassword", newPasswordOpions)}
-                    />
+                    <FormInput type="password" id="newPassword" register={register("newPassword", newPasswordOpions)} />
                   </div>
                   <div className="modified__errorbox">
-                    <ErrorMessage message={modifiedFormErrors.newPassword?.message} />
+                    <ErrorMessage message={errors.newPassword?.message} />
                   </div>
                   <div>
                     <FormLabel id="confirmPassword" text="비밀번호 다시 입력" />
                     <FormInput
                       type="password"
                       id="confirmPassword"
-                      register={modifiedForm.register("confirmPassword", confirmPasswordOpions)}
+                      register={register("confirmPassword", confirmPasswordOpions)}
                     />
                   </div>
                   <div className="modified__errorbox">
-                    <ErrorMessage message={modifiedFormErrors.confirmPassword?.message} />
+                    <ErrorMessage message={errors.confirmPassword?.message} />
                   </div>
                 </div>
               </div>
@@ -414,36 +384,36 @@ const Modified = () => {
                     type="text"
                     id="postalCode"
                     placeholder="우편번호"
-                    register={modifiedForm.register("postalCode", addressOptions)}
+                    register={register("postalCode", addressOptions)}
                   />
                   <FormInput
                     disabled
                     type="text"
                     id="mainAddress"
                     placeholder="주소"
-                    register={modifiedForm.register("mainAddress", addressOptions)}
+                    register={register("mainAddress", addressOptions)}
                   />
                 </div>
                 <div className="modified__errorbox">
-                  <ErrorMessage message={modifiedFormErrors.postalCode?.message} />
-                  <ErrorMessage message={modifiedFormErrors.mainAddress?.message} />
+                  <ErrorMessage message={errors.postalCode?.message} />
+                  <ErrorMessage message={errors.mainAddress?.message} />
                 </div>
                 <div>
                   <FormInput
                     type="text"
                     id="detailAddress"
                     placeholder="상세주소"
-                    register={modifiedForm.register("detailAddress", addressOptions)}
+                    register={register("detailAddress", addressOptions)}
                   />
                 </div>
                 <div>
-                  <ErrorMessage message={modifiedFormErrors.detailAddress?.message} />
+                  <ErrorMessage message={errors.detailAddress?.message} />
                 </div>
               </div>
             </div>
             <div className="modified__buttons">
               <button type="submit">변경</button>
-              <button type="button" className="modified__buttons--reset" onClick={() => modifiedForm.reset()}>
+              <button type="button" className="modified__buttons--reset" onClick={handleModifiedValueReset}>
                 초기화
               </button>
             </div>
@@ -455,50 +425,12 @@ const Modified = () => {
           />
         </Styled.ModifiedWrapper>
       ) : (
-        <Styled.ModifiedWrapper className="modified">
-          <div className="modified__title">회원정보확인</div>
-          <div className="modified__text">
-            {user ? (
-              <span className="modified__email">
-                <span>{user.email}</span>
-              </span>
-            ) : (
-              <Skeleton variant="text" width={140} height={40} animation="wave" />
-            )}
-            <span>님의 정보를 안전하게 보호하기 위해 비밀번호를 다시 한번 확인 합니다. </span>
-          </div>
-          <form className="modified__form" onSubmit={modifiedConfirmForm.handleSubmit(modifiedConfirmFormSubmit)}>
-            <div className="modified__form__row">
-              <div className="modified__form__cell">
-                <span>이메일</span>
-              </div>
-              <div className="modified__form__cell">
-                {user ? (
-                  <span>{user.email}</span>
-                ) : (
-                  <Skeleton variant="text" width={140} height={40} animation="wave" />
-                )}
-              </div>
-            </div>
-            <div className="modified__form__row">
-              <div className="modified__form__cell">
-                <span>비밀번호</span>
-              </div>
-              <div className="modified__form__cell">
-                <FormInput
-                  type="password"
-                  id="password"
-                  register={modifiedConfirmForm.register("password", passwordOpions)}
-                />
-              </div>
-            </div>
-            <ErrorMessage message={modifiedConfirmFormErrors.password?.message} />
-
-            <div className="modified__buttons">
-              <button type="submit">확인</button>
-            </div>
-          </form>
-        </Styled.ModifiedWrapper>
+        <ModifiedConfirm
+          passwordOpions={passwordOpions}
+          setReconfirmation={setReconfirmation}
+          handlePassword={handlePassword}
+          handlePopupMessage={handlePopupMessage}
+        />
       )}
     </>
   );

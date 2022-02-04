@@ -12,9 +12,6 @@ interface PopUpProps {
   children: React.ReactNode;
   className?: Colors;
 }
-interface PopupContainerProps {
-  visible: boolean;
-}
 
 const PopupWrraperOpenCss = css`
   z-index: 20;
@@ -25,7 +22,7 @@ const PopupWrraperCloseCss = css`
   transition: transform 0.5s, z-index 1s ease-in;
 `;
 
-const PopupContainer = styled.div<PopupContainerProps>`
+const PopupContainer = styled.div<{ visible: boolean }>`
   position: fixed;
   top: 5%;
   right: 5%;
@@ -49,6 +46,8 @@ const PopupContainer = styled.div<PopupContainerProps>`
     top: 0;
     right: 0;
     width: 100%;
+    font-size: 15px;
+    padding: 10px;
   }
 `;
 

@@ -1,21 +1,7 @@
-import { createAsyncThunk, createSlice, current } from "@reduxjs/toolkit";
-import {
-  getFreeboardDelete,
-  getFreeboards,
-  getFreeboardsByTitle,
-  getFreeboardUpdate,
-  getFreeboardInsert,
-  getFreeboardCommentDelet,
-  getFreeboardCommentInsert,
-  getFreeboardComments,
-  getFreeboardCommentUpdate,
-  getFreeboard,
-  getSubReplyDelete,
-  getSubReplyInsert,
-  getSubReplyUpdate,
-} from "api/freeboard";
-import { errorHandler } from "api/http";
+import { createAsyncThunk, createSlice, current, PayloadAction } from "@reduxjs/toolkit";
+import client, { errorHandler } from "api/client";
 import { RootState } from "modules/store";
+
 import { getFreeBoardPage } from "utils/localStorageUtil";
 import * as Types from "./types";
 
@@ -29,9 +15,12 @@ export const freeboardUpdateAsync = createAsyncThunk<string, Types.FreeboardUpda
     const { list } = freeBoardReduce;
     try {
       const page = list?.page ?? getFreeBoardPage() ?? 0;
-      const { data } = await getFreeboardUpdate<Types.FreeboardUpdateAsyncPayload>(payload);
-      if (data.data.success === false) throw new Error("수정에 실패했습니다.");
-      dispatch(freeboardsAsync(String(page)));
+      const { success } = await client.put<Types.FreeboardUpdateAsyncPayload, Types.FreeboardUpdateResponse>(
+        "/board",
+        payload,
+      );
+      if (!success) throw new Error("수정에 실패했습니다.");
+      dispatch(freeboardsAsync(page));
       history.replace("/community/freeboard");
       return "수정에 성공했습니다.";
     } catch (error) {
@@ -49,13 +38,16 @@ export const freeboardInsertAsync = createAsyncThunk<void, Types.FreeboardInsert
     const { list, keyWord } = freeBoardReduce;
     try {
       const page = list?.page ?? getFreeBoardPage() ?? 0;
-      const { data } = await getFreeboardInsert<Types.FreeboardInsertAsyncPayload>(payload);
-      if (data.data.success === false) throw new Error("등록에 실패했습니다.");
+      const { success } = await client.post<Types.FreeboardInsertAsyncPayload, Types.FreeboardInsertResponse>(
+        "/board",
+        payload,
+      );
+      if (!success) throw new Error("등록에 실패했습니다.");
       dispatch(setContentInit());
       if (keyWord) {
-        dispatch(freeboardsAsync("0"));
+        dispatch(freeboardsAsync(0));
       } else {
-        dispatch(freeboardsAsync(String(page)));
+        dispatch(freeboardsAsync(page));
       }
       history.replace("/community/freeboard");
       return undefined;
@@ -75,8 +67,8 @@ export const freeboardDeleteAsync = createAsyncThunk<string, string, Types.Thunk
     try {
       if (list) {
         const { page, contents } = list;
-        const { data } = await getFreeboardDelete(boardId);
-        if (data.data.success === false) throw new Error("삭제에 실패했습니다.");
+        const { data } = await client.delete(`/board/${boardId}`);
+        if (data.success === false) throw new Error("삭제에 실패했습니다.");
 
         if (keyWord) {
           if (contents[page].length === 1) {
@@ -100,26 +92,27 @@ export const freeboardDeleteAsync = createAsyncThunk<string, string, Types.Thunk
   },
 );
 
-export const freeboardsByTitleAsync = createAsyncThunk<Types.List, Types.FreeboardsByTitleParam, Types.ThunkApi>(
-  `${name}/freeboardsByTitleAsync`,
-  async ({ keyWord, page }, { rejectWithValue, dispatch }) => {
-    try {
-      const { data } = await getFreeboardsByTitle(page, keyWord);
-      dispatch(setKeyWord(keyWord));
-      return data.data;
-    } catch (e) {
-      const message = errorHandler(e);
-      return rejectWithValue(message);
-    }
-  },
-);
+export const freeboardsByTitleAsync = createAsyncThunk<
+  Types.Freeboards,
+  { keyWord: string; page: number | string },
+  Types.ThunkApi
+>(`${name}/freeboardsByTitleAsync`, async ({ keyWord, page }, { rejectWithValue, dispatch }) => {
+  try {
+    const { data } = await client.get(`/board/search?boardType=FREE&size=5&keyWord=${keyWord}&page=${page}`);
+    dispatch(setKeyWord(keyWord));
+    return data;
+  } catch (error) {
+    const message = errorHandler(error);
+    return rejectWithValue(message);
+  }
+});
 
-export const freeboardsAsync = createAsyncThunk<Types.List, string | number, Types.ThunkApi>(
+export const freeboardsAsync = createAsyncThunk<Types.Freeboards, string | number, Types.ThunkApi>(
   `${name}/freeboardsAsync`,
   async (page, { rejectWithValue }) => {
     try {
-      const { data } = await getFreeboards(page);
-      return data.data;
+      const { data } = await client.get(`/board/getAll?boardType=FREE&size=5&page=${page}`);
+      return data;
     } catch (error) {
       const message = errorHandler(error);
       return rejectWithValue(message);
@@ -131,8 +124,8 @@ export const freeboardInfoAsync = createAsyncThunk<Types.Content, string, Types.
   `${name}/freeboardInfoAsync`,
   async (boardId, { rejectWithValue }) => {
     try {
-      const { data } = await getFreeboard(boardId);
-      return data.data;
+      const { data } = await client.get(`/board/${boardId}`);
+      return data;
     } catch (error) {
       const message = errorHandler(error);
       return rejectWithValue(message);
@@ -140,30 +133,30 @@ export const freeboardInfoAsync = createAsyncThunk<Types.Content, string, Types.
   },
 );
 
-export const freeboardCommentsAsync = createAsyncThunk<Types.Comments, Types.FreeboardCommentsParam, Types.ThunkApi>(
-  `${name}/freeboardCommentsAsync`,
-  async ({ boardId, page, isReload }, { rejectWithValue }) => {
-    try {
-      const { data } = await getFreeboardComments(boardId, page);
-      const comments = data.data;
-      return {
-        boardId: Number(boardId),
-        comments,
-        isReload,
-      };
-    } catch (error) {
-      const message = errorHandler(error);
-      return rejectWithValue(message);
-    }
-  },
-);
+export const freeboardCommentsAsync = createAsyncThunk<
+  Types.FreeboardCommentsAsyncSuccess,
+  Types.FreeboardCommentsParam,
+  Types.ThunkApi
+>(`${name}/freeboardCommentsAsync`, async ({ boardId, page, isReload }, { rejectWithValue }) => {
+  try {
+    const { data } = await client.get(`/reply/board/${boardId}?page=${page}&size=5`);
+    return {
+      boardId: Number(boardId),
+      comments: data,
+      isReload,
+    };
+  } catch (error) {
+    const message = errorHandler(error);
+    return rejectWithValue(message);
+  }
+});
 
-export const freeboardCommentInsertAsync = createAsyncThunk<void, Types.FreeboardInsertPayload, Types.ThunkApi>(
+export const freeboardCommentInsertAsync = createAsyncThunk<void, Types.FreeboardInsertParam, Types.ThunkApi>(
   `${name}/freeboardCommentInsertAsync`,
   async (payload, { rejectWithValue, dispatch }) => {
     try {
-      const { data } = await getFreeboardCommentInsert<Types.FreeboardInsertPayload>(payload);
-      const { boardId } = data.data;
+      const { boardId } = payload;
+      await client.post("/reply/board", payload);
       dispatch(freeboardCommentsAsync({ boardId, page: 0, isReload: true }));
       return undefined;
     } catch (error) {
@@ -173,11 +166,11 @@ export const freeboardCommentInsertAsync = createAsyncThunk<void, Types.Freeboar
   },
 );
 
-export const freeboardCommentDeleteAsync = createAsyncThunk<string, Types.FreeboardDeletePayload, Types.ThunkApi>(
+export const freeboardCommentDeleteAsync = createAsyncThunk<string, Types.FreeboardDeleteParam, Types.ThunkApi>(
   `${name}/freeboardCommentDeleteAsync`,
-  async ({ replyId, boardId }, { rejectWithValue, dispatch }) => {
+  async ({ boardId, replyId }, { rejectWithValue, dispatch }) => {
     try {
-      await getFreeboardCommentDelet(replyId);
+      await client.delete(`/reply/board/${replyId}`);
       dispatch(freeboardCommentsAsync({ boardId, page: 0, isReload: true }));
       return "삭제가 완료되었습니다.";
     } catch (error) {
@@ -186,13 +179,12 @@ export const freeboardCommentDeleteAsync = createAsyncThunk<string, Types.Freebo
     }
   },
 );
-export const freeboardCommentUpdateAsync = createAsyncThunk<string, Types.FreeboardUpdatePayload, Types.ThunkApi>(
+export const freeboardCommentUpdateAsync = createAsyncThunk<string, Types.FreeboardUpdateParam, Types.ThunkApi>(
   `${name}/freeboardCommentUpdateAsync`,
   async (payload, { rejectWithValue, dispatch }) => {
     try {
-      const { data } = await getFreeboardCommentUpdate<Types.FreeboardUpdatePayload>(payload);
-      const { boardId } = data.data;
-      dispatch(freeboardCommentsAsync({ boardId, page: 0, isReload: true }));
+      const { data } = await client.put("/reply/board", payload);
+      dispatch(freeboardCommentsAsync({ boardId: data.boardId, page: 0, isReload: true }));
       return "업데이트가 되었습니다.";
     } catch (error) {
       const message = errorHandler(error);
@@ -205,7 +197,7 @@ export const subReplyInsertAsync = createAsyncThunk<void, Types.SubReplyInsertPa
   `${name}/subRelyInsertAsync`,
   async ({ boardId, payload }, { rejectWithValue, dispatch }) => {
     try {
-      await getSubReplyInsert<Types.SubReplyInsertPayload>(payload);
+      await client.post("/reply", payload);
       dispatch(freeboardCommentsAsync({ boardId, page: 0, isReload: true }));
       return undefined;
     } catch (error) {
@@ -219,7 +211,7 @@ export const subReplyDeleteAsync = createAsyncThunk<string, Types.SubReplyDelete
   `${name}/subRelyInsertAsync`,
   async ({ boardId, subReplyId }, { rejectWithValue, dispatch }) => {
     try {
-      await getSubReplyDelete(subReplyId);
+      await client.delete(`/reply/${subReplyId}`);
       dispatch(freeboardCommentsAsync({ boardId, page: 0, isReload: true }));
       return "삭제가 되었습니다.";
     } catch (error) {
@@ -233,7 +225,7 @@ export const subReplyUpdateAsync = createAsyncThunk<string, Types.SubReplyUpdate
   `${name}/subRelyInsertAsync`,
   async ({ boardId, payload }, { rejectWithValue, dispatch }) => {
     try {
-      await getSubReplyUpdate<Types.SubReplyUpdatePayload>(payload);
+      await client.put("/reply", payload);
       dispatch(freeboardCommentsAsync({ boardId, page: 0, isReload: true }));
       return "업데이트가 되었습니다.";
     } catch (error) {
@@ -256,11 +248,11 @@ const freeBoardSlice = createSlice({
   name,
   initialState,
   reducers: {
-    setPage: (state, action) => {
+    setPage: (state, action: PayloadAction<number>) => {
       const { list } = state;
       if (list) list.page = action.payload;
     },
-    setKeyWord: (state, action) => {
+    setKeyWord: (state, action: PayloadAction<string>) => {
       state.keyWord = action.payload;
     },
     setContentInit: state => {
@@ -431,7 +423,7 @@ const freeBoardSlice = createSlice({
         pageable: { pageNumber },
       } = comments;
 
-      const comment: Types.Comment = {
+      const newComments: Types.Comments = {
         empty,
         first,
         last,
@@ -443,11 +435,11 @@ const freeBoardSlice = createSlice({
 
       if (state.coList) {
         if (isReload) {
-          state.coList[boardId] = comment;
+          state.coList[boardId] = newComments;
         } else if (!state.coList[boardId]) {
           state.coList = {
             ...state.coList,
-            [boardId]: comment,
+            [boardId]: newComments,
           };
         } else if (state.coList[boardId]) {
           state.coList[boardId].contents[pageNumber] = content;
@@ -455,7 +447,7 @@ const freeBoardSlice = createSlice({
         }
       } else {
         state.coList = {
-          [boardId]: comment,
+          [boardId]: newComments,
         };
       }
 

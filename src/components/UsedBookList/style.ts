@@ -19,7 +19,7 @@ export const UsedBookFilter = styled.div`
   }
 `;
 
-export const UsedBookCategoryWrapper = styled.div`
+export const UsedBookCategorysWrapper = styled.div`
   display: flex;
   justify-content: center;
   flex-wrap: wrap;

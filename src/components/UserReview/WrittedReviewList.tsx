@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { SignInReduce } from "modules/Slices/user/types";
 import { GetUserReceivedReviewListData } from "modules/Slices/userReview/types";
 import { deleteUserReview } from "modules/Slices/userReview/userReviewSlice";
-import { RatingContent, RatingScore } from "src/components/BookDetail/style";
+import { RatingContent, RatingScore } from "components/BookDetail/style";
 import Modal from "../BuyList/Modal";
 import { ColorContent, ContentItem, ContentWrapper, FlexBox, TitleContentItem } from "../BuyList/styles";
 

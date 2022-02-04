@@ -1,5 +1,5 @@
 import { useTypedSelector } from "modules/store";
-import { getRelatedUsedBookList, usedBookSelector } from "modules/Slices/usedBookDetail/usedBookDetailSlice";
+import { getRelatedUsedBookList, usedBookDetailSelector } from "modules/Slices/usedBookDetail/usedBookDetailSlice";
 import { useEffect, useMemo } from "react";
 import { useDispatch } from "react-redux";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -21,7 +21,7 @@ import {
 
 const RelatedUsedBook = () => {
   const dispatch = useDispatch();
-  const { relatedUsedBookList, content } = useTypedSelector(usedBookSelector);
+  const { relatedUsedBookList, content } = useTypedSelector(usedBookDetailSelector);
   const { usedBookId } = content;
   const { params } = useRouteMatch<{ id: string }>();
   const { id } = params;

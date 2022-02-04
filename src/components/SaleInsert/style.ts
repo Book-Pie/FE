@@ -3,6 +3,7 @@ import styled from "styled-components";
 export const SaleInsertWrapper = styled.div`
   width: 80%;
   margin-top: 2rem;
+  min-height: 100vh;
 
   @media screen and (max-width: 800px) {
     margin: 1rem 0;

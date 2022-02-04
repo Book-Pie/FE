@@ -482,6 +482,6 @@ const usedBookDetailSlice = createSlice({
   },
 });
 
-export const usedBookSelector = (state: RootState) => state.usedBookDetailReduce;
+export const usedBookDetailSelector = (state: RootState) => state.usedBookDetailReduce;
 export const buyListSelector = (state: RootState) => state.usedBookDetailReduce.buyList;
 export default usedBookDetailSlice;

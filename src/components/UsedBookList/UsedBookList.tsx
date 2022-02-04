@@ -1,285 +1,95 @@
-import React, { ChangeEvent, Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import Popup from "elements/Popup";
-import UsedBookCard from "components/UsedBookList/UsedBookCard";
-import DropDown from "elements/DropDown";
-import { getCategorys } from "api/usedBook";
-import { errorHandler } from "api/http";
-import { Link } from "react-router-dom";
-import { useHistory, useLocation } from "react-router";
+import client, { errorHandler } from "api/client";
+import { useLocation } from "react-router";
 import queryString from "query-string";
-import { makeNewQueryString, removeQueryString } from "utils/queryStringUtil";
 import noUsedBookCard from "assets/image/noComments.png";
 import Loading from "elements/Loading";
-import TextField from "@mui/material/TextField";
-import useDelay from "hooks/useDelay";
-import useDebounce from "hooks/useDebounce";
-import Chip from "@mui/material/Chip";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
-import { Button, Typography, useTheme } from "@mui/material";
-import { useForm } from "react-hook-form";
-import { FormErrorMessages, htmlTagPatternCheck } from "utils/hookFormUtil";
-import ErrorMessage from "elements/ErrorMessage";
-import { useTypedSelector } from "modules/store";
-import { isLoggedInSelector } from "modules/Slices/user/userSlice";
-import { AxiosResponse } from "axios";
-import client from "api/client";
-import UsedBookCategory from "./UsedBookCategory";
+import usePopup from "src/hooks/usePopup";
+import { QueryFunctionContext, useQuery } from "react-query";
+import useDelay from "src/hooks/useDelay";
+import useInfiniteScroll from "src/hooks/useInfiniteScroll";
+import UsedBookCategorys from "./UsedBookCategorys";
 import * as Types from "./types";
 import * as Styled from "./style";
+import UsedBookSkeleton from "./UsedBookSkeleton";
+import UsedBookFilter from "./UsedBookFilter";
+import UsedBookMenu from "./UsedBookMenu";
+import UsedBookSearch from "./UsedBookSearch";
+import UsedBookCards from "./UsedBookCards";
 import Skeletons from "./Skeletons";
-import UsedBookCategorySkeleton from "./UsedBookCategorySkeleton";
 
 const initialState = {
   pages: [],
   pageCount: 1,
+  page: 1,
   isEmpty: false,
 };
-
-const usedbookCache: Types.CacheRefType = {};
 
 const UsedBookList = () => {
   const location = useLocation();
   const [usedBook, setUsedBook] = useState<Types.UsedBookState>(initialState);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [isOpen, setIsOpen] = useState(false);
-  const [message, setMessage] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const observerRef = useRef<IntersectionObserver>();
-  const throttlingRef = useRef<NodeJS.Timeout | null>();
-  const debounce = useDebounce();
-  const theme = useTheme();
-  const [currentDropDownValue, setCurrentDropDownValue] = useState("전체");
-  const { formState, setError, clearErrors } = useForm<{ title: string }>();
-  const { pages, pageCount, isEmpty } = usedBook;
-  const { search, pathname } = location;
-  const isLoggedIn = useTypedSelector(isLoggedInSelector);
 
-  const history = useHistory();
-  const delay = useDelay(600);
+  const { handlePopupClose, handlePopupMessage, popupState } = usePopup();
+  const { isOpen, message } = popupState;
+  const { pages, pageCount, isEmpty } = usedBook;
+  const { count, handleObserver } = useInfiniteScroll(pageCount);
+  const { search } = location;
+  const delay = useDelay(400);
   const query = useMemo(() => queryString.parse(search), [search]);
 
-  const createResource = useCallback(function createResource<T>(promise: Promise<AxiosResponse<T>>) {
-    let status: Types.CreateResourceStatusType = "pending";
-    let result: AxiosResponse<T>;
-
-    const suspender = promise
-      .then(resolved => {
-        status = "success";
-        result = resolved;
-      })
-      .catch(rejected => {
-        status = "error";
-        result = rejected;
-      });
-
-    return {
-      read() {
-        if (status === "pending") throw suspender;
-        if (status === "error") throw result;
-        if (status === "success") return result;
-        throw new Error("This should be impossible");
-      },
-    };
-  }, []);
-
-  const handleResourceCache = useCallback(
-    function handleResourceCache<T>(name: string, promise: <A>() => Promise<AxiosResponse<A>>) {
-      const lowerName = name.toLowerCase();
-
-      let resource = usedbookCache[lowerName];
-
-      if (!resource) {
-        resource = createResource(promise<T>());
-        usedbookCache[lowerName] = resource;
-      }
-      return resource;
+  const { data, isError, error, isFetching } = useQuery(
+    ["/usedbook", count, query],
+    async ({ queryKey }: QueryFunctionContext) => {
+      const [path, page, currentQuery] = queryKey;
+      let newQueryString = "";
+      if (typeof currentQuery === "object") newQueryString = queryString.stringify({ ...currentQuery, page });
+      await delay();
+      const url = `${path}?${newQueryString}`;
+      return client.get<Types.UsedBookListResponse>(url);
     },
-    [createResource],
+    {
+      staleTime: 6000,
+      refetchOnWindowFocus: false,
+      keepPreviousData: true,
+    },
   );
 
-  // 무한스크롤
-  const handleObserver = (node: HTMLDivElement) => {
-    if (node === null) return;
-    // 기존에 생성했던 인스턴스가 있다면 기존에 감시하던 타겟을 감시를 정지한다.
-    if (observerRef.current) observerRef.current.disconnect();
+  useEffect(() => {
+    if (Object.keys(query).length !== 0) setUsedBook(initialState);
+  }, [query]);
 
-    const observerCallback = ([entry]: IntersectionObserverEntry[], observer: IntersectionObserver) => {
-      const { target } = entry;
-      if (pageCount !== currentPage && isLoading === false) {
-        if (entry.isIntersecting) {
-          if (throttlingRef.current) return;
-          setIsLoading(true);
-          throttlingRef.current = setTimeout(() => {
-            setCurrentPage(currentPage + 1);
-            throttlingRef.current = null;
-            setIsLoading(false);
-          }, 500);
-          observer.unobserve(target);
-        }
-      } else {
-        observer.unobserve(target);
-      }
-    };
+  useEffect(() => {
+    if (data && isFetching === false) {
+      const { pages, pageCount } = data.data;
 
-    observerRef.current = new IntersectionObserver(observerCallback, {
-      root: null,
-      rootMargin: "0px",
-      threshold: 0.2,
-    });
-
-    // 파라미터로 넘어온 요소를 감시하도록 등록한다.
-    observerRef.current.observe(node);
-  };
-
-  const handleGetMoreUsedBooks = useCallback(
-    (page: number) => {
-      setIsLoading(true);
-      const url = `/usedbook?${queryString.stringify({ ...query, page })}`;
-
-      const promise = client.get<Types.UsedBookResponse>(url);
-
-      promise
-        .then(async ({ data }) => {
-          await delay();
-          const { pageCount, pages } = data;
-          setUsedBook(prev => ({
-            ...prev,
-            pageCount,
-            pages: [...prev.pages, ...pages],
-            isEmpty: pages.length === 0,
-          }));
-        })
-        .catch(error => {
-          const message = errorHandler(error);
-          setIsOpen(true);
-          setMessage(message);
-        })
-        .finally(() => setIsLoading(false));
-    },
-    [delay, query],
-  );
-
-  const handleTitleOnChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
-    if (debounce.current) clearTimeout(debounce.current);
-    debounce.current = setTimeout(() => {
-      if (value.length > 50) {
-        setError("title", { type: "maxLength", message: FormErrorMessages.MAX_LENGTH });
-        return;
-      }
-      if (htmlTagPatternCheck(value)) {
-        setError("title", { type: "html", message: "HTML태그는 검색이 불가합니다." });
-        return;
-      }
-
-      if (value) {
-        history.replace(makeNewQueryString(pathname, query, { title: value }));
-      } else {
-        history.replace(removeQueryString(pathname, search, ["title"]));
-      }
-      clearErrors();
-    }, 500);
-    return 1;
-  };
-
-  const usedBookCards = pages.map((card, idx) => {
-    if (pages.length - 5 === idx) {
-      return (
-        <React.Fragment key={idx}>
-          <div ref={handleObserver} />
-          <UsedBookCard card={card} />
-        </React.Fragment>
-      );
+      setUsedBook(prev => ({
+        ...prev,
+        pageCount,
+        isEmpty: pages.length === 0,
+        pages: [...prev.pages, ...pages],
+      }));
     }
-
-    return <UsedBookCard key={idx} card={card} />;
-  });
-
-  const categorysResource = handleResourceCache<Types.CategorysResponse>("category", getCategorys);
-
-  // ============================================ useEffect ============================================
+  }, [data, isFetching]);
 
   useEffect(() => {
-    setCurrentPage(1);
-    setUsedBook(initialState);
-    handleGetMoreUsedBooks(1);
-  }, [query, handleGetMoreUsedBooks]);
-
-  useEffect(() => {
-    if (currentPage !== 1) handleGetMoreUsedBooks(currentPage);
-  }, [currentPage]);
-  // ============================================ useEffect ============================================
+    if (isError) handlePopupMessage(false, errorHandler(error));
+  }, [isError, error, handlePopupMessage]);
 
   return (
     <section>
-      <Loading isLoading={isLoading} />
+      <Loading isLoading={isFetching} />
       {isOpen && (
-        <Popup isOpen={isOpen} setIsOpen={setIsOpen} className="red" autoClose>
+        <Popup isOpen={isOpen} setIsOpen={handlePopupClose} className="red" autoClose>
           {message}
         </Popup>
       )}
-      <Styled.UsedBookFilter>
-        <Typography variant="h5" fontWeight="bold" color={theme.colors.darkGrey}>
-          도서 카테고리
-        </Typography>
-        {Object.entries(query).map(([key, value], idx) => (
-          <Link key={idx} to={removeQueryString(pathname, search, [key])}>
-            <Chip
-              key={idx}
-              color="info"
-              variant="outlined"
-              icon={<AddCircleIcon fontSize="small" />}
-              label={value === "date" || value === "view" ? (value === "view" ? "조회순" : "최신순") : value}
-            />
-          </Link>
-        ))}
-      </Styled.UsedBookFilter>
-      <Suspense fallback={<UsedBookCategorySkeleton />}>
-        <UsedBookCategory defaultLocation="usedBook" resource={categorysResource} />
+      <UsedBookFilter query={query} />
+      <Suspense fallback={<UsedBookSkeleton type="category" />}>
+        <UsedBookCategorys defaultLocation="usedBook" />
       </Suspense>
-      <Styled.UsedBookSearchWrapper>
-        <Typography variant="h4" mt={3} mb={2} fontWeight="bold" color={theme.colors.darkGrey}>
-          중고도서 검색
-        </Typography>
-        <TextField
-          fullWidth
-          onChange={handleTitleOnChange}
-          type="text"
-          color="mainDarkBrown"
-          placeholder="중고도서 이름을 입력해주세요."
-        />
-        <ErrorMessage message={formState.errors.title?.message} />
-      </Styled.UsedBookSearchWrapper>
-      <Styled.UsedBookMenuWrapper>
-        <div>
-          <p>중고도서</p>
-        </div>
-        <div>
-          {isLoggedIn && (
-            <Link to="/my/sale/insert">
-              <Button variant="contained" color="mainDarkBrown">
-                게시글 작성하기
-              </Button>
-            </Link>
-          )}
-          <Styled.DropDownWrapper>
-            <DropDown defaultValue={currentDropDownValue} setSelectedId={setCurrentDropDownValue}>
-              <li>
-                <Link to={removeQueryString(pathname, search, ["sort"])}>전체</Link>
-              </li>
-              <li>
-                <Link id="date" to={makeNewQueryString(pathname, query, { sort: "date" })}>
-                  최신순
-                </Link>
-              </li>
-              <li>
-                <Link id="view" to={makeNewQueryString(pathname, query, { sort: "view" })}>
-                  조회순
-                </Link>
-              </li>
-            </DropDown>
-          </Styled.DropDownWrapper>
-        </div>
-      </Styled.UsedBookMenuWrapper>
+      <UsedBookSearch query={query} />
+      <UsedBookMenu query={query} />
       <Styled.UsedBookCardsWrapper>
         {isEmpty ? (
           <Styled.UsedBookCardEmpty>
@@ -289,10 +99,10 @@ const UsedBookList = () => {
               <img src={noUsedBookCard} alt="noUsedBookCard" />
             </span>
           </Styled.UsedBookCardEmpty>
-        ) : pages.length ? (
-          usedBookCards
-        ) : (
+        ) : isFetching ? (
           <Skeletons />
+        ) : (
+          <UsedBookCards pages={pages} handleObserver={handleObserver} />
         )}
       </Styled.UsedBookCardsWrapper>
     </section>

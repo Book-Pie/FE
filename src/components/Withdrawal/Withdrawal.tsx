@@ -9,15 +9,16 @@ import {
   FormErrorMessages,
 } from "utils/hookFormUtil";
 import ErrorMessage from "elements/ErrorMessage";
-import { getPasswordCheck, getUserWithDrawal } from "api/user";
 import axios from "axios";
 import { logout, userReduceSelector } from "modules/Slices/user/userSlice";
 import DropDown from "elements/DropDown";
-import { errorHandler } from "api/http";
+import client, { errorHandler, makeAuthTokenHeader } from "api/client";
 import Popup from "elements/Popup";
 import { getKakaoUnlink } from "utils/oAuthUtil";
 import Editor from "components/Editor/Editor";
 import { useAppDispatch, useTypedSelector } from "modules/store";
+
+import usePopup from "hooks/usePopup";
 import * as Types from "./types";
 import * as Styled from "./style";
 
@@ -29,8 +30,7 @@ const Withdrawal = () => {
   const { formState, handleSubmit, register, watch, clearErrors } = useForm<Types.WithdrawalForm>();
   const { errors } = formState;
   const [password, confirmPassword] = watch(["password", "confirmPassword"]);
-  const [isOpen, setIsOpen] = useState(false);
-  const [message, setMessage] = useState("");
+  const { handlePopupClose, handlePopupMessage, popupState } = usePopup();
   const [editorValue, setEditorValue] = useState("");
   const [isOtherReasonsCheck, setIsOtherReasonsCheck] = useState(false);
 
@@ -62,50 +62,42 @@ const Withdrawal = () => {
     [password],
   );
 
-  const onSubmit = async (formData: Types.WithdrawalForm) => {
+  const handleWithdrawalOnSubmit = async ({ confirmPassword, password }: Types.WithdrawalForm) => {
     try {
       if (currentReason === currentReasonInit) throw new Error("탈퇴사유를 선택해주세요.");
-      if (token === null) throw new Error("로그인을 부탁드립니다.");
-      if (user === null) throw new Error("로그인을 부탁드립니다.");
-
-      const { confirmPassword, password } = formData;
-
-      const passwordPayload: Types.Requset = {
-        password,
-      };
-
-      const confirmPayload: Types.Requset = {
-        password: confirmPassword,
-      };
+      if (!user || !token) throw new Error("로그인이 필요합니다.");
 
       if (user.loginType === "LOCAL") {
-        const responses = await axios.all([
-          getPasswordCheck<Types.Response, Types.Requset>(passwordPayload, token),
-          getPasswordCheck<Types.Response, Types.Requset>(confirmPayload, token),
+        const responses = await axios.all<Types.PasswordCheckResponse>([
+          client.post<Types.PasswordCheckRequset, Types.PasswordCheckResponse>(
+            "/user/password",
+            { password },
+            makeAuthTokenHeader(token),
+          ),
+          client.post<Types.PasswordCheckRequset, Types.PasswordCheckResponse>(
+            "/user/password",
+            { password: confirmPassword },
+            makeAuthTokenHeader(token),
+          ),
         ]);
-
-        responses.forEach(({ data: { data } }) => {
-          if (!data) throw new Error("비밀번호가 틀립니다. 확인 부탁드립니다.");
+        responses.forEach(({ data }) => {
+          if (!data) throw new Error("비밀번호가 틀립니다.");
         });
       }
 
       let reason = currentReason;
-      if (currentReason === "기타" && isOtherReasonsCheck) {
-        reason = editorValue;
-      }
-
+      if (currentReason === "기타" && isOtherReasonsCheck) reason = editorValue;
       if (user.loginType === "KAKAO") getKakaoUnlink();
 
-      const response = await getUserWithDrawal<{ reason: string }>({ reason }, token);
-      const { data } = response;
-      if (data.data) {
-        alert("회원 탈퇴가 완료되었습니다.");
-        dispatch(logout());
-      }
+      const config = makeAuthTokenHeader(token);
+      config.data = { reason };
+      const { data } = await client.delete<Types.WithdrawalResponse>("/user/me", config);
+      if (!data) throw new Error("회원 탈퇴에 실패했습니다.");
+      alert("회원 탈퇴가 완료되었습니다.");
+      dispatch(logout());
     } catch (error) {
       const message = errorHandler(error);
-      setMessage(message);
-      setIsOpen(true);
+      handlePopupMessage(false, message);
     }
   };
 
@@ -126,6 +118,15 @@ const Withdrawal = () => {
 
   useEffect(passwordMisMatchReset, [passwordMisMatchReset]);
 
+  useEffect(() => {
+    const handlePasswordMisMatchReset = () => {
+      if (password === confirmPassword && password !== "" && confirmPassword !== "") {
+        clearErrors(["password", "confirmPassword"]);
+      }
+    };
+    handlePasswordMisMatchReset();
+  }, [clearErrors, password, confirmPassword]);
+
   const dropDownChildren = useMemo(() => {
     return (
       <>
@@ -144,9 +145,9 @@ const Withdrawal = () => {
 
   return (
     <>
-      {isOpen && (
-        <Popup autoClose className="red" isOpen={isOpen} setIsOpen={setIsOpen}>
-          {message}
+      {popupState.isOpen && (
+        <Popup autoClose className="red" isOpen={popupState.isOpen} setIsOpen={handlePopupClose}>
+          {popupState.message}
         </Popup>
       )}
       <Styled.WithDrawalWrapper>
@@ -169,7 +170,7 @@ const Withdrawal = () => {
           <Editor setEditorValue={setEditorValue} value={editorValue} placeholder="기타 사유를 입력해주세요." />
         )}
         <div className="withdrawal__email withdrawal__text--center">본인 확인</div>
-        <form className="withdrawal__form" onSubmit={handleSubmit(onSubmit)}>
+        <form className="withdrawal__form" onSubmit={handleSubmit(handleWithdrawalOnSubmit)}>
           <div className="withdrawal__row">
             <div>이메일</div>
             <div>

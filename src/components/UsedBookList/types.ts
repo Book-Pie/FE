@@ -1,4 +1,4 @@
-import { AxiosResponse } from "axios";
+import { SuccessResponse } from "api/types";
 
 export type StateEnumType = {
   SALE: string;
@@ -21,42 +21,29 @@ export interface UsedBookCardProps {
 export interface UsedBookState {
   pages: UsedBook[];
   pageCount: number;
+  page: number;
   isEmpty: boolean;
 }
 
-export interface CategoryState {
+export interface Categorys {
   [key: string]: string[];
 }
 
-export interface CategorysResponse {
-  success: boolean;
-  data: CategoryState;
-  error: null;
+export interface CategorysResponse extends SuccessResponse {
+  data: Categorys;
 }
-
-export type AxiosCategorysResponse<T> = Promise<AxiosResponse<T>>;
-
-export interface UsedBookResponse {
+export interface UsedBookListResponse extends SuccessResponse {
   data: {
     pageCount: number;
     pages: UsedBook[];
   };
-  success: boolean;
-  erorr: null;
 }
 
-export type ReadReturnType = {
-  read: <T = any>() => AxiosResponse<T>;
-};
 export interface UsedBookCategorysProps {
   defaultLocation: string;
-  resource: {
-    read: <T = any>() => AxiosResponse<T>;
-  };
 }
-export type CacheRefType = {
-  [key: string]: {
-    read: () => AxiosResponse;
-  };
-};
-export type CreateResourceStatusType = "success" | "pending" | "error";
+
+export interface UsedBookCardsProps {
+  pages: UsedBook[];
+  handleObserver: (node: HTMLDivElement) => void;
+}

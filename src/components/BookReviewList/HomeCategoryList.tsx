@@ -1,6 +1,6 @@
 import { memo, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { BookItemProps } from "src/modules/Slices/book/types";
+import { BookItemProps } from "modules/Slices/book/types";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper";
 import "swiper/css/pagination";

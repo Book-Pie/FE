@@ -1,40 +1,41 @@
 import { useState } from "react";
 import Popup from "elements/Popup";
-import { errorHandler } from "api/http";
-import { getFindEmail } from "api/user";
+import client, { errorHandler } from "api/client";
 import useDebounce from "hooks/useDebounce";
 import { hyphenRemoveFormat } from "utils/formatUtil";
-import useDelay from "hooks/useDelay";
 import usePopup from "hooks/usePopup";
+
 import Form from "./Form";
 import * as Types from "./types";
 import * as Styled from "./style";
 
 const FindEmail = () => {
-  const [resulte, setResulte] = useState(null);
+  const [resulte, setResulte] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const debounceRef = useDebounce();
-  const delay = useDelay(200);
   const { handlePopupClose, handlePopupMessage, popupState } = usePopup();
   const { isOpen, isSuccess, message } = popupState;
 
-  const onSubmit = (formData: Types.FindEmailForm) => {
+  const onSubmit = ({ phone, name }: Types.FindEmailForm) => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
-    debounceRef.current = setTimeout(async () => {
-      try {
-        const { phone, name } = formData;
-        setIsLoading(true);
-        await delay();
-        const { data } = await getFindEmail<Types.FindEmailForm>({ phone: hyphenRemoveFormat(phone), name });
-        const email = data.data;
-        setResulte(email);
-        handlePopupMessage(true, "이메일 찾기에 성공했습니다.");
-      } catch (error) {
-        const message = errorHandler(error);
-        handlePopupMessage(false, message);
-      } finally {
-        setIsLoading(false);
-      }
+    debounceRef.current = setTimeout(() => {
+      setIsLoading(true);
+      client
+        .post<Types.FindEmailPayload, Types.FindEmailReponse>("/user/find/email", {
+          phone: hyphenRemoveFormat(phone),
+          name,
+        })
+        .then(({ data }) => {
+          setResulte(data);
+          handlePopupMessage(true, "이메일 찾기에 성공했습니다.");
+        })
+        .catch(error => {
+          const message = errorHandler(error);
+          handlePopupMessage(false, message);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
     }, 1000);
   };
 

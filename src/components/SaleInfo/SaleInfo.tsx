@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo } from "react";
 import { useHistory, useParams } from "react-router";
 import { Link } from "react-router-dom";
 import Loading from "elements/Loading";
-import { saleInfoAsync, userReduceSelector, userSaleInfoSelector } from "modules/Slices/user/userSlice";
+import { fetchSaleInfoAsync, userReduceSelector, userSaleInfoSelector } from "modules/Slices/user/userSlice";
 import { useAppDispatch, useTypedSelector } from "modules/store";
 import { hyphenFormat, dateArrayFormat, make1000UnitsCommaFormet } from "utils/formatUtil";
 import * as Styled from "./style";
@@ -38,7 +38,7 @@ const SaleInfo = () => {
 
   useEffect(() => {
     if (!saleInfo)
-      dispatch(saleInfoAsync(bookId))
+      dispatch(fetchSaleInfoAsync(bookId))
         .unwrap()
         .catch(error => {
           alert(error);

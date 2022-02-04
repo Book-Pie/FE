@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { Controller, RegisterOptions, useForm } from "react-hook-form";
 import { useHistory, useLocation, useParams } from "react-router";
 import { Link } from "react-router-dom";
-import { errorHandler } from "api/http";
+import { errorHandler } from "api/client";
 import ErrorMessage from "elements/ErrorMessage";
 import Loading from "elements/Loading";
 import Popup from "elements/Popup";
@@ -34,7 +34,7 @@ const FreeBoard = () => {
     },
   });
   const { errors } = formState;
-  let { boardId } = useParams<Types.IParam>();
+  let { boardId } = useParams<Types.Param>();
   const [isUpdate, setIsUpdate] = useState(false);
   const { state } = useLocation<Types.LocationState>();
   // param으로 쓰레기값(string)이 넘어왔을때 서버로 요청보내는걸 방지

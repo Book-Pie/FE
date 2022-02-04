@@ -1,4 +1,4 @@
-import { BookDetailPanel, BookDetailPanelWrapper } from "src/components/BookDetail/BookDetailCard";
+import { BookDetailPanel, BookDetailPanelWrapper } from "components/BookDetail/BookDetailCard";
 import BasicCard from "components/Cards/BasicCard";
 import { Reviews } from "components/Reviews/ReviewForm/Reviews";
 import { Container } from "./style";

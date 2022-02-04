@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo } from "react";
 import { useHistory, useParams } from "react-router";
-import { buyInfoAsync, userBuyInfoSelector, userReduceSelector } from "modules/Slices/user/userSlice";
+import { fetchBuyInfoAsync, userBuyInfoSelector, userReduceSelector } from "modules/Slices/user/userSlice";
 import { useAppDispatch, useTypedSelector } from "modules/store";
 import { hyphenFormat, dateArrayFormat, make1000UnitsCommaFormet } from "utils/formatUtil";
 import { Button } from "@mui/material";
@@ -31,7 +31,7 @@ const BuyInfo = () => {
   );
 
   useEffect(() => {
-    if (!buyInfo) dispatch(buyInfoAsync(orderId)).unwrap().catch(alert);
+    if (!buyInfo) dispatch(fetchBuyInfoAsync(orderId)).unwrap().catch(alert);
   }, [orderId, buyInfo, dispatch]);
 
   useEffect(() => {

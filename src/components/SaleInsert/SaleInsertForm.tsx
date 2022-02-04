@@ -1,14 +1,14 @@
 import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { SelectChangeEvent } from "@mui/material";
-import { errorHandler } from "api/http";
+import client, { errorHandler, makeAuthTokenHeader } from "api/client";
 import { useHistory } from "react-router";
 import { useTypedSelector } from "modules/store";
 import { userReduceSelector } from "modules/Slices/user/userSlice";
 import { useForm } from "react-hook-form";
 import DeleteIcon from "@mui/icons-material/Delete";
 import myShop from "assets/image/myShop.png";
-import { AxiosResponse } from "axios";
-import { getSaleInsert, getSaleUpdate } from "src/api/usedBook";
+import { UsedBookResponse } from "pages/types";
+
 import * as Types from "./types";
 import * as Styled from "./style";
 import Buttons from "./Buttons";
@@ -16,17 +16,12 @@ import SaleInsertCheckBox from "./SaleInsertCheckBox";
 import SaleInsertPrice from "./SaleInsertPrice";
 import SaleInsertEditor from "./SaleInsertEditor";
 import SaleInsertTags from "./SaleInsertTags";
-import SaleBeforeImgProps from "./SaleBeforeImg";
 import SaleInsertCategorys from "./SaleInsertCategorys";
 import SaleInsertTitle from "./SaleInsertTitle";
 import SaleInsertSkeleton from "./SaleInsertSkeleton";
+import SaleInsertBeforeImg from "./SaleInsertBeforeImg";
 
-const SaleInsertForm = ({
-  handlePopupMessage,
-  categoryResource,
-  usedBookResource,
-  bookId,
-}: Types.SaleInsertFormProps) => {
+const SaleInsertForm = ({ handlePopupMessage, usedBookResource, bookId }: Types.SaleInsertFormProps) => {
   const [imgFiles, setImgFiles] = useState<File[]>([]);
   const [imgBase64, setImgBase64] = useState<string[]>([]);
   const [currentFirstCategory, setCurrentFirstCategory] = useState("소설");
@@ -36,6 +31,7 @@ const SaleInsertForm = ({
   const [form, setForm] = useState<Types.TagsType>({ tags: new Set<string>() });
   const { tags } = form;
   const history = useHistory();
+
   const { token } = useTypedSelector(userReduceSelector);
 
   const { handleSubmit, formState, reset, control, setValue } = useForm<Types.SaleInsertForm>({
@@ -85,9 +81,9 @@ const SaleInsertForm = ({
       formData.append("usedBook", JSON.stringify(payload));
 
       if (bookId) {
-        await getSaleUpdate(formData, token, bookId);
+        await client.put(`/usedbook/${bookId}`, formData, makeAuthTokenHeader(token));
       } else {
-        await getSaleInsert(formData, token);
+        await client.post("/usedbook", formData, makeAuthTokenHeader(token));
       }
 
       history.replace("/my/sale");
@@ -160,17 +156,17 @@ const SaleInsertForm = ({
 
   useEffect(() => {
     try {
-      if (usedBookResource) usedBookResource.read<Types.UsedBookResponseType>();
-    } catch (promise: any) {
-      promise.then((response: AxiosResponse<Types.UsedBookResponseType>) => {
-        const { data } = response;
-        const usedbook = data.data;
-        setCurrentFirstCategory(usedbook.fstCategory);
-        setCurrentSecondCategory(usedbook.sndCategory);
-        setValue("price", String(usedbook.price));
-        setValue("title", String(usedbook.title));
-        setUsedBookState(usedbook.bookState);
-      });
+      if (usedBookResource) usedBookResource.read();
+    } catch (error: any) {
+      if (error instanceof Promise) {
+        error.then(({ data }: UsedBookResponse) => {
+          setCurrentFirstCategory(data.fstCategory);
+          setCurrentSecondCategory(data.sndCategory);
+          setValue("price", String(data.price));
+          setValue("title", String(data.title));
+          setUsedBookState(data.bookState);
+        });
+      }
     }
   }, [usedBookResource, setValue]);
 
@@ -178,7 +174,7 @@ const SaleInsertForm = ({
     <form onSubmit={handleSubmit(handleOnSubmit)}>
       {usedBookResource && (
         <Suspense fallback={<SaleInsertSkeleton type="image" />}>
-          <SaleBeforeImgProps usedBookResource={usedBookResource} />
+          <SaleInsertBeforeImg usedBookResource={usedBookResource} />
         </Suspense>
       )}
       <Styled.ImgDelete>
@@ -243,7 +239,6 @@ const SaleInsertForm = ({
             handleChange={handleChange}
             currentFirstCategory={currentFirstCategory}
             currentSecondCategory={currentSecondCategory}
-            categoryResource={categoryResource}
           />
         </Suspense>
       </Styled.Row>

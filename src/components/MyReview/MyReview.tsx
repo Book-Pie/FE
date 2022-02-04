@@ -1,7 +1,7 @@
 import { useAppDispatch, useTypedSelector } from "modules/store";
 import queryString from "query-string";
 import { useEffect } from "react";
-import { userReviewsSelector, reviewListAsync, setReviewPage, userSelector } from "modules/Slices/user/userSlice";
+import { userReviewsSelector, fetchReviewAsync, setReviewPage, userSelector } from "modules/Slices/user/userSlice";
 import { Stack, Typography } from "@mui/material";
 import Pagination from "@mui/material/Pagination";
 import Loading from "elements/Loading";
@@ -30,7 +30,7 @@ const MyReview = () => {
         dispatch(setReviewPage(currentPage));
       } else {
         const query = makeQuery(user.id, currentPage, size);
-        dispatch(reviewListAsync(query));
+        dispatch(fetchReviewAsync(query));
       }
     }
   };
@@ -38,7 +38,7 @@ const MyReview = () => {
   useEffect(() => {
     if (user === null || page !== 0 || contents !== null) return;
     const query = makeQuery(user.id, page, size);
-    dispatch(reviewListAsync(query));
+    dispatch(fetchReviewAsync(query));
   }, [dispatch, user, page, size, contents]);
 
   if (contents) {

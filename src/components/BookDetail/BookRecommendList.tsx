@@ -1,8 +1,8 @@
 import { useEffect, useMemo } from "react";
 import { useDispatch } from "react-redux";
-import { Link, useRouteMatch } from "react-router-dom";
-import { bookReduceSelector, getBookRecommendList } from "src/modules/Slices/book/bookSlice";
-import { useTypedSelector } from "src/modules/store";
+import { Link } from "react-router-dom";
+import { bookReduceSelector, getBookRecommendList } from "modules/Slices/book/bookSlice";
+import { useTypedSelector } from "modules/store";
 import { Navigation } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import {
