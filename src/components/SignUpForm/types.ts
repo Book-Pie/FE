@@ -1,6 +1,6 @@
 import { RegisterOptions } from "react-hook-form";
 import { FormInputProps } from "elements/FormInput";
-import { SuccessResponse } from "src/api/types";
+import { SuccessResponse } from "api/types";
 
 export interface SignUpForm {
   name: string;

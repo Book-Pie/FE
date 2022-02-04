@@ -2,9 +2,9 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { removeToken, setAccessToken, getAccessToken } from "utils/localStorageUtil";
 import { hyphenFormat } from "utils/formatUtil";
 import { RootState } from "modules/store";
-import client, { makeAuthTokenHeader } from "api/client";
-import { errorHandler } from "api/http";
-import { OrderResult } from "src/components/OrderForm/types";
+import client, { makeAuthTokenHeader, errorHandler } from "api/client";
+
+import { OrderResult } from "components/OrderForm/types";
 import * as Types from "./types";
 
 const NAME = "userReduce";

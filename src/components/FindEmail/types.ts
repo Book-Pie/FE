@@ -1,4 +1,4 @@
-import { SuccessResponse } from "src/api/types";
+import { SuccessResponse } from "api/types";
 
 export interface FindEmailForm {
   name: string;

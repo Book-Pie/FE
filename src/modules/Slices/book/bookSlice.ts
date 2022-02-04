@@ -1,10 +1,10 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 import { RootState } from "modules/store";
-import { getBestSeller } from "api/book";
 import http from "api/http";
-import { makeTwoDimensionalArray } from "src/components/BookReviewList/BookCategory";
-import { paramProps } from "src/components/BookDetail/types";
+import { makeTwoDimensionalArray } from "components/BookReviewList/BookCategory";
+import { paramProps } from "components/BookDetail/types";
+import client, { errorHandler } from "api/client";
 import {
   BookReduce,
   GetBookAsyncFail,
@@ -13,6 +13,8 @@ import {
   BookAsyncSuccess,
   GetBookRecommendListParam,
   GetBookRecommendListAsyncSuccess,
+  BestSellerAsync,
+  ThunkApi,
 } from "./types";
 
 const name = "bookReduce";
@@ -41,16 +43,15 @@ const initialState: BookReduce = {
 };
 
 // 베스트셀러
-export const bestSellerAsync = createAsyncThunk<GetBookAsyncSuccess>(
+export const bestSellerAsync = createAsyncThunk<BestSellerAsync, void, ThunkApi>(
   `${name}/bestSeller`,
   async (_, { rejectWithValue }) => {
     try {
-      const { data } = await getBestSeller();
+      const { data } = await client.get("/book/bestseller?page=1&size=9");
       return data;
-    } catch (err) {
-      const error = err as AxiosError<GetBookAsyncFail>;
-      if (!error.response) throw err;
-      return rejectWithValue(error.response.data);
+    } catch (e) {
+      const message = errorHandler(e);
+      return rejectWithValue(message);
     }
   },
 );
@@ -188,18 +189,15 @@ export const bookSlice = createSlice({
         state.status = "loading";
       })
       .addCase(bestSellerAsync.fulfilled, (state, { payload }) => {
-        state.bestSeller = payload.data.item;
+        state.bestSeller = payload.item;
         state.status = "idle";
       })
       .addCase(bestSellerAsync.rejected, (state, { payload }) => {
         state.status = "loading";
-        // 에러핸들링
-        if (!payload) {
-          state.error = {
-            code: 500,
-            message: "서버에서 데이터 못가져옴",
-          };
-        }
+        state.error = {
+          code: 500,
+          message: payload ?? "서버에서 데이터 못가져옴",
+        };
       })
       .addCase(mainNovelList.pending, state => {
         state.error = null;

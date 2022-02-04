@@ -7,8 +7,8 @@ import {
   mainEconomicList,
   mainMagazineList,
   mainNovelList,
-} from "src/modules/Slices/book/bookSlice";
-import { useTypedSelector } from "src/modules/store";
+} from "modules/Slices/book/bookSlice";
+import { useTypedSelector } from "modules/store";
 import HomeCategoryList from "./HomeCategoryList";
 import { BestSellerWrapper, BookReviewMainTap, MainTitle, ReviewHomeListWrapper, ReviewListWrapper } from "./styles";
 

@@ -16,7 +16,7 @@ import { fetchUserInfoAsync, userReduceSelector } from "modules/Slices/user/user
 import { useAppDispatch, useTypedSelector } from "modules/store";
 import usePopup from "hooks/usePopup";
 import client, { errorHandler } from "api/client";
-import { makeAuthTokenHeader } from "src/api/http";
+import { makeAuthTokenHeader } from "api/http";
 import * as Styled from "./style";
 import * as Types from "./types";
 
@@ -24,7 +24,7 @@ const OrderForm = ({ usedBook }: Types.OrderFormProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const deliveryTextInit = useMemo(() => "배송요청사항을 선택해주세요.", []);
   const { addressState, handleComplete } = useDaumPost();
-  const { formState, register, handleSubmit, setValue, clearErrors, setFocus, reset } = useForm<Types.IOrderForm>();
+  const { formState, register, handleSubmit, setValue, clearErrors, setFocus, reset } = useForm<Types.OrderForm>();
   const deliveryTexts = useMemo(
     () => ["현관문 앞에 놓고 가세요.", "배송 전 전화 부탁드립니다.", "경비실에 맡겨주세요."],
     [],
@@ -65,7 +65,7 @@ const OrderForm = ({ usedBook }: Types.OrderFormProps) => {
     });
   }, [token, dispatch]);
 
-  const onSumit = async ({ detailAddress, mainAddress, postalCode }: Types.IOrderForm) => {
+  const onSumit = async ({ detailAddress, mainAddress, postalCode }: Types.OrderForm) => {
     try {
       if (!user || !token) throw new Error("로그인이 필요합니다.");
       if (user.point.holdPoint - price < 0) throw new Error("금액이 부족합니다.");

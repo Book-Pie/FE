@@ -12,13 +12,13 @@ import ErrorMessage from "elements/ErrorMessage";
 import axios from "axios";
 import { logout, userReduceSelector } from "modules/Slices/user/userSlice";
 import DropDown from "elements/DropDown";
-import { errorHandler } from "api/http";
+import client, { errorHandler, makeAuthTokenHeader } from "api/client";
 import Popup from "elements/Popup";
 import { getKakaoUnlink } from "utils/oAuthUtil";
 import Editor from "components/Editor/Editor";
 import { useAppDispatch, useTypedSelector } from "modules/store";
-import client, { makeAuthTokenHeader } from "src/api/client";
-import usePopup from "src/hooks/usePopup";
+
+import usePopup from "hooks/usePopup";
 import * as Types from "./types";
 import * as Styled from "./style";
 

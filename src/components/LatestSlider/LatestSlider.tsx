@@ -6,24 +6,34 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/free-mode";
 import { Pagination, Autoplay } from "swiper";
-import { getLatestUsedBooks } from "api/usedBook";
+import client, { errorHandler } from "api/client";
+import usePopup from "hooks/usePopup";
+import Popup from "elements/Popup";
 import * as Styled from "./style";
 import * as Types from "./types";
 import Card from "./Card";
 
 const LatestSlider = () => {
-  const [pages, setPages] = useState<Types.IPage[]>([]);
-
+  const [pages, setPages] = useState<Types.UsedBook[]>([]);
+  const { handlePopupClose, handlePopupMessage, popupState } = usePopup();
+  const { isOpen, message } = popupState;
   useEffect(() => {
-    const fetcher = async () => {
-      const { data } = await getLatestUsedBooks();
-      setPages(data.data.pages);
-    };
-    fetcher();
-  }, []);
+    client
+      .get<Types.LatestSliderReponse>("/usedbook?limit=15")
+      .then(({ data }) => setPages(data.pages))
+      .catch(e => {
+        const message = errorHandler(e);
+        handlePopupMessage(false, message);
+      });
+  }, [handlePopupMessage]);
 
   return (
     <Styled.LatestSliderContainer>
+      {isOpen && (
+        <Popup isOpen={isOpen} setIsOpen={handlePopupClose} className="red">
+          {message}
+        </Popup>
+      )}
       <Swiper
         modules={[Pagination, Autoplay]}
         slidesPerView={5}

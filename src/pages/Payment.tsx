@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import http, { errorHandler } from "api/http";
 import Popup from "elements/Popup";
 import { make1000UnitsCommaFormet } from "utils/formatUtil";
 import TextField from "@mui/material/TextField";
@@ -7,6 +6,7 @@ import logo from "assets/image/logo-removebg.png";
 import { useTypedSelector } from "modules/store";
 import { userSelector } from "modules/Slices/user/userSlice";
 import usePopup from "hooks/usePopup";
+import client, { errorHandler } from "api/client";
 import * as Styled from "./styles";
 
 const { IMP } = window as any;
@@ -71,7 +71,7 @@ const Payment = () => {
             userId,
           };
 
-          await http.post("/point", data);
+          await client.post("/point", data);
           handlePopupMessage(true, "결제에 성공하였습니다.");
           setPayment({
             isSuccess: true,

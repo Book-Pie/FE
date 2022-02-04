@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Link, useRouteMatch } from "react-router-dom";
 import queryString from "query-string";
 import Popup from "elements/Popup";
-import { errorHandler } from "api/http";
+import client, { errorHandler, makeAuthTokenHeader } from "api/client";
 import noComments from "assets/image/noComments.png";
 import { AutocompleteChangeReason, SelectChangeEvent, useMediaQuery } from "@mui/material";
 import Autocomplete from "@mui/material/Autocomplete";
@@ -20,7 +20,7 @@ import { getShopPage, removeShopPage, setShopPage } from "utils/localStorageUtil
 import { userReduceSelector } from "modules/Slices/user/userSlice";
 import { useTypedSelector } from "modules/store";
 import usePopup from "hooks/usePopup";
-import { getSales, getUsedbooLatestUp } from "api/usedBook";
+
 import * as Styled from "./style";
 import * as Types from "./types";
 import Skeletons from "./Skeletons";
@@ -28,7 +28,7 @@ import Content from "./Content";
 
 const SaleList = () => {
   const { user, token } = useTypedSelector(userReduceSelector);
-  const [list, setList] = useState<Types.ListState>({
+  const [list, setList] = useState<Types.SaleListState>({
     page: getShopPage(1),
     pageCount: 0,
     pages: [],
@@ -52,8 +52,11 @@ const SaleList = () => {
         const query = queryString.stringify({ userId: user.id, page, limit });
         setIsLoading(true);
         await delay();
-        const { data } = await getSales<Types.Response>(query, token);
-        const { pageCount, pages } = data.data;
+        const { data } = await client.get<Types.SaleListResponse>(
+          `/usedbook/user?${query}`,
+          makeAuthTokenHeader(token),
+        );
+        const { pageCount, pages } = data;
         setList({
           pageCount,
           pages,
@@ -91,7 +94,7 @@ const SaleList = () => {
     (id: number) => async () => {
       try {
         if (!token) throw new Error("로그인이 필요합니다.");
-        await getUsedbooLatestUp(id, token);
+        await client.put(`/usedbook/date/${id}`, {}, makeAuthTokenHeader(token));
         handleHasMoreList(page, limit);
       } catch (error: any) {
         handlePopupMessage(false, errorHandler(error));
@@ -101,7 +104,11 @@ const SaleList = () => {
   );
 
   const handleTitlteFilterOnChange = useCallback(
-    (_: React.SyntheticEvent<Element, Event>, value: string | null | Types.Page, reason: AutocompleteChangeReason) => {
+    (
+      _: React.SyntheticEvent<Element, Event>,
+      value: string | null | Types.UsedBook,
+      reason: AutocompleteChangeReason,
+    ) => {
       if (value && typeof value !== "string") {
         setTitleFilter(value.title);
       }

@@ -1,10 +1,6 @@
 import { History } from "history";
 import { AppDispatch, RootState } from "modules/store";
-
-export interface FreeboardsByTitleParam {
-  keyWord: string;
-  page: number | string;
-}
+import { SuccessResponse } from "api/types";
 
 export interface ThunkApi {
   dispatch: AppDispatch;
@@ -57,7 +53,7 @@ export interface SubReply {
   secret: boolean;
 }
 
-export interface Pageable {
+interface Pageable {
   sort: Sort;
   offset: number;
   pageNumber: number;
@@ -66,7 +62,7 @@ export interface Pageable {
   unpaged: boolean;
 }
 
-export interface List {
+export interface Freeboards {
   content: Content[];
   pageable: Pageable;
   totalElements: number;
@@ -80,7 +76,7 @@ export interface List {
   empty: boolean;
 }
 
-export interface IComment {
+interface Comment {
   replyId: number;
   parentReplyId: number;
   boardId: number;
@@ -91,33 +87,31 @@ export interface IComment {
   subReply: SubReply[];
 }
 
-export interface Comment {
+export interface Comments {
   page: number;
   totalPages: number;
   last: boolean;
   first: boolean;
   empty: boolean;
   size: number;
-  contents: IComment[][];
+  contents: Comment[][];
 }
 
-export interface CommentReponse {
-  content: IComment[];
-  pageable: Pageable;
-  totalElements: number;
-  totalPages: number;
-  last: boolean;
-  number: number;
-  sort: Sort;
-  size: number;
-  numberOfElements: number;
-  first: boolean;
-  empty: boolean;
-}
-
-export interface Comments {
+export interface FreeboardCommentsAsyncSuccess {
   boardId: number;
-  comments: CommentReponse;
+  comments: {
+    content: Comment[];
+    pageable: Pageable;
+    totalElements: number;
+    totalPages: number;
+    last: boolean;
+    number: number;
+    sort: Sort;
+    size: number;
+    numberOfElements: number;
+    first: boolean;
+    empty: boolean;
+  };
   isReload?: boolean;
 }
 
@@ -128,6 +122,8 @@ export interface Contents {
 export interface FreeBoardReduce {
   status: "loading" | "idle";
   error: string | null;
+  info: Content | null;
+  keyWord: string | null;
   list: {
     page: number;
     totalPages: number;
@@ -137,23 +133,21 @@ export interface FreeBoardReduce {
     contents: Contents;
     size: number;
   } | null;
-  info: Content | null;
-  keyWord: string | null;
-  coList: { [key: number]: Comment } | null;
+  coList: { [key: number]: Comments } | null;
 }
 
-export interface FreeboardInsertPayload {
+export interface FreeboardInsertParam {
   boardId: number | string;
   content: string;
   userId: number;
 }
 
-export interface FreeboardUpdatePayload {
+export interface FreeboardUpdateParam {
   replyId: number | string;
   userId: number;
   content: string;
 }
-export interface FreeboardDeletePayload {
+export interface FreeboardDeleteParam {
   replyId: number;
   boardId: number | string;
 }
@@ -161,12 +155,6 @@ export interface FreeboardCommentsParam {
   boardId: string | number;
   page: number;
   isReload?: boolean;
-}
-
-export interface SubReplyInsertPayload {
-  userId: number | string;
-  parentReplyId: number;
-  content: string;
 }
 
 export interface SubReplyInsertParam {
@@ -182,13 +170,15 @@ export interface SubReplyDeleteParam {
   boardId: string;
   subReplyId: number;
 }
-export interface SubReplyUpdatePayload {
-  userId: number | string;
-  content: string;
-  replyId: number;
-}
 
 export interface SubReplyUpdateParam {
   boardId: string;
-  payload: SubReplyUpdatePayload;
+  payload: {
+    userId: number | string;
+    replyId: number;
+    content: string;
+  };
 }
+
+export interface FreeboardInsertResponse extends SuccessResponse {}
+export interface FreeboardUpdateResponse extends SuccessResponse {}

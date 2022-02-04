@@ -1,22 +1,21 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { errorHandler } from "api/http";
-import { getSearchUsedBooks } from "api/usedBook";
-import { getSearchAladinBooks } from "api/book";
+import client, { errorHandler } from "api/client";
 import { RootState } from "modules/store";
+
 import * as Types from "./types";
 
 const name = "searchReduce";
 
 export const searchUsedBooksAsync = createAsyncThunk<Types.SearchUsedBooksAsyncSuccess, string, Types.ThunkApi>(
   `${name}/searchUsedBooksAsync`,
-  async (query, { rejectWithValue }) => {
-    try {
-      const { data } = await getSearchUsedBooks(query);
-      return data.data;
-    } catch (error) {
-      const message = errorHandler(error);
-      return rejectWithValue(message);
-    }
+  (query, { rejectWithValue }) => {
+    return client
+      .get<Types.SearchUsedBooksAsyncReponse>(`/usedbook${query}&limit=8`)
+      .then(({ data }) => data)
+      .catch(e => {
+        const message = errorHandler(e);
+        return rejectWithValue(message);
+      });
   },
 );
 
@@ -25,16 +24,16 @@ export const searchAladinBooksAsync = createAsyncThunk<
   Types.AladinBookParam,
   Types.ThunkApi
 >(`${name}/searchAladinBooksAsync`, async ({ query, isReload }, { rejectWithValue }) => {
-  try {
-    const { data } = await getSearchAladinBooks(query);
-    return {
-      data: data.data,
+  return client
+    .get<Types.SearchAladinBooksAsyncReponse>(`/book/search?${query}&size=8`)
+    .then(({ data }) => ({
+      data,
       isReload,
-    };
-  } catch (error) {
-    const message = errorHandler(error);
-    return rejectWithValue(message);
-  }
+    }))
+    .catch(e => {
+      const message = errorHandler(e);
+      return rejectWithValue(message);
+    });
 });
 
 const initialState: Types.SearchReduce = {

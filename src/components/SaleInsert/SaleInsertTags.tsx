@@ -1,5 +1,5 @@
 import { memo, useCallback, useRef } from "react";
-import useDebounce from "src/hooks/useDebounce";
+import useDebounce from "hooks/useDebounce";
 import * as Styled from "./style";
 import * as Types from "./types";
 

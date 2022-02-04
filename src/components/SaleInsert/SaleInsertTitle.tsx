@@ -1,7 +1,7 @@
 import { Controller, RegisterOptions } from "react-hook-form";
 import { TextField } from "@mui/material";
-import ErrorMessage from "src/elements/ErrorMessage";
-import { makeOption } from "src/utils/hookFormUtil";
+import ErrorMessage from "elements/ErrorMessage";
+import { makeOption } from "utils/hookFormUtil";
 import { memo } from "react";
 import * as Styled from "./style";
 import * as Types from "./types";

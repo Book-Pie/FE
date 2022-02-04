@@ -1,4 +1,4 @@
-import { SuccessResponse } from "src/api/types";
+import { SuccessResponse } from "api/types";
 import { Dispatch, SetStateAction } from "react";
 import { RegisterOptions } from "react-hook-form";
 

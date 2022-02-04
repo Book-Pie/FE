@@ -1,4 +1,6 @@
-export interface Page {
+import { SuccessResponse } from "api/types";
+
+export interface UsedBook {
   id: number;
   title: string;
   price: number;
@@ -10,19 +12,17 @@ export interface Page {
   replyCount: number;
 }
 
-export interface ListState {
+export interface SaleListState {
   pageCount: number;
-  pages: Page[];
+  pages: UsedBook[];
   page: number;
   isEmpty: boolean;
 }
-export interface Response {
-  success: boolean;
+export interface SaleListResponse extends SuccessResponse {
   data: {
     pageCount: number;
-    pages: Page[];
+    pages: UsedBook[];
   };
-  error: null;
 }
 
 export type StateEnumType = {
@@ -30,7 +30,7 @@ export type StateEnumType = {
 };
 
 export interface Content {
-  pages: Page[];
+  pages: UsedBook[];
   handleLatestClick: (id: number) => () => void;
   titleFilter: string | null;
   select: string;

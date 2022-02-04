@@ -58,6 +58,12 @@ export interface GetBookAsyncSuccess {
   error: null;
 }
 
+export interface BestSellerAsync {
+  otalResults: number;
+  startIndex: number;
+  item: BookItemProps[];
+}
+
 export interface GetReviewBookAsyncSuccess {
   data: GetBookAsyncSuccess;
   status: number;
@@ -98,7 +104,7 @@ export interface GetBookAsyncFail {
 
 // 썽크함수가 사용하는 api 타입
 export interface ThunkApi {
-  rejectValue: GetBookAsyncFail;
+  rejectValue: string;
 }
 
 export interface bookInfo {

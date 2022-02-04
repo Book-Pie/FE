@@ -1,7 +1,7 @@
 import { History } from "history";
 import { AppDispatch, RootState } from "modules/store";
 import { OrderResult } from "components/OrderForm/types";
-import { SuccessResponse } from "src/api/types";
+import { SuccessResponse } from "api/types";
 
 export interface Content {
   reviewId: number;
@@ -15,13 +15,13 @@ export interface Content {
   likeCheck: boolean;
 }
 
-export interface Sort {
+interface Sort {
   empty: boolean;
   sorted: boolean;
   unsorted: boolean;
 }
 
-export interface Pageable {
+interface Pageable {
   sort: Sort;
   offset: number;
   pageNumber: number;

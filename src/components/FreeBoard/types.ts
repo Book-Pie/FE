@@ -1,6 +1,6 @@
 import { SubReply } from "modules/Slices/freeBoard/types";
 
-export interface IParam {
+export interface Param {
   boardId: string;
 }
 export interface LocationState {

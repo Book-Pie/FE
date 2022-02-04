@@ -1,8 +1,8 @@
 import axios, { AxiosError, AxiosRequestConfig } from "axios";
-import { removeToken } from "src/utils/localStorageUtil";
+import { removeToken } from "utils/localStorageUtil";
 import * as Types from "./types";
 
-const RESPONSE_STATUS_ENUM: Types.ResponseEnum = {
+const RESPONSE_STATUS_ENUM: { [key: number]: string } = {
   400: "클라이언트에서 잘못된 요청을 보냈습니다.",
   403: "권한이 없습니다.",
   404: "유효하지 않는 자원입니다.",
@@ -86,6 +86,7 @@ export default {
   async post<P, R = void>(url: string, body?: P, config?: AxiosRequestConfig): Promise<R> {
     try {
       const res = await client.post(url, body, config);
+
       return res.data;
     } catch (e) {
       throw new Error(errorHandler(e));
@@ -110,3 +111,46 @@ export default {
     }
   },
 };
+
+export const createResource = <T>(promise: Promise<T>) => {
+  let status: "success" | "pending" | "error" = "pending";
+  let result: T;
+
+  const suspender = promise
+    .then(resolved => {
+      console.log("resolvedresolvedresolvedresolvedresolved", resolved);
+
+      status = "success";
+      result = resolved;
+      return resolved;
+    })
+    .catch(rejected => {
+      status = "error";
+      result = rejected;
+      return rejected;
+    });
+
+  return {
+    read() {
+      if (status === "pending") throw suspender;
+      if (status === "error") throw result;
+      if (status === "success") return result;
+      throw new Error("This should be impossible");
+    },
+  };
+};
+
+// export const handleResourceCache = <T>(
+//   name: string,
+//   promise: <A>() => Promise<AxiosResponse<A>>,
+// )=> {
+//   const lowerName = name.toLowerCase();
+
+//   let resource = usedbookCache[lowerName];
+
+//   if (!resource) {
+//     resource = createResource(promise<T>());
+//     usedbookCache[lowerName] = resource;
+//   }
+//   return resource;
+// };

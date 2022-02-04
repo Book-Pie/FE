@@ -2,18 +2,18 @@ import { Route, Switch, useRouteMatch } from "react-router";
 import MyTop from "components/MyTop/MyTop";
 import { NavLink } from "react-router-dom";
 import { lazy, Suspense, useMemo, useState } from "react";
-import RootRedirect from "src/router/RootRedirect";
+import RootRedirect from "router/RootRedirect";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-import Loading from "src/elements/Loading";
 import * as Styled from "./styles";
+import FallBack from "./FallBack";
 
 const Point = lazy(() => import("components/Point/Point"));
 const SaleList = lazy(() => import("components/SaleList/SaleList"));
 const SaleInsert = lazy(() => import("components/SaleInsert/SaleInsert"));
 const SaleInfo = lazy(() => import("components/SaleInfo/SaleInfo"));
 const BuyList = lazy(() => import("components/BuyList/BuyList"));
-const UsedBookLikeList = lazy(() => import("src/components/UsedBookLikeList/UsedBookLikeList"));
+const UsedBookLikeList = lazy(() => import("components/UsedBookLikeList/UsedBookLikeList"));
 const UserReview = lazy(() => import("components/UserReview/UserReview"));
 const MyReview = lazy(() => import("components/MyReview/MyReview"));
 const Modified = lazy(() => import("components/Modified/Modified"));
@@ -86,7 +86,7 @@ const My = () => {
         </Tabs>
       </Styled.MyMenuTabWrapper>
       <Styled.MyRouterWrapper>
-        <Suspense fallback={<Loading isLoading />}>
+        <Suspense fallback={<FallBack />}>
           <Switch>
             <Route path={`${path}/point`} exact component={Point} />
             <Route path={`${path}/sale`} exact component={SaleList} />

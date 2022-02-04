@@ -13,8 +13,8 @@ import queryString from "query-string";
 import { BookItemProps, GetCategoryAsyncSuccess, ParentsCategoryData } from "modules/Slices/book/types";
 import Loading from "elements/Loading";
 import { useDispatch } from "react-redux";
-import { getCategoryReview } from "api/book";
 import ReviewCategorys from "components/BookReviewList/ReviewCategorys";
+import client from "api/client";
 import { BookReviewContainer, BookReviewListContainer, BookReviewMainTap, ReviewListWrapper, Title } from "./styles";
 import ReviewListSkeleton from "./ReviewListSkeleton";
 
@@ -70,8 +70,8 @@ const BookCategory = () => {
 
   useEffect(() => {
     (async () => {
-      const { data } = await getCategoryReview<GetCategoryAsyncSuccess>();
-      setCategorys(data.data);
+      const { data } = await client.get<GetCategoryAsyncSuccess>("/book/category");
+      setCategorys(data);
     })();
   }, []);
 

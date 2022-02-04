@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { GetUserReceivedReviewListData } from "modules/Slices/userReview/types";
-import { RatingContent, RatingScore } from "src/components/BookDetail/style";
+import { RatingContent, RatingScore } from "components/BookDetail/style";
 import Rating from "@mui/material/Rating";
 import { ColorContent, ContentItem, ContentWrapper, TitleContentItem } from "../BuyList/styles";
 

@@ -4,12 +4,12 @@ import { CategorysResponse } from "../UsedBookList/types";
 import * as Types from "./types";
 
 const SaleInsertCategorys = ({
-  categoryResource,
+  categorysResource,
   currentFirstCategory,
   currentSecondCategory,
   handleChange,
 }: Types.SaleInsertCategorysProps) => {
-  const { data } = categoryResource.read<CategorysResponse>();
+  const { data } = categorysResource.read<CategorysResponse>();
 
   const sx = useMemo<SxProps<Theme>>(
     () => ({
@@ -22,7 +22,7 @@ const SaleInsertCategorys = ({
 
   return (
     <div>
-      {Object.entries(data.data).map(([first, second], idx) => (
+      {Object.entries(data).map(([first, second], idx) => (
         <FormControl className="category" sx={{ minWidth: 130 }} key={idx} color="mainDarkBrown">
           <InputLabel id="category">{first}</InputLabel>
           <Select

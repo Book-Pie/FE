@@ -2,7 +2,7 @@ import { Button, TextField } from "@mui/material";
 import { useState } from "react";
 import { useForm, Controller, RegisterOptions } from "react-hook-form";
 import { Link } from "react-router-dom";
-import { errorHandler } from "api/http";
+import { errorHandler } from "api/client";
 import ErrorMessage from "elements/ErrorMessage";
 import Loading from "elements/Loading";
 import Popup from "elements/Popup";

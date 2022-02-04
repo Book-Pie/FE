@@ -1,6 +1,5 @@
 import { Reducer, useCallback, useReducer } from "react";
-import { errorHandler } from "api/http";
-import { AxiosResponse } from "axios";
+import { errorHandler } from "api/client";
 import useDelay from "./useDelay";
 
 const LOADING = "LOADING";

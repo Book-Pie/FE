@@ -14,7 +14,7 @@ import ErrorMessage from "elements/ErrorMessage";
 import FormLabel from "elements/FormLabel";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import useDaumPost from "hooks/useDaumPost";
-import { errorHandler } from "api/http";
+import client, { errorHandler } from "api/client";
 import axios from "axios";
 import { useHistory } from "react-router";
 import Popup from "elements/Popup";
@@ -24,8 +24,8 @@ import naverImg from "assets/image/naver_oauth.png";
 import kakaoImg from "assets/image/kakao_oauth.png";
 import { Link } from "react-router-dom";
 import DaumPostModal from "elements/DaumPostModal";
-import client from "api/client";
-import usePopup from "src/hooks/usePopup";
+
+import usePopup from "hooks/usePopup";
 import * as Types from "./types";
 import * as Styled from "./style";
 

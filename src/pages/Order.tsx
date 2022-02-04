@@ -1,13 +1,13 @@
 import { useCallback, useEffect, useState } from "react";
 import { Route, Switch, useParams, useRouteMatch } from "react-router";
 import { Link } from "react-router-dom";
-import { getUsedBook } from "api/usedBook";
 import OrderResult from "components/OrderForm/OrderResult";
 import OrderForm from "components/OrderForm/OrderForm";
 import { make1000UnitsCommaFormet } from "utils/formatUtil";
 import { getUsedBookOrder, removeUsedBookOrder, setUsedBookOrder } from "utils/localStorageUtil";
 import { useTypedSelector } from "modules/store";
 import { userSelector } from "modules/Slices/user/userSlice";
+import client from "api/client";
 import * as Styled from "./styles";
 import * as Types from "./types";
 
@@ -41,9 +41,10 @@ const Order = () => {
   const { images, price, title, saleState } = usedBook;
 
   const handleUsedBookLoad = useCallback(async () => {
-    const { data } = await getUsedBook<Types.Response>(id);
-    setUsedBookOrder(JSON.stringify(data.data));
-    setUsedBook(data.data);
+    client.get<Types.UsedBookResponse>(`/usedbook/${id}`).then(({ data }) => {
+      setUsedBookOrder(JSON.stringify(data));
+      setUsedBook(data);
+    });
   }, [id]);
 
   useEffect(() => {

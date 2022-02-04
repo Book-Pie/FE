@@ -1,5 +1,5 @@
 import Rating from "@mui/material/Rating";
-import { RatingContent, RatingScore } from "src/components/BookDetail/style";
+import { RatingContent, RatingScore } from "components/BookDetail/style";
 
 export interface ReviewRankProps {
   ReviewRank: number;

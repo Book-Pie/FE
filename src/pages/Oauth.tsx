@@ -10,7 +10,7 @@ import Loading from "elements/Loading";
 import { Button } from "@mui/material";
 import { getKakaoUnlink, setKakaoAccessToken } from "utils/oAuthUtil";
 import client, { makeKaKaoOauthHeader, errorHandler } from "api/client";
-import usePopup from "src/hooks/usePopup";
+import usePopup from "hooks/usePopup";
 import * as Types from "./types";
 import * as Styled from "./styles";
 

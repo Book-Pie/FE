@@ -13,7 +13,7 @@ import * as Types from "./types";
 import * as Styled from "./style";
 
 const UsedBookCategory = ({ defaultLocation, resource }: Types.UsedBookCategorysProps) => {
-  const { data } = resource.read<Types.CategorysResponse>();
+  const { data } = resource.read();
   const matches = useMediaQuery("(max-width:500px)");
   const location = useLocation();
   const { pathname, search } = location;
@@ -33,7 +33,7 @@ const UsedBookCategory = ({ defaultLocation, resource }: Types.UsedBookCategorys
 
   return (
     <Styled.UsedBookCategoryWrapper>
-      {Object.entries(data.data).map(([first, second], idx) => (
+      {Object.entries(data).map(([first, second], idx) => (
         <FormControl key={idx} color="mainDarkBrown" sx={sx} size={matches ? "small" : "medium"}>
           <InputLabel id="category">{first}</InputLabel>
           <Select

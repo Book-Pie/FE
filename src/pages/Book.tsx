@@ -1,7 +1,7 @@
 import { Route, useRouteMatch } from "react-router";
-import BookDetail from "src/components/BookDetail/BookDetail";
-import BookCategory from "src/components/BookReviewList/BookCategory";
-import BookMain from "src/components/BookReviewList/BookMain";
+import BookDetail from "components/BookDetail/BookDetail";
+import BookCategory from "components/BookReviewList/BookCategory";
+import BookMain from "components/BookReviewList/BookMain";
 
 const Book = () => {
   const { path } = useRouteMatch();

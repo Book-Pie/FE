@@ -2,11 +2,8 @@ import { memo } from "react";
 import { UseFormRegisterReturn } from "react-hook-form";
 import styled, { css } from "styled-components";
 
-interface InputProps {
+export interface FormInputProps {
   size?: number;
-}
-
-export interface FormInputProps extends InputProps {
   placeholder?: string;
   id?: string;
   name?: string;
@@ -16,7 +13,7 @@ export interface FormInputProps extends InputProps {
   value?: string;
 }
 
-const Input = styled.input<InputProps>`
+const Input = styled.input<{ size?: number }>`
   ${({ size }) =>
     size &&
     css`

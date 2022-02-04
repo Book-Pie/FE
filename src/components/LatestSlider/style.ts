@@ -40,6 +40,17 @@ export const LatestSliderContainer = styled.div`
     border-color: ${props => props.theme.colors.mainDarkBrown} !important;
     color: ${props => props.theme.colors.mainDarkBrown} !important;
   }
+  ${({ theme }) => theme.media.tab} {
+    margin: 0 -1rem;
+    margin-bottom: 1.5rem;
+    .swiper {
+      padding-bottom: 0;
+      width: 1000px;
+    }
+    .swiper-slide {
+      margin-right: 10px !important;
+    }
+  }
   ${({ theme }) => theme.media.mobile} {
     margin: 0 -1rem;
     margin-bottom: 1.5rem;
@@ -57,6 +68,10 @@ export const LatestSliderCardWrapper = styled.div`
   border: 1px solid ${props => props.theme.colors.mainLightBrown};
   height: 400px;
   transition: height 0.5s linear;
+
+  ${({ theme }) => theme.media.tab} {
+    height: 350px;
+  }
 
   ${({ theme }) => theme.media.mobile} {
     height: 300px;
@@ -102,7 +117,7 @@ export const LatestSliderCardInfo = styled.div`
     }
   }
   .card__state {
-    font-size: 1.3rem;
+    font-size: 1rem;
     line-height: normal;
     letter-spacing: -0.4px;
     color: ${p => p.theme.colors.darkGrey};
@@ -112,16 +127,31 @@ export const LatestSliderCardInfo = styled.div`
     color: ${p => p.theme.colors.error};
   }
 
+  ${({ theme }) => theme.media.tab} {
+    .card__title {
+      margin-top: 0.2rem;
+      font-size: 1.1rem;
+      padding: 0 0.5rem;
+      min-height: 1.4rem;
+    }
+    .card__price {
+      span:nth-child(1) {
+        font-size: 1rem;
+      }
+      span:nth-child(2) {
+        font-size: 0.9rem;
+      }
+    }
+    .card__state {
+      font-size: 0.8rem;
+      font-weight: bold;
+    }
+  }
+
   ${({ theme }) => theme.media.mobile} {
     height: 40%;
     gap: 0.3rem;
 
-    .card__title {
-      margin-top: 0.2rem;
-      font-size: 0.7rem;
-      padding: 0 0.5rem;
-      min-height: 1.4rem;
-    }
     .card__price {
       span:nth-child(1) {
         font-size: 0.7rem;
@@ -131,7 +161,7 @@ export const LatestSliderCardInfo = styled.div`
       }
     }
     .card__state {
-      font-size: 0.6rem;
+      font-size: 0.5rem;
       font-weight: bold;
     }
   }

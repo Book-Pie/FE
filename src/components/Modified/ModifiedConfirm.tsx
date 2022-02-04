@@ -1,11 +1,11 @@
 import { Skeleton } from "@mui/material";
 import { useForm } from "react-hook-form";
-import { errorHandler } from "src/api/client";
-import ErrorMessage from "src/elements/ErrorMessage";
-import FormInput from "src/elements/FormInput";
-import useDebounce from "src/hooks/useDebounce";
-import { userReduceSelector } from "src/modules/Slices/user/userSlice";
-import { useTypedSelector } from "src/modules/store";
+import { errorHandler } from "api/client";
+import ErrorMessage from "elements/ErrorMessage";
+import FormInput from "elements/FormInput";
+import useDebounce from "hooks/useDebounce";
+import { userReduceSelector } from "modules/Slices/user/userSlice";
+import { useTypedSelector } from "modules/store";
 import * as Styled from "./style";
 import * as Types from "./types";
 

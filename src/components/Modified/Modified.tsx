@@ -13,7 +13,7 @@ import {
   FormErrorMessages,
 } from "utils/hookFormUtil";
 import useDebounce from "hooks/useDebounce";
-import { errorHandler } from "api/http";
+import client, { errorHandler, makeAuthTokenHeader, makeFormDataHeader } from "api/client";
 import FormInput from "elements/FormInput";
 import Popup from "elements/Popup";
 import useDaumPost from "hooks/useDaumPost";
@@ -28,7 +28,7 @@ import useDelay from "hooks/useDelay";
 import DaumPostModal from "elements/DaumPostModal";
 import { useAppDispatch, useTypedSelector } from "modules/store";
 import usePopup from "hooks/usePopup";
-import client, { makeAuthTokenHeader, makeFormDataHeader } from "api/client";
+
 import * as Styled from "./style";
 import * as Types from "./types";
 import ModifiedConfirm from "./ModifiedConfirm";

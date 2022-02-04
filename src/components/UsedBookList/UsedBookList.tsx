@@ -2,8 +2,7 @@ import React, { ChangeEvent, Suspense, useCallback, useEffect, useMemo, useRef, 
 import Popup from "elements/Popup";
 import UsedBookCard from "components/UsedBookList/UsedBookCard";
 import DropDown from "elements/DropDown";
-import { getCategorys } from "api/usedBook";
-import { errorHandler } from "api/http";
+import client, { errorHandler, createResource } from "api/client";
 import { Link } from "react-router-dom";
 import { useHistory, useLocation } from "react-router";
 import queryString from "query-string";
@@ -21,21 +20,21 @@ import { FormErrorMessages, htmlTagPatternCheck } from "utils/hookFormUtil";
 import ErrorMessage from "elements/ErrorMessage";
 import { useTypedSelector } from "modules/store";
 import { isLoggedInSelector } from "modules/Slices/user/userSlice";
-import { AxiosResponse } from "axios";
-import client from "api/client";
+
 import UsedBookCategory from "./UsedBookCategory";
 import * as Types from "./types";
 import * as Styled from "./style";
 import Skeletons from "./Skeletons";
-import UsedBookCategorySkeleton from "./UsedBookCategorySkeleton";
+import UsedBookSkeleton from "./UsedBookSkeleton";
 
 const initialState = {
   pages: [],
   pageCount: 1,
   isEmpty: false,
 };
-
-const usedbookCache: Types.CacheRefType = {};
+const categorysResource = createResource<Types.CategorysResponse>(
+  client.get<Types.CategorysResponse>("/usedbook/category"),
+);
 
 const UsedBookList = () => {
   const location = useLocation();
@@ -57,45 +56,6 @@ const UsedBookList = () => {
   const history = useHistory();
   const delay = useDelay(600);
   const query = useMemo(() => queryString.parse(search), [search]);
-
-  const createResource = useCallback(function createResource<T>(promise: Promise<AxiosResponse<T>>) {
-    let status: Types.CreateResourceStatusType = "pending";
-    let result: AxiosResponse<T>;
-
-    const suspender = promise
-      .then(resolved => {
-        status = "success";
-        result = resolved;
-      })
-      .catch(rejected => {
-        status = "error";
-        result = rejected;
-      });
-
-    return {
-      read() {
-        if (status === "pending") throw suspender;
-        if (status === "error") throw result;
-        if (status === "success") return result;
-        throw new Error("This should be impossible");
-      },
-    };
-  }, []);
-
-  const handleResourceCache = useCallback(
-    function handleResourceCache<T>(name: string, promise: <A>() => Promise<AxiosResponse<A>>) {
-      const lowerName = name.toLowerCase();
-
-      let resource = usedbookCache[lowerName];
-
-      if (!resource) {
-        resource = createResource(promise<T>());
-        usedbookCache[lowerName] = resource;
-      }
-      return resource;
-    },
-    [createResource],
-  );
 
   // 무한스크롤
   const handleObserver = (node: HTMLDivElement) => {
@@ -135,7 +95,7 @@ const UsedBookList = () => {
     (page: number) => {
       setIsLoading(true);
       const url = `/usedbook?${queryString.stringify({ ...query, page })}`;
-      const promise = client.get<Types.UsedBookResponse>(url);
+      const promise = client.get<Types.UsedBookListResponse>(url);
 
       promise
         .then(async ({ data }) => {
@@ -179,8 +139,6 @@ const UsedBookList = () => {
     }, 500);
     return 1;
   };
-
-  const categorysResource = handleResourceCache<Types.CategorysResponse>("category", getCategorys);
 
   // ============================================ useEffect ============================================
 
@@ -232,7 +190,7 @@ const UsedBookList = () => {
           </Link>
         ))}
       </Styled.UsedBookFilter>
-      <Suspense fallback={<UsedBookCategorySkeleton />}>
+      <Suspense fallback={<UsedBookSkeleton type="category" />}>
         <UsedBookCategory defaultLocation="usedBook" resource={categorysResource} />
       </Suspense>
       <Styled.UsedBookSearchWrapper>

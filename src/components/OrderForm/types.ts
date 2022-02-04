@@ -1,10 +1,10 @@
 import { UsedBook } from "pages/types";
-import { SuccessResponse } from "src/api/types";
+import { SuccessResponse } from "api/types";
 
 export interface OrderFormProps {
   usedBook: UsedBook;
 }
-export interface IOrderForm {
+export interface OrderForm {
   detailAddress: string;
   mainAddress: string;
   postalCode: string;

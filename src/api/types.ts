@@ -16,3 +16,9 @@ export interface ErrorResponse {
   };
   data: null;
 }
+
+export interface CacheRefType {
+  [key: string]: {
+    read: () => any;
+  };
+}
