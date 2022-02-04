@@ -55,7 +55,7 @@ export const ContentBottom = styled.div`
   justify-content: space-between;
 `;
 
-export const Button = styled.button`
+export const DeleteButton = styled.button`
   border: none;
   background: #fff;
   color: #808991;

@@ -13,7 +13,7 @@ import {
   ReviewItemWrapper,
   ReplyDate,
   ContentBottom,
-  Button,
+  DeleteButton,
   ClickArea,
   ReviewContentTop,
   ReviewContentBottom,
@@ -60,7 +60,7 @@ export const ReviewItem: React.FC<ReviewItemProps> = ({ content, myCommentId }) 
 
   return (
     <ReviewItemWrapper>
-      <ClickArea>{user?.id === userId && <Button onClick={deleteClick}>x</Button>}</ClickArea>
+      <ClickArea>{user?.id === userId && <DeleteButton onClick={deleteClick}>x</DeleteButton>}</ClickArea>
       <ReviewContent>
         <ReviewContentTop>
           <Rating name="read-only" precision={0.5} value={rating} size="small" readOnly />
