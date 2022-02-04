@@ -10,7 +10,7 @@ import {
   addUsedBookDetailSubReply,
   deleteUsedBookDetailSubReply,
   editUsedBookDetailSubReply,
-  usedBookSelector,
+  usedBookDetailSelector,
 } from "src/modules/Slices/usedBookDetail/usedBookDetailSlice";
 import { userReduceSelector } from "src/modules/Slices/user/userSlice";
 import { useTypedSelector } from "src/modules/store";
@@ -49,7 +49,7 @@ const SubReply = ({ sx, replyId, sellerName, sellerId, subReply, isSubReplyAdd, 
   const [SubContent, setSubContent] = useState<string | undefined>(subReply?.content || "");
   const [isSubReplyUpdate, setIsSubReplyUpdate] = useState<boolean>(false);
   const { isLoggedIn, user } = useTypedSelector(userReduceSelector);
-  const { content } = useTypedSelector(usedBookSelector);
+  const { content } = useTypedSelector(usedBookDetailSelector);
   const { usedBookId } = content;
 
   const handleSubReviewChange = (event: React.ChangeEvent<HTMLInputElement>) => {
