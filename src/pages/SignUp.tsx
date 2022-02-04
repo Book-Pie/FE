@@ -1,6 +1,6 @@
 import { Typography } from "@mui/material";
 import SignUpForm from "components/SignUpForm/SignUpForm";
-import * as Styled from "./style";
+import * as Styled from "./styles";
 
 const SignUp = () => {
   return (

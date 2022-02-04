@@ -12,6 +12,7 @@ export const LatestSliderContainer = styled.div`
     padding-bottom: 2.5rem;
     width: 1200px;
     margin-left: -1rem;
+    transition: width 0.5s ease-in;
   }
   .swiper-slide {
     ${props => props.theme.shadow[0]};
@@ -44,7 +45,7 @@ export const LatestSliderContainer = styled.div`
     margin-bottom: 1.5rem;
     .swiper {
       padding-bottom: 0;
-      width: 900px;
+      width: 950px;
     }
     .swiper-slide {
       margin-right: 10px !important;
@@ -55,6 +56,8 @@ export const LatestSliderContainer = styled.div`
 export const LatestSliderCardWrapper = styled.div`
   border: 1px solid ${props => props.theme.colors.mainLightBrown};
   height: 400px;
+  transition: height 0.5s linear;
+
   ${({ theme }) => theme.media.mobile} {
     height: 300px;
   }

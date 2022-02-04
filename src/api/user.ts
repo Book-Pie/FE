@@ -9,9 +9,6 @@ export const getPasswordChange = <T, P>(payload: P, token: string) =>
 export const getUserInfoUpdate = <T, P>(payload: P, token: string) =>
   http.put<T>("/user/me", payload, makeAuthTokenHeader(token));
 
-export const getUserNickNameUpdate = (nickName: string, token: string) =>
-  http.put(`/user/nickname/${nickName}`, {}, makeAuthTokenHeader(token));
-
 export const getUserProfileImgUpload = (formData: FormData, token: string) => {
   return http.post("/user/image", formData, {
     headers: {
@@ -27,12 +24,8 @@ export const getUserWithDrawal = <P>(payload: P, token: string) => {
   });
 };
 
-export const getUserInfo = <T>(token: string) => http.get<T>("/user/me", makeAuthTokenHeader(token));
 export const getUserPoints = (userId: number) => http.get(`/point/${userId}`);
 export const getUserPointCancel = <P>(payload: P) => http.post("/point", payload);
-export const getSignIn = <T, P>(payload: P) => {
-  return http.post<T>("/user/login", payload);
-};
 export const getNickNameDuplicateCheck = <T>(nickName: string) => http.get<T>(`/user/nickname/${nickName}`);
 export const getEmailDuplicateCheck = <T>(email: string) => http.get<T>(`/user/email/${email}`);
 export const getSignUp = <P>(payload: P) => http.post("/user/signup", payload);

@@ -6,7 +6,9 @@ import { makeOption } from "src/utils/hookFormUtil";
 import * as Styled from "./style";
 import * as Types from "./types";
 
-const SaleInsertPrice = ({ control, errors }: Types.SaleInsertProps) => {
+const SaleInsertPrice = ({ control, error, usedBookResource }: Types.SaleInsertPriceProps) => {
+  usedBookResource?.read();
+
   const priceOpions: RegisterOptions = {
     required: "필수입니다.",
     max: makeOption<number>(1000000000, "최대 1억입니다."),
@@ -14,25 +16,20 @@ const SaleInsertPrice = ({ control, errors }: Types.SaleInsertProps) => {
   };
 
   return (
-    <Styled.Row>
-      <div>
-        <span>가격</span>
-        <span>*</span>
-      </div>
-      <div className="price">
-        <Controller
-          name="price"
-          control={control}
-          rules={priceOpions}
-          render={({ field }) => (
-            <TextField {...field} fullWidth type="number" color="mainDarkBrown" error={errors.price ? true : false} />
-          )}
-        />
-        <Styled.ErrorMessageWrapper>
-          <ErrorMessage message={errors.price?.message} />
-        </Styled.ErrorMessageWrapper>
-      </div>
-    </Styled.Row>
+    <div className="price">
+      <Controller
+        name="price"
+        control={control}
+        defaultValue="123213123123213213"
+        rules={priceOpions}
+        render={({ field }) => (
+          <TextField {...field} fullWidth type="number" color="mainDarkBrown" error={error ? true : false} />
+        )}
+      />
+      <Styled.ErrorMessageWrapper>
+        <ErrorMessage message={error?.message} />
+      </Styled.ErrorMessageWrapper>
+    </div>
   );
 };
 

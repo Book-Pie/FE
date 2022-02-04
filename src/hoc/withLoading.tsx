@@ -1,11 +1,7 @@
 import Loading from "elements/Loading";
 
-interface WithLoadingProps {
-  isLoading: boolean;
-}
-
 const withLoading = <P extends object>(Component: React.ComponentType<P>) => {
-  const hoc = (props: WithLoadingProps & P) => {
+  const hoc = (props: { isLoading: boolean } & P) => {
     const { isLoading, ...rest } = props;
     return (
       <>

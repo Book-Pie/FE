@@ -78,9 +78,7 @@ export const SaleTableBody = styled.div`
     display: flex;
     padding: 10px 0;
   }
-  a {
-    color: ${({ theme }) => theme.colors.white};
-  }
+
   span {
     display: flex;
     align-items: center;

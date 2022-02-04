@@ -3,7 +3,7 @@ import { Route, Switch } from "react-router";
 import { lazy, Suspense } from "react";
 import Header from "components/Header/Header";
 import Footer from "components/Footer/Footer";
-import Fallback from "pages/Fallback";
+import FallBack from "pages/FallBack";
 import useSignIn from "hooks/useSignIn";
 import PrivateRoute from "router/PrivateRoute";
 import Routers from "router/Routers";
@@ -14,7 +14,7 @@ const App = () => {
   useSignIn();
 
   return (
-    <Suspense fallback={<Fallback />}>
+    <Suspense fallback={<FallBack />}>
       <Switch>
         <PrivateRoute path="/payment" component={Payment} redirectPath="/" />
         <Route path="/">

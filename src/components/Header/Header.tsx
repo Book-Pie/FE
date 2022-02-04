@@ -2,8 +2,8 @@ import logo from "assets/image/logo-removebg.png";
 import searchImg from "assets/image/search.png";
 import { Link } from "react-router-dom";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useTypedSelector } from "modules/store";
-import { userSelector } from "modules/Slices/user/userSlice";
+import { useAppDispatch, useTypedSelector } from "modules/store";
+import { logout, userSelector } from "modules/Slices/user/userSlice";
 import { RegisterOptions, useForm } from "react-hook-form";
 import ErrorMessage from "elements/ErrorMessage";
 import { hookFormHtmlCheck, makeOption } from "utils/hookFormUtil";
@@ -22,6 +22,7 @@ const Header = () => {
   });
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const history = useHistory();
+  const dispatch = useAppDispatch();
   const { errors } = formState;
 
   const titleOptions: RegisterOptions = useMemo(
@@ -44,7 +45,17 @@ const Header = () => {
     setValue("title", "");
   };
 
-  const infos = useMemo(
+  const handleLogoutOnClick = useCallback(() => {
+    dispatch(logout());
+  }, [dispatch]);
+
+  const infos = useMemo<
+    {
+      endPoint: string;
+      text: string;
+      onClick?: () => void;
+    }[]
+  >(
     () =>
       user
         ? [
@@ -53,8 +64,9 @@ const Header = () => {
               text: "마이페이지",
             },
             {
-              endPoint: "/logout",
+              endPoint: "/",
               text: "로그아웃",
+              onClick: handleLogoutOnClick,
             },
           ]
         : [
@@ -67,7 +79,7 @@ const Header = () => {
               text: "로그인",
             },
           ],
-    [user],
+    [user, handleLogoutOnClick],
   );
 
   const handleCloseHamburger = useCallback(
@@ -92,8 +104,8 @@ const Header = () => {
     <Styled.HeaderContainer>
       <Styled.InfoWrapper>
         <div>
-          {infos.map(({ endPoint, text }, idx) => (
-            <span key={idx}>
+          {infos.map(({ endPoint, text, onClick }, idx) => (
+            <span key={idx} onClick={onClick}>
               <Link to={endPoint}>{text}</Link>
             </span>
           ))}
@@ -104,8 +116,8 @@ const Header = () => {
           <MenuIcon fontSize="large" />
         </span>
         <ul>
-          {infos.map(({ endPoint, text }, idx) => (
-            <li key={idx}>
+          {infos.map(({ endPoint, text, onClick }, idx) => (
+            <li key={idx} onClick={onClick}>
               <Link to={endPoint}>{text}</Link>
             </li>
           ))}

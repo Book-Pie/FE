@@ -1,3 +1,13 @@
+export type ResponseEnum = {
+  [key: number]: string;
+};
+
+export type SuccessResponse = {
+  error: null;
+  success: boolean;
+  data: any;
+};
+
 export interface ErrorResponse {
   success: boolean;
   error: {
@@ -6,13 +16,3 @@ export interface ErrorResponse {
   };
   data: null;
 }
-
-export type ResponseEnum = {
-  [key: number]: string;
-};
-
-export type Response = {
-  error: null;
-  success: boolean;
-  data: any;
-};

@@ -1,17 +1,19 @@
-import { Suspense, useCallback, useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { getCategorys, getUsedBook } from "api/usedBook";
 import Popup from "elements/Popup";
-import { useParams } from "react-router";
-import { CacheRefType, CreateResourceStatusType } from "components/UsedBookList/types";
+import { useLocation, useParams } from "react-router";
+import { CacheRefType, CreateResourceStatusType, StateEnumType } from "components/UsedBookList/types";
 import usePopup from "hooks/usePopup";
 import { AxiosResponse } from "axios";
 import * as Styled from "./style";
 import SaleInsertForm from "./SaleInsertForm";
+import SaleInsertNotFound from "./SaleInsertNotFound";
 
 const cache: CacheRefType = {};
 
 const SaleInsert = () => {
   const { bookId } = useParams<{ bookId?: string }>();
+  const { state } = useLocation<{ saleState: keyof StateEnumType } | undefined>();
 
   const { handlePopupClose, handlePopupMessage, popupState } = usePopup();
   const { isOpen, isSuccess, message } = popupState;
@@ -78,6 +80,8 @@ const SaleInsert = () => {
     return cleanup;
   }, []);
 
+  if (!state || state.saleState !== "SALE") return <SaleInsertNotFound state={state} />;
+
   const categoryResource = handleCategorysResourceCache("category");
   const usedBookResource = handleUsedBookResourceCache("usedBook");
 
@@ -92,14 +96,12 @@ const SaleInsert = () => {
         <span>기본정보</span>
         <span>*필수항목</span>
       </Styled.Title>
-      <Suspense fallback={<div>...로딩중</div>}>
-        <SaleInsertForm
-          bookId={bookId}
-          handlePopupMessage={handlePopupMessage}
-          usedBookResource={usedBookResource}
-          categoryResource={categoryResource}
-        />
-      </Suspense>
+      <SaleInsertForm
+        bookId={bookId}
+        handlePopupMessage={handlePopupMessage}
+        usedBookResource={usedBookResource}
+        categoryResource={categoryResource}
+      />
     </Styled.SaleInsertWrapper>
   );
 };

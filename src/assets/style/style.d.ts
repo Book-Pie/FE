@@ -26,9 +26,6 @@ declare module "styled-components" {
 
 declare module "@mui/material/styles" {
   export interface Theme {
-    status: {
-      danger: React.CSSProperties["color"];
-    };
     colors: {
       mainDarkBrown: string;
       mainLightBrown: string;
@@ -49,35 +46,39 @@ declare module "@mui/material/styles" {
   export interface Palette {
     mainDarkBrown: Palette["primary"];
     mainLightBrown: Palette["secondary"];
+    darkgray: Palette["darkgray"];
   }
   export interface PaletteOptions {
     mainDarkBrown?: PaletteOptions["primary"];
     mainLightBrown?: PaletteOptions["secondary"];
+    darkgray?: Palette["darkgray"];
   }
 }
 
-declare module "@mui/material/Button" {
+declare module "@mui/material" {
   export interface ButtonPropsColorOverrides {
     mainDarkBrown: true;
     mainLightBrown: true;
+    darkgray: true;
   }
-}
-
-declare module "@mui/material/Checkbox" {
-  export interface CheckboxPropsColorOverrides {
+  export interface PaginationPropsColorOverrides {
     mainDarkBrown: true;
     mainLightBrown: true;
+    darkgray: true;
   }
-}
-declare module "@mui/material/TextField" {
-  export interface TextFieldPropsColorOverrides {
-    mainDarkBrown: true;
-    mainLightBrown: true;
-  }
-}
-declare module "@mui/material/FormControl" {
   export interface FormControlPropsColorOverrides {
     mainDarkBrown: true;
     mainLightBrown: true;
+    darkgray: true;
+  }
+  export interface TextFieldPropsColorOverrides {
+    mainDarkBrown: true;
+    mainLightBrown: true;
+    darkgray: true;
+  }
+  export interface CheckboxPropsColorOverrides {
+    mainDarkBrown: true;
+    mainLightBrown: true;
+    darkgray: true;
   }
 }

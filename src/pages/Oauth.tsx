@@ -12,10 +12,10 @@ import Loading from "elements/Loading";
 import { Button } from "@mui/material";
 import { getKakaoUnlink, setKakaoAccessToken } from "utils/oAuthUtil";
 import * as Types from "./types";
-import { Wrapper } from "./style";
+import * as Styled from "./styles";
 
 const Oauth = () => {
-  const param = useParams<Types.IParam>();
+  const param = useParams<Types.OauthParam>();
   const query = useMemo(() => queryString.parse(window.location.search), []);
   const [popUpState, setPopUpstate] = useState({
     isSuccess: true,
@@ -46,7 +46,7 @@ const Oauth = () => {
           const response = await getNaverOauthAccessToken(queryString.stringify(query));
           handleMyInfo(response.data.data);
         } else if (name === "kakao") {
-          const kakaoRequestData: Types.IKakaoRequest = {
+          const kakaoRequestData: Types.KakaoRequest = {
             grant_type: "authorization_code",
             client_id: process.env.KAKAO_CLIENT_ID ?? "",
             redirect_uri: process.env.KAKAO_REDIRECT_PATH ?? "",
@@ -83,7 +83,7 @@ const Oauth = () => {
   }, [handleOauth, param]);
 
   return (
-    <Wrapper>
+    <Styled.OauthContainer>
       {isOpen && (
         <Popup autoClose className="red" isOpen={isOpen} setIsOpen={setIsOpen}>
           {popUpState.message}
@@ -108,7 +108,7 @@ const Oauth = () => {
           </Link>
         </div>
       )}
-    </Wrapper>
+    </Styled.OauthContainer>
   );
 };
 
