@@ -3,18 +3,22 @@ import { AxiosError } from "axios";
 import http from "api/http";
 import { RootState } from "modules/store";
 import {
+  AddUsedBookDetailSubReplyParam,
   AddUserReviewAsyncSuccess,
   AddUserReviewParam,
+  EditUsedBookDetailSubReply,
   GetRelatedUsedBookListAsyncSuccess,
   GetRelatedUsedBookListParam,
   GetStoreUserReviewAsyncSuccess,
   getStoreUserReviewListParam,
   getUserReviewListParam,
+  ThunkApi,
 } from "../userReview/types";
 import {
   AddUsedBookDetailReplyAsyncSuccess,
   AddUsedBookDetailReplyParam,
   DeleteUsedBookDetailParam,
+  DeleteUsedBookDetailSubReply,
   editUsedBookDetailReplyParam,
   GetUsedBookBuyConfirmParam,
   getUsedBookBuyListAsyncSuccess,
@@ -184,6 +188,51 @@ export const getRelatedUsedBookList = createAsyncThunk<GetRelatedUsedBookListAsy
     try {
       const response = await http.post(`/usedbook/recommendation`, data);
       return response.data;
+    } catch (error: any) {
+      console.error(error);
+      return rejectWithValue(error.response.data);
+    }
+  },
+);
+
+// 중고장터 대댓글 작성
+export const addUsedBookDetailSubReply = createAsyncThunk<string, AddUsedBookDetailSubReplyParam, ThunkApi>(
+  `${name}/add/subReply`,
+  async ({ content, page, parentReplyId, usedBookId, userId }, { rejectWithValue, dispatch }) => {
+    try {
+      await http.post(`/reply`, { userId, parentReplyId, content });
+      dispatch(usedBookDetailReplyList({ usedBookId, page }));
+      return "댓글 작성완료";
+    } catch (error: any) {
+      console.error(error);
+      return rejectWithValue(error.response.data);
+    }
+  },
+);
+
+// 중고장터 대댓글 수정
+export const editUsedBookDetailSubReply = createAsyncThunk<string, EditUsedBookDetailSubReply, ThunkApi>(
+  `${name}/edit/subReply`,
+  async ({ replyId, content, usedBookId, page }, { rejectWithValue, dispatch }) => {
+    try {
+      await http.put(`/reply`, { replyId, content });
+      dispatch(usedBookDetailReplyList({ usedBookId, page }));
+      return "수정완료 되었습니다.";
+    } catch (error: any) {
+      console.error(error);
+      return rejectWithValue(error.response.data);
+    }
+  },
+);
+
+// 중고장터 대댓글 삭제
+export const deleteUsedBookDetailSubReply = createAsyncThunk<string, DeleteUsedBookDetailSubReply, ThunkApi>(
+  `${name}/delete/subReply`,
+  async ({ replyId, usedBookId, page }, { rejectWithValue, dispatch }) => {
+    try {
+      await http.delete(`/reply/${replyId}`);
+      dispatch(usedBookDetailReplyList({ usedBookId, page }));
+      return "삭제완료 되었습니다.";
     } catch (error: any) {
       console.error(error);
       return rejectWithValue(error.response.data);

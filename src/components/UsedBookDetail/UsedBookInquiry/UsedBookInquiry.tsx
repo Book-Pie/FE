@@ -35,7 +35,7 @@ const UsedBookInquiry = () => {
   const { id } = params;
   const { content, replyList, totalElements, totalPages } = useTypedSelector(usedBookSelector);
   const { isLoggedIn, user } = useTypedSelector(userReduceSelector);
-  const { usedBookId } = content;
+  const { usedBookId, sellerId, sellerName } = content;
   const [myContent, setContent] = useState<string>("");
   const [page, setPage] = useState(getUsedBookReplyPage());
   const [isChecked, setIsChecked] = useState(false);
@@ -67,7 +67,7 @@ const UsedBookInquiry = () => {
     if (replyList.length === 0 && totalPages === 0 && Number(id) === usedBookId) {
       handleHasMoreList(page);
     }
-  }, [handleHasMoreList, page]);
+  }, [handleHasMoreList, page, replyList]);
 
   useEffect(() => {
     if (getUsedBookReplyPage() === 0) setUsedBookReplyPage(page);
@@ -101,6 +101,7 @@ const UsedBookInquiry = () => {
           secret: isChecked,
         }),
       );
+      setIsChecked(false);
       return setContent("");
     }
     return false;
@@ -163,7 +164,7 @@ const UsedBookInquiry = () => {
         <>
           {replyList.map((reply, idx) => (
             <div key={idx}>
-              <UsedBookReplyItem review={reply} />
+              <UsedBookReplyItem idx={idx} review={reply} sellerId={sellerId} sellerName={sellerName} page={page} />
             </div>
           ))}
           <Stack mt={5} justifyContent="center" direction="row">

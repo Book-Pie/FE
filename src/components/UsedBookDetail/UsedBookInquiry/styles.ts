@@ -8,3 +8,11 @@ export const DateContent = styled.div`
 export const SecretItem = styled.div`
   color: #d1d5d9;
 `;
+
+export const SellerNameTitle = styled.div`
+  margin-top: 20px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 70px;
+`;

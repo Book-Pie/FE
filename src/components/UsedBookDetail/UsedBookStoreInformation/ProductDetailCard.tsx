@@ -6,7 +6,7 @@ import {
   UsedStoreUserThumbnail,
   UsedBookDetailButton,
   BigPieImg,
-  FlexWrapper,
+  ProductDetailCardFlexWrapper,
 } from "../style";
 import UsedStoreUserContent from "./UsedStoreUserContent";
 
@@ -16,12 +16,12 @@ const ProductDetailCard = () => {
 
   return (
     <ProductDetailCardWrapper>
-      <FlexWrapper>
+      <ProductDetailCardFlexWrapper>
         <UsedStoreUserThumbnail>
           <BigPieImg src={profileImg} alt="profileImg" />
         </UsedStoreUserThumbnail>
         <UsedStoreUserContent sellerName={sellerName} />
-      </FlexWrapper>
+      </ProductDetailCardFlexWrapper>
       <UsedBookDetailButton small>팔로우</UsedBookDetailButton>
     </ProductDetailCardWrapper>
   );
