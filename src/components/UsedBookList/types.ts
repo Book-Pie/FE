@@ -1,4 +1,3 @@
-import { AxiosResponse } from "axios";
 import { SuccessResponse } from "api/types";
 
 export type StateEnumType = {
@@ -22,6 +21,7 @@ export interface UsedBookCardProps {
 export interface UsedBookState {
   pages: UsedBook[];
   pageCount: number;
+  page: number;
   isEmpty: boolean;
 }
 
@@ -39,12 +39,11 @@ export interface UsedBookListResponse extends SuccessResponse {
   };
 }
 
-export type ReadReturnType = {
-  read: <T = any>() => AxiosResponse<T>;
-};
 export interface UsedBookCategorysProps {
   defaultLocation: string;
-  resource: {
-    read: () => CategorysResponse;
-  };
+}
+
+export interface UsedBookCardsProps {
+  pages: UsedBook[];
+  handleObserver: (node: HTMLDivElement) => void;
 }

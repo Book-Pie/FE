@@ -9,11 +9,15 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import { SelectChangeEvent } from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import client, { createResource } from "api/client";
 import * as Types from "./types";
 import * as Styled from "./style";
 
-const UsedBookCategory = ({ defaultLocation, resource }: Types.UsedBookCategorysProps) => {
+const resource = createResource<Types.CategorysResponse>(client.get("/usedbook/category"));
+
+const UsedBookCategorys = ({ defaultLocation }: Types.UsedBookCategorysProps) => {
   const { data } = resource.read();
+
   const matches = useMediaQuery("(max-width:500px)");
   const location = useLocation();
   const { pathname, search } = location;
@@ -32,7 +36,7 @@ const UsedBookCategory = ({ defaultLocation, resource }: Types.UsedBookCategorys
   const sx = useMemo(() => (matches ? { minWidth: 100, height: 52 } : { minWidth: 150, height: 56 }), [matches]);
 
   return (
-    <Styled.UsedBookCategoryWrapper>
+    <Styled.UsedBookCategorysWrapper>
       {Object.entries(data).map(([first, second], idx) => (
         <FormControl key={idx} color="mainDarkBrown" sx={sx} size={matches ? "small" : "medium"}>
           <InputLabel id="category">{first}</InputLabel>
@@ -57,8 +61,8 @@ const UsedBookCategory = ({ defaultLocation, resource }: Types.UsedBookCategorys
           </Select>
         </FormControl>
       ))}
-    </Styled.UsedBookCategoryWrapper>
+    </Styled.UsedBookCategorysWrapper>
   );
 };
 
-export default memo(UsedBookCategory);
+export default memo(UsedBookCategorys);

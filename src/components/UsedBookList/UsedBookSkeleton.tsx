@@ -8,7 +8,7 @@ const UsedBookSkeleton = ({ type }: { type: "category" | "usedbook" }) => {
 
   if (type === "category") {
     return (
-      <Styled.UsedBookCategoryWrapper>
+      <Styled.UsedBookCategorysWrapper>
         <Skeleton sx={sx} animation="wave" variant="rectangular" />
         <Skeleton sx={sx} animation="wave" variant="rectangular" />
         <Skeleton sx={sx} animation="wave" variant="rectangular" />
@@ -16,7 +16,7 @@ const UsedBookSkeleton = ({ type }: { type: "category" | "usedbook" }) => {
         <Skeleton sx={sx} animation="wave" variant="rectangular" />
         <Skeleton sx={sx} animation="wave" variant="rectangular" />
         <Skeleton sx={sx} animation="wave" variant="rectangular" />
-      </Styled.UsedBookCategoryWrapper>
+      </Styled.UsedBookCategorysWrapper>
     );
   }
 
