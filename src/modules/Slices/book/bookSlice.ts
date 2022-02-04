@@ -3,8 +3,9 @@ import { AxiosError } from "axios";
 import { RootState } from "modules/store";
 import http from "api/http";
 import { makeTwoDimensionalArray } from "components/BookReviewList/BookCategory";
-import { paramProps } from "components/BookDetail/types";
 import client, { errorHandler } from "api/client";
+import { paramProps } from "src/components/BookDetail/types";
+
 import {
   BookReduce,
   GetBookAsyncFail,
@@ -261,11 +262,10 @@ export const bookSlice = createSlice({
       })
       .addCase(getDefaultBookList.fulfilled, (state, { payload }) => {
         const { item } = payload.data;
-        const array = makeTwoDimensionalArray(item);
         if (state.list.pages.length === 0) {
-          state.list.pages = array;
+          state.list.pages = item;
         } else {
-          state.list.pages = [...state.list.pages, ...array];
+          state.list.pages = [...state.list.pages, ...item];
         }
         state.status = "idle";
       })
@@ -286,11 +286,10 @@ export const bookSlice = createSlice({
       })
       .addCase(getReviewBook.fulfilled, (state, { payload }) => {
         const { item } = payload.data;
-        const array = makeTwoDimensionalArray(item);
         if (state.list.pages.length === 0) {
-          state.list.pages = array;
+          state.list.pages = item;
         } else {
-          state.list.pages = [...state.list.pages, ...array];
+          state.list.pages = [...state.list.pages, ...item];
         }
         state.status = "idle";
       })

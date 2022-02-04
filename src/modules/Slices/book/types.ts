@@ -173,7 +173,7 @@ export interface BookReduce {
   item: BookItemProps[];
   bookRecommendList: GetBookRecommendListResponse[];
   list: {
-    pages: BookItemProps[][];
+    pages: BookItemProps[];
     pageCount: number;
     isEmpty: boolean;
   };

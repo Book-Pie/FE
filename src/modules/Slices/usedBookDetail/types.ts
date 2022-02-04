@@ -21,6 +21,12 @@ export interface GetUsedBookBuyListParam {
   token: string;
 }
 
+export interface DeleteUsedBookDetailSubReply {
+  replyId: number;
+  usedBookId: number | string;
+  page: number;
+}
+
 export interface DeleteUsedBookDetailParam {
   id: number;
 }
@@ -29,6 +35,14 @@ export interface AddUsedBookDetailReplyParam {
   usedBookId: number;
   userId: number;
   content: string;
+  secret: boolean;
+}
+
+export interface editUsedBookDetailReplyParam {
+  userId: number;
+  replyId: number;
+  content: string;
+  secret: boolean;
 }
 
 export interface UsedBookLikeParam {
@@ -68,17 +82,27 @@ export interface ModalItemParam {
   reviewDate: string;
   usedBookTitle: string;
 }
-
-export interface UsedBookDetailReplyResponse {
+export interface UsedBookDetailSubReplyResponse {
   replyId: number;
-  parentReplyId: number | null;
+  parentReplyId: number;
   usedBookId: number;
   userId: number;
   content: string;
   replyDate: string;
   nickName: string;
-  secret: boolean | null;
-  subReply: [];
+  secret: boolean;
+}
+
+export interface UsedBookDetailReplyResponse {
+  replyId: number;
+  parentReplyId: number;
+  usedBookId: number;
+  userId: number;
+  content: string;
+  replyDate: string;
+  nickName: string;
+  secret: boolean;
+  subReply: UsedBookDetailSubReplyResponse[];
 }
 
 export interface BuyBookList {

@@ -1,4 +1,5 @@
 import { addUserReviewSubmitParam } from "components/BuyList/types";
+import { AppDispatch } from "src/modules/store";
 import { PagesResponse } from "../usedBookDetail/types";
 
 export interface GetRelatedUsedBookListParam {
@@ -77,6 +78,32 @@ export interface EditUserReviewParam {
   token: string;
 }
 
+export interface ThunkApi {
+  dispatch: AppDispatch;
+  rejectValue: string;
+}
+
+// 대댓글
+export interface AddUsedBookDetailSubReplyParam {
+  userId: number;
+  parentReplyId: number;
+  content: string;
+  usedBookId: number;
+  page: number;
+}
+
+export interface EditUsedBookDetailSubReply {
+  replyId: number;
+  content: string;
+  usedBookId: number;
+  page: number;
+}
+
+export interface EditUsedBookDetailSubReplyParam {
+  replyId: number;
+  content: string;
+}
+
 // 성공 데이터
 export interface AddUserReviewAsyncSuccess {
   success: boolean;
@@ -126,4 +153,19 @@ export interface DeleteUserReviewAsyncSuccess {
 export interface getUserReviewListParam {
   query: string;
   token: string;
+}
+
+// 대댓글 성공
+export interface AddUsedBookDetailSubReplyAsyncSuccess {
+  success: boolean;
+  data: {
+    replyId: number;
+    parentReplyId: number;
+    userId: number;
+    content: string;
+    replyDate: string;
+    nickName: string;
+    secret: boolean;
+  };
+  error: string;
 }

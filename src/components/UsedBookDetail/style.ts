@@ -40,16 +40,18 @@ export const RelatedReviewWrapper = styled.div`
   width: 100%;
   height: 600px;
   margin: 10px auto 0 auto;
-  // overflow-x: hidden;
-`;
-
-export const FlexBoxWrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
 `;
 
 export const FlexBox = styled.div`
   display: flex;
+  align-items: center;
+`;
+
+export const SubReplyFlexBox = styled(FlexBox)`
+  padding-left: 28px;
+`;
+export const FlexBoxWrapper = styled(FlexBox)`
+  justify-content: space-between;
 `;
 
 export const PieImg = styled.img`
@@ -63,7 +65,12 @@ export const BigPieImg = styled.img`
 `;
 
 export const ContentWrapper = styled.div`
+  width: 400px;
   padding-left: 20px;
+`;
+
+export const SubContentWrapper = styled.div`
+  width: 330px;
 `;
 
 export const ProfileArea = styled.div`
@@ -73,6 +80,10 @@ export const ProfileArea = styled.div`
   padding: 16.5px 15.3px 16.5px 15.3px;
   border-radius: 40px;
   background-color: #f2f2f2;
+`;
+
+export const SubProfileArea = styled(ProfileArea)`
+  margin-bottom: 35px;
 `;
 
 export const ProductDetailTitle = styled.div`
@@ -92,12 +103,19 @@ export const ProductDetailTitle = styled.div`
 `;
 
 export const ReplyItemWrapper = styled.div`
-  height: 112px;
+  min-height: 160px;
   margin: 0 0 24px;
   padding: 16px;
   border: solid 1px #51382b;
   border-radius: 10px;
   background-color: #fff;
+  overflow-wrap: anywhere;
+`;
+
+export const SubReplyItemWrapper = styled(ReplyItemWrapper)`
+  background-color: #edeae9;
+  width: 450px;
+  margin-left: 20px;
 `;
 
 export const ReplyItemNickName = styled.p`
@@ -108,6 +126,13 @@ export const ReplyItemNickName = styled.p`
 
 export const ReplyItemContent = styled.p`
   color: #51382b;
+`;
+
+export const SubReplyItemContent = styled(ReplyItemContent)`
+  color: #51382b;
+  padding-top: 20px;
+  margin-bottom: 13px;
+  min-height: 100px;
 `;
 
 export const ReviewListEmptyWrapper = styled.div`
@@ -141,8 +166,13 @@ export const CategoryArea = styled.div`
   text-align: right;
 `;
 
+export const ProductDetailCardFlexWrapper = styled.div`
+  display: flex;
+`;
+
 export const FlexWrapper = styled.div`
   display: flex;
+  margin-bottom: 100px;
 `;
 
 export const UsedBookStoreInformationLeftWrapper = styled.div`
