@@ -26,7 +26,7 @@ export interface UsedBook {
   replyCount: number;
 }
 
-export interface LatestSliderReponse extends SuccessResponse {
+export interface LatestSlideReponse extends SuccessResponse {
   data: {
     pageCount: number;
     pages: UsedBook[];

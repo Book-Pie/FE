@@ -1,5 +1,5 @@
 import profileImg from "assets/image/pie3x.png";
-import { usedBookSelector } from "modules/Slices/usedBookDetail/usedBookDetailSlice";
+import { usedBookDetailSelector } from "modules/Slices/usedBookDetail/usedBookDetailSlice";
 import { useTypedSelector } from "modules/store";
 import {
   ProductDetailCardWrapper,
@@ -11,7 +11,7 @@ import {
 import UsedStoreUserContent from "./UsedStoreUserContent";
 
 const ProductDetailCard = () => {
-  const { content } = useTypedSelector(usedBookSelector);
+  const { content } = useTypedSelector(usedBookDetailSelector);
   const { sellerId, sellerName } = content;
 
   return (

@@ -1,24 +1,29 @@
 import styled from "styled-components";
 
-export const MainBannerWrapper = styled.div`
+export const MainBannerWrapper = styled.section`
   .swiper-button-next {
-    border-color: ${props => props.theme.colors.white} !important;
-    color: ${props => props.theme.colors.white} !important;
+    border-color: ${({ theme }) => theme.colors.white} !important;
+    color: ${({ theme }) => theme.colors.white} !important;
   }
   .swiper-button-prev {
-    border-color: ${props => props.theme.colors.white} !important;
-    color: ${props => props.theme.colors.white} !important;
+    border-color: ${({ theme }) => theme.colors.white} !important;
+    color: ${({ theme }) => theme.colors.white} !important;
   }
 
   img {
-    min-height: 200px;
+    height: 380px;
     display: block;
     margin: 0 auto;
-    height: 100%;
     width: 100%;
+    transition: height 0.5s ease-in;
+    ${({ theme }) => theme.media.tab} {
+      height: 250px;
+    }
+    ${({ theme }) => theme.media.mobile} {
+      height: 200px;
+    }
   }
 `;
 export const MainBannerContainer = styled.div`
-  max-height: 380px;
   ${p => p.theme.shadow[0]}
 `;

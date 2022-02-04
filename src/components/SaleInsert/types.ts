@@ -21,7 +21,6 @@ export type KeyEvent = React.KeyboardEvent<HTMLInputElement>;
 export type SaleInsertFormProps = {
   bookId?: string;
   handlePopupMessage: (isSuccess: boolean, message: string) => void;
-  categorysResource: ResourceType;
   usedBookResource: ResourceType | undefined;
 };
 
@@ -44,7 +43,6 @@ export interface SaleInsertEditorProps {
 }
 
 export interface SaleInsertCategorysProps {
-  categorysResource: ResourceType;
   currentFirstCategory: string;
   currentSecondCategory: string;
   handleChange: (firstCategory: string) => (event: SelectChangeEvent) => void;

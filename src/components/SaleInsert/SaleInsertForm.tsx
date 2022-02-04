@@ -21,12 +21,7 @@ import SaleInsertTitle from "./SaleInsertTitle";
 import SaleInsertSkeleton from "./SaleInsertSkeleton";
 import SaleInsertBeforeImg from "./SaleInsertBeforeImg";
 
-const SaleInsertForm = ({
-  handlePopupMessage,
-  categorysResource,
-  usedBookResource,
-  bookId,
-}: Types.SaleInsertFormProps) => {
+const SaleInsertForm = ({ handlePopupMessage, usedBookResource, bookId }: Types.SaleInsertFormProps) => {
   const [imgFiles, setImgFiles] = useState<File[]>([]);
   const [imgBase64, setImgBase64] = useState<string[]>([]);
   const [currentFirstCategory, setCurrentFirstCategory] = useState("소설");
@@ -244,7 +239,6 @@ const SaleInsertForm = ({
             handleChange={handleChange}
             currentFirstCategory={currentFirstCategory}
             currentSecondCategory={currentSecondCategory}
-            categorysResource={categorysResource}
           />
         </Suspense>
       </Styled.Row>

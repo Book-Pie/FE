@@ -22,7 +22,7 @@ const SearchReviewCard = ({ page }: Types.SearchReviewCardProp) => {
   if (typeof page === "object") {
     const { isbn13, cover, title, priceSales, priceStandard, description, author } = page;
     content = (
-      <Link to={`/book/${isbn13}`}>
+      <Link to={`/book/category/${isbn13}`}>
         <Styled.SearchImg src={cover} alt="cover" />
         <div className="content">
           <Styled.SearchTitle>{title}</Styled.SearchTitle>

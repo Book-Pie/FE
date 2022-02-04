@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import useSignIn from "hooks/useSignIn";
-import { getUsedBookLikeList, usedBookSelector } from "modules/Slices/usedBookDetail/usedBookDetailSlice";
+import { getUsedBookLikeList, usedBookDetailSelector } from "modules/Slices/usedBookDetail/usedBookDetailSlice";
 import { useTypedSelector } from "modules/store";
 import noComments from "assets/image/noComments.png";
 import styled from "styled-components";
@@ -24,7 +24,7 @@ const UsedBookLikeList = () => {
     }
   }, []);
 
-  const { likeList } = useTypedSelector(usedBookSelector);
+  const { likeList } = useTypedSelector(usedBookDetailSelector);
   const likeCount = likeList.length;
   const usedBookCards =
     likeList.length !== 0 ? (

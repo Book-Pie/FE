@@ -118,8 +118,6 @@ export const createResource = <T>(promise: Promise<T>) => {
 
   const suspender = promise
     .then(resolved => {
-      console.log("resolvedresolvedresolvedresolvedresolved", resolved);
-
       status = "success";
       result = resolved;
       return resolved;
@@ -140,17 +138,17 @@ export const createResource = <T>(promise: Promise<T>) => {
   };
 };
 
-// export const handleResourceCache = <T>(
-//   name: string,
-//   promise: <A>() => Promise<AxiosResponse<A>>,
-// )=> {
-//   const lowerName = name.toLowerCase();
-
-//   let resource = usedbookCache[lowerName];
-
-//   if (!resource) {
-//     resource = createResource(promise<T>());
-//     usedbookCache[lowerName] = resource;
-//   }
-//   return resource;
-// };
+export const handleResourceCache = (
+  cache: Types.CacheRefType,
+  url: string,
+  name: string,
+  promise: (url: string) => Promise<any>,
+) => {
+  const lowerName = name.toLowerCase();
+  let resource = cache[lowerName];
+  if (!resource) {
+    resource = createResource(promise(url));
+    cache[lowerName] = resource;
+  }
+  return resource;
+};

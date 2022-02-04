@@ -7,7 +7,7 @@ import { userReduceSelector } from "modules/Slices/user/userSlice";
 import {
   addUsedBookDetailReply,
   usedBookDetailReplyList,
-  usedBookSelector,
+  usedBookDetailSelector,
 } from "modules/Slices/usedBookDetail/usedBookDetailSlice";
 import { useTypedSelector } from "modules/store";
 import Button from "@mui/material/Button";
@@ -30,7 +30,7 @@ const UsedBookInquiry = () => {
   const dispatch = useDispatch();
   const { params } = useRouteMatch<{ id: string }>();
   const { id } = params;
-  const { content, replyList, totalElements, totalPages } = useTypedSelector(usedBookSelector);
+  const { content, replyList, totalElements, totalPages } = useTypedSelector(usedBookDetailSelector);
   const { isLoggedIn, user } = useTypedSelector(userReduceSelector);
   const { usedBookId } = content;
   const [myContent, setContent] = useState<string>("");

@@ -15,7 +15,7 @@ import Pagination from "@mui/material/Pagination";
 import useDelay from "hooks/useDelay";
 import { getShopPage, removeShopPage, setShopPage } from "utils/localStorageUtil";
 import { Empty } from "components/SaleList/style";
-import { getUsedBookBuyList, usedBookSelector } from "modules/Slices/usedBookDetail/usedBookDetailSlice";
+import { getUsedBookBuyList, usedBookDetailSelector } from "modules/Slices/usedBookDetail/usedBookDetailSlice";
 import { useTypedSelector } from "modules/store";
 import ContentList from "./ContentList";
 import MyPageSkeleton from "./MyPageSkeleton";
@@ -38,7 +38,7 @@ const BuyList = () => {
   const [limit, setLimit] = useState(5);
   const [titleFilter, setTitleFilter] = useState<string | null>(null);
   const [page, setPage] = useState(getShopPage(1));
-  const { list } = useTypedSelector(usedBookSelector);
+  const { list } = useTypedSelector(usedBookDetailSelector);
   const [open, setOpen] = useState(false);
 
   const { pages, pageCount } = list;

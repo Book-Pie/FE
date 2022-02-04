@@ -152,6 +152,13 @@ export const LatestSliderCardInfo = styled.div`
     height: 40%;
     gap: 0.3rem;
 
+    .card__title {
+      margin-top: 0.2rem;
+      font-size: 0.7rem;
+      padding: 0 0.5rem;
+      min-height: 1.4rem;
+    }
+
     .card__price {
       span:nth-child(1) {
         font-size: 0.7rem;

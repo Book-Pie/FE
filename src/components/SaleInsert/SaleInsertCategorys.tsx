@@ -1,15 +1,17 @@
 import { FormControl, InputLabel, MenuItem, Select, SxProps, Theme } from "@mui/material";
 import { memo, useMemo } from "react";
+import client, { createResource } from "src/api/client";
 import { CategorysResponse } from "../UsedBookList/types";
 import * as Types from "./types";
 
+const resource = createResource(client.get<CategorysResponse>("/usedbook/category"));
+
 const SaleInsertCategorys = ({
-  categorysResource,
   currentFirstCategory,
   currentSecondCategory,
   handleChange,
 }: Types.SaleInsertCategorysProps) => {
-  const { data } = categorysResource.read<CategorysResponse>();
+  const { data } = resource.read();
 
   const sx = useMemo<SxProps<Theme>>(
     () => ({
