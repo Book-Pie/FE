@@ -1,9 +1,7 @@
 import { useCallback, useRef, useState } from "react";
 
-const useInfiniteScroll = (pageCount: number) => {
-  console.log(1);
-
-  const [count, setCount] = useState(1);
+const useInfiniteScroll = (pageCount: number, defaultCount = 1) => {
+  const [count, setCount] = useState(defaultCount);
   const observerRef = useRef<IntersectionObserver>();
   const throttlingRef = useRef<NodeJS.Timeout | null>();
 
@@ -22,8 +20,9 @@ const useInfiniteScroll = (pageCount: number) => {
 
             throttlingRef.current = setTimeout(() => {
               throttlingRef.current = null;
+
               setCount(prev => prev + 1);
-            }, 500);
+            }, 1000);
             observer.unobserve(target);
           }
         } else {

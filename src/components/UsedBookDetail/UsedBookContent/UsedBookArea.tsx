@@ -140,7 +140,17 @@ const UsedBookArea = ({
           {saleState === "SOLD_OUT" && <DisabledButton>판매완료된 상품입니다.</DisabledButton>}
           {saleState === "SALE" && (
             <>
-              <UsedBookDetailButton>1:1채팅 </UsedBookDetailButton>
+              <Link
+                to={{
+                  pathname: "/chat",
+                  state: {
+                    sellerId,
+                    usedBookId,
+                  },
+                }}
+              >
+                <UsedBookDetailButton>1:1채팅 </UsedBookDetailButton>
+              </Link>
               <Link to={`/order/${usedBookId}`}>
                 <BuyButton>구매하기</BuyButton>
               </Link>

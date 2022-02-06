@@ -8,6 +8,8 @@ import { useState } from "react";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import InsertCommentIcon from "@mui/icons-material/InsertComment";
 import Grid from "@mui/material/Grid";
+import { useTypedSelector } from "src/modules/store";
+import { userReduceSelector } from "src/modules/Slices/user/userSlice";
 import * as Styled from "./style";
 import * as Types from "./types";
 
@@ -24,6 +26,7 @@ const STATE_CLASSNAME: Types.StateEnumType = {
 };
 
 const Content = ({ pages, titleFilter, select, handleLatestClick }: Types.Content) => {
+  const { user } = useTypedSelector(userReduceSelector);
   const [header] = useState(["사진", "상품명", "가격", "찜 / 댓글", "판매상태", "등록일", "기능"]);
   const max950 = useMediaQuery("(max-width:950px)");
   const history = useHistory();
@@ -90,6 +93,20 @@ const Content = ({ pages, titleFilter, select, handleLatestClick }: Types.Conten
                       </Button>
                       <Button color="info" variant="contained" onClick={handleSaleUpdateOnClick(id, state)}>
                         수정하기
+                      </Button>
+                      <Button color="darkgray" variant="contained">
+                        <Link
+                          style={{ color: "white" }}
+                          to={{
+                            pathname: "/chat",
+                            state: {
+                              sellerId: user?.id,
+                              usedBookId: id,
+                            },
+                          }}
+                        >
+                          채팅보기
+                        </Link>
                       </Button>
                     </>
                   )}
@@ -178,7 +195,7 @@ const Content = ({ pages, titleFilter, select, handleLatestClick }: Types.Conten
               </Styled.SaleDate>
             </Styled.SaleCell>
             <Styled.SaleCell>
-              <ButtonGroup variant="contained" orientation="vertical" size="small">
+              <ButtonGroup disableElevation variant="contained" orientation="vertical" size="small">
                 {state === "SALE" && (
                   <>
                     <Button color="error" variant="contained" onClick={handleLatestClick(id)}>
@@ -186,6 +203,20 @@ const Content = ({ pages, titleFilter, select, handleLatestClick }: Types.Conten
                     </Button>
                     <Button color="info" variant="contained" onClick={handleSaleUpdateOnClick(id, state)}>
                       수정하기
+                    </Button>
+                    <Button color="darkgray" variant="contained">
+                      <Link
+                        style={{ color: "white" }}
+                        to={{
+                          pathname: "/chat",
+                          state: {
+                            sellerId: user?.id,
+                            usedBookId: id,
+                          },
+                        }}
+                      >
+                        채팅보기
+                      </Link>
                     </Button>
                   </>
                 )}
