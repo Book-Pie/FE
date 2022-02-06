@@ -2,6 +2,7 @@ import Stack from "@mui/material/Stack";
 import Skeleton from "@mui/material/Skeleton";
 import { range } from "lodash";
 import { useMediaQuery } from "@mui/material";
+import * as Styled from "./style";
 
 const Skeletons = () => {
   const max1000 = useMediaQuery("(max-width:1000px)");
@@ -19,7 +20,7 @@ const Skeletons = () => {
   imgheight = max1000 ? 200 : imgheight;
 
   return (
-    <>
+    <Styled.UsedBookCardsWrapper>
       {range(0, 20).map((_, idx) => {
         return (
           <Stack key={idx} sx={sx}>
@@ -36,7 +37,7 @@ const Skeletons = () => {
           </Stack>
         );
       })}
-    </>
+    </Styled.UsedBookCardsWrapper>
   );
 };
 

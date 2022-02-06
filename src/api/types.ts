@@ -1,3 +1,5 @@
+import { AxiosRequestConfig } from "axios";
+
 export type ResponseEnum = {
   [key: number]: string;
 };
@@ -22,3 +24,7 @@ export interface CacheRefType {
     read: () => any;
   };
 }
+
+export type HTTPFunctionGetorDelete = <T>(url: string, config?: AxiosRequestConfig) => Promise<T>;
+export type HTTPFunctionPostorPut = <P, R = void>(url: string, body?: P, config?: AxiosRequestConfig) => Promise<R>;
+export type SucpenceType = "success" | "pending" | "error";

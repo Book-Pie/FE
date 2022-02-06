@@ -1,4 +1,5 @@
 import { SuccessResponse } from "api/types";
+import { InfiniteData } from "react-query";
 
 export type StateEnumType = {
   SALE: string;
@@ -21,7 +22,6 @@ export interface UsedBookCardProps {
 export interface UsedBookState {
   pages: UsedBook[];
   pageCount: number;
-  page: number;
   isEmpty: boolean;
 }
 
@@ -44,6 +44,12 @@ export interface UsedBookCategorysProps {
 }
 
 export interface UsedBookCardsProps {
-  pages: UsedBook[];
+  data:
+    | InfiniteData<{
+        pageCount: number;
+        pages: UsedBook[];
+        isEmpty: boolean;
+      }>
+    | undefined;
   handleObserver: (node: HTMLDivElement) => void;
 }
