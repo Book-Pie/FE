@@ -550,3 +550,17 @@ export const SignUpContainer = styled.main`
     margin: 0;
   }
 `;
+
+export const ChatContainer = styled.main`
+  ${({ theme }) => theme.shadow[0]};
+  width: 50%;
+  margin: 20px auto;
+
+  ${({ theme }) => theme.media.tab} {
+    width: 80%;
+  }
+  ${({ theme }) => theme.media.mobile} {
+    width: 100%;
+    margin: 0;
+  }
+`;

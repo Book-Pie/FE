@@ -14,6 +14,7 @@ const Book = lazy(() => import("pages/Book"));
 const Order = lazy(() => import("pages/Order"));
 const Community = lazy(() => import("pages/Community"));
 const Search = lazy(() => import("pages/Search"));
+const Chat = lazy(() => import("pages/Chat"));
 
 const Routers = () => {
   return (
@@ -29,6 +30,7 @@ const Routers = () => {
       <Route path="/usedBook" component={UsedBook} />
       <Route path="/search" component={Search} />
       <Route path="/book" component={Book} />
+      <Route path="/Chat" component={Chat} />
       <Route path="*" component={RootRedirect} />
     </Switch>
   );
