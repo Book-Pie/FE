@@ -26,19 +26,6 @@ const UsedBookLikeList = () => {
 
   const { likeList } = useTypedSelector(usedBookDetailSelector);
   const likeCount = likeList.length;
-  const usedBookCards =
-    likeList.length !== 0 ? (
-      likeList.map((card, idx) => (
-        <div key={idx}>
-          <UsedBookCard key={idx} card={card} width={100} />
-        </div>
-      ))
-    ) : (
-      <ReviewListEmptyWrapper>
-        <ReviewListEmptyParagraph>찜목록이 존재하지 않습니다.</ReviewListEmptyParagraph>
-        <img src={noComments} alt="noComments" />
-      </ReviewListEmptyWrapper>
-    );
 
   return (
     <ContentWrapper>
@@ -46,13 +33,39 @@ const UsedBookLikeList = () => {
         <TitleSpan>찜목록</TitleSpan>
         <CountWrapper>{likeCount}</CountWrapper>
       </Title>
-      <UsedBookLikeListWrapper>{usedBookCards}</UsedBookLikeListWrapper>
+      {/* <div>{usedBookCards}</div> */}
+      {likeList.length !== 0 && (
+        <UsedBookLikeListWrapper>
+          {likeList.map((card, idx) => (
+            <div key={idx}>
+              <UsedBookCard key={idx} card={card} width={100} />
+            </div>
+          ))}
+        </UsedBookLikeListWrapper>
+      )}
+
+      {likeList.length === 0 && (
+        <ReviewListEmptyWrapper>
+          <EmptyWrapper>
+            <UsedBookLikeImg src={noComments} alt="noComments" />
+            <ReviewListEmptyParagraph>찜목록이 존재하지 않습니다.</ReviewListEmptyParagraph>
+
+          </EmptyWrapper>
+        </ReviewListEmptyWrapper>
+      )}
     </ContentWrapper>
   );
 };
-
-export const GridEmpty = styled.div`
+export const EmptyWrapper = styled.div`
+  height: 400px;
+  display: flex;
   justify-content: center;
+  align-items: center;
+  flex-direction: column;
+`;
+
+export const UsedBookLikeImg = styled.img`
+  height: 50%;
 `;
 
 export default UsedBookLikeList;

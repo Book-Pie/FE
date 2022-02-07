@@ -11,15 +11,14 @@ export const Container = styled.div`
 `;
 
 export const ReviewListEmptyWrapper = styled.div`
-  padding-top: 13px;
+  margin: 1rem 0;
+  padding: 0 1rem;
 `;
 
 export const ReviewListEmptyParagraph = styled.p`
   margin: 0;
   padding: 75px 0;
-  color: #808991;
-  font-size: 15px;
-  font-weight: 700;
+  font-size: 22px;
   line-height: 1.8em;
   text-align: center;
   padding: 40px 0;
@@ -98,4 +97,19 @@ export const LikeButton = styled.button`
   &:hover {
     background-color: #f2f4f5;
   }
+`;
+
+export const ReviewEmptyWrapper = styled.div`
+  padding-top: 13px;
+`;
+
+export const ReviewEmptyParagraph = styled.p`
+  margin: 0;
+  padding: 75px 0;
+  color: #808991;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.8em;
+  text-align: center;
+  padding: 40px 0;
 `;

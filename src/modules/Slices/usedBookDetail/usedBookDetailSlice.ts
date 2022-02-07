@@ -307,7 +307,11 @@ export const addUserReview = createAsyncThunk<AddUserReviewAsyncSuccess, AddUser
 const usedBookDetailSlice = createSlice({
   name: "usedBookDetailReduce",
   initialState,
-  reducers: {},
+  reducers: {
+    setReviewInit: state => {
+      state.replyList = [];
+    },
+  },
   extraReducers: builder => {
     builder
       // 중고 상품 상세 페이지
@@ -484,4 +488,5 @@ const usedBookDetailSlice = createSlice({
 
 export const usedBookDetailSelector = (state: RootState) => state.usedBookDetailReduce;
 export const buyListSelector = (state: RootState) => state.usedBookDetailReduce.buyList;
+export const { setReviewInit } = usedBookDetailSlice.actions;
 export default usedBookDetailSlice;
