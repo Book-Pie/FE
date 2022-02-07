@@ -5,12 +5,12 @@ export const LatestSliderContainer = styled.div`
 
   img {
     width: 100%;
-    max-height: 100%;
+    height: 100%;
   }
 
   .swiper {
     padding-bottom: 2.5rem;
-    width: 1200px;
+    width: 1100px;
     margin-left: -1rem;
     transition: width 0.5s ease-in;
   }
@@ -64,7 +64,6 @@ export const LatestSliderContainer = styled.div`
 `;
 
 export const LatestSliderCardWrapper = styled.div`
-  border: 1px solid ${props => props.theme.colors.mainLightBrown};
   height: 350px;
   transition: height 0.5s linear;
 
@@ -79,7 +78,7 @@ export const LatestSliderCardWrapper = styled.div`
 
 export const LatestSliderCardImage = styled.div`
   border-bottom: 1px solid rgba(99, 110, 114, 0.1);
-  height: 65%;
+  height: 80%;
 
   ${({ theme }) => theme.media.mobile} {
     height: 60%;
@@ -96,8 +95,6 @@ export const LatestSliderCardInfo = styled.div`
   .card__title {
     padding: 0 1rem;
     font-size: 1rem;
-    margin-top: 0.5rem;
-    min-height: 38px;
     overflow: hidden;
     display: -webkit-box;
     -webkit-line-clamp: 2;
