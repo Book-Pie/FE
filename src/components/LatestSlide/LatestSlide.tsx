@@ -24,7 +24,7 @@ const LatestSlide = () => {
         slidesPerView={5}
         spaceBetween={20}
         freeMode
-        autoplay={{ delay: 3000 }}
+        // autoplay={{ delay: 3000 }}
         loop
       >
         {pages.map(({ id, title, price, image, state }, index) => (

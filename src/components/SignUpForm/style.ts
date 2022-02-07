@@ -4,12 +4,13 @@ export const SignUpWrapper = styled.section`
   margin: 2rem;
   form {
     display: flex;
+    flex-direction: column;
+
     & > div {
       flex: 1;
     }
     & > div:last-child {
-      margin-top: 2rem;
-      margin-left: 1.5rem;
+      margin: 2rem 1.5rem;
     }
   }
   a {
@@ -18,7 +19,6 @@ export const SignUpWrapper = styled.section`
   ${({ theme }) => theme.media.mobile} {
     margin: 0;
     form {
-      flex-direction: column;
       & > div:last-child {
         margin: 0;
       }
@@ -116,12 +116,12 @@ export const ButtonWrapper = styled.div`
 `;
 export const Oauths = styled.div`
   gap: 15px;
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
   a {
-    width: 70%;
-    margin: 0 auto;
-    margin-top: 20px;
+    display: inline-block;
     height: 70px;
-    display: block;
     :hover {
       opacity: 0.8;
     }
@@ -133,7 +133,7 @@ export const Oauths = styled.div`
   ${({ theme }) => theme.media.mobile} {
     a {
       width: 100%;
-      height: 70px;
+      height: 50px;
     }
   }
 `;

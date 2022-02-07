@@ -5,7 +5,7 @@ export const LatestSliderContainer = styled.div`
 
   img {
     width: 100%;
-    height: 100%;
+    max-height: 100%;
   }
 
   .swiper {
@@ -15,7 +15,6 @@ export const LatestSliderContainer = styled.div`
     transition: width 0.5s ease-in;
   }
   .swiper-slide {
-    ${props => props.theme.shadow[0]};
     color: ${props => props.theme.colors.darkGrey};
   }
 
@@ -66,7 +65,7 @@ export const LatestSliderContainer = styled.div`
 
 export const LatestSliderCardWrapper = styled.div`
   border: 1px solid ${props => props.theme.colors.mainLightBrown};
-  height: 400px;
+  height: 350px;
   transition: height 0.5s linear;
 
   ${({ theme }) => theme.media.tab} {
@@ -96,7 +95,7 @@ export const LatestSliderCardInfo = styled.div`
   gap: 0.6rem;
   .card__title {
     padding: 0 1rem;
-    font-size: 1.3rem;
+    font-size: 1rem;
     margin-top: 0.5rem;
     min-height: 38px;
     overflow: hidden;
@@ -110,10 +109,10 @@ export const LatestSliderCardInfo = styled.div`
     letter-spacing: -0.4px;
     color: ${p => p.theme.colors.info};
     span:nth-child(1) {
-      font-size: 1.4rem;
+      font-size: 0.9rem;
     }
     span:nth-child(2) {
-      font-size: 1.2rem;
+      font-size: 0.8rem;
     }
   }
   .card__state {
@@ -131,7 +130,7 @@ export const LatestSliderCardInfo = styled.div`
     .card__title {
       margin-top: 0.2rem;
       font-size: 1.1rem;
-      padding: 0 0.5rem;
+      padding: 0 0.8rem;
       min-height: 1.4rem;
     }
     .card__price {
@@ -154,17 +153,17 @@ export const LatestSliderCardInfo = styled.div`
 
     .card__title {
       margin-top: 0.2rem;
-      font-size: 0.7rem;
-      padding: 0 0.5rem;
-      min-height: 1.4rem;
+      padding: 0 0.8rem;
+      font-size: 0.6rem;
+      min-height: 1.2rem;
     }
 
     .card__price {
       span:nth-child(1) {
-        font-size: 0.7rem;
+        font-size: 0.6rem;
       }
       span:nth-child(2) {
-        font-size: 0.6rem;
+        font-size: 0.5rem;
       }
     }
     .card__state {

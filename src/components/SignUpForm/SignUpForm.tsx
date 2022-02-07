@@ -274,7 +274,7 @@ const SignUpForm = () => {
             <Button variant="contained" color="mainDarkBrown" onClick={handleDaumPostOpne}>
               주소찾기
             </Button>
-            <Button variant="contained" color="mainDarkBrown" type="submit">
+            <Button variant="contained" color="darkgray" type="submit">
               가입하기
             </Button>
             <Button variant="contained" color="error" onClick={handleReset}>

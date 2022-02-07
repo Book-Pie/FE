@@ -90,7 +90,7 @@ const Form = ({ onSubmit }: Types.FormProps) => {
         변경
       </Button>
       <Link to="/find/email">
-        <Button variant="contained" color="mainDarkBrown">
+        <Button variant="contained" color="darkgray">
           이메일 찾기
         </Button>
       </Link>

@@ -496,10 +496,11 @@ export const Oauths = styled.div`
   display: flex;
   padding: 1rem 0;
   justify-content: center;
+  align-items: center;
 
   a {
     box-sizing: border-box;
-    height: 70px;
+    height: 50px;
     transition: opacity 0.5s ease-in;
     img {
       width: 100%;
@@ -517,7 +518,8 @@ export const Oauths = styled.div`
   ${p => p.theme.media.mobile} {
     flex-direction: column;
     a {
-      height: 90px;
+      height: 75px;
+      width: 80%;
     }
     a + a {
       margin-left: 0px;
@@ -563,4 +565,8 @@ export const ChatContainer = styled.main`
     width: 100%;
     margin: 0;
   }
+`;
+
+export const ChatEmpty = styled.div`
+  height: 100vh;
 `;
