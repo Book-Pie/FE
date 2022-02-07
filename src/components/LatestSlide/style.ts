@@ -10,12 +10,11 @@ export const LatestSliderContainer = styled.div`
 
   .swiper {
     padding-bottom: 2.5rem;
-    width: 1200px;
+    width: 1100px;
     margin-left: -1rem;
     transition: width 0.5s ease-in;
   }
   .swiper-slide {
-    ${props => props.theme.shadow[0]};
     color: ${props => props.theme.colors.darkGrey};
   }
 
@@ -65,8 +64,7 @@ export const LatestSliderContainer = styled.div`
 `;
 
 export const LatestSliderCardWrapper = styled.div`
-  border: 1px solid ${props => props.theme.colors.mainLightBrown};
-  height: 400px;
+  height: 350px;
   transition: height 0.5s linear;
 
   ${({ theme }) => theme.media.tab} {
@@ -80,7 +78,7 @@ export const LatestSliderCardWrapper = styled.div`
 
 export const LatestSliderCardImage = styled.div`
   border-bottom: 1px solid rgba(99, 110, 114, 0.1);
-  height: 65%;
+  height: 80%;
 
   ${({ theme }) => theme.media.mobile} {
     height: 60%;
@@ -96,9 +94,7 @@ export const LatestSliderCardInfo = styled.div`
   gap: 0.6rem;
   .card__title {
     padding: 0 1rem;
-    font-size: 1.3rem;
-    margin-top: 0.5rem;
-    min-height: 38px;
+    font-size: 1rem;
     overflow: hidden;
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -110,10 +106,10 @@ export const LatestSliderCardInfo = styled.div`
     letter-spacing: -0.4px;
     color: ${p => p.theme.colors.info};
     span:nth-child(1) {
-      font-size: 1.4rem;
+      font-size: 0.9rem;
     }
     span:nth-child(2) {
-      font-size: 1.2rem;
+      font-size: 0.8rem;
     }
   }
   .card__state {
@@ -131,7 +127,7 @@ export const LatestSliderCardInfo = styled.div`
     .card__title {
       margin-top: 0.2rem;
       font-size: 1.1rem;
-      padding: 0 0.5rem;
+      padding: 0 0.8rem;
       min-height: 1.4rem;
     }
     .card__price {
@@ -154,17 +150,17 @@ export const LatestSliderCardInfo = styled.div`
 
     .card__title {
       margin-top: 0.2rem;
-      font-size: 0.7rem;
-      padding: 0 0.5rem;
-      min-height: 1.4rem;
+      padding: 0 0.8rem;
+      font-size: 0.6rem;
+      min-height: 1.2rem;
     }
 
     .card__price {
       span:nth-child(1) {
-        font-size: 0.7rem;
+        font-size: 0.6rem;
       }
       span:nth-child(2) {
-        font-size: 0.6rem;
+        font-size: 0.5rem;
       }
     }
     .card__state {

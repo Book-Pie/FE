@@ -12,7 +12,7 @@ import {
 import FormInput from "elements/FormInput";
 import ErrorMessage from "elements/ErrorMessage";
 import FormLabel from "elements/FormLabel";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import useDaumPost from "hooks/useDaumPost";
 import client, { errorHandler } from "api/client";
 import axios from "axios";
@@ -24,10 +24,12 @@ import naverImg from "assets/image/naver_oauth.png";
 import kakaoImg from "assets/image/kakao_oauth.png";
 import { Link } from "react-router-dom";
 import DaumPostModal from "elements/DaumPostModal";
-
 import usePopup from "hooks/usePopup";
+import { Typography } from "@mui/material";
+import useDebounce from "src/hooks/useDebounce";
 import * as Types from "./types";
 import * as Styled from "./style";
+import EmailConfirm from "./EmailConfirm";
 
 const kakaOauthUrl = process.env.KAKAO_OAUTH_URL;
 const naverOauthUrl = process.env.NAVER_OAUTH_URL;
@@ -42,55 +44,78 @@ const init: Types.SignUpForm = {
   postalCode: "",
   mainAddress: "",
   detailAddress: "",
+  code: "",
 };
 
 const SignUpForm = () => {
-  const { register, handleSubmit, reset, formState, setValue, watch, clearErrors, setFocus } =
-    useForm<Types.SignUpForm>({
-      defaultValues: init,
-    });
+  const { register, handleSubmit, reset, formState, setValue, watch, clearErrors, setFocus } = useForm({
+    defaultValues: init,
+  });
 
   const [isDaumPostOpen, setIsDaumPostOpen] = useState(false);
   const { addressState, handleComplete } = useDaumPost();
   const [password, confirmPassword] = watch(["password", "confirmPassword"]);
   const { errors } = formState;
   const { handlePopupClose, handlePopupMessage, popupState } = usePopup();
+  const { isOpen, isSuccess, message } = popupState;
   const history = useHistory();
+  const [emailconfirm, setEmailconfirm] = useState(false);
+  const [emailConfirmTimeout, setEmailConfirmTimeout] = useState(false);
+  const debounce = useDebounce();
 
   const onSubmit = async (data: Types.SignUpForm) => {
     try {
-      const { mainAddress, detailAddress, email, phone, nickName, password, postalCode, name } = data;
+      if (debounce.current) clearTimeout(debounce.current);
+      let isEmailconfirmSuccessCheck = false;
+      const { mainAddress, detailAddress, email, phone, nickName, password, postalCode, name, code } = data;
+      if (code) {
+        await client.post<{ email: string; code: string }, Types.EmailCodeReponse>("/user/email/code", { email, code });
+        isEmailconfirmSuccessCheck = true;
+      }
 
-      const validationResponse = await axios.all([
-        client.get<Types.CheckReponse>(`/user/nickname/${nickName}`),
-        client.get<Types.CheckReponse>(`/user/email/${email}`),
-      ]);
+      debounce.current = setTimeout(async () => {
+        const validationResponse = await axios.all([
+          client.get<Types.CheckReponse>(`/user/email/${email}`),
+          client.get<Types.CheckReponse>(`/user/nickname/${nickName}`),
+        ]);
 
-      const [emailDuplicate, nickNameDuplicate] = validationResponse;
+        const [emailDuplicate, nickNameDuplicate] = validationResponse;
 
-      if (!emailDuplicate.data) throw new Error("이미 가입한 이메일입니다.");
-      if (!nickNameDuplicate.data) throw new Error("사용중인 닉네임입니다.");
+        if (!emailDuplicate.data) throw new Error("이미 가입한 이메일입니다.");
+        if (!nickNameDuplicate.data) throw new Error("사용중인 닉네임입니다.");
 
-      await client.post<Types.SignUpPayload>("/user/signup", {
-        password,
-        name,
-        phone: hyphenRemoveFormat(phone),
-        email,
-        nickName,
-        address: {
-          postalCode,
-          mainAddress,
-          detailAddress,
-        },
-      });
-
-      history.replace("/signIn");
+        if (isEmailconfirmSuccessCheck) {
+          await client.post<Types.SignUpPayload>("/user/signup", {
+            password,
+            name,
+            phone: hyphenRemoveFormat(phone),
+            email,
+            nickName,
+            address: {
+              postalCode,
+              mainAddress,
+              detailAddress,
+            },
+          });
+          alert("회원가입에 성공했습니다.");
+          history.replace("/signIn");
+        } else {
+          handlePopupMessage(true, "인증코드가 발송되었습니다.");
+          const { data } = await client.post<{ email: string }, Types.EmailCodeReponse>("/user/email", { email });
+          if (!data) throw new Error("인증코드를 가져오기 실패했습니다.");
+          setEmailconfirm(true);
+        }
+      }, 1000);
     } catch (error) {
       const message = errorHandler(error);
       handlePopupMessage(false, message);
     }
   };
 
+  const handleEmailConfirmResetClick = () => {
+    setEmailconfirm(false);
+    setEmailConfirmTimeout(false);
+  };
   const handleReset = useCallback(() => reset(init), [reset]);
   const handleDaumPostOpne = useCallback(() => setIsDaumPostOpen(prve => !prve), []);
 
@@ -168,47 +193,47 @@ const SignUpForm = () => {
           },
         },
       },
-      {
-        id: "phone",
-        placeholder: "ex 000-0000-0000",
-        text: "휴대번호",
-        options: {
-          maxLength: makeOption<number>(14, FormErrorMessages.MAX_LENGTH),
-          minLength: makeOption<number>(10, FormErrorMessages.MIN_LENGTH),
-          required: makeOption<boolean>(true, FormErrorMessages.PHONE_REQUIRED),
-          validate: {
-            mobileNumber: value => hookFormMobileNumberPatternCheck(value, FormErrorMessages.MOBILE_NUMBER),
-          },
-        },
-      },
-      {
-        id: "postalCode",
-        placeholder: "선택입력",
-        text: "우편주소",
-        disabled: true,
-        options: {
-          required: makeOption<boolean>(true, FormErrorMessages.POST_REQUIRED),
-        },
-      },
-      {
-        id: "mainAddress",
-        placeholder: "주소",
-        text: "",
-        disabled: true,
-        options: {
-          required: makeOption<boolean>(true, FormErrorMessages.MAINADRRESS_REQUIRED),
-        },
-      },
-      {
-        id: "detailAddress",
-        placeholder: "상세주소",
-        text: "",
-        options: {
-          maxLength: makeOption<number>(20, FormErrorMessages.MAX_LENGTH),
-          minLength: makeOption<number>(10, FormErrorMessages.MIN_LENGTH),
-          required: makeOption<boolean>(true, FormErrorMessages.DETAILADRRESS_REQUIRED),
-        },
-      },
+      // {
+      //   id: "phone",
+      //   placeholder: "ex 000-0000-0000",
+      //   text: "휴대번호",
+      //   options: {
+      //     maxLength: makeOption<number>(14, FormErrorMessages.MAX_LENGTH),
+      //     minLength: makeOption<number>(10, FormErrorMessages.MIN_LENGTH),
+      //     required: makeOption<boolean>(true, FormErrorMessages.PHONE_REQUIRED),
+      //     validate: {
+      //       mobileNumber: value => hookFormMobileNumberPatternCheck(value, FormErrorMessages.MOBILE_NUMBER),
+      //     },
+      //   },
+      // },
+      // {
+      //   id: "postalCode",
+      //   placeholder: "선택입력",
+      //   text: "우편주소",
+      //   disabled: true,
+      //   options: {
+      //     required: makeOption<boolean>(true, FormErrorMessages.POST_REQUIRED),
+      //   },
+      // },
+      // {
+      //   id: "mainAddress",
+      //   placeholder: "주소",
+      //   text: "",
+      //   disabled: true,
+      //   options: {
+      //     required: makeOption<boolean>(true, FormErrorMessages.MAINADRRESS_REQUIRED),
+      //   },
+      // },
+      // {
+      //   id: "detailAddress",
+      //   placeholder: "상세주소",
+      //   text: "",
+      //   options: {
+      //     maxLength: makeOption<number>(20, FormErrorMessages.MAX_LENGTH),
+      //     minLength: makeOption<number>(1, FormErrorMessages.MIN_LENGTH),
+      //     required: makeOption<boolean>(true, FormErrorMessages.DETAILADRRESS_REQUIRED),
+      //   },
+      // },
     ];
   }, [confirmPassword, password]);
 
@@ -223,6 +248,7 @@ const SignUpForm = () => {
         <div>
           <FormInput {...input} register={register(id, options)} />
         </div>
+        {isError && <ErrorMessage message={errors[`${id}`]?.message} />}
       </Styled.InputWrapper>
     );
   });
@@ -244,9 +270,9 @@ const SignUpForm = () => {
 
   return (
     <Styled.SignUpWrapper>
-      {popupState.isOpen && (
-        <Popup isOpen={popupState.isOpen} setIsOpen={handlePopupClose} autoClose className="red">
-          {popupState.message}
+      {isOpen && (
+        <Popup isOpen={isOpen} setIsOpen={handlePopupClose} autoClose className={isSuccess ? "green" : "red"}>
+          {message}
         </Popup>
       )}
       <DaumPostModal
@@ -254,30 +280,34 @@ const SignUpForm = () => {
         handleComplete={handleComplete}
         handleDaumPostOpne={handleDaumPostOpne}
       />
+
       <form onSubmit={handleSubmit(onSubmit)}>
         <div>{rows}</div>
         <div>
-          {Object.keys(errors).length !== 0 && (
-            <Styled.ErrorWrapper isError={Object.keys(errors).length !== 0}>
-              <ErrorMessage message={errors.email?.message} />
-              <ErrorMessage message={errors.nickName?.message} />
-              <ErrorMessage message={errors.password?.message} />
-              <ErrorMessage message={errors.confirmPassword?.message} />
-              <ErrorMessage message={errors.name?.message} />
-              <ErrorMessage message={errors.phone?.message} />
-              <ErrorMessage message={errors.postalCode?.message} />
-              <ErrorMessage message={errors.mainAddress?.message} />
-              <ErrorMessage message={errors.detailAddress?.message} />
-            </Styled.ErrorWrapper>
+          {emailconfirm && (
+            <div>
+              <Typography variant="h5" fontWeight="bold" sx={{ textAlign: "center", mb: 3 }}>
+                이메일 인증코드가 발송되었습니다.
+              </Typography>
+              <Button variant="outlined" color="darkgray" onClick={handleEmailConfirmResetClick}>
+                다시하기
+              </Button>
+              <EmailConfirm
+                register={register}
+                setEmailConfirmTimeout={setEmailConfirmTimeout}
+                errors={errors}
+                emailconfirm={emailconfirm}
+              />
+            </div>
           )}
           <Styled.ButtonWrapper>
             <Button variant="contained" color="mainDarkBrown" onClick={handleDaumPostOpne}>
               주소찾기
             </Button>
-            <Button variant="contained" color="mainDarkBrown" type="submit">
+            <Button variant="contained" color="darkgray" type="submit">
               가입하기
             </Button>
-            <Button variant="contained" color="error" onClick={handleReset}>
+            <Button variant="contained" color="error" onClick={handleReset} disabled={emailconfirm}>
               초기화
             </Button>
             <Link to="/signIn">

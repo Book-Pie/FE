@@ -115,7 +115,7 @@ export const ChatInputWrapper = styled.form`
 `;
 
 export const UsedBookInfoWrapper = styled.div`
-  padding: 10px;
+  padding: 15px 10px;
   display: flex;
 
   img {

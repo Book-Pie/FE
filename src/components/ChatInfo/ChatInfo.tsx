@@ -5,7 +5,7 @@ import { useHistory, useLocation } from "react-router";
 import client, { handleResourceCache } from "src/api/client";
 import { Button, TextField } from "@mui/material";
 import { UserInfo } from "modules/Slices/user/types";
-import { dateArrayFormat, make1000UnitsCommaFormet } from "src/utils/formatUtil";
+import { dateArrayFormat } from "src/utils/formatUtil";
 import CloudIcon from "@mui/icons-material/Cloud";
 import { useForm, Controller, RegisterOptions } from "react-hook-form";
 import { FormErrorMessages, hookFormHtmlCheck, makeOption } from "src/utils/hookFormUtil";
@@ -17,12 +17,11 @@ import UsedbookInfo from "./UsedbookInfo";
 import Skeletons from "./Skeletons";
 
 const BASE_URL = "http://ec2-3-34-249-63.ap-northeast-2.compute.amazonaws.com:8081";
-const MESSAGE_PRE_TOPIC = "/topic";
 const init: Types.ChattingForm = { content: "" };
 const cache: CacheRefType = {};
 
 const ChatInfo = ({ user }: Types.ChatInfoProps) => {
-  const [chattings, setChattings] = useState<Types.ChattingReponse>({
+  const [chattings, setChattings] = useState<Types.Chatting>({
     bookId: 0,
     buyerId: 0,
     id: "",
@@ -50,25 +49,20 @@ const ChatInfo = ({ user }: Types.ChatInfoProps) => {
     [],
   );
 
-  // 토픽은 sellerid buyerid + usedbookid
+  // 토픽은 sellerid + buyerid(userId) + usedbookid
   const TOPIC = `${state.usedBookId}-${state.sellerId}-${user?.id}`;
-  // const TOPIC = `${state.usedBookId}${state.sellerId}`;
-  const FULL_TOPIC = `${MESSAGE_PRE_TOPIC}/${TOPIC}`;
 
   const handleOnPublish = useCallback(
-    ({ content }: Types.ChattingForm) => {
+    async ({ content }: Types.ChattingForm) => {
       if (socket.current && socket.current.connected && user) {
-        client
-          .post(`${BASE_URL}/kafka/publish?topic=${TOPIC}`, {
-            user: JSON.stringify(user),
-            content,
-          })
-          .then(() => {
-            setValue("content", "");
-          });
+        await client.post(
+          `${BASE_URL}/kafka/publish?topic=${TOPIC}&bookId=${state.usedBookId}&sellerId=${state.sellerId}&buyerId=${user?.id}`,
+          { user: JSON.stringify(user), content },
+        );
+        setValue("content", "");
       }
     },
-    [TOPIC, user, setValue],
+    [TOPIC, user, state, setValue],
   );
 
   const connect = useCallback(() => {
@@ -82,7 +76,7 @@ const ChatInfo = ({ user }: Types.ChatInfoProps) => {
     socket.current.activate();
     socket.current.onConnect = () => {
       if (socket.current) {
-        socket.current.subscribe(`${TOPIC}`, ({ body }) => {
+        socket.current.subscribe(`/topic/${TOPIC}`, ({ body }) => {
           const obj = JSON.parse(body) as Types.ChattingInfo;
           setChattings(prev => {
             return {
@@ -110,19 +104,14 @@ const ChatInfo = ({ user }: Types.ChatInfoProps) => {
   }, [connect]);
 
   useEffect(() => {
-    // client.get<Types.ChattingInfo[]>(`${BASE_URL}/kafka/history?topic=${MESSAGE_PRE_TOPIC}/${TOPIC}`).then(response => {
     client.get<Types.ChattingReponse>(`${BASE_URL}/kafka/history?topic=${TOPIC}`).then(response => {
-      if (response === "") return;
+      if (typeof response === "string") return;
 
-      setChattings(prev => {
-        return {
-          ...prev,
-          messages: [...prev.messages, ...response.messages],
-        };
-      });
+      setChattings(prev => ({
+        ...prev,
+        messages: [...prev.messages, ...response.messages],
+      }));
     });
-
-    // client.get<Types.UsedBookInfoReponse>(`/usedbook/${state.usedBookId}`).then(({ data }) => setUsedBookInfo(data));
   }, [TOPIC, state]);
 
   const usedbook = handleResourceCache(cache, `/usedbook/${state.usedBookId}`, "usedbook", client.get);
@@ -134,11 +123,11 @@ const ChatInfo = ({ user }: Types.ChatInfoProps) => {
       </Suspense>
       <Styled.ChatTopWrapper>
         <CloudIcon color={connected ? "success" : "error"} />
-        <span>{FULL_TOPIC}</span>
+        <span>topic {TOPIC}</span>
       </Styled.ChatTopWrapper>
       <Styled.ChatContentWrapper ref={contentRef}>
         {chattings.messages.length ? (
-          chattings.messages.map(({ content, timestamp, topic, user: otherUser }, idx) => {
+          chattings.messages.map(({ content, timestamp, user: otherUser }, idx) => {
             const otherObj = JSON.parse(otherUser) as UserInfo;
             const otherId = otherObj.id;
             const isMy = otherId === user.id;

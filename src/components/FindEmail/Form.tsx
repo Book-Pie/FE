@@ -56,7 +56,7 @@ const Form = ({ onSubmit }: Types.FormProps) => {
         찾기
       </Button>
       <Link to="/find/password">
-        <Button variant="contained" color="mainDarkBrown" fullWidth sx={{ mb: 2, height: 60 }}>
+        <Button variant="contained" color="darkgray" fullWidth sx={{ mb: 2, height: 60 }}>
           비밀번호 찾기
         </Button>
       </Link>

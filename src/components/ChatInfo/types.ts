@@ -2,7 +2,6 @@ import { SuccessResponse } from "src/api/types";
 import { UserInfo } from "src/modules/Slices/user/types";
 
 export type ChattingInfo = {
-  topic: string;
   user: string;
   content: string;
   timestamp: string;
@@ -32,11 +31,11 @@ export interface Usedbook {
   sndCategory: string;
   likeCount: number;
   replyCount: number;
-  tags: any[];
+  tags: string[];
   images: string[];
 }
 
-export type ChattingReponse = {
+export type Chatting = {
   bookId: number;
   buyerId: number;
   id: string;
@@ -44,6 +43,8 @@ export type ChattingReponse = {
   sellerId: number;
   topic: string;
 };
+
+export type ChattingReponse = Chatting | string;
 
 export interface UsedBookInfoReponse extends SuccessResponse {
   data: Usedbook;
