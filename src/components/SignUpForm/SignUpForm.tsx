@@ -12,7 +12,7 @@ import {
 import FormInput from "elements/FormInput";
 import ErrorMessage from "elements/ErrorMessage";
 import FormLabel from "elements/FormLabel";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import useDaumPost from "hooks/useDaumPost";
 import client, { errorHandler } from "api/client";
 import axios from "axios";
@@ -59,8 +59,7 @@ const SignUpForm = () => {
   const { handlePopupClose, handlePopupMessage, popupState } = usePopup();
   const { isOpen, isSuccess, message } = popupState;
   const history = useHistory();
-  const [emailconfirm, setEmailconfirm] = useState(false);
-  const [emailConfirmTimeout, setEmailConfirmTimeout] = useState(false);
+  const [isEmailconfirmRender, setIsEmailconfirmRender] = useState(false);
   const debounce = useDebounce();
 
   const onSubmit = async (data: Types.SignUpForm) => {
@@ -103,7 +102,7 @@ const SignUpForm = () => {
           handlePopupMessage(true, "인증코드가 발송되었습니다.");
           const { data } = await client.post<{ email: string }, Types.EmailCodeReponse>("/user/email", { email });
           if (!data) throw new Error("인증코드를 가져오기 실패했습니다.");
-          setEmailconfirm(true);
+          setIsEmailconfirmRender(true);
         }
       }, 1000);
     } catch (error) {
@@ -113,8 +112,7 @@ const SignUpForm = () => {
   };
 
   const handleEmailConfirmResetClick = () => {
-    setEmailconfirm(false);
-    setEmailConfirmTimeout(false);
+    setIsEmailconfirmRender(false);
   };
   const handleReset = useCallback(() => reset(init), [reset]);
   const handleDaumPostOpne = useCallback(() => setIsDaumPostOpen(prve => !prve), []);
@@ -193,47 +191,47 @@ const SignUpForm = () => {
           },
         },
       },
-      // {
-      //   id: "phone",
-      //   placeholder: "ex 000-0000-0000",
-      //   text: "휴대번호",
-      //   options: {
-      //     maxLength: makeOption<number>(14, FormErrorMessages.MAX_LENGTH),
-      //     minLength: makeOption<number>(10, FormErrorMessages.MIN_LENGTH),
-      //     required: makeOption<boolean>(true, FormErrorMessages.PHONE_REQUIRED),
-      //     validate: {
-      //       mobileNumber: value => hookFormMobileNumberPatternCheck(value, FormErrorMessages.MOBILE_NUMBER),
-      //     },
-      //   },
-      // },
-      // {
-      //   id: "postalCode",
-      //   placeholder: "선택입력",
-      //   text: "우편주소",
-      //   disabled: true,
-      //   options: {
-      //     required: makeOption<boolean>(true, FormErrorMessages.POST_REQUIRED),
-      //   },
-      // },
-      // {
-      //   id: "mainAddress",
-      //   placeholder: "주소",
-      //   text: "",
-      //   disabled: true,
-      //   options: {
-      //     required: makeOption<boolean>(true, FormErrorMessages.MAINADRRESS_REQUIRED),
-      //   },
-      // },
-      // {
-      //   id: "detailAddress",
-      //   placeholder: "상세주소",
-      //   text: "",
-      //   options: {
-      //     maxLength: makeOption<number>(20, FormErrorMessages.MAX_LENGTH),
-      //     minLength: makeOption<number>(1, FormErrorMessages.MIN_LENGTH),
-      //     required: makeOption<boolean>(true, FormErrorMessages.DETAILADRRESS_REQUIRED),
-      //   },
-      // },
+      {
+        id: "phone",
+        placeholder: "ex 000-0000-0000",
+        text: "휴대번호",
+        options: {
+          maxLength: makeOption<number>(14, FormErrorMessages.MAX_LENGTH),
+          minLength: makeOption<number>(10, FormErrorMessages.MIN_LENGTH),
+          required: makeOption<boolean>(true, FormErrorMessages.PHONE_REQUIRED),
+          validate: {
+            mobileNumber: value => hookFormMobileNumberPatternCheck(value, FormErrorMessages.MOBILE_NUMBER),
+          },
+        },
+      },
+      {
+        id: "postalCode",
+        placeholder: "선택입력",
+        text: "우편주소",
+        disabled: true,
+        options: {
+          required: makeOption<boolean>(true, FormErrorMessages.POST_REQUIRED),
+        },
+      },
+      {
+        id: "mainAddress",
+        placeholder: "주소",
+        text: "",
+        disabled: true,
+        options: {
+          required: makeOption<boolean>(true, FormErrorMessages.MAINADRRESS_REQUIRED),
+        },
+      },
+      {
+        id: "detailAddress",
+        placeholder: "상세주소",
+        text: "",
+        options: {
+          maxLength: makeOption<number>(20, FormErrorMessages.MAX_LENGTH),
+          minLength: makeOption<number>(1, FormErrorMessages.MIN_LENGTH),
+          required: makeOption<boolean>(true, FormErrorMessages.DETAILADRRESS_REQUIRED),
+        },
+      },
     ];
   }, [confirmPassword, password]);
 
@@ -280,11 +278,10 @@ const SignUpForm = () => {
         handleComplete={handleComplete}
         handleDaumPostOpne={handleDaumPostOpne}
       />
-
       <form onSubmit={handleSubmit(onSubmit)}>
         <div>{rows}</div>
         <div>
-          {emailconfirm && (
+          {isEmailconfirmRender && (
             <div>
               <Typography variant="h5" fontWeight="bold" sx={{ textAlign: "center", mb: 3 }}>
                 이메일 인증코드가 발송되었습니다.
@@ -292,12 +289,7 @@ const SignUpForm = () => {
               <Button variant="outlined" color="darkgray" onClick={handleEmailConfirmResetClick}>
                 다시하기
               </Button>
-              <EmailConfirm
-                register={register}
-                setEmailConfirmTimeout={setEmailConfirmTimeout}
-                errors={errors}
-                emailconfirm={emailconfirm}
-              />
+              <EmailConfirm register={register} errors={errors} isEmailconfirmRender={isEmailconfirmRender} />
             </div>
           )}
           <Styled.ButtonWrapper>
@@ -307,7 +299,7 @@ const SignUpForm = () => {
             <Button variant="contained" color="darkgray" type="submit">
               가입하기
             </Button>
-            <Button variant="contained" color="error" onClick={handleReset} disabled={emailconfirm}>
+            <Button variant="contained" color="error" onClick={handleReset} disabled={isEmailconfirmRender}>
               초기화
             </Button>
             <Link to="/signIn">

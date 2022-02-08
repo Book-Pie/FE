@@ -22,7 +22,7 @@ const LatestSlide = () => {
       <Swiper
         modules={[Pagination, Autoplay]}
         slidesPerView={5}
-        spaceBetween={40}
+        spaceBetween={30}
         freeMode
         autoplay={{ delay: 3000 }}
         loop

@@ -6,7 +6,7 @@ import { memo } from "react";
 import * as Styled from "./style";
 import * as Types from "./types";
 
-const SaleInsertTitle = ({ control, error, usedBookResource }: Types.SaleInsertTitleProps) => {
+const SaleInsertTitle = ({ control, error, usedBookResource }: Types.SaleInsertProps) => {
   usedBookResource?.read();
   const titleOpions: RegisterOptions = {
     required: "필수입니다.",

@@ -40,36 +40,49 @@ export const emailPatternCheck = (value: string) =>
 // html 패턴 검사
 export const htmlTagPatternCheck = (value: string) => /(<([^>]+)>)/g.test(value);
 
+/**
+ * @param value isbn 10자리, 13자리
+ * example Matches
+ * 89-5674-189-1
+ * 979-11-6224-448-7
+ * @returns boolean
+ */
+export const isbnPatternCheck = (value: string) =>
+  /^(?:97[89][- ])?[0-9]{1,5}[- ][0-9]+[- ][0-9]+[- ][0-9X]$/gi.test(value);
+
 // hook form validate는 retur값이 true면 유효성검사 통과입니다.
 // 특정 패턴에 걸렸을때 문자열을 리턴해주면 validation message로 등록됩니다.
-export const hookFormKoreaChractersCheck = (value: string, errorMessage: string) => {
+
+type HookFormCheckType = (value: string, errorMessage: string) => string | boolean;
+
+export const hookFormKoreaChractersCheck: HookFormCheckType = (value, errorMessage) => {
   if (koreaChractersCheck(value)) {
     return errorMessage;
   }
   return true;
 };
-export const hookFormSpecialChractersCheck = (value: string, errorMessage: string) => {
+export const hookFormSpecialChractersCheck: HookFormCheckType = (value, errorMessage) => {
   if (specialChractersCheck(value)) {
     return errorMessage;
   }
   return true;
 };
 
-export const hookFormWhiteSpaceCheck = (value: string, errorMessage: string) => {
+export const hookFormWhiteSpaceCheck: HookFormCheckType = (value, errorMessage) => {
   if (whiteSpaceCheck(value)) {
     return errorMessage;
   }
   return true;
 };
 
-export const hookFormMobileNumberPatternCheck = (value: string, errorMessage: string) => {
+export const hookFormMobileNumberPatternCheck: HookFormCheckType = (value, errorMessage) => {
   if (mobileNumberPatternCheck(value) === false) {
     return errorMessage;
   }
   return true;
 };
 
-export const hookFormEmailPatternCheck = (value: string, errorMessage: string) => {
+export const hookFormEmailPatternCheck: HookFormCheckType = (value, errorMessage) => {
   if (emailPatternCheck(value) === false) {
     return errorMessage;
   }
@@ -83,10 +96,58 @@ export const hookFormMisMatchCheck = (target: string, source: string, errorMessa
   return true;
 };
 
-export const hookFormHtmlCheck = (value: string, errorMessage: string) => {
+export const hookFormHtmlCheck: HookFormCheckType = (value, errorMessage) => {
   if (htmlTagPatternCheck(value)) {
     return errorMessage;
   }
+  return true;
+};
+
+/**
+ * @param value isbn 10자리, 13자리
+ * example Matches
+ * 89-5674-189-1
+ * 979-11-6224-448-7
+ * @returns boolean | string
+ */
+export const hookFormIsbnCheck: HookFormCheckType = (value, errorMessage) => {
+  // ISBN형식이 맞는지 체크 후
+  // 유효한 ISBN인지 확인을 한다.
+  if (isbnPatternCheck(value) === false) {
+    return errorMessage;
+  }
+
+  const chars = value.replace(/[^0-9X]/g, "").split("");
+  const last = chars.pop();
+  let sum = 0;
+  let digit = 10;
+  let checksum;
+
+  chars.forEach((str, i) => {
+    if (chars.length === 9) {
+      sum += digit * parseInt(str, 10);
+      digit -= 1;
+      return;
+    }
+    sum += ((i % 2) * 2 + 1) * parseInt(str, 10);
+  });
+
+  if (chars.length === 9) {
+    checksum = 11 - (sum % 11);
+    if (checksum === 10) {
+      checksum = "X";
+    } else if (checksum === 11) {
+      checksum = "0";
+    }
+  } else {
+    checksum = 10 - (sum % 10);
+    if (checksum === 10) checksum = "0";
+  }
+
+  if (String(checksum) !== last) {
+    return "ISBN 검증 번호가 잘못 되었습니다.";
+  }
+
   return true;
 };
 
