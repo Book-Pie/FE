@@ -15,7 +15,7 @@ import { getFreeBoardPage, setFreeBoardPage } from "utils/localStorageUtil";
 import { userSelector } from "modules/Slices/user/userSlice";
 import { Link } from "react-router-dom";
 import { useForm, Controller, RegisterOptions } from "react-hook-form";
-import { makeOption } from "utils/hookFormUtil";
+import { hookFormHtmlCheck, makeOption } from "utils/hookFormUtil";
 import ErrorMessage from "elements/ErrorMessage";
 import useDebounce from "hooks/useDebounce";
 import * as Styled from "./style";
@@ -38,6 +38,9 @@ const FreeBoardList = () => {
 
   const titleOptions: RegisterOptions = {
     maxLength: makeOption<number>(50, "최대 50자 입니다."),
+    validate: {
+      html: value => hookFormHtmlCheck(value, "HTML은 입력 불가합니다."),
+    },
   };
 
   const onSubmit = (data: Types.SearchForm) => {

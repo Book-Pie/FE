@@ -1,6 +1,7 @@
-import { RegisterOptions } from "react-hook-form";
+import { RegisterOptions, FieldErrors, UseFormRegister } from "react-hook-form";
 import { FormInputProps } from "elements/FormInput";
 import { SuccessResponse } from "api/types";
+import { Dispatch, SetStateAction } from "react";
 
 export interface SignUpForm {
   name: string;
@@ -12,6 +13,7 @@ export interface SignUpForm {
   postalCode: string;
   mainAddress: string;
   detailAddress: string;
+  code: string;
 }
 
 export interface Row extends FormInputProps {
@@ -21,6 +23,9 @@ export interface Row extends FormInputProps {
 }
 
 export interface CheckReponse extends SuccessResponse {
+  data: boolean;
+}
+export interface EmailCodeReponse extends SuccessResponse {
   data: boolean;
 }
 
@@ -35,4 +40,9 @@ export interface SignUpPayload {
     mainAddress: string;
     detailAddress: string;
   };
+}
+export interface EmailConfirmProps {
+  register: UseFormRegister<SignUpForm>;
+  errors: FieldErrors<SignUpForm>;
+  isEmailconfirmRender: boolean;
 }

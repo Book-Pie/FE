@@ -13,14 +13,13 @@ const TAGS_MAX_COUNT = 5;
 const TAGS_MAX_LENGTH = 20;
 
 // 추가해야된다.
-const SaleInsertTags = ({ tags, setForm }: any) => {
+const SaleInsertTags = ({ tags, setForm }: Types.SaleInsertTagsProps) => {
   const tagInputRef = useRef<HTMLInputElement>(null);
   const debounceRef = useDebounce();
 
   const tagClick = useCallback(
-    (e: React.MouseEvent<HTMLDivElement>) => {
-      const { id } = e.currentTarget;
-      if (tags.delete(id)) setForm(() => ({ tags: new Set([...Array.from(tags)]) }));
+    ({ currentTarget }: React.MouseEvent<HTMLDivElement>) => {
+      if (tags.delete(currentTarget.id)) setForm(() => ({ tags: new Set([...Array.from(tags)]) }));
     },
     [tags, setForm],
   );

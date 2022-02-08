@@ -1,11 +1,9 @@
 import styled from "styled-components";
 
-export const BestSellerContainer = styled.div``;
-
 export const BestSellerWrapper = styled.div`
   display: grid;
   grid-template-columns: repeat(6, 6fr);
-  grid-template-rows: repeat(2, 230px);
+  grid-template-rows: repeat(2, 200px);
   row-gap: 10px;
   column-gap: 10px;
   & > div {
@@ -18,7 +16,7 @@ export const BestSellerWrapper = styled.div`
   }
   ${({ theme }) => theme.media.mobile} {
     grid-template-columns: auto;
-    grid-template-rows: repeat(6, 150px);
+    grid-template-rows: repeat(6, 180px);
   }
 `;
 
@@ -168,7 +166,7 @@ export const CardWrapper = styled.div`
     line-height: 1.5;
     overflow: hidden;
     text-overflow: ellipsis;
-    -webkit-line-clamp: 6;
+    -webkit-line-clamp: 5;
     -webkit-box-orient: vertical;
     padding-right: 5px;
     color: ${p => p.theme.colors.darkGrey};
