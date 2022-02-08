@@ -6,7 +6,7 @@ import { makeOption } from "utils/hookFormUtil";
 import * as Styled from "./style";
 import * as Types from "./types";
 
-const SaleInsertPrice = ({ control, error, usedBookResource }: Types.SaleInsertPriceProps) => {
+const SaleInsertPrice = ({ control, error, usedBookResource }: Types.SaleInsertProps) => {
   usedBookResource?.read();
 
   const priceOpions: RegisterOptions = {

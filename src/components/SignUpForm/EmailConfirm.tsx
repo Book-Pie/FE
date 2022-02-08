@@ -7,9 +7,10 @@ import { hookFormHtmlCheck, makeOption } from "src/utils/hookFormUtil";
 import * as Styled from "./style";
 import * as Types from "./types";
 
-const EmailConfirm = ({ register, errors, setEmailConfirmTimeout, emailconfirm }: Types.EmailConfirmProps) => {
+const EmailConfirm = ({ register, errors, isEmailconfirmRender }: Types.EmailConfirmProps) => {
   const [time, setTime] = useState(300);
-  const codeOptions: RegisterOptions = {
+
+  const codeOptions: RegisterOptions<Types.SignUpForm> = {
     maxLength: makeOption<number>(8, "인증코드는 최대8자입니다."),
     minLength: makeOption<number>(8, "인증코드는 최소8자입니다."),
     required: makeOption<boolean>(true, "인증코드는 필수입니다."),
@@ -17,28 +18,15 @@ const EmailConfirm = ({ register, errors, setEmailConfirmTimeout, emailconfirm }
       html: value => hookFormHtmlCheck(value, "HTML입력은 불가능합니다."),
     },
   };
-  const isError = errors.code ? true : false;
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
-
-    if (emailconfirm && time > 0) {
-      timer = setTimeout(() => {
-        setTime(time - 1);
-      }, 1000);
-    }
-
-    if (time === 0) {
-      setEmailConfirmTimeout(true);
-    }
-
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [time, emailconfirm, setEmailConfirmTimeout]);
+    if (isEmailconfirmRender && time > 0) timer = setTimeout(() => setTime(time - 1), 1000);
+    return () => clearTimeout(timer);
+  }, [time, isEmailconfirmRender]);
 
   return (
-    <Styled.InputWrapper isError={isError}>
+    <Styled.InputWrapper isError={errors.code ? true : false}>
       <div className="timer">{time > 0 && `남은 시간 ${parseInt(String(time / 60), 10)}분 ${time % 60}초`}</div>
       <div>
         <FormLabel id="code" text="이메일인증" />

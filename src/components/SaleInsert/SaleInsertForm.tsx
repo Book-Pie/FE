@@ -20,6 +20,7 @@ import SaleInsertCategorys from "./SaleInsertCategorys";
 import SaleInsertTitle from "./SaleInsertTitle";
 import SaleInsertSkeleton from "./SaleInsertSkeleton";
 import SaleInsertBeforeImg from "./SaleInsertBeforeImg";
+import SaleInsertIsbn from "./SaleInsertIsbn";
 
 const SaleInsertForm = ({ handlePopupMessage, usedBookResource, bookId }: Types.SaleInsertFormProps) => {
   const [imgFiles, setImgFiles] = useState<File[]>([]);
@@ -31,13 +32,13 @@ const SaleInsertForm = ({ handlePopupMessage, usedBookResource, bookId }: Types.
   const [form, setForm] = useState<Types.TagsType>({ tags: new Set<string>() });
   const { tags } = form;
   const history = useHistory();
-
   const { token } = useTypedSelector(userReduceSelector);
 
   const { handleSubmit, formState, reset, control, setValue } = useForm<Types.SaleInsertForm>({
     defaultValues: {
       title: "",
       price: "",
+      isbn: "",
     },
   });
   const { errors } = formState;
@@ -60,7 +61,7 @@ const SaleInsertForm = ({ handlePopupMessage, usedBookResource, bookId }: Types.
     setImgFiles([]);
   }, [reset]);
 
-  const handleOnSubmit = async ({ price, title }: Types.SaleInsertForm) => {
+  const handleOnSubmit = async ({ price, title, isbn }: Types.SaleInsertForm) => {
     try {
       if (!token) throw new Error("로그인이 필요합니다.");
       if (imgFiles.length === 0) throw new Error("이미지는 필수입니다.");
@@ -70,10 +71,10 @@ const SaleInsertForm = ({ handlePopupMessage, usedBookResource, bookId }: Types.
         content: editorValue,
         price,
         state,
-        isbn: "123123",
+        isbn,
         fstCategory: currentFirstCategory,
         sndCategory: currentSecondCategory,
-        tags: [...Array.from(tags)],
+        tags: Array.from(tags),
       };
 
       const formData = new FormData();
@@ -261,6 +262,7 @@ const SaleInsertForm = ({ handlePopupMessage, usedBookResource, bookId }: Types.
           <SaleInsertEditor setEditorValue={setEditorValue} usedBookResource={usedBookResource} />
         </Suspense>
       </Styled.Row>
+      <SaleInsertIsbn error={errors?.isbn} control={control} />
       <SaleInsertTags tags={tags} setForm={setForm} />
       <Buttons handleReset={handleReset} />
     </form>

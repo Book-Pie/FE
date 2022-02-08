@@ -44,6 +44,5 @@ export interface SignUpPayload {
 export interface EmailConfirmProps {
   register: UseFormRegister<SignUpForm>;
   errors: FieldErrors<SignUpForm>;
-  emailconfirm: boolean;
-  setEmailConfirmTimeout: Dispatch<SetStateAction<boolean>>;
+  isEmailconfirmRender: boolean;
 }

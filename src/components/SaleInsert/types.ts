@@ -1,9 +1,11 @@
 import { SelectChangeEvent } from "@mui/material";
+import { Dispatch, SetStateAction } from "react";
 import { Control, FieldError } from "react-hook-form";
 
 export interface SaleInsertForm {
   title: string;
   price: string;
+  isbn: string;
 }
 
 export type CheckBoxType = {
@@ -27,15 +29,10 @@ export type SaleInsertFormProps = {
 export interface SaleBeforeImgProps {
   usedBookResource: ResourceType | undefined;
 }
-export interface SaleInsertPriceProps {
+export interface SaleInsertProps {
   control: Control<SaleInsertForm, object>;
   error?: FieldError | undefined;
-  usedBookResource: ResourceType | undefined;
-}
-export interface SaleInsertTitleProps {
-  control: Control<SaleInsertForm, object>;
-  error?: FieldError | undefined;
-  usedBookResource: ResourceType | undefined;
+  usedBookResource?: ResourceType;
 }
 export interface SaleInsertEditorProps {
   setEditorValue: (value: string) => void;
@@ -46,4 +43,9 @@ export interface SaleInsertCategorysProps {
   currentFirstCategory: string;
   currentSecondCategory: string;
   handleChange: (firstCategory: string) => (event: SelectChangeEvent) => void;
+}
+
+export interface SaleInsertTagsProps {
+  tags: Set<string>;
+  setForm: Dispatch<SetStateAction<TagsType>>;
 }

@@ -10,7 +10,7 @@ export const LatestSliderContainer = styled.div`
 
   .swiper {
     padding-bottom: 2.5rem;
-    width: 1100px;
+    width: 1200px;
     margin-left: -1rem;
     transition: width 0.5s ease-in;
   }
@@ -44,7 +44,6 @@ export const LatestSliderContainer = styled.div`
     margin-bottom: 1.5rem;
     .swiper {
       padding-bottom: 0;
-      width: 1000px;
     }
     .swiper-slide {
       margin-right: 10px !important;
@@ -77,8 +76,11 @@ export const LatestSliderCardWrapper = styled.div`
 `;
 
 export const LatestSliderCardImage = styled.div`
-  border-bottom: 1px solid rgba(99, 110, 114, 0.1);
   height: 80%;
+
+  ${({ theme }) => theme.media.tab} {
+    height: 70%;
+  }
 
   ${({ theme }) => theme.media.mobile} {
     height: 60%;
@@ -127,8 +129,7 @@ export const LatestSliderCardInfo = styled.div`
     .card__title {
       margin-top: 0.2rem;
       font-size: 1.1rem;
-      padding: 0 0.8rem;
-      min-height: 1.4rem;
+      padding: 0 0.4rem;
     }
     .card__price {
       span:nth-child(1) {
@@ -150,9 +151,8 @@ export const LatestSliderCardInfo = styled.div`
 
     .card__title {
       margin-top: 0.2rem;
-      padding: 0 0.8rem;
+      padding: 0 0.3rem;
       font-size: 0.6rem;
-      min-height: 1.2rem;
     }
 
     .card__price {
