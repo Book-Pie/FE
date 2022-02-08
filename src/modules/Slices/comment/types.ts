@@ -10,17 +10,23 @@ export interface ErrorHandling {
 }
 
 export interface addCommentProps {
-  isbn: string;
-  userId: number;
-  content: string;
-  rating: number;
+  data: {
+    isbn: string;
+    content: string;
+    rating: number;
+    category: string;
+  };
+  token: string;
 }
 
-export interface editCommentProps {
-  reviewId: number;
-  userId: number;
-  content: string;
-  rating: number;
+export interface EditCommentProps {
+  data: {
+    reviewId: number;
+    content: string;
+    rating: number;
+    category: string;
+  };
+  token: string;
 }
 
 // 통신 성공 시 반환하는 타입
@@ -54,15 +60,20 @@ export interface pageableProps {
 
 export interface deleteCommentProps {
   id: number;
+  token: string;
 }
 
 export interface commentListProps {
   bookId: number;
 }
 
+export interface BestCommentProps {
+  bookId: string;
+}
+
 export interface CommentId {
   reviewId: number;
-  userId: number;
+  token: string;
 }
 
 export interface commentLikeResponse {
@@ -113,7 +124,7 @@ export interface commentThunkApi {
 }
 
 // 성공했을 때 반환 타입
-export interface commentLikeSuccess {
+export interface CommentLikeSuccess {
   success: boolean;
   data: commentLikeResponse;
   error: null;
@@ -132,8 +143,15 @@ export interface commentAsyncSuccess {
 }
 
 // 나의 댓글
-export interface myCommentAsyncSuccess {
+export interface MyCommentAsyncSuccess {
+  success: boolean;
   data: getCommentProps;
   error: null;
+}
+
+// 베스트 댓글
+export interface BestCommentAsyncSuccess {
   success: boolean;
+  data: getCommentProps[];
+  error: null;
 }

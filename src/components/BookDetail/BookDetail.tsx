@@ -5,7 +5,7 @@ import { useLocation, useParams } from "react-router";
 import BookDetailContent from "./BookDetailContent";
 import BookDetailHeader from "./BookDetailHeader";
 import BookRecommendList from "./BookRecommendList";
-import { FlexColum, FlexWrapper, Wrapper } from "./style";
+import { BookDetailContentWrapper, FlexColum, FlexWrapper } from "./style";
 
 export interface BookDetailParam {
   isbn13: string;
@@ -41,10 +41,15 @@ const BookDetail = () => {
           categoryName={categoryName}
           publisher={publisher}
         />
-        <Wrapper>
-          <BookDetailContent bookIntroText={fullDescription} authorIntroText={fullDescription2} bookId={isbn13} />
+        <BookDetailContentWrapper>
+          <BookDetailContent
+            bookIntroText={fullDescription}
+            authorIntroText={fullDescription2}
+            bookId={isbn13}
+            categoryName={categoryName}
+          />
           <BookRecommendList isbn={isbn13} />
-        </Wrapper>
+        </BookDetailContentWrapper>
       </>
     );
   }

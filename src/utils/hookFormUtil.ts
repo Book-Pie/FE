@@ -36,7 +36,7 @@ export const whiteSpaceCheck = (value: string) => /\s/gi.test(value);
 export const mobileNumberPatternCheck = (value: string) => /^01([0|1|6|7|8|9])-([0-9]{3,4})-([0-9]{4})$/gi.test(value);
 // 이메일 패턴 검사
 export const emailPatternCheck = (value: string) =>
-  /^[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*\.(kr|com|net)$/gi.test(value);
+  /^[0-9a-zA-Z]([-_\\.]?[-_\\.0-9a-zA-Z])*@[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*\.(kr|com|net)$/gi.test(value);
 // html 패턴 검사
 export const htmlTagPatternCheck = (value: string) => /(<([^>]+)>)/g.test(value);
 

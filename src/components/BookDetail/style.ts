@@ -113,3 +113,7 @@ export const Wrapper = styled.div`
   overflow-y: auto;
   margin-bottom: 100px;
 `;
+
+export const BookDetailContentWrapper = styled.div`
+  margin-bottom: 100px;
+`;

@@ -1,7 +1,12 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { ReviewList } from "components/Reviews/ReviewList/ReviewList";
 import { ReviewWrite } from "components/Reviews/ReviewWrite";
-import { myReviewComment, reviewCommentList, commentsSelector } from "modules/Slices/comment/commentSlice";
+import {
+  myReviewComment,
+  reviewCommentList,
+  commentsSelector,
+  reviewBestComment,
+} from "modules/Slices/comment/commentSlice";
 import { useTypedSelector } from "modules/store";
 import queryString from "query-string";
 import { useHistory } from "react-router";
@@ -9,22 +14,24 @@ import { getShopPage, removeShopPage, setShopPage } from "utils/localStorageUtil
 import useSignIn from "hooks/useSignIn";
 import { ReviewsParam } from "./types";
 import { ReviewListEmpty } from "../ReviewList/ReviewListEmpty";
+import { BestCommentListWrapper, BestReviewsListTitle } from "../ReviewList/style";
+import BestReviewItem from "../ReviewList/BestReviewItem";
+import { ReviewsContentWrapper } from "./style";
 
-export const Reviews: React.FC<ReviewsParam> = ({ bookId }) => {
+export const Reviews = ({ bookId, categoryName }: ReviewsParam) => {
   const { signIn, dispatch } = useSignIn();
   const history = useHistory();
   const reviewSelector = useTypedSelector(commentsSelector);
-  const { user, isLoggedIn } = signIn;
-  const { id } = user ?? -1;
-  const { myCommentCheck, content, myComment, totalElements, totalPages } = reviewSelector;
+  const { user, isLoggedIn, token } = signIn;
+  const { myCommentCheck, content, myComment, totalElements, totalPages, bestComment } = reviewSelector;
   const [page, setPage] = useState(getShopPage(1));
 
   const handleHasMoreList = useCallback(
     async (page: number) => {
       if (user) {
-        const { id } = user;
+        const { token } = user;
         const query = queryString.stringify({ page: page - 1 });
-        dispatch(reviewCommentList({ bookId, id, query }));
+        dispatch(reviewCommentList({ bookId, query, token }));
       } else {
         const query = queryString.stringify({ page: page - 1 });
         dispatch(reviewCommentList({ bookId, query }));
@@ -48,7 +55,7 @@ export const Reviews: React.FC<ReviewsParam> = ({ bookId }) => {
   useEffect(() => {
     if (user) {
       if (myCommentCheck === true) {
-        dispatch(myReviewComment({ bookId, id }));
+        dispatch(myReviewComment({ bookId, token }));
       }
     }
   }, [dispatch, myCommentCheck]);
@@ -65,14 +72,33 @@ export const Reviews: React.FC<ReviewsParam> = ({ bookId }) => {
     };
   });
 
+  useEffect(() => {
+    dispatch(
+      reviewBestComment({
+        bookId,
+      }),
+    );
+  }, []);
+
   return (
-    <div className="Reviews">
+    <ReviewsContentWrapper className="Reviews">
       {/* 정렬 부분 */}
       {/* <ReviewListHeader bookId={bookId} />*/}
+      {!!bestComment.length && (
+        <>
+          <BestReviewsListTitle>베스트 리뷰</BestReviewsListTitle>
+          <BestCommentListWrapper>
+            {bestComment.map((item, idx) => (
+              <div key={idx}>
+                <BestReviewItem item={item} />
+              </div>
+            ))}
+          </BestCommentListWrapper>
+        </>
+      )}
       {content.length ? (
         <ReviewList
           commentList={content}
-          myCommentId={id}
           pageCount={totalPages}
           totalCount={totalElements}
           page={page}
@@ -85,7 +111,7 @@ export const Reviews: React.FC<ReviewsParam> = ({ bookId }) => {
         bookId={bookId}
         myReviewCheck={myCommentCheck}
         myComment={myComment}
-        myCommentId={id}
+        categoryName={categoryName}
         checkAuth={() => {
           if (isLoggedIn) {
             return true;
@@ -96,6 +122,6 @@ export const Reviews: React.FC<ReviewsParam> = ({ bookId }) => {
           return false;
         }}
       />
-    </div>
+    </ReviewsContentWrapper>
   );
 };

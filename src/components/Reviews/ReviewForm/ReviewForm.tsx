@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import { addComment, editComment } from "modules/Slices/comment/commentSlice";
@@ -13,12 +13,13 @@ import Textarea from "components/TextArea/Textarea";
 import { ButtonArea, TextareaAutosize, TextWrapper, MyReviwContent } from "./style";
 import { ReviewFormProps } from "./types";
 
-export const ReviewForm: React.FC<ReviewFormProps> = ({ isbn, isMyReview, myComment, userId, checkAuth }) => {
+export const ReviewForm = ({ isbn, isMyReview, myComment, categoryName, checkAuth }: ReviewFormProps) => {
   const { handleSubmit } = useForm({ defaultValues: { something: "anything" } });
   const { reviewDate } = myComment ?? "";
   const commentDate = reviewDateFormat(reviewDate);
   const myUserStatus = useTypedSelector(userReduceSelector);
-  const { isLoggedIn } = myUserStatus ?? false;
+  const { isLoggedIn, token } = myUserStatus ?? false;
+  const category = categoryName.split(">", 2)[1];
 
   let editStatus = false;
   let myRatingDefault = 3;
@@ -44,27 +45,37 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({ isbn, isMyReview, myComm
   };
 
   const addReview = () => {
-    dispatch(
-      addComment({
-        isbn,
-        userId,
-        content: reviewContent,
-        rating: ratingValue,
-      }),
-    );
-    editEnabled(true);
+    if (token) {
+      dispatch(
+        addComment({
+          data: {
+            isbn,
+            content: reviewContent,
+            rating: ratingValue,
+            category,
+          },
+          token,
+        }),
+      );
+      editEnabled(true);
+    }
   };
 
   const editReview = () => {
-    dispatch(
-      editComment({
-        userId,
-        reviewId: myComment.reviewId,
-        content: reviewContent,
-        rating: ratingValue,
-      }),
-    );
-    editEnabled(true);
+    if (token) {
+      dispatch(
+        editComment({
+          data: {
+            reviewId: myComment.reviewId,
+            content: reviewContent,
+            rating: ratingValue,
+            category,
+          },
+          token,
+        }),
+      );
+      editEnabled(true);
+    }
   };
 
   const handleEdit = () => {

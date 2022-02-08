@@ -75,6 +75,29 @@ export const ReviewsListTitle = styled.h4`
   padding: 30px 0;
 `;
 
+export const BestReviewsListTitle = styled(ReviewsListTitle)`
+  font-size: 20px;
+  font-weight: bold;
+  color: #4f3629;
+`;
+
+export const DateWrapper = styled.span`
+  margin-left: 5px;
+  color: #a2a2a2;
+`;
+
+export const BestCommentNickName = styled.span`
+  font-size: 16px;
+  margin-right: 10px;
+`;
+
+export const BestReviewContent = styled.div`
+  border-top: 1px solid rgb(229, 229, 229);
+  padding: 20px 0 30px 0;
+  line-height: 1.5em;
+  min-height: 130px;
+`;
+
 export const ReviewsListWrapper = styled.div``;
 
 export const ContentArea = styled.div`
@@ -112,4 +135,31 @@ export const ReviewEmptyParagraph = styled.p`
   line-height: 1.8em;
   text-align: center;
   padding: 40px 0;
+`;
+
+export const BestCommentListWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+
+export const BestCommentWrapper = styled.div`
+  min-width: 340px;
+  background-color: rgb(242, 242, 242);
+  border: 1px solid #e3e3e3;
+  padding: 30px 30px 0 30px;
+  margin: 0 10px 0 10px;
+  border-radius: 5px;
+  flex: 1;
+
+  div {
+    margin: 10px 0 10px 0;
+    color: #303538;
+    font-size: 14px;
+  }
+`;
+
+export const LikeButtonWrapper = styled.div`
+  height: 44px;
+  border-top: 1px solid rgb(229, 229, 229);
+  padding-top: 10px;
 `;

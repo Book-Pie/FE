@@ -6,21 +6,14 @@ import { ReviewListEmpty } from "./ReviewListEmpty";
 import { CommentUl, ReviewsListTitle, ReviewsListWrapper } from "./style";
 import { ReviewListProps } from "./types";
 
-export const ReviewList: React.FC<ReviewListProps> = ({
-  commentList,
-  myCommentId,
-  page,
-  pageCount,
-  totalCount,
-  onChange,
-}) => {
+export const ReviewList: React.FC<ReviewListProps> = ({ commentList, page, pageCount, totalCount, onChange }) => {
   return (
     <ReviewsListWrapper>
       <ReviewsListTitle>회원 리뷰 ({totalCount}건)</ReviewsListTitle>
       {commentList.length ? (
         <CommentUl>
           {commentList.map(review => {
-            return <ReviewItem key={review.reviewId} content={review} myCommentId={myCommentId} />;
+            return <ReviewItem key={review.reviewId} content={review} />;
           })}
         </CommentUl>
       ) : (

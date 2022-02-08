@@ -10,17 +10,19 @@ export interface ReviewTextareaProps {
 
 export interface MyReviewCommentParam {
   bookId: string;
-  id: number;
+  token: string;
 }
 
 export interface ReviewsParam {
   bookId: string;
+  categoryName: string;
 }
 
 export interface ReviewsParams {
   bookId: string;
   id?: number;
   query: string;
+  token: string;
 }
 
 export interface ReviewFormProps {
@@ -30,6 +32,6 @@ export interface ReviewFormProps {
   onCancel?: () => void;
   isDisabled?: boolean;
   myComment: getCommentProps | null;
-  userId: number;
+  categoryName: string;
   checkAuth: () => boolean;
 }
