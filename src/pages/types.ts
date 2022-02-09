@@ -36,3 +36,8 @@ export interface UsedBookResponse extends SuccessResponse {
 export interface OauthAccessTokenResponse extends SuccessResponse {
   data: string;
 }
+export type LocationState = {
+  usedBookId: string;
+  sellerId: string;
+  buyerId: string;
+};

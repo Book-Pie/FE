@@ -7,6 +7,7 @@ import Loading from "elements/Loading";
 import usePopup from "src/hooks/usePopup";
 import { useInfiniteQuery } from "react-query";
 import useInfiniteScroll from "src/hooks/useInfiniteScroll";
+import useDelay from "src/hooks/useDelay";
 import UsedBookCategorys from "./UsedBookCategorys";
 import * as Types from "./types";
 import UsedBookSkeleton from "./UsedBookSkeleton";
@@ -22,8 +23,9 @@ const UsedBookList = () => {
   const location = useLocation();
   const { handlePopupClose, handlePopupMessage, popupState } = usePopup();
   const { isOpen, message } = popupState;
-  const { handleObserver } = useInfiniteScroll(pageCountRef.current);
+  const { count, handleObserver } = useInfiniteScroll(pageCountRef.current);
   const { search } = location;
+  const delay = useDelay(400);
   const query = useMemo(() => queryString.parse(search), [search]);
 
   const fetchUsedBooklist = useCallback(
@@ -31,22 +33,27 @@ const UsedBookList = () => {
       pageRef.current = pageParam;
       const newQuery = queryString.stringify({ ...query });
       const { data } = await client.get<Types.UsedBookListResponse>(`/usedbook?page=${pageParam}&${newQuery}`);
+      await delay();
       return { ...data, nextPage: pageParam + 1, isEmpty: data.pages.length === 0 };
     },
-    [query],
+    [query, delay],
   );
 
-  const { data, isError, isLoading, error } = useInfiniteQuery(["/usedbook", query], fetchUsedBooklist, {
-    getNextPageParam: lastPage => {
-      if (lastPage.nextPage !== pageCountRef.current + 1) return lastPage.nextPage;
-      return undefined;
+  const { data, isError, isLoading, error, isFetching, fetchNextPage } = useInfiniteQuery(
+    ["/usedbook", query],
+    fetchUsedBooklist,
+    {
+      getNextPageParam: lastPage => {
+        if (lastPage.nextPage !== pageCountRef.current + 1) return lastPage.nextPage;
+        return undefined;
+      },
+      refetchOnWindowFocus: false,
+      refetchOnMount: true,
+      refetchOnReconnect: true,
+      retry: 1,
+      staleTime: 10000,
     },
-    refetchOnWindowFocus: false,
-    refetchOnMount: true,
-    refetchOnReconnect: true,
-    retry: 1,
-    staleTime: 10000,
-  });
+  );
 
   useEffect(() => {
     if (data) {
@@ -56,12 +63,20 @@ const UsedBookList = () => {
   }, [data]);
 
   useEffect(() => {
+    if (count > 1) fetchNextPage();
+  }, [fetchNextPage, count]);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
     if (isError) handlePopupMessage(false, errorHandler(error));
   }, [isError, handlePopupMessage, error]);
 
   return (
     <section>
-      <Loading isLoading={isLoading} />
+      <Loading isLoading={isFetching} />
       {isOpen && (
         <Popup isOpen={isOpen} setIsOpen={handlePopupClose} className="red" autoClose closeDelay={4000}>
           {message}

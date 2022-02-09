@@ -25,12 +25,12 @@ const Routers = () => {
       <PrivateRoute path="/my" component={My} redirectPath="/signIn" />
       <PrivateRoute path="/order/:id" component={Order} redirectPath="/signIn" />
       <PrivateRoute path="/oAuth/:name" component={Oauth} redirectPath="/" />
+      <PrivateRoute path="/chat" component={Chat} redirectPath="/signIn" exact />
       <Route path="/find" component={Find} />
       <Route path="/community" component={Community} />
       <Route path="/usedBook" component={UsedBook} />
       <Route path="/search" component={Search} />
       <Route path="/book" component={Book} />
-      <Route path="/Chat" component={Chat} />
       <Route path="*" component={RootRedirect} />
     </Switch>
   );

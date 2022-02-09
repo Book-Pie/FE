@@ -4,7 +4,7 @@ import UsedBookCard from "./UsedBookCard";
 import * as Types from "./types";
 import * as Styled from "./style";
 
-const UsedBookCards = ({ data }: Types.UsedBookCardsProps) => {
+const UsedBookCards = ({ data, handleObserver }: Types.UsedBookCardsProps) => {
   if (data) {
     let render;
 
@@ -16,6 +16,7 @@ const UsedBookCards = ({ data }: Types.UsedBookCardsProps) => {
             if (pages.length - 1 === idx) {
               return (
                 <React.Fragment key={idx}>
+                  <div ref={handleObserver} />
                   <UsedBookCard card={card} />
                 </React.Fragment>
               );

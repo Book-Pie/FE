@@ -4,7 +4,7 @@ import { useAppDispatch, useTypedSelector } from "modules/store";
 import { fetchUserInfoAsync, userReduceSelector } from "modules/Slices/user/userSlice";
 import { dateArrayFormat, make1000UnitsCommaFormet } from "utils/formatUtil";
 import Loading from "elements/Loading";
-import client, { errorHandler } from "api/client";
+import client, { errorHandler, makeAuthTokenHeader } from "api/client";
 import useFetch, { errorAction } from "hooks/useFetch";
 import PointInfo from "components/MyTop/PointInfo";
 import Popup from "elements/Popup";
@@ -78,14 +78,14 @@ const Point = () => {
     }
   };
   const handlePointFetch = useCallback(() => {
-    if (!user) return;
-    callApi(client.get(`/point/${user.id}`)).then(data => {
+    if (!user || !token) return;
+    callApi(client.get(`/point`, makeAuthTokenHeader(token))).then(data => {
       const pointCancelList = data.filter(item => item.cancelAmount !== 0);
       const pointList = data.filter(item => item.cancelAmount === 0);
       setPointList(pointList);
       setPointCancelList(pointCancelList);
     });
-  }, [callApi, user]);
+  }, [callApi, user, token]);
 
   useEffect(handlePointFetch, [handlePointFetch]);
 

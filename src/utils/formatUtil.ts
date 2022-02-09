@@ -86,7 +86,7 @@ export const dateArrayFormat = (date: string | null) => {
     const [YMD, HMS] = date.split("T");
     const [YYYY, MM, DD] = YMD.split("-");
     const [hh, mm, ss] = HMS.split(":");
-    return [`${YYYY}년 ${MM}월 ${DD}일`, ` ${hh}시 ${mm}분 ${ss}초`];
+    return [`${YYYY}년 ${MM}월 ${DD}일`, ` ${hh}시 ${mm}분 ${Number(ss).toFixed(0)}초`];
   }
   return "";
 };

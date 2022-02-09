@@ -1,24 +1,35 @@
-import { useEffect } from "react";
-import { useHistory } from "react-router";
+import { Button } from "@mui/material";
+import { useCallback, useEffect } from "react";
+import { useHistory, useLocation } from "react-router";
 import ChatInfo from "src/components/ChatInfo/ChatInfo";
 import { userReduceSelector } from "src/modules/Slices/user/userSlice";
 import { useTypedSelector } from "src/modules/store";
 import * as Styled from "./styles";
+import * as Types from "./types";
 
 const Chat = () => {
-  const { isLoggedIn, user } = useTypedSelector(userReduceSelector);
+  const { user } = useTypedSelector(userReduceSelector);
   const history = useHistory();
-  useEffect(() => {
-    if (!isLoggedIn) {
-      alert("로그인이 필요한 서비스입니다.");
-      history.replace("/");
-    }
-  }, [history, isLoggedIn]);
+  const { state } = useLocation<Types.LocationState>();
 
-  if (isLoggedIn && user) {
+  const handleGoback = useCallback(() => {
+    history.goBack();
+  }, [history]);
+
+  useEffect(() => {
+    if (!state) {
+      alert("옳바른 경로가 아닙니다.");
+      handleGoback();
+    }
+  }, [history, state, handleGoback]);
+
+  if (user && state) {
     return (
       <Styled.ChatContainer>
-        <ChatInfo user={user} />
+        <ChatInfo user={user} state={state} />
+        <Button fullWidth color="darkgray" sx={{ height: 50 }} variant="contained" onClick={handleGoback}>
+          뒤로가기
+        </Button>
       </Styled.ChatContainer>
     );
   }
