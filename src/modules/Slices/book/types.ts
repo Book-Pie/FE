@@ -1,3 +1,5 @@
+import { UsedBook } from "src/components/LatestSlide/types";
+
 // initialState로 사용할 객체의 data
 export interface BookItemProps {
   author: string;
@@ -158,6 +160,12 @@ export interface GetBookRecommendListAsyncSuccess {
   error: string;
 }
 
+export interface GetRecommendUsedBookListAsyncSuccess {
+  success: boolean;
+  data: UsedBook[];
+  error: string;
+}
+
 // 리듀가 사용할 데이터 타입
 export interface BookReduce {
   content: BookAsyncSuccess;
@@ -172,6 +180,7 @@ export interface BookReduce {
   };
   item: BookItemProps[];
   bookRecommendList: GetBookRecommendListResponse[];
+  usedBookRecommendList: UsedBook[];
   list: {
     pages: BookItemProps[];
     pageCount: number;

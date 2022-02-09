@@ -4,13 +4,15 @@ import http from "api/http";
 import { MyReviewCommentParam, ReviewsParams } from "components/Reviews/ReviewForm/types";
 import {
   commentAsyncSuccess,
-  myCommentAsyncSuccess,
+  MyCommentAsyncSuccess,
   deleteCommentProps,
   CommentId,
   commentReduceProps,
   addCommentProps,
-  editCommentProps,
-  commentLikeSuccess,
+  EditCommentProps,
+  CommentLikeSuccess,
+  BestCommentAsyncSuccess,
+  BestCommentProps,
 } from "./types";
 
 const initialState: commentReduceProps = {
@@ -19,6 +21,7 @@ const initialState: commentReduceProps = {
   myComment: null,
   bestComment: [],
   last: false,
+  averageRating: 0,
   totalPages: 0,
   pageable: {
     sort: {
@@ -44,14 +47,19 @@ const name = "comments";
 // 댓글 리스트
 export const reviewCommentList = createAsyncThunk<commentAsyncSuccess, ReviewsParams>(
   `${name}/commentList`,
-  async ({ bookId, query, id }, { rejectWithValue }) => {
+  async ({ bookId, query, token }, { rejectWithValue }) => {
     try {
-      if (id === undefined) {
+      if (token === null) {
         const response = await http.get(`/book-review/${bookId}?&${query}`);
         return response.data;
       }
-      const response = await http.get(`/book-review/${bookId}?userId=${id}&${query}`);
-      return response.data;
+      if (token) {
+        const response = await http.get(`/book-review/${bookId}?&${query}`, {
+          headers: { "X-AUTH-TOKEN": token },
+        });
+        return response.data;
+      }
+      return false;
     } catch (error: any) {
       console.log(error);
       return rejectWithValue(error.response.data);
@@ -60,11 +68,13 @@ export const reviewCommentList = createAsyncThunk<commentAsyncSuccess, ReviewsPa
 );
 
 // 댓글 작성
-export const addComment = createAsyncThunk<myCommentAsyncSuccess, addCommentProps>(
+export const addComment = createAsyncThunk<MyCommentAsyncSuccess, addCommentProps>(
   `${name}/create`,
-  async (data, { rejectWithValue }) => {
+  async ({ data, token }, { rejectWithValue }) => {
     try {
-      const response = await http.post(`/book-review/`, data);
+      const response = await http.post(`/book-review/`, data, {
+        headers: { "X-AUTH-TOKEN": token },
+      });
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response.data);
@@ -75,9 +85,11 @@ export const addComment = createAsyncThunk<myCommentAsyncSuccess, addCommentProp
 // 댓글 삭제하기
 export const deleteComment = createAsyncThunk(
   `${name}/delete`,
-  async ({ id }: deleteCommentProps, { rejectWithValue }) => {
+  async ({ id, token }: deleteCommentProps, { rejectWithValue }) => {
     try {
-      await http.delete(`/book-review/${id}`);
+      await http.delete(`/book-review/${id}`, {
+        headers: { "X-AUTH-TOKEN": token },
+      });
       return id;
     } catch (error: any) {
       console.error(error);
@@ -87,11 +99,13 @@ export const deleteComment = createAsyncThunk(
 );
 
 // 댓글 수정
-export const editComment = createAsyncThunk<myCommentAsyncSuccess, editCommentProps>(
+export const editComment = createAsyncThunk<MyCommentAsyncSuccess, EditCommentProps>(
   `${name}/edit`,
-  async (data, { rejectWithValue }) => {
+  async ({ data, token }, { rejectWithValue }) => {
     try {
-      const response = await http.put(`/book-review`, data);
+      const response = await http.put(`/book-review`, data, {
+        headers: { "X-AUTH-TOKEN": token },
+      });
       return response.data;
     } catch (error: any) {
       console.error(error);
@@ -101,11 +115,13 @@ export const editComment = createAsyncThunk<myCommentAsyncSuccess, editCommentPr
 );
 
 // 나의 댓글
-export const myReviewComment = createAsyncThunk<myCommentAsyncSuccess, MyReviewCommentParam>(
+export const myReviewComment = createAsyncThunk<MyCommentAsyncSuccess, MyReviewCommentParam>(
   `${name}/myComment`,
-  async ({ bookId, id }, { rejectWithValue }) => {
+  async ({ bookId, token }, { rejectWithValue }) => {
     try {
-      const response = await http.get(`/book-review/my/${bookId}?userId=${id}`);
+      const response = await http.get(`/book-review/my/${bookId}`, {
+        headers: { "X-AUTH-TOKEN": token },
+      });
       return response.data;
     } catch (error: any) {
       console.log(error);
@@ -115,11 +131,31 @@ export const myReviewComment = createAsyncThunk<myCommentAsyncSuccess, MyReviewC
 );
 
 // 댓글 좋아요 추가 및 삭제하기
-export const commentLike = createAsyncThunk<commentLikeSuccess, CommentId>(
+export const commentLike = createAsyncThunk<CommentLikeSuccess, CommentId>(
   `${name}/like`,
-  async (data, { rejectWithValue }) => {
+  async ({ reviewId, token }, { rejectWithValue }) => {
     try {
-      const response = await http.post(`/book-review/like`, data);
+      const response = await http.post(
+        `/book-review/like`,
+        { reviewId },
+        {
+          headers: { "X-AUTH-TOKEN": token },
+        },
+      );
+      return response.data;
+    } catch (error: any) {
+      console.error(error);
+      return rejectWithValue(error.response.data);
+    }
+  },
+);
+
+// 베스트 댓글
+export const reviewBestComment = createAsyncThunk<BestCommentAsyncSuccess, BestCommentProps>(
+  `${name}/bestComment`,
+  async ({ bookId }, { rejectWithValue }) => {
+    try {
+      const response = await http.get(`/book-review/bestReview/${bookId}`);
       return response.data;
     } catch (error: any) {
       console.error(error);
@@ -140,7 +176,8 @@ const commentSlice = createSlice({
       })
       .addCase(reviewCommentList.fulfilled, (state, { payload }) => {
         const { data } = payload;
-        const { content, empty, first, last, myCommentCheck, pageable, totalPages, totalElements } = data;
+        const { content, empty, first, last, myCommentCheck, pageable, totalPages, totalElements, averageRating } =
+          data;
         state.content = content;
         state.totalPages = totalPages;
         state.totalElements = totalElements;
@@ -150,6 +187,7 @@ const commentSlice = createSlice({
         state.empty = empty;
         state.status = "success";
         state.myCommentCheck = myCommentCheck;
+        state.averageRating = averageRating;
       })
       .addCase(reviewCommentList.rejected, state => {
         state.status = "failed";
@@ -163,6 +201,7 @@ const commentSlice = createSlice({
         state.status = "success";
         state.myComment = payload.data;
         state.myCommentCheck = true;
+        state.totalElements += 1;
       })
       .addCase(addComment.rejected, state => {
         state.status = "failed";
@@ -176,6 +215,7 @@ const commentSlice = createSlice({
         state.content = state.content.filter(comment => comment.reviewId !== payload);
         state.myComment = null;
         state.myCommentCheck = false;
+        state.totalElements -= 1;
       })
       .addCase(deleteComment.rejected, state => {
         state.status = "failed";
@@ -217,13 +257,30 @@ const commentSlice = createSlice({
           state.content = state.content.map(v =>
             v.reviewId !== reviewId ? v : { ...v, reviewLikeCount: v.reviewLikeCount + 1 },
           );
+          state.bestComment = state.bestComment.map(v =>
+            v.reviewId !== reviewId ? v : { ...v, reviewLikeCount: v.reviewLikeCount + 1 },
+          );
         } else {
           state.content = state.content.map(v =>
+            v.reviewId !== reviewId ? v : { ...v, reviewLikeCount: v.reviewLikeCount - 1 },
+          );
+          state.bestComment = state.bestComment.map(v =>
             v.reviewId !== reviewId ? v : { ...v, reviewLikeCount: v.reviewLikeCount - 1 },
           );
         }
       })
       .addCase(commentLike.rejected, state => {
+        state.status = "failed";
+      })
+      // 베스트 댓글
+      .addCase(reviewBestComment.pending, state => {
+        state.status = "loading";
+      })
+      .addCase(reviewBestComment.fulfilled, (state, { payload }) => {
+        state.bestComment = payload.data;
+        state.status = "success";
+      })
+      .addCase(reviewBestComment.rejected, state => {
         state.status = "failed";
       });
   },

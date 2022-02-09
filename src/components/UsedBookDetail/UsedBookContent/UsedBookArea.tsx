@@ -90,6 +90,27 @@ const UsedBookArea = ({
     return false;
   };
 
+  const handleOrderClick = () => {
+    if (!isLoggedIn) {
+      if (window.confirm("로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?")) {
+        history.replace("/signIn");
+      }
+      return false;
+    }
+    return history.replace(`/order/${usedBookId}`);
+  };
+
+  const handleChatClick = () => {
+    if (!isLoggedIn) {
+      if (window.confirm("로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?")) {
+        history.replace("/signIn");
+      }
+      return false;
+    }
+    return false;
+    // history.replace(`/order/${usedBookId}`);
+  };
+
   return (
     <UsedBookWrapper>
       <TopInformationArea>
@@ -133,51 +154,43 @@ const UsedBookArea = ({
         <ProductDetailContent dangerouslySetInnerHTML={{ __html: content }} />
       </ProductDetail>
       <TagArea>{tags && tags.map((tag, index) => <TagContent key={index}>#{tag}</TagContent>)}</TagArea>
-      {user?.id !== sellerId ? (
-        <ButtonArea>
-          <UsedBookDetailButton onClick={likeClick}>좋아요</UsedBookDetailButton>
-          {saleState === "TRADING" && <DisabledButton>현재 거래중인 상품입니다.</DisabledButton>}
-          {saleState === "SOLD_OUT" && <DisabledButton>판매완료된 상품입니다.</DisabledButton>}
-          {saleState === "SALE" && (
-            <>
-              <Link
-                to={{
-                  pathname: "/chat",
-                  state: {
-                    sellerId,
-                    usedBookId,
-                  },
-                }}
-              >
-                <UsedBookDetailButton>1:1채팅 </UsedBookDetailButton>
-              </Link>
-              <Link to={`/order/${usedBookId}`}>
-                <BuyButton>구매하기</BuyButton>
-              </Link>
-            </>
-          )}
-        </ButtonArea>
-      ) : (
-        <ButtonArea>
-          {saleState === "SALE" ? (
-            <>
-              <Button variant="outlined" color="mainDarkBrown" sx={{ mt: 1, height: 50, width: 200 }}>
-                <Link to={{ pathname: `/my/sale/insert/${usedBookId}`, state: { saleState } }}>수정</Link>
-              </Button>
-              <Button
-                variant="outlined"
-                onClick={handleUsedBookDeleteOnClick}
-                color="error"
-                sx={{ mt: 1, height: 50, width: 200 }}
-              >
-                삭제
-              </Button>
-            </>
-          ) : (
-            <DisabledButton>현재 거래중인 상품입니다.</DisabledButton>
-          )}
-        </ButtonArea>
-      )}
+
+      <ButtonArea>
+        {user?.id !== sellerId && (
+          <>
+            <UsedBookDetailButton onClick={likeClick}>좋아요</UsedBookDetailButton>
+            {saleState === "TRADING" && <DisabledButton>현재 거래중인 상품입니다.</DisabledButton>}
+            {saleState === "SOLD_OUT" && <DisabledButton>판매완료된 상품입니다.</DisabledButton>}
+            {saleState === "SALE" && (
+              <>
+                <UsedBookDetailButton onClick={handleChatClick}>1: 1채팅 </UsedBookDetailButton>
+                <BuyButton onClick={handleOrderClick}>구매하기</BuyButton>
+              </>
+            )}
+          </>
+        )}
+        {user && user.id === sellerId && (
+          <>
+            {saleState === "TRADING" && <DisabledButton>현재 거래중인 상품입니다.</DisabledButton>}
+            {saleState === "SOLD_OUT" && <DisabledButton>판매완료된 상품입니다.</DisabledButton>}
+            {saleState === "SALE" && (
+              <>
+                <Button variant="outlined" color="mainDarkBrown" sx={{ mt: 1, height: 50, width: 200 }}>
+                  <Link to={{ pathname: `/my/sale/insert/${usedBookId}`, state: { saleState } }}>수정</Link>
+                </Button>
+                <Button
+                  variant="outlined"
+                  onClick={handleUsedBookDeleteOnClick}
+                  color="error"
+                  sx={{ mt: 1, height: 50, width: 200 }}
+                >
+                  삭제
+                </Button>
+              </>
+            )}
+          </>
+        )}
+      </ButtonArea>
     </UsedBookWrapper>
   );
 };

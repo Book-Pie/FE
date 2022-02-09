@@ -1,24 +1,40 @@
 import styled from "styled-components";
 
+export const EmptyWrapper = styled.div`
+  height: 400px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+`;
+
+export const UsedBookLikeImg = styled.img`
+  height: 50%;
+`;
+
 export const UsedBookLikeListWrapper = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 20px;
   margin-top: 2rem;
+  margin-bottom: 150px;
   padding: 1rem 0.5rem;
   border-radius: 5px;
   background-color: ${props => props.theme.colors.mainLightBrown};
   ${props => props.theme.shadow[10]};
   width: 1200px;
+  margin: 1rem 0;
+  padding: 0 1rem;
 `;
 
 export const ContentWrapper = styled.div`
-  flex-direction: column;
-  margin-top: 60px;
+  margin: 1rem 0;
+  padding: 0 1rem;
+  flex: 1;
 `;
 
 export const TitleSpan = styled.span`
-  margin-right: 10px;
+  margin: 0 10px 0 20px;
 `;
 
 export const Title = styled.div`

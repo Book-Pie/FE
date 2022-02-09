@@ -1,5 +1,4 @@
 import StarRating from "components/Rating/StarRating";
-import { bookInfoHeader } from "modules/Slices/bookDetail/types";
 import {
   BookCategory,
   BookDetailHeaderWrapper,
@@ -10,7 +9,25 @@ import {
   SmallBookInfo,
 } from "./style";
 
-const BookDetailHeader = ({ author, cover, title, categoryName, publisher, ReviewRank }: bookInfoHeader) => {
+export interface bookInfoHeaderParam {
+  author: string;
+  cover: string;
+  title: string;
+  categoryName: string;
+  publisher: string;
+  ReviewRank: number;
+  averageRating: number;
+}
+
+const BookDetailHeader = ({
+  author,
+  cover,
+  title,
+  categoryName,
+  publisher,
+  ReviewRank,
+  averageRating,
+}: bookInfoHeaderParam) => {
   return (
     <BookDetailHeaderWrapper>
       <BookDetailTopContent>
@@ -20,7 +37,9 @@ const BookDetailHeader = ({ author, cover, title, categoryName, publisher, Revie
           <BookTitle>{title}</BookTitle>
           <SmallBookInfo>{author}</SmallBookInfo>
           <SmallBookInfo>{publisher}</SmallBookInfo>
-          <StarRating ReviewRank={ReviewRank} />
+          <StarRating ReviewRank={ReviewRank} title="알라딘" />
+          <br />
+          <StarRating ReviewRank={averageRating} title="북파이" />
         </BookInfo>
       </BookDetailTopContent>
     </BookDetailHeaderWrapper>

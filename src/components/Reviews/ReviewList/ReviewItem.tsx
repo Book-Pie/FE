@@ -22,21 +22,24 @@ import {
 } from "./style";
 import { ReviewItemProps } from "./types";
 
-export const ReviewItem: React.FC<ReviewItemProps> = ({ content, myCommentId }) => {
+export const ReviewItem: React.FC<ReviewItemProps> = ({ content }) => {
   const dispatch = useDispatch();
   const history = useHistory();
   const { reviewId, likeCheck, reviewLikeCount, reviewDate, nickName, rating, userId } = content;
   const commentDate = reviewDateFormat(reviewDate);
   const myUserStatus = useTypedSelector(userReduceSelector);
-  const { user, isLoggedIn } = myUserStatus;
+  const { user, isLoggedIn, token } = myUserStatus;
 
   const deleteClick = () => {
-    if (window.confirm("댓글을 정말로 삭제하시겠습니까?") === true) {
-      dispatch(
-        deleteComment({
-          id: reviewId,
-        }),
-      );
+    if (token) {
+      if (window.confirm("댓글을 정말로 삭제하시겠습니까?") === true) {
+        dispatch(
+          deleteComment({
+            id: reviewId,
+            token,
+          }),
+        );
+      }
     }
   };
 
@@ -48,12 +51,14 @@ export const ReviewItem: React.FC<ReviewItemProps> = ({ content, myCommentId }) 
       return false;
     }
     if (user !== null) {
-      dispatch(
-        commentLike({
-          reviewId,
-          userId: myCommentId,
-        }),
-      );
+      if (token) {
+        dispatch(
+          commentLike({
+            reviewId,
+            token,
+          }),
+        );
+      }
     }
     return false;
   };

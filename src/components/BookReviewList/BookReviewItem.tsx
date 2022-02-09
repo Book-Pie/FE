@@ -22,7 +22,7 @@ const BookReviewItem = ({ card }: BookReviewItemParam) => {
           </ImgWrapper>
           <BookReviewTitle>{title}</BookReviewTitle>
           <BookRatingContent>
-            <StarRating ReviewRank={ReviewRank} />
+            <StarRating ReviewRank={ReviewRank} title="알라딘" />
           </BookRatingContent>
         </Link>
       ) : (
@@ -32,7 +32,7 @@ const BookReviewItem = ({ card }: BookReviewItemParam) => {
           </ImgWrapper>
           <BookReviewTitle>{title}</BookReviewTitle>
           <BookRatingContent>
-            <StarRating ReviewRank={ReviewRank} />
+            <StarRating ReviewRank={ReviewRank} title="알라딘" />
           </BookRatingContent>
         </Link>
       )}

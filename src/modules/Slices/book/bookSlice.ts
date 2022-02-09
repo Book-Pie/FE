@@ -2,7 +2,6 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 import { RootState } from "modules/store";
 import http from "api/http";
-import { makeTwoDimensionalArray } from "components/BookReviewList/BookCategory";
 import client, { errorHandler } from "api/client";
 import { paramProps } from "src/components/BookDetail/types";
 
@@ -16,6 +15,7 @@ import {
   GetBookRecommendListAsyncSuccess,
   BestSellerAsync,
   ThunkApi,
+  GetRecommendUsedBookListAsyncSuccess,
 } from "./types";
 
 const name = "bookReduce";
@@ -36,6 +36,7 @@ const initialState: BookReduce = {
   error: null,
   item: [],
   bookRecommendList: [],
+  usedBookRecommendList: [],
   list: {
     pages: [],
     pageCount: 1,
@@ -172,7 +173,21 @@ export const getBookRecommendList = createAsyncThunk<GetBookRecommendListAsyncSu
   },
 );
 
-// Slice
+// 연관 중고도서
+export const getRecommendUsedBookList = createAsyncThunk<
+  GetRecommendUsedBookListAsyncSuccess,
+  GetBookRecommendListParam
+>(`${name}/getRecommendUsedBookList`, async ({ isbn }, { rejectWithValue }) => {
+  try {
+    const { data } = await http.get(`/usedbook/isbn/${isbn}`);
+    return data;
+  } catch (err) {
+    const error = err as AxiosError<GetBookAsyncFail>;
+    if (!error.response) throw err;
+    return rejectWithValue(error.response.data);
+  }
+});
+
 export const bookSlice = createSlice({
   name,
   initialState,
@@ -303,6 +318,7 @@ export const bookSlice = createSlice({
           };
         }
       })
+      // 리뷰 상세페이지
       .addCase(bookDetailAsync.pending, state => {
         state.status = "loading";
       })
@@ -313,6 +329,7 @@ export const bookSlice = createSlice({
       .addCase(bookDetailAsync.rejected, state => {
         state.status = "failed";
       })
+      // 도서관 정보나루 추천목록
       .addCase(getBookRecommendList.pending, state => {
         state.status = "loading";
       })
@@ -321,6 +338,17 @@ export const bookSlice = createSlice({
         state.bookRecommendList = payload.data;
       })
       .addCase(getBookRecommendList.rejected, state => {
+        state.status = "failed";
+      })
+      // 연관 중고도서
+      .addCase(getRecommendUsedBookList.pending, state => {
+        state.status = "loading";
+      })
+      .addCase(getRecommendUsedBookList.fulfilled, (state, { payload }) => {
+        state.status = "success";
+        state.usedBookRecommendList = payload.data;
+      })
+      .addCase(getRecommendUsedBookList.rejected, state => {
         state.status = "failed";
       });
   },

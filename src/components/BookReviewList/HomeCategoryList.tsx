@@ -62,7 +62,7 @@ const HomeCategoryList = ({ list }: HomeCategoryListParam) => {
                           <BestsellerThumbnail src={cover} alt={title} />
                         </ThumbnailWrapper>
                         <ListTitle>{title}</ListTitle>
-                        <StarRating ReviewRank={customerReviewRank / 2} />
+                        <StarRating ReviewRank={customerReviewRank / 2} title="알라딘" />
                       </BestsellerItemWrapper>
                     </Link>
                   </SwiperSlide>

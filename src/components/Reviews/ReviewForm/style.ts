@@ -28,3 +28,7 @@ export const TextWrapper = styled.div`
 export const ButtonArea = styled.div`
   text-align: right;
 `;
+
+export const ReviewsContentWrapper = styled.div`
+  margin-bottom: 100px;
+`;

@@ -4,11 +4,10 @@ import useSignIn from "hooks/useSignIn";
 import { getUsedBookLikeList, usedBookDetailSelector } from "modules/Slices/usedBookDetail/usedBookDetailSlice";
 import { useTypedSelector } from "modules/store";
 import noComments from "assets/image/noComments.png";
-import styled from "styled-components";
 import UsedBookCard from "components/UsedBookList/UsedBookCard";
 import { ReviewListEmptyParagraph, ReviewListEmptyWrapper } from "../Reviews/ReviewList/style";
 import { CountWrapper } from "../UsedBookDetail/style";
-import { ContentWrapper, Title, UsedBookLikeListWrapper, TitleSpan } from "./styles";
+import { ContentWrapper, Title, UsedBookLikeListWrapper, TitleSpan, EmptyWrapper, UsedBookLikeImg } from "./styles";
 
 const UsedBookLikeList = () => {
   const dispatch = useDispatch();
@@ -26,19 +25,6 @@ const UsedBookLikeList = () => {
 
   const { likeList } = useTypedSelector(usedBookDetailSelector);
   const likeCount = likeList.length;
-  const usedBookCards =
-    likeList.length !== 0 ? (
-      likeList.map((card, idx) => (
-        <div key={idx}>
-          <UsedBookCard key={idx} card={card} width={100} />
-        </div>
-      ))
-    ) : (
-      <ReviewListEmptyWrapper>
-        <ReviewListEmptyParagraph>찜목록이 존재하지 않습니다.</ReviewListEmptyParagraph>
-        <img src={noComments} alt="noComments" />
-      </ReviewListEmptyWrapper>
-    );
 
   return (
     <ContentWrapper>
@@ -46,13 +32,26 @@ const UsedBookLikeList = () => {
         <TitleSpan>찜목록</TitleSpan>
         <CountWrapper>{likeCount}</CountWrapper>
       </Title>
-      <UsedBookLikeListWrapper>{usedBookCards}</UsedBookLikeListWrapper>
+      {likeList.length !== 0 && (
+        <UsedBookLikeListWrapper>
+          {likeList.map((card, idx) => (
+            <div key={idx}>
+              <UsedBookCard key={idx} card={card} width={100} />
+            </div>
+          ))}
+        </UsedBookLikeListWrapper>
+      )}
+
+      {likeList.length === 0 && (
+        <ReviewListEmptyWrapper>
+          <EmptyWrapper>
+            <UsedBookLikeImg src={noComments} alt="noComments" />
+            <ReviewListEmptyParagraph>찜목록이 존재하지 않습니다.</ReviewListEmptyParagraph>
+          </EmptyWrapper>
+        </ReviewListEmptyWrapper>
+      )}
     </ContentWrapper>
   );
 };
-
-export const GridEmpty = styled.div`
-  justify-content: center;
-`;
 
 export default UsedBookLikeList;

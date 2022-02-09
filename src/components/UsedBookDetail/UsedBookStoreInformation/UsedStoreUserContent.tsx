@@ -1,4 +1,3 @@
-import { UsedBookDetailResponse } from "modules/Slices/usedBookDetail/types";
 import { CardBoldTitle, CardSmallTitle, UsedStoreUserContentWrapper } from "../style";
 
 export interface UsedStoreUserContentParam {

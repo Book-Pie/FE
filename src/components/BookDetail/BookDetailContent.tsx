@@ -4,7 +4,7 @@ import { Reviews } from "components/Reviews/ReviewForm/Reviews";
 import { Container } from "./style";
 import { bookDetailContentProps } from "./types";
 
-const BookDetailContent = ({ bookIntroText, authorIntroText, bookId }: bookDetailContentProps) => {
+const BookDetailContent = ({ bookIntroText, authorIntroText, bookId, categoryName }: bookDetailContentProps) => {
   return (
     <Container>
       <BasicCard>
@@ -14,7 +14,7 @@ const BookDetailContent = ({ bookIntroText, authorIntroText, bookId }: bookDetai
         <BookDetailPanel title="저자 소개">{authorIntroText}</BookDetailPanel>
       </BasicCard>
       <BookDetailPanelWrapper>
-        <Reviews bookId={bookId} />
+        <Reviews bookId={bookId} categoryName={categoryName} />
       </BookDetailPanelWrapper>
     </Container>
   );

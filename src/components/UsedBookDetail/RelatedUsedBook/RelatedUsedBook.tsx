@@ -58,7 +58,7 @@ const RelatedUsedBook = () => {
   );
 
   const list = relatedUsedBookList.map((item, idx) => {
-    const { id, image, price, state, title, uploadDate } = item;
+    const { id, image, price, title, uploadDate } = item;
     const date = compareDateFormat(String(uploadDate));
     let dayAgo = "일전";
     if (date === 0) {

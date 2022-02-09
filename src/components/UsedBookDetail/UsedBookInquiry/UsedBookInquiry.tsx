@@ -8,6 +8,7 @@ import {
   addUsedBookDetailReply,
   usedBookDetailReplyList,
   usedBookDetailSelector,
+  setReviewInit,
 } from "modules/Slices/usedBookDetail/usedBookDetailSlice";
 import Checkbox from "@mui/material/Checkbox";
 import LockIcon from "@mui/icons-material/Lock";
@@ -44,8 +45,8 @@ const UsedBookInquiry = () => {
     setIsChecked(!isChecked);
   };
 
-  const handleReviewChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setContent(event.target.value);
+  const handleReviewChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setContent(e.target.value);
   };
 
   const handleHasMoreList = useCallback(
@@ -57,17 +58,13 @@ const UsedBookInquiry = () => {
     [dispatch, usedBookId],
   );
 
+  // 다른 페이지 이동
   useEffect(() => {
-    if (Number(id) === usedBookId && totalPages !== 0 && replyList.length !== 0) {
+    setReviewInit();
+    if (Number(id) === usedBookId) {
       handleHasMoreList(0);
     }
   }, [usedBookId]);
-
-  useEffect(() => {
-    if (replyList.length === 0 && totalPages === 0 && Number(id) === usedBookId) {
-      handleHasMoreList(page);
-    }
-  }, [handleHasMoreList, page, replyList]);
 
   useEffect(() => {
     if (getUsedBookReplyPage() === 0) setUsedBookReplyPage(page);
@@ -76,6 +73,7 @@ const UsedBookInquiry = () => {
     };
   });
 
+  // 댓글 페이지 이동
   const handlePaginationOnChange = useCallback(
     (_: React.ChangeEvent<unknown>, value: number) => {
       if (totalPages === 1) return;

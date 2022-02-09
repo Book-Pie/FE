@@ -3,6 +3,10 @@ import { getCommentProps } from "modules/Slices/comment/types";
 export type DateDTO = string;
 export type BookId = number;
 
+export interface BestReviewItemParam {
+  item: getCommentProps;
+}
+
 export interface Review {
   reviewId: number;
   id: number;
@@ -12,7 +16,6 @@ export interface Review {
 
 export interface ReviewListProps {
   commentList: getCommentProps[];
-  myCommentId: number;
   pageCount: number;
   totalCount: number;
   page: number;
@@ -31,7 +34,6 @@ export interface ReviewItemProps {
   key: number;
   content: getCommentProps;
   children?: React.ReactNode;
-  myCommentId: number;
 }
 
 export interface TruncateProps {
@@ -45,6 +47,6 @@ export interface ReviewsWriteProps {
   bookId: string;
   myReviewCheck: boolean;
   myComment?: getCommentProps;
-  myCommentId?: number;
+  categoryName: string;
   checkAuth: () => boolean;
 }

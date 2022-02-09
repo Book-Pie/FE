@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import { addComment, editComment } from "modules/Slices/comment/commentSlice";
@@ -13,27 +13,31 @@ import Textarea from "components/TextArea/Textarea";
 import { ButtonArea, TextareaAutosize, TextWrapper, MyReviwContent } from "./style";
 import { ReviewFormProps } from "./types";
 
-export const ReviewForm: React.FC<ReviewFormProps> = ({ isbn, isMyReview, myComment, userId, checkAuth }) => {
+export const ReviewForm = ({ isbn, isMyReview, myComment, categoryName, checkAuth }: ReviewFormProps) => {
   const { handleSubmit } = useForm({ defaultValues: { something: "anything" } });
   const { reviewDate } = myComment ?? "";
   const commentDate = reviewDateFormat(reviewDate);
   const myUserStatus = useTypedSelector(userReduceSelector);
-  const { isLoggedIn } = myUserStatus ?? false;
+  const { isLoggedIn, token } = myUserStatus ?? false;
+  const category = categoryName.split(">", 2)[1];
 
   let editStatus = false;
   let myRatingDefault = 3;
+  let myContent = "";
 
   if (myComment === null) {
     editStatus = false;
   } else {
     editStatus = true;
     myRatingDefault = myComment.rating;
+    myContent = myComment.content;
   }
 
   const dispatch = useDispatch();
-  const [reviewContent, setContent] = useState(""); // 리뷰 등록
+  const [reviewContent, setContent] = useState(myContent); // 리뷰 등록
   const [ratingValue, setValue] = useState(myRatingDefault); // 별점 추가
   const [editDisabled, editEnabled] = useState(editStatus);
+  const [myReview, setIsMyReview] = useState(isMyReview);
 
   const handleRatingChange = (event: any) => {
     setValue(event.target.value);
@@ -44,27 +48,37 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({ isbn, isMyReview, myComm
   };
 
   const addReview = () => {
-    dispatch(
-      addComment({
-        isbn,
-        userId,
-        content: reviewContent,
-        rating: ratingValue,
-      }),
-    );
-    editEnabled(true);
+    if (token) {
+      dispatch(
+        addComment({
+          data: {
+            isbn,
+            content: reviewContent,
+            rating: ratingValue,
+            category,
+          },
+          token,
+        }),
+      );
+      editEnabled(true);
+    }
   };
 
   const editReview = () => {
-    dispatch(
-      editComment({
-        userId,
-        reviewId: myComment.reviewId,
-        content: reviewContent,
-        rating: ratingValue,
-      }),
-    );
-    editEnabled(true);
+    if (token && myComment) {
+      dispatch(
+        editComment({
+          data: {
+            reviewId: myComment.reviewId,
+            content: reviewContent,
+            rating: ratingValue,
+            category,
+          },
+          token,
+        }),
+      );
+      editEnabled(true);
+    }
   };
 
   const handleEdit = () => {
@@ -80,33 +94,46 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({ isbn, isMyReview, myComm
   };
 
   useEffect(() => {
-    if (isLoggedIn === true && myComment !== null) {
+    if (isLoggedIn === true && myComment) {
       setMyReview(myComment.content);
       setMyRating(String(myComment.rating));
+      const savedReview = getMyReview();
+      const savedRating = getMyRating();
+
+      if (savedReview !== "" && savedReview !== null) {
+        setContent(savedReview);
+        setValue(Number(savedRating));
+        setIsMyReview(true);
+      }
+      editEnabled(true);
+    }
+    if (isLoggedIn === true && myComment === null) {
       const savedReview = getMyReview();
       const savedRating = getMyRating();
       if (savedReview !== "" && savedReview !== null) {
         setContent(savedReview);
         setValue(Number(savedRating));
+        setIsMyReview(true);
+        editEnabled(true);
+      } else {
+        editEnabled(false);
+        setContent("");
+        removeMyReview();
       }
-      editEnabled(true);
-    }
-    if (myComment === null) {
-      editEnabled(false);
-      setContent("");
-      removeMyReview();
     }
   }, [isLoggedIn, myComment, editEnabled]);
 
   useEffect(() => {
-    if (!isMyReview) {
+    if (!isMyReview || isMyReview === undefined) {
       editEnabled(false);
       setContent("");
+      setIsMyReview(false);
       setValue(3);
+      removeMyReview();
     }
   }, [isMyReview, isbn]);
 
-  return isMyReview ? (
+  return myReview ? (
     <form onSubmit={handleSubmit(editReview)}>
       <HoverRating isDisabled={editDisabled} rating={ratingValue} handleChange={handleRatingChange} />
       {editDisabled && (
