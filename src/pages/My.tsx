@@ -19,6 +19,7 @@ const MyReview = lazy(() => import("components/MyReview/MyReview"));
 const Modified = lazy(() => import("components/Modified/Modified"));
 const Withdrawal = lazy(() => import("components/Withdrawal/Withdrawal"));
 const BuyInfo = lazy(() => import("components/BuyInfo/BuyInfo"));
+const ChatList = lazy(() => import("components/ChatList/ChatList"));
 
 const My = () => {
   const { path } = useRouteMatch();
@@ -89,6 +90,7 @@ const My = () => {
         <Suspense fallback={<FallBack />}>
           <Switch>
             <Route path={`${path}/point`} exact component={Point} />
+            <Route path={`${path}/chat`} component={ChatList} />
             <Route path={`${path}/sale`} exact component={SaleList} />
             <Route path={[`${path}/sale/insert/:bookId`, `${path}/sale/insert`]} component={SaleInsert} />
             <Route path={`${path}/sale/:bookId`} component={SaleInfo} />

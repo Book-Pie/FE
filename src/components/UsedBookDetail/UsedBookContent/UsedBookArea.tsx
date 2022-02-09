@@ -107,8 +107,11 @@ const UsedBookArea = ({
       }
       return false;
     }
-    return false;
-    // history.replace(`/order/${usedBookId}`);
+    return history.replace(`/chat`, {
+      sellerId,
+      usedBookId,
+      buyerId: user?.id,
+    });
   };
 
   return (

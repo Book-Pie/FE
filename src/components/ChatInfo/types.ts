@@ -10,10 +10,17 @@ export type ChattingInfo = {
 export type ChattingForm = {
   content: string;
 };
+
+export type State = {
+  usedBookId: string;
+  sellerId: string;
+  buyerId: string;
+};
+
 export type ChatInfoProps = {
   user: UserInfo;
+  state: State;
 };
-export type State = { usedBookId: string; sellerId: string };
 
 export interface Usedbook {
   usedBookId: number;
@@ -35,7 +42,7 @@ export interface Usedbook {
   images: string[];
 }
 
-export type Chatting = {
+export type Historys = {
   bookId: number;
   buyerId: number;
   id: string;
@@ -44,8 +51,16 @@ export type Chatting = {
   topic: string;
 };
 
-export type ChattingReponse = Chatting | string;
+export interface HistorysReponse extends SuccessResponse {
+  data: Historys | null;
+}
 
 export interface UsedBookInfoReponse extends SuccessResponse {
   data: Usedbook;
+}
+
+export interface UsedbookInfoProps {
+  resource: {
+    read: () => UsedBookInfoReponse;
+  };
 }

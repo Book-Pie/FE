@@ -117,9 +117,10 @@ export const ChatInputWrapper = styled.form`
 export const UsedBookInfoWrapper = styled.div`
   padding: 15px 10px;
   display: flex;
+  height: 190px;
 
   img {
-    width: 100px;
+    width: 150px;
     height: 100%;
     max-height: 200px;
   }
@@ -139,11 +140,12 @@ export const UsedBookInfoWrapper = styled.div`
     }
 
     p {
-      font-size: 14px;
+      font-size: 12px;
+      color: ${({ theme }) => theme.colors.info};
     }
     p:nth-child(2n + 1) {
-      font-size: 18px;
-      color: ${({ theme }) => theme.colors.info};
+      font-size: 15px;
+      color: ${({ theme }) => theme.colors.darkGrey};
     }
     p + p {
       margin-top: 10px;

@@ -120,9 +120,16 @@ const MyTop = () => {
                 </Button>
               </div>
               <div>
-                <Link to="point">
+                <Link to="/my/point">
                   <Button color="info" variant="contained">
                     충전 내역 확인
+                  </Button>
+                </Link>
+              </div>
+              <div>
+                <Link to="/my/chat">
+                  <Button color="darkgray" variant="contained">
+                    채팅 내역 확인
                   </Button>
                 </Link>
               </div>

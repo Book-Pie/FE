@@ -29,6 +29,7 @@ const NAVER_OAUTH_URL_PRO =
   "https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=qtbZhYGrYVHhLWesnRyJ&redirect_uri=http://www.react-dev.p-e.kr/oAuth/naver&state=state";
 const BASE_URL_DEV = "http://localhost:3000/api";
 const BASE_URL_PRO = "http://3.34.100.122:8080/api";
+const CHAT_BASE_URL = "http://ec2-3-34-249-63.ap-northeast-2.compute.amazonaws.com:8081";
 
 module.exports = (env, argv) => {
   const { mode } = argv;
@@ -223,6 +224,7 @@ module.exports = (env, argv) => {
       new webpack.DefinePlugin({
         "process.env.KAKAO_OAUTH_URL": JSON.stringify(KAKAO_OAUTH_URL_PRO),
         "process.env.NAVER_OAUTH_URL": JSON.stringify(NAVER_OAUTH_URL_PRO),
+        "process.env.CHAT_BASE_URL": JSON.stringify(CHAT_BASE_URL),
         "process.env.REDUX_DEV_TOOL": JSON.stringify(false),
         "process.env.BASE_URL": JSON.stringify(BASE_URL_PRO),
         "process.env.KAKAO_CLIENT_ID": JSON.stringify(KAKAO_CLIENT_ID),
@@ -244,6 +246,7 @@ module.exports = (env, argv) => {
       new webpack.DefinePlugin({
         "process.env.KAKAO_OAUTH_URL": JSON.stringify(KAKAO_OAUTH_URL_DEV),
         "process.env.NAVER_OAUTH_URL": JSON.stringify(NAVER_OAUTH_URL_DEV),
+        "process.env.CHAT_BASE_URL": JSON.stringify(CHAT_BASE_URL),
         "process.env.REDUX_DEV_TOOL": JSON.stringify(true),
         "process.env.BASE_URL": JSON.stringify(BASE_URL_DEV),
         "process.env.KAKAO_CLIENT_ID": JSON.stringify(KAKAO_CLIENT_ID),

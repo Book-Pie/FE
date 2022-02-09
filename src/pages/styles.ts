@@ -554,9 +554,11 @@ export const SignUpContainer = styled.main`
 `;
 
 export const ChatContainer = styled.main`
-  ${({ theme }) => theme.shadow[0]};
   width: 50%;
   margin: 20px auto;
+  & > div {
+    ${({ theme }) => theme.shadow[0]};
+  }
 
   ${({ theme }) => theme.media.tab} {
     width: 80%;

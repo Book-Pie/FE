@@ -1,8 +1,7 @@
 import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import * as StompJs from "@stomp/stompjs";
 import SockJS from "sockjs-client";
-import { useHistory, useLocation } from "react-router";
-import client, { handleResourceCache } from "src/api/client";
+import client, { errorHandler, handleResourceCache } from "src/api/client";
 import { Button, TextField } from "@mui/material";
 import { UserInfo } from "modules/Slices/user/types";
 import { dateArrayFormat } from "src/utils/formatUtil";
@@ -11,17 +10,19 @@ import { useForm, Controller, RegisterOptions } from "react-hook-form";
 import { FormErrorMessages, hookFormHtmlCheck, makeOption } from "src/utils/hookFormUtil";
 import ErrorMessage from "src/elements/ErrorMessage";
 import { CacheRefType } from "src/api/types";
+import usePopup from "src/hooks/usePopup";
+import Popup from "src/elements/Popup";
 import * as Styled from "./styles";
 import * as Types from "./types";
 import UsedbookInfo from "./UsedbookInfo";
 import Skeletons from "./Skeletons";
 
-const BASE_URL = "http://ec2-3-34-249-63.ap-northeast-2.compute.amazonaws.com:8081";
+const BASE_URL = process.env.CHAT_BASE_URL ?? "";
 const init: Types.ChattingForm = { content: "" };
 const cache: CacheRefType = {};
 
-const ChatInfo = ({ user }: Types.ChatInfoProps) => {
-  const [chattings, setChattings] = useState<Types.Chatting>({
+const ChatInfo = ({ user, state }: Types.ChatInfoProps) => {
+  const [historys, setHistorys] = useState<Types.Historys>({
     bookId: 0,
     buyerId: 0,
     id: "",
@@ -31,11 +32,14 @@ const ChatInfo = ({ user }: Types.ChatInfoProps) => {
   });
   const [connected, setConnected] = useState(false);
   const socket = useRef<StompJs.Client | null>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
-  const { state } = useLocation<Types.State>();
+  const historyRef = useRef<HTMLDivElement>(null);
   const { control, formState, handleSubmit, setValue } = useForm({ defaultValues: init });
   const { errors } = formState;
-  const history = useHistory();
+  const { handlePopupClose, handlePopupMessage, popupState } = usePopup();
+  const { isOpen, message } = popupState;
+  const { buyerId, sellerId, usedBookId } = state;
+  const TOPIC = `${usedBookId}-${sellerId}-${buyerId}`;
+  const url = `${BASE_URL}/kafka/publish?topic=${TOPIC}&bookId=${usedBookId}&sellerId=${sellerId}&buyerId=${buyerId}`;
 
   const contentOptions: RegisterOptions = useMemo(
     () => ({
@@ -49,20 +53,14 @@ const ChatInfo = ({ user }: Types.ChatInfoProps) => {
     [],
   );
 
-  // 토픽은 sellerid + buyerid(userId) + usedbookid
-  const TOPIC = `${state.usedBookId}-${state.sellerId}-${user?.id}`;
-
   const handleOnPublish = useCallback(
     async ({ content }: Types.ChattingForm) => {
       if (socket.current && socket.current.connected && user) {
-        await client.post(
-          `${BASE_URL}/kafka/publish?topic=${TOPIC}&bookId=${state.usedBookId}&sellerId=${state.sellerId}&buyerId=${user?.id}`,
-          { user: JSON.stringify(user), content },
-        );
+        await client.post(url, { user: JSON.stringify(user), content, topic: TOPIC });
         setValue("content", "");
       }
     },
-    [TOPIC, user, state, setValue],
+    [TOPIC, user, url, setValue],
   );
 
   const connect = useCallback(() => {
@@ -77,17 +75,17 @@ const ChatInfo = ({ user }: Types.ChatInfoProps) => {
     socket.current.onConnect = () => {
       if (socket.current) {
         socket.current.subscribe(`/topic/${TOPIC}`, ({ body }) => {
-          const obj = JSON.parse(body) as Types.ChattingInfo;
-          setChattings(prev => {
+          const parseObj = JSON.parse(body) as Types.ChattingInfo;
+          setHistorys(prev => {
             return {
               ...prev,
-              messages: [...prev.messages, obj],
+              messages: [...prev.messages, parseObj],
             };
           });
 
-          if (contentRef.current) {
-            const { scrollHeight } = contentRef.current;
-            contentRef.current.scrollTop = scrollHeight;
+          if (historyRef.current) {
+            const { scrollHeight } = historyRef.current;
+            historyRef.current.scrollTop = scrollHeight;
           }
         });
         setConnected(true);
@@ -96,28 +94,42 @@ const ChatInfo = ({ user }: Types.ChatInfoProps) => {
   }, [TOPIC]);
 
   useEffect(() => {
+    const fetchChatHistory = async () => {
+      try {
+        const { data } = await client.get<Types.HistorysReponse>(`${BASE_URL}/kafka/history?topic=${TOPIC}`);
+        if (data !== null) {
+          setHistorys(prev => ({
+            ...prev,
+            messages: prev.messages.concat(data.messages),
+          }));
+        }
+      } catch (e) {
+        const message = errorHandler(e);
+        handlePopupMessage(false, message);
+      }
+    };
+
+    fetchChatHistory();
+  }, [TOPIC, state, handlePopupMessage]);
+
+  useEffect(() => {
     window.scrollTo(0, 0);
     connect();
     return () => {
       if (socket.current) socket.current.deactivate();
+      Object.keys(cache).forEach(key => delete cache[key]);
     };
   }, [connect]);
 
-  useEffect(() => {
-    client.get<Types.ChattingReponse>(`${BASE_URL}/kafka/history?topic=${TOPIC}`).then(response => {
-      if (typeof response === "string") return;
-
-      setChattings(prev => ({
-        ...prev,
-        messages: [...prev.messages, ...response.messages],
-      }));
-    });
-  }, [TOPIC, state]);
-
-  const usedbook = handleResourceCache(cache, `/usedbook/${state.usedBookId}`, "usedbook", client.get);
+  const usedbook = handleResourceCache(cache, `/usedbook/${usedBookId}`, "usedbook", client.get);
 
   return (
-    <>
+    <div>
+      {isOpen && (
+        <Popup isOpen={isOpen} setIsOpen={handlePopupClose} className="red" autoClose>
+          {message}
+        </Popup>
+      )}
       <Suspense fallback={<Skeletons />}>
         <UsedbookInfo resource={usedbook} />
       </Suspense>
@@ -125,19 +137,20 @@ const ChatInfo = ({ user }: Types.ChatInfoProps) => {
         <CloudIcon color={connected ? "success" : "error"} />
         <span>topic {TOPIC}</span>
       </Styled.ChatTopWrapper>
-      <Styled.ChatContentWrapper ref={contentRef}>
-        {chattings.messages.length ? (
-          chattings.messages.map(({ content, timestamp, user: otherUser }, idx) => {
+      <Styled.ChatContentWrapper ref={historyRef}>
+        {historys.messages.length ? (
+          historys.messages.map(({ content, timestamp, user: otherUser }, idx) => {
             const otherObj = JSON.parse(otherUser) as UserInfo;
             const otherId = otherObj.id;
             const isMy = otherId === user.id;
             return (
               <div key={idx} className={isMy ? "my" : "other"}>
                 <div>
-                  <p>{content}</p>
+                  <span>{content}</span>
                 </div>
                 <div>
                   <span>{dateArrayFormat(timestamp)[0]}</span>
+                  <span>{dateArrayFormat(timestamp)[1]}</span>
                   <span className="nickname">({isMy ? "나" : otherObj.nickName})</span>
                 </div>
               </div>
@@ -156,22 +169,19 @@ const ChatInfo = ({ user }: Types.ChatInfoProps) => {
             <TextField
               {...field}
               variant="outlined"
-              placeholder="입력해주세요."
+              placeholder="채팅을 입력해주세요."
               color="darkgray"
               disabled={!connected}
               type="text"
             />
           )}
         />
-        <Button type="submit" color="secondary" variant="contained">
+        <Button type="submit" color="mainDarkBrown" variant="contained">
           보내기
         </Button>
       </Styled.ChatInputWrapper>
       <ErrorMessage message={errors.content?.message} />
-      <Button fullWidth color="info" variant="contained" onClick={() => history.goBack()}>
-        뒤로가기
-      </Button>
-    </>
+    </div>
   );
 };
 
