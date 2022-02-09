@@ -88,6 +88,7 @@ export interface commentLikeResponse {
 export interface commentData {
   myCommentCheck: boolean;
   last: boolean;
+  averageRating: number;
   totalPages: number;
   pageable: pageableProps;
   content: getCommentProps[];
@@ -98,10 +99,11 @@ export interface commentData {
 
 // 리듀가 사용할 데이터 타입
 export interface commentReduceProps {
-  myCommentCheck: boolean;
+  myCommentCheck: boolean | null;
   myComment: getCommentProps | null;
   bestComment: getCommentProps[];
   last: boolean;
+  averageRating: number;
   totalPages: number;
   pageable: pageableProps;
   content: getCommentProps[];

@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { ReviewList } from "components/Reviews/ReviewList/ReviewList";
-import { ReviewWrite } from "components/Reviews/ReviewWrite";
 import {
   myReviewComment,
   reviewCommentList,
@@ -14,9 +13,10 @@ import { getShopPage, removeShopPage, setShopPage } from "utils/localStorageUtil
 import useSignIn from "hooks/useSignIn";
 import { ReviewsParam } from "./types";
 import { ReviewListEmpty } from "../ReviewList/ReviewListEmpty";
-import { BestCommentListWrapper, BestReviewsListTitle } from "../ReviewList/style";
+import { BestCommentListWrapper, BestReviewsListTitle, Container } from "../ReviewList/style";
 import BestReviewItem from "../ReviewList/BestReviewItem";
 import { ReviewsContentWrapper } from "./style";
+import { ReviewForm } from "./ReviewForm";
 
 export const Reviews = ({ bookId, categoryName }: ReviewsParam) => {
   const { signIn, dispatch } = useSignIn();
@@ -28,14 +28,8 @@ export const Reviews = ({ bookId, categoryName }: ReviewsParam) => {
 
   const handleHasMoreList = useCallback(
     async (page: number) => {
-      if (user) {
-        const { token } = user;
-        const query = queryString.stringify({ page: page - 1 });
-        dispatch(reviewCommentList({ bookId, query, token }));
-      } else {
-        const query = queryString.stringify({ page: page - 1 });
-        dispatch(reviewCommentList({ bookId, query }));
-      }
+      const query = queryString.stringify({ page: page - 1 });
+      dispatch(reviewCommentList({ bookId, query, token }));
     },
     [user, dispatch, bookId],
   );
@@ -53,7 +47,7 @@ export const Reviews = ({ bookId, categoryName }: ReviewsParam) => {
   }, [dispatch, bookId, handleHasMoreList]);
 
   useEffect(() => {
-    if (user) {
+    if (user && token) {
       if (myCommentCheck === true) {
         dispatch(myReviewComment({ bookId, token }));
       }
@@ -78,7 +72,7 @@ export const Reviews = ({ bookId, categoryName }: ReviewsParam) => {
         bookId,
       }),
     );
-  }, []);
+  }, [bookId, dispatch]);
 
   return (
     <ReviewsContentWrapper className="Reviews">
@@ -107,21 +101,23 @@ export const Reviews = ({ bookId, categoryName }: ReviewsParam) => {
       ) : (
         <ReviewListEmpty title="리뷰" />
       )}
-      <ReviewWrite
-        bookId={bookId}
-        myReviewCheck={myCommentCheck}
-        myComment={myComment}
-        categoryName={categoryName}
-        checkAuth={() => {
-          if (isLoggedIn) {
-            return true;
-          }
-          if (window.confirm("로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?")) {
-            history.replace("/signIn");
-          }
-          return false;
-        }}
-      />
+      <Container>
+        <ReviewForm
+          isbn={bookId}
+          isMyReview={myCommentCheck}
+          myComment={myComment}
+          categoryName={categoryName}
+          checkAuth={() => {
+            if (isLoggedIn) {
+              return true;
+            }
+            if (window.confirm("로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?")) {
+              history.replace("/signIn");
+            }
+            return false;
+          }}
+        />
+      </Container>
     </ReviewsContentWrapper>
   );
 };

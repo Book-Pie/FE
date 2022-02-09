@@ -21,6 +21,7 @@ const initialState: commentReduceProps = {
   myComment: null,
   bestComment: [],
   last: false,
+  averageRating: 0,
   totalPages: 0,
   pageable: {
     sort: {
@@ -48,11 +49,11 @@ export const reviewCommentList = createAsyncThunk<commentAsyncSuccess, ReviewsPa
   `${name}/commentList`,
   async ({ bookId, query, token }, { rejectWithValue }) => {
     try {
-      if (token === undefined) {
+      if (token === null) {
         const response = await http.get(`/book-review/${bookId}?&${query}`);
         return response.data;
       }
-      if (token !== undefined) {
+      if (token) {
         const response = await http.get(`/book-review/${bookId}?&${query}`, {
           headers: { "X-AUTH-TOKEN": token },
         });
@@ -175,7 +176,8 @@ const commentSlice = createSlice({
       })
       .addCase(reviewCommentList.fulfilled, (state, { payload }) => {
         const { data } = payload;
-        const { content, empty, first, last, myCommentCheck, pageable, totalPages, totalElements } = data;
+        const { content, empty, first, last, myCommentCheck, pageable, totalPages, totalElements, averageRating } =
+          data;
         state.content = content;
         state.totalPages = totalPages;
         state.totalElements = totalElements;
@@ -185,6 +187,7 @@ const commentSlice = createSlice({
         state.empty = empty;
         state.status = "success";
         state.myCommentCheck = myCommentCheck;
+        state.averageRating = averageRating;
       })
       .addCase(reviewCommentList.rejected, state => {
         state.status = "failed";

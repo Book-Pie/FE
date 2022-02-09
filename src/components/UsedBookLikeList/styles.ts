@@ -1,5 +1,17 @@
 import styled from "styled-components";
 
+export const EmptyWrapper = styled.div`
+  height: 400px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+`;
+
+export const UsedBookLikeImg = styled.img`
+  height: 50%;
+`;
+
 export const UsedBookLikeListWrapper = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);

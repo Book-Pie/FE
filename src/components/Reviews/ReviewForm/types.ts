@@ -20,14 +20,13 @@ export interface ReviewsParam {
 
 export interface ReviewsParams {
   bookId: string;
-  id?: number;
   query: string;
-  token: string;
+  token: string | null;
 }
 
 export interface ReviewFormProps {
   isbn: string;
-  isMyReview: boolean;
+  isMyReview: boolean | null;
   onSubmit?: (reviewContent: string) => void;
   onCancel?: () => void;
   isDisabled?: boolean;

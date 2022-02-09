@@ -2,7 +2,7 @@ import Button from "@mui/material/Button";
 import Rating from "@mui/material/Rating";
 import { Dispatch, useState } from "react";
 import { Link } from "react-router-dom";
-import { SignInReduce } from "modules/Slices/user/types";
+import { UserReduce } from "modules/Slices/user/types";
 import { GetUserReceivedReviewListData } from "modules/Slices/userReview/types";
 import { deleteUserReview } from "modules/Slices/userReview/userReviewSlice";
 import { RatingContent, RatingScore } from "components/BookDetail/style";
@@ -12,7 +12,7 @@ import { ColorContent, ContentItem, ContentWrapper, FlexBox, TitleContentItem } 
 export interface WrittedReviewListProps {
   contents: GetUserReceivedReviewListData[];
   dispatch: Dispatch<any>;
-  signIn: SignInReduce;
+  signIn: UserReduce;
 }
 
 const WrittedReviewList = ({ contents, dispatch, signIn }: WrittedReviewListProps) => {

@@ -2,10 +2,13 @@ import Skeleton from "@mui/material/Skeleton";
 import { useBookDetail } from "hooks/useBookDetail";
 import { useEffect } from "react";
 import { useLocation, useParams } from "react-router";
+import { commentsSelector } from "src/modules/Slices/comment/commentSlice";
+import { useTypedSelector } from "src/modules/store";
 import BookDetailContent from "./BookDetailContent";
 import BookDetailHeader from "./BookDetailHeader";
 import BookRecommendList from "./BookRecommendList";
 import { BookDetailContentWrapper, FlexColum, FlexWrapper } from "./style";
+import UsedBookRecommendList from "./UsedBookRecommendList";
 
 export interface BookDetailParam {
   isbn13: string;
@@ -15,6 +18,7 @@ const BookDetail = () => {
   const { isbn13 } = useParams<BookDetailParam>();
   const { pathname } = useLocation();
   const { bookContent } = useBookDetail({ isbn13 });
+  const { averageRating } = useTypedSelector(commentsSelector);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -40,6 +44,7 @@ const BookDetail = () => {
           cover={cover}
           categoryName={categoryName}
           publisher={publisher}
+          averageRating={averageRating}
         />
         <BookDetailContentWrapper>
           <BookDetailContent
@@ -48,6 +53,7 @@ const BookDetail = () => {
             bookId={isbn13}
             categoryName={categoryName}
           />
+          <UsedBookRecommendList isbn={isbn13} />
           <BookRecommendList isbn={isbn13} />
         </BookDetailContentWrapper>
       </>
