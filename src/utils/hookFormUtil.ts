@@ -43,8 +43,8 @@ export const htmlTagPatternCheck = (value: string) => /(<([^>]+)>)/g.test(value)
 /**
  * @param value isbn 10자리, 13자리
  * example Matches
- * 89-5674-189-1
- * 979-11-6224-448-7
+ * 8956741891
+ * 9791162244487
  * @returns boolean
  */
 export const isbnPatternCheck = (value: string) =>
@@ -106,16 +106,16 @@ export const hookFormHtmlCheck: HookFormCheckType = (value, errorMessage) => {
 /**
  * @param value isbn 10자리, 13자리
  * example Matches
- * 89-5674-189-1
- * 979-11-6224-448-7
+ * 8956741891
+ * 9791162244487
  * @returns boolean | string
  */
 export const hookFormIsbnCheck: HookFormCheckType = (value, errorMessage) => {
   // ISBN형식이 맞는지 체크 후
   // 유효한 ISBN인지 확인을 한다.
-  if (isbnPatternCheck(value) === false) {
-    return errorMessage;
-  }
+  // if (isbnPatternCheck(value) === false) {
+  //   return errorMessage;
+  // }
 
   const chars = value.replace(/[^0-9X]/g, "").split("");
   const last = chars.pop();
@@ -145,7 +145,7 @@ export const hookFormIsbnCheck: HookFormCheckType = (value, errorMessage) => {
   }
 
   if (String(checksum) !== last) {
-    return "ISBN 검증 번호가 잘못 되었습니다.";
+    return errorMessage;
   }
 
   return true;
