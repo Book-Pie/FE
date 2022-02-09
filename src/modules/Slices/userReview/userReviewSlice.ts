@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import http from "api/http";
-import { ReceivedReviewList } from "components/UserReview/types";
 import { RootState } from "modules/store";
 import {
   AddUserReviewAsyncSuccess,
@@ -8,21 +7,24 @@ import {
   DeleteUserReviewAsyncSuccess,
   DeleteUserReviewParam,
   EditUserReviewAsyncSuccess,
-  GetUserReceivedReviewListData,
+  GetChartAsyncSuccess,
   GetUserReviewListAsyncSuccess,
   getUserReviewListParam,
+  userReviewInfo,
 } from "./types";
 
-const initialState = {
-  userReviewList: [] as GetUserReceivedReviewListData[],
-  receivedReviewList: [] as GetUserReceivedReviewListData[],
+const initialState: userReviewInfo = {
+  userReviewList: [],
+  receivedReviewList: [],
+  myPageChart: [],
   list: {
     page: 1,
     pageCount: 0,
     pages: [],
     isEmpty: false,
-  } as ReceivedReviewList,
+  },
   status: "loading",
+  error: null,
 };
 const name = "userReview";
 
@@ -96,6 +98,22 @@ export const deleteUserReview = createAsyncThunk<DeleteUserReviewAsyncSuccess, D
   async ({ userReviewId, token }, { rejectWithValue }) => {
     try {
       const response = await http.delete(`/userreview/${userReviewId}`, {
+        headers: { "X-AUTH-TOKEN": token },
+      });
+      return response.data;
+    } catch (error: any) {
+      console.error(error);
+      return rejectWithValue(error.response.data);
+    }
+  },
+);
+
+// 마이페이지 - 차트
+export const getMyPageChart = createAsyncThunk<GetChartAsyncSuccess, string>(
+  `${name}/getChart`,
+  async (token, { rejectWithValue }) => {
+    try {
+      const response = await http.get(`/book-review/myCategory`, {
         headers: { "X-AUTH-TOKEN": token },
       });
       return response.data;
@@ -187,6 +205,17 @@ const userReviewSlice = createSlice({
       .addCase(deleteUserReview.rejected, state => {
         state.status = "failed";
         alert("리뷰 삭제에 실패하였습니다. 다시 한번 시도해주세요.");
+      })
+      // 마이페이지 - 차트
+      .addCase(getMyPageChart.pending, state => {
+        state.status = "loading";
+      })
+      .addCase(getMyPageChart.fulfilled, (state, { payload }) => {
+        state.status = "success";
+        state.myPageChart = payload.data;
+      })
+      .addCase(getMyPageChart.rejected, state => {
+        state.status = "failed";
       });
   },
 });

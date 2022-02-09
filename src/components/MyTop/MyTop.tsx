@@ -1,6 +1,6 @@
 import noProfileImg from "assets/image/noProfile.jpg";
 import Button from "@mui/material/Button";
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
 import { fetchUserInfoAsync, fetchNickNameUpdateAsync, userReduceSelector } from "modules/Slices/user/userSlice";
 import { useForm, Controller, RegisterOptions } from "react-hook-form";
 import { hookFormSpecialChractersCheck, makeOption, FormErrorMessages } from "utils/hookFormUtil";
@@ -11,10 +11,12 @@ import { dateArrayFormat, make1000UnitsCommaFormet } from "utils/formatUtil";
 import { useAppDispatch, useTypedSelector } from "modules/store";
 import { Link } from "react-router-dom";
 import usePopup from "hooks/usePopup";
+import { getMyPageChart, userReviewSelector } from "src/modules/Slices/userReview/userReviewSlice";
 import * as Styled from "./style";
 import * as Types from "./types";
 import PointInfo from "./PointInfo";
 import Skeletons from "./Skeletons";
+import MyChart from "./MyChart";
 
 const MyTop = () => {
   const [isNickNameUpdateOpne, setIsNickNameUpdateOpen] = useState<boolean>(false);
@@ -28,6 +30,7 @@ const MyTop = () => {
   const dispatch = useAppDispatch();
   const { errors } = formState;
   const { user, token } = useTypedSelector(userReduceSelector);
+  const { myPageChart } = useTypedSelector(userReviewSelector);
 
   const nickNameOptions = useMemo<RegisterOptions>(
     () => ({
@@ -70,6 +73,12 @@ const MyTop = () => {
     },
     [token, dispatch, handlePopupMessage],
   );
+
+  useEffect(() => {
+    if (token) {
+      dispatch(getMyPageChart(token));
+    }
+  }, []);
 
   return (
     <>
@@ -138,7 +147,10 @@ const MyTop = () => {
         ) : (
           <Skeletons />
         )}
-        <div>차트</div>
+        <Styled.MyChartWrapper>
+          <Styled.TitleSpan>선호 장르</Styled.TitleSpan>
+          <MyChart data={myPageChart} />
+        </Styled.MyChartWrapper>
       </Styled.MyTopWrapper>
     </>
   );
