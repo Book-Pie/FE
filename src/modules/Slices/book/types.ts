@@ -1,5 +1,22 @@
 import { UsedBook } from "src/components/LatestSlide/types";
 
+export interface SubInfoResponse {
+  subTitle: string;
+  originalTitle: string;
+  itemPage: number;
+  authors: [
+    {
+      authorTypeDesc: string;
+      authorInfoLink: string;
+      authorName: string;
+      authorType: string;
+      authorInfo: string;
+      authorId: number;
+      authorPhoto: string;
+    },
+  ];
+}
+
 // initialState로 사용할 객체의 data
 export interface BookItemProps {
   author: string;
@@ -14,7 +31,7 @@ export interface BookItemProps {
   customerReviewRank: number;
   cover: string;
   itemId: number;
-  subInfo: any;
+  subInfo: SubInfoResponse;
   isbn13: string;
   stockStatus: string;
   publisher: string;
@@ -132,6 +149,7 @@ export interface bookInfo {
   adult: boolean;
   fixedPrice: boolean;
   customerReviewRank: number;
+  subInfo: SubInfoResponse;
 }
 
 export interface bookDisplayData {

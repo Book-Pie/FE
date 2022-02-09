@@ -68,6 +68,19 @@ export const CardTitle = styled.h2`
   font-weight: 700;
 `;
 
+export const BookDetailTitle = styled.h2`
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 10px;
+`;
+
+export const AuthorTitle = styled.h2`
+  font-size: 18px;
+  font-weight: 700;
+  margin-right: 20px;
+  margin-bottom: 10px;
+`;
+
 export const ExpanderArea = styled.div`
   text-align: right;
 `;
@@ -83,8 +96,6 @@ export const A = styled.a`
 `;
 
 export const SideBar = styled.div`
-  // position: fixed;
-  // left: 30px;
   width: 100%;
   height: 200px;
 `;
@@ -116,4 +127,21 @@ export const Wrapper = styled.div`
 
 export const BookDetailContentWrapper = styled.div`
   margin-bottom: 100px;
+`;
+
+export const Flexbox = styled.div`
+  display: flex;
+`;
+
+export const PhotoImg = styled.img`
+  border: 4px solid white;
+`;
+
+export const ImgWrapper = styled.div`
+  border: 1px solid none;
+  background-color: #f7f6f1;
+  padding: 15px;
+  text-align: center;
+  margin-right: 20px;
+  height: 200px;
 `;

@@ -25,8 +25,17 @@ const BookDetail = () => {
   }, [pathname]);
 
   if (bookContent.length !== 0) {
-    const { author, categoryName, cover, title, fullDescription, fullDescription2, publisher, customerReviewRank } =
-      bookContent[0];
+    const {
+      author,
+      categoryName,
+      cover,
+      title,
+      fullDescription,
+      fullDescription2,
+      publisher,
+      customerReviewRank,
+      subInfo,
+    } = bookContent[0];
 
     let ReviewRank = 0;
     if (customerReviewRank > 0) {
@@ -34,6 +43,7 @@ const BookDetail = () => {
     } else {
       ReviewRank = 0;
     }
+    const { authorInfo, authorName, authorPhoto } = subInfo.authors[0];
 
     return (
       <>
@@ -52,6 +62,9 @@ const BookDetail = () => {
             authorIntroText={fullDescription2}
             bookId={isbn13}
             categoryName={categoryName}
+            authorInfo={authorInfo}
+            authorName={authorName}
+            authorPhoto={authorPhoto}
           />
           <UsedBookRecommendList isbn={isbn13} />
           <BookRecommendList isbn={isbn13} />
