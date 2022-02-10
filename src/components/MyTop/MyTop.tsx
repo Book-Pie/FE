@@ -75,8 +75,9 @@ const MyTop = () => {
   );
 
   useEffect(() => {
-    if (token) {
-      dispatch(getMyPageChart(token));
+    if (user) {
+      const { id } = user;
+      dispatch(getMyPageChart(String(id)));
     }
   }, []);
 

@@ -111,11 +111,9 @@ export const deleteUserReview = createAsyncThunk<DeleteUserReviewAsyncSuccess, D
 // 마이페이지 - 차트
 export const getMyPageChart = createAsyncThunk<GetChartAsyncSuccess, string>(
   `${name}/getChart`,
-  async (token, { rejectWithValue }) => {
+  async (id, { rejectWithValue }) => {
     try {
-      const response = await http.get(`/book-review/myCategory`, {
-        headers: { "X-AUTH-TOKEN": token },
-      });
+      const response = await http.get(`/book-review/myCategory/${id}`);
       return response.data;
     } catch (error: any) {
       console.error(error);
