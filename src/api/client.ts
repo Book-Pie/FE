@@ -12,13 +12,13 @@ const RESPONSE_STATUS_ENUM: { [key: number]: string } = {
 
 const baseURL = process.env.BASE_URL;
 
-export const client = axios.create({
+export const http = axios.create({
   baseURL,
   headers: { "Content-Type": "application/json" },
   timeout: 10000,
 });
 
-client.interceptors.response.use(
+http.interceptors.response.use(
   response => response,
   (error: AxiosError<Types.ErrorResponse>) => {
     // response가 없는 경우는 타임아웃 발생했을 때 이다.
@@ -76,7 +76,7 @@ export const makeFormDataHeader = (token: string): AxiosRequestConfig => ({
 */
 const get: Types.HTTPFunctionGetorDelete = async (url, config) => {
   try {
-    const res = await client.get(url, config);
+    const res = await http.get(url, config);
     return res.data;
   } catch (e) {
     throw new Error(errorHandler(e));
@@ -84,7 +84,7 @@ const get: Types.HTTPFunctionGetorDelete = async (url, config) => {
 };
 const Delete: Types.HTTPFunctionGetorDelete = async (url, config) => {
   try {
-    const res = await client.delete(url, config);
+    const res = await http.delete(url, config);
     return res.data;
   } catch (e) {
     throw new Error(errorHandler(e));
@@ -93,7 +93,7 @@ const Delete: Types.HTTPFunctionGetorDelete = async (url, config) => {
 
 const post: Types.HTTPFunctionPostorPut = async (url, body, config) => {
   try {
-    const res = await client.post(url, body, config);
+    const res = await http.post(url, body, config);
     return res.data;
   } catch (e) {
     throw new Error(errorHandler(e));
@@ -102,7 +102,7 @@ const post: Types.HTTPFunctionPostorPut = async (url, body, config) => {
 
 const put: Types.HTTPFunctionPostorPut = async (url, body, config) => {
   try {
-    const res = await client.put(url, body, config);
+    const res = await http.put(url, body, config);
     return res.data;
   } catch (e) {
     throw new Error(errorHandler(e));
