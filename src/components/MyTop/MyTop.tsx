@@ -147,10 +147,10 @@ const MyTop = () => {
         ) : (
           <Skeletons />
         )}
-        <Styled.MyChartWrapper>
+        {/* <Styled.MyChartWrapper>
           <Styled.TitleSpan>선호 장르</Styled.TitleSpan>
           <MyChart data={myPageChart} />
-        </Styled.MyChartWrapper>
+        </Styled.MyChartWrapper> */}
       </Styled.MyTopWrapper>
     </>
   );
