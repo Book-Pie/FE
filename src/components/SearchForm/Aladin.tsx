@@ -23,6 +23,10 @@ const Aladin = () => {
   const loading = status === "loading";
   const observerRef = useRef<IntersectionObserver>();
 
+  const handleSearchTop = () => {
+    window.scrollTo(0, 0);
+  };
+
   const makeQuery = useCallback(
     (query: queryString.ParsedQuery<string>, page: number) =>
       queryString.stringify({
@@ -94,7 +98,7 @@ const Aladin = () => {
     <Styled.SearchWrapper>
       <Loading isLoading={loading} />
       <Typography variant="h4" mt={2} fontWeight="bold">
-        알라딘 검색 결과
+        리뷰 검색결과
         {pageCount > 1 && (
           <>
             (총<span>{pageCount * 8}개</span>)
@@ -116,13 +120,8 @@ const Aladin = () => {
         <Grid item xs={12} ref={handleObserver} />
       </Grid>
       <Styled.SearchTopButtonWrapper isVisible={visible}>
-        <button
-          type="button"
-          onClick={() => {
-            window.scrollTo(0, 0);
-          }}
-        >
-          <ArrowUpwardIcon sx={{ color: "white" }} />
+        <button type="button" onClick={handleSearchTop}>
+          <ArrowUpwardIcon />
         </button>
       </Styled.SearchTopButtonWrapper>
     </Styled.SearchWrapper>

@@ -9,41 +9,32 @@ export interface OrderForm {
   mainAddress: string;
   postalCode: string;
 }
+
+export type AddressType = {
+  postalCode: string;
+  mainAddress: string;
+  detailAddress: string;
+};
+
+export type SellerBuyerType = {
+  userId: number;
+  nickName: string;
+  name: string;
+  address: AddressType | null;
+  phone: string | null;
+};
+
 export interface OrderPayload {
   usedBookId: number;
-  address: {
-    postalCode: string;
-    mainAddress: string;
-    detailAddress: string;
-  };
+  address: AddressType;
   deliveryRequest: string;
 }
 
 export interface OrderResult {
   orderId: number;
   orderDate: string;
-  buyer: {
-    userId: number;
-    nickName: string;
-    name: string;
-    address: {
-      postalCode: string;
-      mainAddress: string;
-      detailAddress: string;
-    } | null;
-    phone: string;
-  };
-  seller: {
-    userId: number;
-    nickName: string;
-    name: string;
-    address: {
-      postalCode: string;
-      mainAddress: string;
-      detailAddress: string;
-    } | null;
-    phone: string;
-  };
+  buyer: SellerBuyerType;
+  seller: SellerBuyerType;
   book: {
     bookId: number;
     title: string;

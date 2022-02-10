@@ -70,7 +70,7 @@ const BuyInfo = () => {
                 </div>
                 <div>
                   <p>판매자 연락처</p>
-                  <p>{hyphenFormat(seller.phone)}</p>
+                  <p>{hyphenFormat(seller.phone ?? "")}</p>
                 </div>
                 <div>
                   <p>상품 명</p>
@@ -91,7 +91,7 @@ const BuyInfo = () => {
             </div>
             <div>
               <span>연락처</span>
-              <p>{hyphenFormat(buyer.phone)}</p>
+              <p>{hyphenFormat(buyer.phone ?? "")}</p>
             </div>
             <div>
               <span>받는주소</span>
