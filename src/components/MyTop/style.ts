@@ -225,3 +225,21 @@ export const TitleSpan = styled.span`
   font-weight: 600;
   color: #787878;
 `;
+
+export const EmptyChart = styled.div`
+  display: flex;
+  height: 300px;
+  align-items: center;
+  flex-direction: row;
+  justify-content: center;
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 14px;
+
+  div {
+    flex-direction: column;
+  }
+
+  p {
+    margin-bottom: 5px;
+  }
+`;
