@@ -12,7 +12,7 @@ const RESPONSE_STATUS_ENUM: { [key: number]: string } = {
 
 const baseURL = process.env.BASE_URL;
 
-const client = axios.create({
+export const client = axios.create({
   baseURL,
   headers: { "Content-Type": "application/json" },
   timeout: 10000,
@@ -117,7 +117,7 @@ export default {
 };
 
 export const createResource = <T>(promise: Promise<T>) => {
-  let status: Types.SucpenceType = "pending";
+  let status: Types.SuspenceType = "pending";
   let result: T;
 
   const suspender = promise

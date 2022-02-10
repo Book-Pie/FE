@@ -23,11 +23,9 @@ const PrivateRoute = ({ component: Component, redirectPath, ...rest }: PrivateRo
         }
 
         if (path.match("/signIn") || path.match("/signUp")) {
-          console.log(2);
           if (!isLoggedIn) return <Component {...props} />;
         }
         if (path.match("/oAuth/:name")) {
-          console.log(3);
           if (!isLoggedIn) return <Component {...props} />;
         }
 

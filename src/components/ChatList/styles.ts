@@ -63,7 +63,7 @@ export const ChatListCard = styled.div`
     }
   }
   .ChatListCard__bookName {
-    font-size: 18px;
+    font-size: 17px;
     font-weight: 500;
     display: table-cell;
     max-width: 375px;
