@@ -48,7 +48,7 @@ const OrderForm = ({ usedBook }: Types.OrderFormProps) => {
   const detailAddressOptions: RegisterOptions = {
     required: makeOption<boolean>(true, FormErrorMessages.REQUIRED),
     maxLength: makeOption<number>(35, FormErrorMessages.MAX_LENGTH),
-    minLength: makeOption<number>(5, FormErrorMessages.MIN_LENGTH),
+    minLength: makeOption<number>(1, FormErrorMessages.MIN_LENGTH),
   };
 
   const handleReset = useCallback(() => reset(), [reset]);

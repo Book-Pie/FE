@@ -14,7 +14,7 @@ const SearchUsedBook = () => {
   const dispatch = useAppDispatch();
   const { pageCount, pages, status } = useTypedSelector(searchUsedBookSelector);
   const loading = status === "loading";
-  const pageArray = loading ? range(0, 8) : pages;
+  const pageArray = loading ? range(0, 6) : pages;
 
   useEffect(() => {
     dispatch(searchUsedBooksAsync(search));
@@ -24,11 +24,7 @@ const SearchUsedBook = () => {
     <Styled.SearchWrapper>
       <Typography variant="h5" mt={2} fontWeight="bold">
         중고도서 검색 결과
-        {pageCount > 1 && (
-          <>
-            (총<span>{pageCount * 8}개</span>)
-          </>
-        )}
+        {pageCount > 1 && <span>{`(총${pageCount * 8}개)`}</span>}
       </Typography>
       <Styled.SearchAddMore>{pageCount > 1 && <Link to={`/usedBook${search}`}>더보기</Link>}</Styled.SearchAddMore>
       <Grid container spacing={2}>
