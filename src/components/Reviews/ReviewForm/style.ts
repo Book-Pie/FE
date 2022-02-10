@@ -20,7 +20,7 @@ export const MyReviwContent = styled.p<{ margin?: string }>`
 export const TextWrapper = styled.div`
   background: #f2f4f5;
   border-radius: 3px;
-  padding: 20px;
+  padding: 30px;
   position: relative;
   margin-bottom: 10px;
 `;

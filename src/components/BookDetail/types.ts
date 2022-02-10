@@ -14,6 +14,8 @@ export interface BookDetailPanelProps {
   isMobile?: boolean;
   useTruncate?: boolean;
   useSkeleton?: boolean;
+  authorName?: string;
+  authorPhoto?: string;
 }
 
 export interface TextTruncateProps {
@@ -57,4 +59,7 @@ export interface bookDetailContentProps {
   authorIntroText: string;
   categoryName: string;
   bookId: string;
+  authorInfo: string;
+  authorName: string;
+  authorPhoto: string;
 }

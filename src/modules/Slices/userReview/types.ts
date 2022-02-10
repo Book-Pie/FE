@@ -1,5 +1,7 @@
 import { addUserReviewSubmitParam } from "components/BuyList/types";
+import { ReceivedReviewList } from "src/components/UserReview/types";
 import { AppDispatch } from "src/modules/store";
+import { ErrorHandling } from "../comment/types";
 import { PagesResponse } from "../usedBookDetail/types";
 
 export interface GetRelatedUsedBookListParam {
@@ -168,4 +170,25 @@ export interface AddUsedBookDetailSubReplyAsyncSuccess {
     secret: boolean;
   };
   error: string;
+}
+
+export interface GetChartResponse {
+  id: string;
+  label: string;
+  value: number;
+}
+
+export interface GetChartAsyncSuccess {
+  success: boolean;
+  data: GetChartResponse[];
+  error: string;
+}
+
+export interface userReviewInfo {
+  userReviewList: GetUserReceivedReviewListData[];
+  receivedReviewList: GetUserReceivedReviewListData[];
+  myPageChart: GetChartResponse[];
+  list: ReceivedReviewList;
+  status: "loading" | "success" | "failed";
+  error: null | ErrorHandling;
 }

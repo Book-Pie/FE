@@ -213,3 +213,15 @@ export const MyTopUserInfo = styled.div`
     }
   } ;
 `;
+
+export const MyChartWrapper = styled.div`
+  width: 300px;
+  height: 300px;
+`;
+
+export const TitleSpan = styled.span`
+  margin: 0 10px 0 20px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #787878;
+`;

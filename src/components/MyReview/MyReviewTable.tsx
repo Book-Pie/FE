@@ -50,7 +50,7 @@ const MyReviewTable = ({ contents }: Types.MyReviewTableProps) => {
           </Grid>
           <Grid item xs={12} sm={10} md={5}>
             <Styled.MyReviewCell className="content">
-              <Link to={`/book/${isbn}`}>{content}</Link>
+              <Link to={`/book/category/${isbn}`}>{content}</Link>
             </Styled.MyReviewCell>
           </Grid>
           <Grid item xs={12} sm={6} md={2.5}>
