@@ -55,7 +55,10 @@ export const ContentText = styled.div`
 export const ButtonArea = styled.div`
   align-content: center;
   margin: 50px auto;
-  // display: flex;
+`;
+
+export const ModalButtonArea = styled(ButtonArea)`
+  display: flex;
 `;
 
 export const ModalContent = styled.div`

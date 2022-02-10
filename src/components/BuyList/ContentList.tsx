@@ -54,65 +54,69 @@ const ContentList = ({ pages, select, titleFilter, open, setOpen }: IContent) =>
       }
       return alert("재로그인 후 다시 시도하세요.");
     }
+    e.preventDefault();
     return false;
   };
 
   return (
     <div>
       {contents.length ? (
-        contents.map((item, idx) => (
-          <ContentWrapper key={idx}>
-            <BuyContent>
-              <Link to={`/usedBook/${item.bookId}`}>
-                {item.image.length !== 0 && (
-                  <ImgContent src={`${process.env.BASE_URL}/image/${item.image}`} alt="usedBookImg" />
-                )}
-              </Link>
-            </BuyContent>
-            <BuyContent>
-              <ContentText>
-                {item.state === "SALE" && "거래취소"}
-                {item.state === "TRADING" && "거래중"}
-                {item.state === "SOLD_OUT" && "거래완료"}
-              </ContentText>
-            </BuyContent>
-            <BuyTitleContent>
-              <ContentText>{item.title}</ContentText>
-            </BuyTitleContent>
-            <BuyContent>
-              <ContentText>{item.price}</ContentText>
-            </BuyContent>
-            <BuyContent>
-              <ContentText>{item.orderDate.split("T", 1)}</ContentText>
-            </BuyContent>
-            <BuyContent>
-              <ButtonArea>
-                {item.state === "TRADING" ? (
-                  <form onSubmit={buyConfirmSubmit}>
-                    <Button variant="outlined" type="submit">
-                      구매확정
-                      <input type="hidden" value={item.orderId} />
-                    </Button>
-                  </form>
-                ) : item.state === "SOLD_OUT" ? (
-                  item.reviewId ? (
-                    <Button disabled>리뷰작성완료</Button>
-                  ) : (
-                    <Button variant="contained" onClick={() => expandModal(item)} type="button">
-                      리뷰작성
-                    </Button>
-                  )
-                ) : null}
-                <Link to={`buy/${item.orderId}`}>
-                  <Button variant="contained" color="inherit">
-                    구매상세
-                  </Button>
+        contents.map((item, idx) => {
+          const { image, orderDate, orderId, price, reviewId, state, title, bookId } = item;
+          return (
+            <ContentWrapper key={idx}>
+              <BuyContent>
+                <Link to={`/usedBook/${bookId}`}>
+                  {image.length !== 0 && (
+                    <ImgContent src={`${process.env.BASE_URL}/image/${image}`} alt="usedBookImg" />
+                  )}
                 </Link>
-              </ButtonArea>
-            </BuyContent>
-            {open ? <Modal open={open} handleClose={handleClose} item={selectedItem} /> : null}
-          </ContentWrapper>
-        ))
+              </BuyContent>
+              <BuyContent>
+                <ContentText>
+                  {state === "SALE" && "거래취소"}
+                  {state === "TRADING" && "거래중"}
+                  {state === "SOLD_OUT" && "거래완료"}
+                </ContentText>
+              </BuyContent>
+              <BuyTitleContent>
+                <ContentText>{title}</ContentText>
+              </BuyTitleContent>
+              <BuyContent>
+                <ContentText>{price}</ContentText>
+              </BuyContent>
+              <BuyContent>
+                <ContentText>{orderDate.split("T", 1)}</ContentText>
+              </BuyContent>
+              <BuyContent>
+                <ButtonArea>
+                  {state === "TRADING" ? (
+                    <form onSubmit={buyConfirmSubmit}>
+                      <Button variant="outlined" type="submit">
+                        구매확정
+                        <input type="hidden" value={orderId} />
+                      </Button>
+                    </form>
+                  ) : state === "SOLD_OUT" ? (
+                    reviewId ? (
+                      <Button disabled>리뷰작성완료</Button>
+                    ) : (
+                      <Button variant="contained" onClick={() => expandModal(item)} type="button">
+                        리뷰작성
+                      </Button>
+                    )
+                  ) : null}
+                  <Link to={`buy/${item.orderId}`}>
+                    <Button variant="contained" color="inherit">
+                      구매상세
+                    </Button>
+                  </Link>
+                </ButtonArea>
+              </BuyContent>
+              {open ? <Modal open={open} handleClose={handleClose} item={selectedItem} /> : null}
+            </ContentWrapper>
+          );
+        })
       ) : (
         <Empty>
           <p>조건에 맞는 내용이 없습니다.</p>
