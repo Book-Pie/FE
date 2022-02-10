@@ -27,4 +27,4 @@ export interface CacheRefType {
 
 export type HTTPFunctionGetorDelete = <T>(url: string, config?: AxiosRequestConfig) => Promise<T>;
 export type HTTPFunctionPostorPut = <P, R = void>(url: string, body?: P, config?: AxiosRequestConfig) => Promise<R>;
-export type SucpenceType = "success" | "pending" | "error";
+export type SuspenceType = "success" | "pending" | "error";
