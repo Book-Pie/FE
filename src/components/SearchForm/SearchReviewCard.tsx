@@ -38,7 +38,7 @@ const SearchReviewCard = ({ page }: Types.SearchReviewCardProp) => {
   }
 
   return (
-    <Grid item xs={6} sm={6} md={3}>
+    <Grid item xs={6} sm={4} md={2}>
       <Styled.SearchCard>{content}</Styled.SearchCard>
     </Grid>
   );

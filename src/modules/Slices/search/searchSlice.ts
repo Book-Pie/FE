@@ -10,7 +10,7 @@ export const searchUsedBooksAsync = createAsyncThunk<Types.SearchUsedBooksAsyncS
   `${name}/searchUsedBooksAsync`,
   (query, { rejectWithValue }) => {
     return client
-      .get<Types.SearchUsedBooksAsyncReponse>(`/usedbook${query}&limit=8`)
+      .get<Types.SearchUsedBooksAsyncReponse>(`/usedbook${query}&limit=6`)
       .then(({ data }) => data)
       .catch(e => {
         const message = errorHandler(e);
@@ -25,7 +25,7 @@ export const searchAladinBooksAsync = createAsyncThunk<
   Types.ThunkApi
 >(`${name}/searchAladinBooksAsync`, async ({ query, isReload }, { rejectWithValue }) => {
   return client
-    .get<Types.SearchAladinBooksAsyncReponse>(`/book/search?${query}&size=8`)
+    .get<Types.SearchAladinBooksAsyncReponse>(`/book/search?${query}&size=6`)
     .then(({ data }) => ({
       data,
       isReload,

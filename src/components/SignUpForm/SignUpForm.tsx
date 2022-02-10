@@ -66,15 +66,15 @@ const SignUpForm = () => {
     if (debounce.current) clearTimeout(debounce.current);
     debounce.current = setTimeout(async () => {
       try {
-        // let isEmailconfirmSuccessCheck = false;
+        let isEmailconfirmSuccessCheck = false;
         const { mainAddress, detailAddress, email, phone, nickName, password, postalCode, name, code } = data;
-        // if (code) {
-        //   await client.post<{ email: string; code: string }, Types.EmailCodeReponse>("/user/email/code", {
-        //     email,
-        //     code,
-        //   });
-        //   isEmailconfirmSuccessCheck = true;
-        // }
+        if (code) {
+          await client.post<{ email: string; code: string }, Types.EmailCodeReponse>("/user/email/code", {
+            email,
+            code,
+          });
+          isEmailconfirmSuccessCheck = true;
+        }
 
         const validationResponse = await axios.all([
           client.get<Types.CheckReponse>(`/user/email/${email}`),
@@ -87,27 +87,27 @@ const SignUpForm = () => {
         if (!nickNameDuplicate.data) throw new Error("사용중인 닉네임입니다.");
 
         // 여러개에 테스트 이메일이 필요해서 작업해놓았다.
-        await client.post<Types.SignUpPayload>("/user/signup", {
-          password,
-          name,
-          phone: hyphenRemoveFormat(phone),
-          email,
-          nickName,
-          address: {
-            postalCode,
-            mainAddress,
-            detailAddress,
-          },
-        });
-        alert("회원가입에 성공했습니다.");
-        history.replace("/signIn");
-        // if (isEmailconfirmSuccessCheck) {
-        // } else {
-        //   handlePopupMessage(true, "인증코드가 발송되었습니다.");
-        //   const { data } = await client.post<{ email: string }, Types.EmailCodeReponse>("/user/email", { email });
-        //   if (!data) throw new Error("인증코드를 가져오기 실패했습니다.");
-        //   setIsEmailconfirmRender(true);
-        // }
+        if (isEmailconfirmSuccessCheck) {
+          await client.post<Types.SignUpPayload>("/user/signup", {
+            password,
+            name,
+            phone: hyphenRemoveFormat(phone),
+            email,
+            nickName,
+            address: {
+              postalCode,
+              mainAddress,
+              detailAddress,
+            },
+          });
+          alert("회원가입에 성공했습니다.");
+          history.replace("/signIn");
+        } else {
+          handlePopupMessage(true, "인증코드가 발송되었습니다.");
+          const { data } = await client.post<{ email: string }, Types.EmailCodeReponse>("/user/email", { email });
+          if (!data) throw new Error("인증코드를 가져오기 실패했습니다.");
+          setIsEmailconfirmRender(true);
+        }
       } catch (error) {
         const message = errorHandler(error);
         handlePopupMessage(false, message);
@@ -285,7 +285,7 @@ const SignUpForm = () => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <div>{rows}</div>
         <div>
-          {/* {isEmailconfirmRender && (
+          {isEmailconfirmRender && (
             <div>
               <Typography variant="h5" fontWeight="bold" sx={{ textAlign: "center", mb: 3 }}>
                 이메일 인증코드가 발송되었습니다.
@@ -295,7 +295,7 @@ const SignUpForm = () => {
               </Button>
               <EmailConfirm register={register} errors={errors} isEmailconfirmRender={isEmailconfirmRender} />
             </div>
-          )} */}
+          )}
           <Styled.ButtonWrapper>
             <Button variant="contained" color="mainDarkBrown" onClick={handleDaumPostOpne}>
               주소찾기

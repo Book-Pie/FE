@@ -29,17 +29,32 @@ export const SearchCard = styled.div`
   cursor: pointer;
   ${({ theme }) => theme.shadow[0]}
   .content {
-    padding: 15px;
+    padding: 7.5px 15px;
   }
   .state {
     display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-top: 15px;
+    flex-direction: column;
+    flex-wrap: wrap;
+    gap: 7.5px;
+    margin-top: 5px;
     color: ${({ theme }) => theme.colors.darkGrey};
-    span:first-child {
-      font-weight: bold;
-      font-size: 19px;
+    span {
+      font-weight: 600;
+      font-size: 16px;
+    }
+
+    .info {
+      font-weight: 100;
+      font-size: 14px;
+      color: #1565c0;
+    }
+
+    ${({ theme }) => theme.media.tab} {
+      flex-direction: row;
+      align-items: center;
+    }
+    ${({ theme }) => theme.media.mobile} {
+      flex-direction: row;
     }
   }
   .state--lineThrough {
@@ -66,16 +81,13 @@ export const SearchCard = styled.div`
     }
   }
   .author {
-    margin-top: 10px;
+    margin-top: 5px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     font-weight: bold;
     color: ${({ theme }) => theme.colors.mainDarkBrown};
     height: 20px;
-  }
-  .info {
-    color: #1565c0;
   }
 
   ${({ theme }) => theme.media.mobile} {
@@ -104,13 +116,12 @@ export const SearchCard = styled.div`
 
 export const SearchImg = styled.img`
   width: 100%;
-  height: 300px;
+  height: 270px;
   border-bottom: 1px solid rgba(99, 110, 114, 0.1);
 `;
 export const SearchTitle = styled.p`
-  font-size: 22px;
+  font-size: 17px;
   color: ${({ theme }) => theme.colors.darkGrey};
-  height: 35px;
   line-height: 1.5;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -198,5 +209,8 @@ export const SearchTopButtonWrapper = styled.div<{
     :hover {
       animation: ${buttonUpDownKeyFrames} 1.5s 0.2s infinite linear alternate;
     }
+  }
+  svg {
+    color: white;
   }
 `;

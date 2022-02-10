@@ -15,7 +15,7 @@ const SearchBookReview = () => {
   const dispatch = useAppDispatch();
   const { pageCount, pages, status } = useTypedSelector(searchAladinBookSelector);
   const loading = status === "loading";
-  const pageArray = loading ? range(0, 8) : pages;
+  const pageArray = loading ? range(0, 6) : pages;
   const query = useMemo(() => queryString.parse(search), [search]);
 
   useEffect(() => {
@@ -31,7 +31,7 @@ const SearchBookReview = () => {
   return (
     <Styled.SearchWrapper>
       <Typography variant="h5" mt={2} fontWeight="bold">
-        알라딘 검색 결과
+        리뷰 검색결과
         {pageCount > 1 && (
           <>
             (총<span>{pageCount * 8}개</span>)

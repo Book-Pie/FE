@@ -1,4 +1,8 @@
-// 10000 => 10,000으로 변경해준다.
+/**
+ * 숫자를 천의자리 마다 콤마를 찍어주는 함수
+ * @param 금액 문자열 or 숫자
+ * @returns 10,000
+ */
 export const make1000UnitsCommaFormet = (text: string | number) => {
   const reversStr = String(text).split("").reverse();
   return reversStr.reduce((acc, cur, idx) => {
@@ -7,23 +11,38 @@ export const make1000UnitsCommaFormet = (text: string | number) => {
   });
 };
 
-export const hyphenRemoveFormat = (text: string) => {
-  return text.replaceAll("-", "");
-};
+/**
+ * 휴대번호 포멧에서 하이픈(-)을 제거해주는 함수
+ * @param 하이픈(-)이 있는 휴대번호 문자열
+ * @returns 01000000000 11자 0100000000 10자
+ */
+export const hyphenRemoveFormat = (text: string) => text.replaceAll("-", "");
 
+/**
+ * 휴대번호 포멧으로 변경해주는 함수
+ * @param 휴대번호 문자열
+ * @returns 010-0000-0000 11자 010-000-0000 10자
+ * 휴대번호가 null인 유저는 빈문자열을 param으로 보내는경우가 생긴다.
+ * 빈문자열을 reduce에 사용한다면 초기값이 없다라는 런타임 에러를 발생한다.
+ * 런타임 에러를 방지하기위해 길이가 0인 문자열은 자기 자신을 리턴한다.
+ */
 export const hyphenFormat = (text: string) => {
   const { length } = text;
-  return text.split("").reduce((acc, cur, idx) => {
-    const hyphenText = `${acc}-${cur}`;
 
-    if (idx === 3) return hyphenText;
-    // 010-0000-0000 11자
-    if (length === 11 && idx === 7) return hyphenText;
-    // 010-000-0000 10자
-    if (length === 10 && idx === 6) return hyphenText;
+  if (length > 0) {
+    return text.split("").reduce((acc, cur, idx) => {
+      const hyphenText = `${acc}-${cur}`;
 
-    return acc + cur;
-  });
+      if (idx === 3) return hyphenText;
+      // 010-0000-0000 11자
+      if (length === 11 && idx === 7) return hyphenText;
+      // 010-000-0000 10자
+      if (length === 10 && idx === 6) return hyphenText;
+
+      return acc + cur;
+    });
+  }
+  return text;
 };
 
 export const reviewDateFormat = (text: string) => {
