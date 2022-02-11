@@ -9,6 +9,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { ReviewListEmpty } from "components/Reviews/ReviewList/ReviewListEmpty";
 import { useRouteMatch } from "react-router";
+import { Link } from "react-router-dom";
 import {
   FlexBox,
   RatingContent,
@@ -71,13 +72,16 @@ const UsedBookStoreReview = () => {
   });
 
   const reviewList = storeReviewList.map((item, idx) => {
-    const { buyerName, content, rating, reviewDate } = item;
+    const { buyerName, content, rating, reviewDate, buyerId } = item;
+    const shopId = String(buyerId);
     return (
       <StoreReviewItemWrapper key={idx}>
         <FlexBoxWrapper>
-          <ProfileArea>
-            <PieImg src={profileImg} alt="profileImg" />
-          </ProfileArea>
+          <Link to={`/shop/${shopId}`}>
+            <ProfileArea>
+              <PieImg src={profileImg} alt="profileImg" />
+            </ProfileArea>
+          </Link>
           <ContentWrapper>
             <RatingContent>
               <Rating name="read-only" precision={0.5} value={rating} size="small" readOnly />
