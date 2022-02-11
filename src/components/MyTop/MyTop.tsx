@@ -91,9 +91,15 @@ const MyTop = () => {
       <Styled.MyTopWrapper>
         {user ? (
           <div>
-            <Styled.ProfileImg>
-              <img src={user.image ? `${process.env.BASE_URL}/image/${user.image}` : pie3x} alt="myProfileImg" />
-            </Styled.ProfileImg>
+            {user.image ? (
+              <Styled.ProfileImg>
+                <img src={`${process.env.BASE_URL}/image/${user.image}`} alt="myProfileImg" />
+              </Styled.ProfileImg>
+            ) : (
+              <Styled.NoneProfileImg>
+                <img src={pie3x} alt="myProfileImg" />
+              </Styled.NoneProfileImg>
+            )}
             <Styled.MyTopUserInfo>
               <PointInfo />
               <div>

@@ -1,11 +1,11 @@
 import { useCallback } from "react";
-import noProfileImg from "assets/image/noProfile.jpg";
+import noProfileImg from "assets/image/pie3x.png";
 import { dateArrayFormat } from "src/utils/formatUtil";
 import { UserInfo } from "src/modules/Slices/user/types";
 import Rating from "@mui/material/Rating";
 import { GetChartResponse } from "src/modules/Slices/userReview/types";
 import MyChart from "../MyTop/MyChart";
-import { MyChartWrapper, ProfileImg, EmptyChart, TitleSpan } from "../MyTop/style";
+import { MyChartWrapper, ProfileImg, EmptyChart, TitleSpan, NoneProfileImg } from "../MyTop/style";
 import { ShopTopUserInfo, ShopTopWrapper } from "./styles";
 import { RatingContent } from "../BookDetail/style";
 
@@ -30,9 +30,16 @@ const ShopTop = ({ shop, chart }: ShopTopParam) => {
     <ShopTopWrapper>
       {shop && (
         <>
-          <ProfileImg>
-            <img src={shop.image ? `${process.env.BASE_URL}/image/${shop.image}` : noProfileImg} alt="myProfileImg" />
-          </ProfileImg>
+          {shop.image ? (
+            <ProfileImg>
+              <img src={`${process.env.BASE_URL}/image/${shop.image}`} alt="myProfileImg" />
+            </ProfileImg>
+          ) : (
+            <NoneProfileImg>
+              <img src={noProfileImg} alt="myProfileImg" />
+            </NoneProfileImg>
+          )}
+
           <ShopTopUserInfo>
             <span>{`${getRating(shop.point.totalPoint)}회원`}</span>
             <div>

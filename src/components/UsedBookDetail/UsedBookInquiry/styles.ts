@@ -16,3 +16,24 @@ export const SellerNameTitle = styled.div`
   overflow: hidden;
   width: 70px;
 `;
+
+export const ProfileImg = styled.div`
+  flex: 6;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+
+  img {
+    border-radius: 50%;
+    height: 200px;
+    width: 200px;
+    ${({ theme }) => theme.shadow[0]};
+  }
+`;
+
+export const NoneProfileImg = styled(ProfileImg)`
+  img {
+    padding: 30px;
+  }
+`;

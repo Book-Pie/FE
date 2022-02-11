@@ -55,8 +55,9 @@ export const FlexBoxWrapper = styled(FlexBox)`
 `;
 
 export const PieImg = styled.img`
-  width: 45px;
-  height: 45px;
+  width: 80px;
+  height: 80px;
+  padding: 15px;
 `;
 
 export const BigPieImg = styled.img`
@@ -77,7 +78,6 @@ export const ProfileArea = styled.div`
   width: 80px;
   height: 80px;
   margin: 0 10px 0 0;
-  padding: 16.5px 15.3px 16.5px 15.3px;
   border-radius: 40px;
   background-color: #f2f2f2;
 `;
@@ -188,7 +188,6 @@ export const UsedStoreUserThumbnail = styled.div`
   width: 120px;
   height: 120px;
   margin-bottom: 8px;
-  padding: 22.8px 21px;
   border-radius: 60px;
   background-color: #f2f2f2;
 `;

@@ -17,6 +17,7 @@ import {
   StoreReviewItemContent,
   StoreReviewItemNickName,
   StoreReviewItemWrapper,
+  StoreReviewNoneProfileImg,
   StoreReviewProfileImg,
 } from "./styles";
 import {
@@ -79,9 +80,15 @@ const UsedBookStoreReview = () => {
         <FlexBoxWrapper>
           <Link to={`/shop/${shopId}`}>
             <ProfileArea>
-              <StoreReviewProfileImg>
-                <img src={buyerImage ? `${process.env.BASE_URL}/image/${buyerImage}` : profileImg} alt="myProfileImg" />
-              </StoreReviewProfileImg>
+              {buyerImage ? (
+                <StoreReviewProfileImg>
+                  <img src={`${process.env.BASE_URL}/image/${buyerImage}`} alt="myProfileImg" />
+                </StoreReviewProfileImg>
+              ) : (
+                <StoreReviewNoneProfileImg>
+                  <img src={profileImg} alt="NoneProfileImg" />
+                </StoreReviewNoneProfileImg>
+              )}
             </ProfileArea>
           </Link>
           <ContentWrapper>
