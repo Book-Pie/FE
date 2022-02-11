@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
 import useSignIn from "hooks/useSignIn";
 import noComments from "assets/image/noComments.png";
 import queryString from "query-string";
@@ -12,16 +11,16 @@ import {
   getUserReviewList,
   userReviewSelector,
 } from "modules/Slices/userReview/userReviewSlice";
-import { CancelButton, FlexBox, HeaderTitle, UserReviewButtonArea, UserReviewHeaderWrapper } from "../BuyList/styles";
+import { CancelButton, FlexBox, UserReviewButtonArea } from "../BuyList/styles";
 import { ReviewListEmptyParagraph, ReviewListEmptyWrapper } from "../Reviews/ReviewList/style";
 import { Empty } from "../SaleList/style";
 import WrittedReviewList from "./WrittedReviewList";
 import ReceivedReviewContent from "./ReceivedReviewContent";
 import MyPageSkeleton from "../BuyList/MyPageSkeleton";
+import { UserReviewCell, UserReviewHeader, UserReviewWrapper } from "./styles";
 
 const UserReview = () => {
-  const dispatch = useDispatch();
-  const { signIn } = useSignIn();
+  const { signIn, dispatch } = useSignIn();
   const { user } = signIn;
   const [receivedReview, writtedReview] = useState(true);
   const receivedReviewHeader = ["별점", "구매자명", "상품명", "내용", "작성일"];
@@ -83,11 +82,15 @@ const UserReview = () => {
     };
   });
 
-  const headerList = headers.map((header, idx) => (
-    <div key={idx}>
-      <HeaderTitle>{header}</HeaderTitle>
-    </div>
-  ));
+  const headerList = (
+    <UserReviewHeader>
+      {headers.map((text, idx) => (
+        <UserReviewCell key={idx}>
+          <span>{text}</span>
+        </UserReviewCell>
+      ))}
+    </UserReviewHeader>
+  );
 
   const writtedReviewList = pages.length ? (
     <WrittedReviewList contents={pages} dispatch={dispatch} signIn={signIn} />
@@ -124,12 +127,12 @@ const UserReview = () => {
   );
 
   return (
-    <div>
+    <UserReviewWrapper>
       <UserReviewButtonArea>
         <CancelButton onClick={receivedReviewClick}>받은 거래 후기</CancelButton>
         <CancelButton onClick={writtedReviewClick}>작성 거래 후기</CancelButton>
       </UserReviewButtonArea>
-      <UserReviewHeaderWrapper>{headerList}</UserReviewHeaderWrapper>
+      {headerList}
       {receivedReview ? <div>{receivedMyReviewList}</div> : <div>{writtedReviewList}</div>}
       {list.isEmpty || (
         <Stack mt={5} justifyContent="center" direction="row">
@@ -149,7 +152,7 @@ const UserReview = () => {
           />
         </Stack>
       )}
-    </div>
+    </UserReviewWrapper>
   );
 };
 

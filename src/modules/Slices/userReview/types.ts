@@ -61,6 +61,7 @@ export interface UserReviewData {
   sellerName: string;
   buyerId: number;
   buyerName: string;
+  buyerImage: string;
   usedBookId: number;
   usedBookTitle: string;
   content: string;

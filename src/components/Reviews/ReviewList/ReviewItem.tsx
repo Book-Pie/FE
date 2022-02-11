@@ -7,6 +7,7 @@ import { useTypedSelector } from "modules/store";
 import { userReduceSelector } from "modules/Slices/user/userSlice";
 import { reviewDateFormat } from "utils/formatUtil";
 import { useHistory } from "react-router";
+import { Link } from "react-router-dom";
 import {
   ContentWrapper,
   ReviewContent,
@@ -29,6 +30,7 @@ export const ReviewItem: React.FC<ReviewItemProps> = ({ content }) => {
   const commentDate = reviewDateFormat(reviewDate);
   const myUserStatus = useTypedSelector(userReduceSelector);
   const { user, isLoggedIn, token } = myUserStatus;
+  const shopId = String(userId);
 
   const deleteClick = () => {
     if (token) {
@@ -69,7 +71,9 @@ export const ReviewItem: React.FC<ReviewItemProps> = ({ content }) => {
       <ReviewContent>
         <ReviewContentTop>
           <Rating name="read-only" precision={0.5} value={rating} size="small" readOnly />
-          <p>{nickName}</p>
+          <Link to={`/shop/${shopId}`}>
+            <p>{nickName}</p>
+          </Link>
           <ContentBottom>
             <ReplyDate>{commentDate}</ReplyDate>
           </ContentBottom>

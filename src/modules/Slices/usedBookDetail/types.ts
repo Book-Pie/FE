@@ -128,6 +128,7 @@ export interface UsedBookDetailResponse {
   usedBookId: number;
   sellerId: number;
   sellerName: string;
+  sellerImage: string;
   price: number;
   title: string;
   content: string;
@@ -205,7 +206,7 @@ export interface UsedBookDetailReduce {
 
 // =========================== 썽크함수 성공 시 리턴 타입 ===========================
 
-export interface getUsedBookLikeListAsyncSuccess {
+export interface GetUsedBookLikeListAsyncSuccess {
   success: boolean;
   data: PagesResponse[];
   error: null;
@@ -247,7 +248,7 @@ export interface usedBookDetailReplyListAsyncSuccess {
   error: null;
 }
 
-export interface getUsedBookBuyListAsyncSuccess {
+export interface GetUsedBookBuyListAsyncSuccess {
   success: boolean;
   data: {
     pageCount: number;

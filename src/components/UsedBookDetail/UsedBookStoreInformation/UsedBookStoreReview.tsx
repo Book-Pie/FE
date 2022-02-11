@@ -9,6 +9,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { ReviewListEmpty } from "components/Reviews/ReviewList/ReviewListEmpty";
 import { useRouteMatch } from "react-router";
+import { Link } from "react-router-dom";
 import {
   FlexBox,
   RatingContent,
@@ -16,12 +17,12 @@ import {
   StoreReviewItemContent,
   StoreReviewItemNickName,
   StoreReviewItemWrapper,
+  StoreReviewProfileImg,
 } from "./styles";
 import {
   ContentWrapper,
   CountWrapper,
   FlexBoxWrapper,
-  PieImg,
   ProductDetailTitle,
   ProfileArea,
   ReviewListEmptyWrapper,
@@ -71,13 +72,18 @@ const UsedBookStoreReview = () => {
   });
 
   const reviewList = storeReviewList.map((item, idx) => {
-    const { buyerName, content, rating, reviewDate } = item;
+    const { buyerName, content, rating, reviewDate, buyerId, buyerImage } = item;
+    const shopId = String(buyerId);
     return (
       <StoreReviewItemWrapper key={idx}>
         <FlexBoxWrapper>
-          <ProfileArea>
-            <PieImg src={profileImg} alt="profileImg" />
-          </ProfileArea>
+          <Link to={`/shop/${shopId}`}>
+            <ProfileArea>
+              <StoreReviewProfileImg>
+                <img src={buyerImage ? `${process.env.BASE_URL}/image/${buyerImage}` : profileImg} alt="myProfileImg" />
+              </StoreReviewProfileImg>
+            </ProfileArea>
+          </Link>
           <ContentWrapper>
             <RatingContent>
               <Rating name="read-only" precision={0.5} value={rating} size="small" readOnly />
@@ -107,7 +113,7 @@ const UsedBookStoreReview = () => {
           <ReviewListEmpty title="상점후기" />
         </ReviewListEmptyWrapper>
       )}
-      {reviewList.length ? (
+      {reviewList.length !== 0 && (
         <Stack mt={5} justifyContent="center" direction="row">
           <Pagination
             count={pageCount}
@@ -124,9 +130,6 @@ const UsedBookStoreReview = () => {
             }}
           />
         </Stack>
-      ) : (
-        // eslint-disable-next-line react/jsx-no-useless-fragment
-        <></>
       )}
     </UsedBookStoreInformationWrapper>
   );

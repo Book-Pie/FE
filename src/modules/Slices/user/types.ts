@@ -110,4 +110,5 @@ export interface UserReduce {
   saleInfos: OrderResult[];
   buyInfos: OrderResult[];
   reviews: Reviews;
+  shop: UserInfo | null;
 }

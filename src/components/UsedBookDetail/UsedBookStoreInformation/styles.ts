@@ -53,3 +53,29 @@ export const StoreReviewItemNickName = styled.div`
   text-align: left;
   color: #fff;
 `;
+
+export const UsedBookStoreProfileImg = styled.div`
+  flex: 6;
+  display: flex;
+  align-items: center;
+
+  img {
+    width: 120px;
+    height: 80px;
+    margin-bottom: 8px;
+    border-radius: 80%;
+  }
+`;
+
+export const StoreReviewProfileImg = styled.div`
+  flex: 6;
+  display: flex;
+  align-items: center;
+
+  img {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 8px;
+    border-radius: 80%;
+  }
+`;

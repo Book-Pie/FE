@@ -8,15 +8,11 @@ export const ColorContent = styled.div`
   color: #52a4c3;
 `;
 
-export const BuyListWrapper = styled.div`
-  padding-top: 60px;
-`;
-
 export const HeaderTitle = styled.div`
   font-size: 18px;
   padding: 20px;
   text-align: center;
-  width: 180px;
+  flex: 1;
   border-top: 1px solid black;
   border-bottom: 1px solid black;
 `;
@@ -31,7 +27,7 @@ export const BuyContent = styled.div`
   font-size: 18px;
   text-align: center;
   padding: 20px;
-  width: 180px;
+  width: 200px;
   height: 220px;
 `;
 
@@ -55,7 +51,10 @@ export const ContentText = styled.div`
 export const ButtonArea = styled.div`
   align-content: center;
   margin: 50px auto;
-  // display: flex;
+`;
+
+export const ModalButtonArea = styled(ButtonArea)`
+  display: flex;
 `;
 
 export const ModalContent = styled.div`
@@ -120,7 +119,7 @@ export const ContentItem = styled.div`
   font-size: 18px;
   text-align: center;
   padding: 20px;
-  width: 180px;
+  flex: 1;
   height: 170px;
 `;
 
@@ -139,4 +138,10 @@ export const TextReviewArea = styled.div`
   padding: 10px 10px 11px;
   border: 1px solid #cbcbcb;
   background-color: #f4f4f4;
+`;
+
+export const BuyListWrapper = styled.div`
+  margin: 3rem 0;
+  padding: 0 1rem;
+  flex: 1;
 `;

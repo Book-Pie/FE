@@ -12,20 +12,20 @@ import { addUserReview, editUserReview } from "modules/Slices/userReview/userRev
 import {
   RegisterButton,
   TextReviewArea,
-  ButtonArea,
   CancelButton,
   ModalContent,
   BuyContent,
   FlexWrapper,
   ImgContent,
   Text,
+  ModalButtonArea,
 } from "./styles";
 import { HoverRating } from "../Rating/Rating";
 import { addUserReviewSubmitParam } from "./types";
 
 export interface userReviewModalProps {
   open: boolean;
-  item: ModalItemParam | null;
+  item: ModalItemParam;
   handleClose: () => void;
 }
 
@@ -145,13 +145,13 @@ const Modal = (props: userReviewModalProps) => {
             />
           </TextReviewArea>
           <div>
-            <ButtonArea>
-              <CancelButton onClick={handleClose}>취소</CancelButton>
+            <ModalButtonArea>
               <RegisterButton type="submit">
                 {orderDate && "등록"}
                 {reviewDate && "수정"}
               </RegisterButton>
-            </ButtonArea>
+              <CancelButton onClick={handleClose}>취소</CancelButton>
+            </ModalButtonArea>
           </div>
         </DialogContent>
       </form>

@@ -20,8 +20,9 @@ import { useTypedSelector } from "modules/store";
 import ContentList from "./ContentList";
 import MyPageSkeleton from "./MyPageSkeleton";
 import { ReviewListEmptyParagraph, ReviewListEmptyWrapper } from "../Reviews/ReviewList/style";
-import { BuyListWrapper, FlexBox, HeaderTitle, HeaderWrapper } from "./styles";
+import { BuyListWrapper, FlexBox } from "./styles";
 import { BuyListResponse } from "./types";
+import { UserReviewCell, UserReviewHeader } from "../UserReview/styles";
 
 export interface buyConfirmSubmitParam {
   orderId: string;
@@ -114,11 +115,15 @@ const BuyList = () => {
     };
   });
 
-  const headerList = headers.map((header, idx) => (
-    <div key={idx}>
-      <HeaderTitle>{header}</HeaderTitle>
-    </div>
-  ));
+  const headerList = (
+    <UserReviewHeader>
+      {headers.map((text, idx) => (
+        <UserReviewCell key={idx}>
+          <span>{text}</span>
+        </UserReviewCell>
+      ))}
+    </UserReviewHeader>
+  );
 
   const contentList =
     pages.length !== 0 ? (
@@ -190,7 +195,7 @@ const BuyList = () => {
           </Select>
         </FormControl>
       </Stack>
-      <HeaderWrapper>{headerList}</HeaderWrapper>
+      {headerList}
       <div>{contentList}</div>
       {list.isEmpty || (
         <Stack mt={5} justifyContent="center" direction="row">

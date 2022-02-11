@@ -11,6 +11,7 @@ import Textarea from "src/components/TextArea/Textarea";
 import { useTypedSelector } from "src/modules/store";
 import { userReduceSelector } from "src/modules/Slices/user/userSlice";
 import { useHistory } from "react-router";
+import { Link } from "react-router-dom";
 import { DateContent, SecretItem } from "./styles";
 import {
   ContentWrapper,
@@ -44,6 +45,7 @@ export const UsedBookReplyItem = ({ review, sellerId, sellerName, page }: UsedBo
   const [isSubReplyAdd, setIsSubReplyAdd] = useState<boolean>(false);
   const { id } = user ?? noId;
   const date = compareDateFormat(replyDate);
+  const shopId = String(userId);
   let dayAgo = "일전";
   if (date === 0) {
     dayAgo = "오늘";
@@ -99,9 +101,11 @@ export const UsedBookReplyItem = ({ review, sellerId, sellerName, page }: UsedBo
       <ReplyItemWrapper>
         <FlexBoxWrapper>
           <FlexBox>
-            <ProfileArea>
-              <PieImg src={profileImg} alt="profileImg" />
-            </ProfileArea>
+            <Link to={`/shop/${shopId}`}>
+              <ProfileArea>
+                <PieImg src={profileImg} alt="profileImg" />
+              </ProfileArea>
+            </Link>
             <ContentWrapper>
               <ClickArea>
                 {id === sellerId && (

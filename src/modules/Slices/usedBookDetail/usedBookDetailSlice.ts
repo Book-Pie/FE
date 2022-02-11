@@ -21,8 +21,8 @@ import {
   DeleteUsedBookDetailSubReply,
   editUsedBookDetailReplyParam,
   GetUsedBookBuyConfirmParam,
-  getUsedBookBuyListAsyncSuccess,
-  getUsedBookLikeListAsyncSuccess,
+  GetUsedBookBuyListAsyncSuccess,
+  GetUsedBookLikeListAsyncSuccess,
   UsedBookDetailAsyncSuccess,
   UsedBookDetailFail,
   UsedBookDetailReduce,
@@ -241,7 +241,7 @@ export const deleteUsedBookDetailSubReply = createAsyncThunk<string, DeleteUsedB
 );
 
 // 마이페이지 - 중고장터 찜 목록
-export const getUsedBookLikeList = createAsyncThunk<getUsedBookLikeListAsyncSuccess, string>(
+export const getUsedBookLikeList = createAsyncThunk<GetUsedBookLikeListAsyncSuccess, string>(
   `${myPage}/${name}/like/list`,
   async (token, { rejectWithValue }) => {
     try {
@@ -257,7 +257,7 @@ export const getUsedBookLikeList = createAsyncThunk<getUsedBookLikeListAsyncSucc
 );
 
 // 마이페이지 - 중고장터 구매 목록
-export const getUsedBookBuyList = createAsyncThunk<getUsedBookBuyListAsyncSuccess, getUserReviewListParam>(
+export const getUsedBookBuyList = createAsyncThunk<GetUsedBookBuyListAsyncSuccess, getUserReviewListParam>(
   `${myPage}/${name}/buy/list`,
   async ({ query, token }, { rejectWithValue }) => {
     try {

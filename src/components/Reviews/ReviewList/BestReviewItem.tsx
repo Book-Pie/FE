@@ -4,6 +4,7 @@ import useSignIn from "src/hooks/useSignIn";
 import { commentLike } from "src/modules/Slices/comment/commentSlice";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import { compareDateFormat } from "src/utils/formatUtil";
+import { Link } from "react-router-dom";
 import {
   BestCommentNickName,
   BestCommentWrapper,
@@ -15,11 +16,11 @@ import {
 import { BestReviewItemParam } from "./types";
 
 const BestReviewItem = ({ item }: BestReviewItemParam) => {
-  const { content, nickName, rating, reviewLikeCount, reviewId, reviewDate } = item;
+  const { content, nickName, rating, reviewLikeCount, reviewId, reviewDate, userId } = item;
   const { signIn, dispatch } = useSignIn();
   const history = useHistory();
   const { user, isLoggedIn, token } = signIn;
-
+  const shopId = String(userId);
   const likeClick = () => {
     if (!isLoggedIn) {
       if (window.confirm("로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?")) {
@@ -49,16 +50,17 @@ const BestReviewItem = ({ item }: BestReviewItemParam) => {
   return (
     <BestCommentWrapper>
       <div>
-        <BestCommentNickName>{nickName}</BestCommentNickName>
+        <Link to={`/shop/${shopId}`}>
+          <BestCommentNickName>{nickName}</BestCommentNickName>
+        </Link>
         <Rating name="read-only" precision={0.5} value={rating} size="small" readOnly />
         <DateWrapper>
           {date !== 0 ? (
-            <>
+            <span>
               {date} {dayAgo}
-            </>
+            </span>
           ) : (
-            // eslint-disable-next-line react/jsx-no-useless-fragment
-            <>{dayAgo}</>
+            <span>{dayAgo}</span>
           )}
         </DateWrapper>
       </div>

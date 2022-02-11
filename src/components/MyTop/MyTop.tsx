@@ -75,8 +75,9 @@ const MyTop = () => {
   );
 
   useEffect(() => {
-    if (token) {
-      dispatch(getMyPageChart(token));
+    if (user) {
+      const { id } = user;
+      dispatch(getMyPageChart(String(id)));
     }
   }, []);
 
@@ -147,10 +148,19 @@ const MyTop = () => {
         ) : (
           <Skeletons />
         )}
-        {/* <Styled.MyChartWrapper>
+        <Styled.MyChartWrapper>
           <Styled.TitleSpan>선호 장르</Styled.TitleSpan>
-          <MyChart data={myPageChart} />
-        </Styled.MyChartWrapper> */}
+          {myPageChart.length !== 0 ? (
+            <MyChart data={myPageChart} />
+          ) : (
+            <Styled.EmptyChart>
+              <div>
+                <p>선호장르 데이터가 없습니다.</p>
+                <p>첫 리뷰를 작성해주세요!</p>
+              </div>
+            </Styled.EmptyChart>
+          )}
+        </Styled.MyChartWrapper>
       </Styled.MyTopWrapper>
     </>
   );
