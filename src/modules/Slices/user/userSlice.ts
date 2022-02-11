@@ -147,15 +147,15 @@ export const fetchBuyInfoAsync = createAsyncThunk<OrderResult, string, Types.Thu
 
 /**
  *   유저가 작성한 도서 리뷰 가져오기
- *   @param  url 쿼리 스트링
+ *   @param  유저id, 쿼리 스트링(page,size)
  *   @return 도서 리뷰
  */
-export const fetchReviewAsync = createAsyncThunk<Types.Review, string, Types.ThunkApi>(
+export const fetchReviewAsync = createAsyncThunk<Types.Review, { userId: number; query: string }, Types.ThunkApi>(
   `${NAME}/fetchReviewAsync`,
-  async (query, { getState, rejectWithValue }) => {
+  async ({ query, userId }, { getState, rejectWithValue }) => {
     try {
       isLoggedInCheck(getState().userReduce);
-      const { data } = await client.get<Types.ReviewAsyncReponse>(`/book-review/my?${query}`);
+      const { data } = await client.get<Types.ReviewAsyncReponse>(`/book-review/myReview/${userId}?${query}`);
       return data;
     } catch (error) {
       const message = errorHandler(error);

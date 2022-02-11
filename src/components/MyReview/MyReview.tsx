@@ -15,9 +15,8 @@ const MyReview = () => {
   const user = useTypedSelector(userSelector);
   const dispatch = useAppDispatch();
 
-  const makeQuery = (userId: number, page: number, size: number) => {
+  const makeQuery = (page: number, size: number) => {
     return queryString.stringify({
-      userId,
       page,
       size,
     });
@@ -29,16 +28,16 @@ const MyReview = () => {
       if (contents && contents[currentPage]) {
         dispatch(setReviewPage(currentPage));
       } else {
-        const query = makeQuery(user.id, currentPage, size);
-        dispatch(fetchReviewAsync(query));
+        const query = makeQuery(currentPage, size);
+        dispatch(fetchReviewAsync({ userId: user.id, query }));
       }
     }
   };
 
   useEffect(() => {
     if (user === null || page !== 0 || contents !== null) return;
-    const query = makeQuery(user.id, page, size);
-    dispatch(fetchReviewAsync(query));
+    const query = makeQuery(page, size);
+    dispatch(fetchReviewAsync({ userId: user.id, query }));
   }, [dispatch, user, page, size, contents]);
 
   if (contents) {
