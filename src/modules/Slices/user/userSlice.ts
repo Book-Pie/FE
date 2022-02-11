@@ -164,6 +164,16 @@ export const fetchReviewAsync = createAsyncThunk<Types.Review, { userId: number;
   },
 );
 
+const reviewsInit: Types.Reviews = {
+  contents: null,
+  empty: false,
+  page: 0,
+  pageCount: 0,
+  size: 10,
+  status: "idle",
+  error: null,
+};
+
 const initialState: Types.UserReduce = {
   user: null,
   token: null,
@@ -172,37 +182,27 @@ const initialState: Types.UserReduce = {
   status: "idle",
   buyInfos: [],
   saleInfos: [],
-  reviews: {
-    contents: null,
-    empty: false,
-    page: 0,
-    pageCount: 0,
-    size: 10,
-    status: "idle",
-    error: null,
-  },
   shop: null,
+  reviews: reviewsInit,
 };
 
 const userSlice = createSlice({
   name: NAME,
   initialState,
   reducers: {
-    // 액션함수 이름 logout
-    // 함수 내용 리듀서
-    logout: state => {
-      state.user = null;
-      state.token = null;
-      state.isLoggedIn = false;
-      state.error = null;
+    logout: () => {
       removeToken();
       alert("로그아웃 되었습니다.");
+      return initialState;
     },
     setClearError: state => {
       state.error = null;
     },
     setReviewPage: (state, action) => {
       state.reviews.page = action.payload;
+    },
+    setReivewsReset: state => {
+      state.reviews = reviewsInit;
     },
   },
   extraReducers: builder => {
@@ -323,5 +323,5 @@ export const userBuyInfoSelector =
   ({ userReduce }: RootState) =>
     userReduce.buyInfos.find(info => info.orderId === orderId);
 export const userReviewsSelector = ({ userReduce }: RootState) => userReduce.reviews;
-export const { logout, setClearError, setReviewPage } = userSlice.actions;
+export const { logout, setClearError, setReviewPage, setReivewsReset } = userSlice.actions;
 export default userSlice;
