@@ -48,7 +48,7 @@ const SearchBookReview = () => {
           <Grid item xs={12}>
             <Styled.SearchEmpty>
               <img src={noComments} alt="noComments" />
-              <p>죄송합니다. 알라딘 결과가 없습니다.</p>
+              <p>죄송합니다. 리뷰 결과가 없습니다.</p>
             </Styled.SearchEmpty>
           </Grid>
         )}

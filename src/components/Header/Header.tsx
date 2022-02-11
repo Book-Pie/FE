@@ -49,13 +49,7 @@ const Header = () => {
     dispatch(logout());
   }, [dispatch]);
 
-  const infos = useMemo<
-    {
-      endPoint: string;
-      text: string;
-      onClick?: () => void;
-    }[]
-  >(
+  const infos = useMemo<Types.Infos[]>(
     () =>
       user
         ? [
