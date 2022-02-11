@@ -56,12 +56,11 @@ const BestReviewItem = ({ item }: BestReviewItemParam) => {
         <Rating name="read-only" precision={0.5} value={rating} size="small" readOnly />
         <DateWrapper>
           {date !== 0 ? (
-            <>
+            <span>
               {date} {dayAgo}
-            </>
+            </span>
           ) : (
-            // eslint-disable-next-line react/jsx-no-useless-fragment
-            <>{dayAgo}</>
+            <span>{dayAgo}</span>
           )}
         </DateWrapper>
       </div>

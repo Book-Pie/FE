@@ -74,12 +74,11 @@ const RelatedUsedBook = () => {
             <RelatedUsedBookBoldTitle brown>{make1000UnitsCommaFormet(String(price))}원</RelatedUsedBookBoldTitle>
             <RelatedUsedBookHashTagItem>
               {date !== 0 ? (
-                <>
+                <span>
                   {date} {dayAgo}
-                </>
+                </span>
               ) : (
-                // eslint-disable-next-line react/jsx-no-useless-fragment
-                <>{dayAgo}</>
+                <span>{dayAgo}</span>
               )}
             </RelatedUsedBookHashTagItem>
           </RelatedUsedBookItemContentWrapper>

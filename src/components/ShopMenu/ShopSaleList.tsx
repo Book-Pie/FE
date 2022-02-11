@@ -97,12 +97,11 @@ const ShopSaleList = () => {
                       </div>
                       <DateWrapper>
                         {date !== 0 ? (
-                          <>
+                          <span>
                             {date} {dayAgo}
-                          </>
+                          </span>
                         ) : (
-                          // eslint-disable-next-line react/jsx-no-useless-fragment
-                          <>{dayAgo}</>
+                          <span>{dayAgo}</span>
                         )}
                       </DateWrapper>
                       <p className={`${state === "SOLD_OUT" ? "red" : ""} usedBookCard__state`}>{STATE_ENUM[state]}</p>

@@ -113,7 +113,7 @@ const UsedBookStoreReview = () => {
           <ReviewListEmpty title="상점후기" />
         </ReviewListEmptyWrapper>
       )}
-      {reviewList.length ? (
+      {reviewList.length !== 0 && (
         <Stack mt={5} justifyContent="center" direction="row">
           <Pagination
             count={pageCount}
@@ -130,9 +130,6 @@ const UsedBookStoreReview = () => {
             }}
           />
         </Stack>
-      ) : (
-        // eslint-disable-next-line react/jsx-no-useless-fragment
-        <></>
       )}
     </UsedBookStoreInformationWrapper>
   );

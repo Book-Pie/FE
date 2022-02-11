@@ -96,7 +96,7 @@ const ShopUserReview = () => {
       </ShopTitle>
       {headerList}
       <div>{receivedMyReviewList}</div>
-      {storeReviewList.length ? (
+      {storeReviewList.length !== 0 && (
         <Stack mt={5} justifyContent="center" direction="row">
           <Pagination
             count={pageCount}
@@ -113,9 +113,6 @@ const ShopUserReview = () => {
             }}
           />
         </Stack>
-      ) : (
-        // eslint-disable-next-line react/jsx-no-useless-fragment
-        <></>
       )}
     </ShopContentWrapper>
   );
