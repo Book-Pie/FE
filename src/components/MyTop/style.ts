@@ -41,6 +41,9 @@ export const ProfileImg = styled.div`
     width: 200px;
     ${({ theme }) => theme.shadow[0]};
   }
+  .noProfile {
+    padding: 30px;
+  }
 `;
 
 export const NoneProfileImg = styled(ProfileImg)`
