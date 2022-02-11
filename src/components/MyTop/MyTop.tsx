@@ -79,7 +79,7 @@ const MyTop = () => {
       const { id } = user;
       dispatch(getMyPageChart(String(id)));
     }
-  }, []);
+  }, [user, dispatch]);
 
   return (
     <>
@@ -92,7 +92,11 @@ const MyTop = () => {
         {user ? (
           <div>
             <Styled.ProfileImg>
-              <img src={user.image ? `${process.env.BASE_URL}/image/${user.image}` : pie3x} alt="myProfileImg" />
+              <img
+                src={user.image ? `${process.env.BASE_URL}/image/${user.image}` : pie3x}
+                className={user.image ? "" : "noProfile"}
+                alt="myProfileImg"
+              />
             </Styled.ProfileImg>
             <Styled.MyTopUserInfo>
               <PointInfo />
