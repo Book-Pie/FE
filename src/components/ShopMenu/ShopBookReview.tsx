@@ -1,7 +1,13 @@
 import { useAppDispatch, useTypedSelector } from "modules/store";
 import queryString from "query-string";
 import { useEffect } from "react";
-import { userReviewsSelector, fetchReviewAsync, setReviewPage, userSelector } from "modules/Slices/user/userSlice";
+import {
+  userReviewsSelector,
+  fetchReviewAsync,
+  setReviewPage,
+  setReivewsReset,
+  userReduceSelector,
+} from "modules/Slices/user/userSlice";
 import { Stack } from "@mui/material";
 import Pagination from "@mui/material/Pagination";
 import Loading from "elements/Loading";
@@ -13,12 +19,11 @@ import { Title, TitleSpan } from "../UsedBookLikeList/styles";
 const ShopBookReview = () => {
   const { empty, contents, page, pageCount, size, status } = useTypedSelector(userReviewsSelector);
   const loading = status === "loading";
-  const shop = useTypedSelector(userSelector);
+  const { shop } = useTypedSelector(userReduceSelector);
   const dispatch = useAppDispatch();
 
-  const makeQuery = (userId: number, page: number, size: number) => {
+  const makeQuery = (page: number, size: number) => {
     return queryString.stringify({
-      userId,
       page,
       size,
     });
@@ -30,17 +35,22 @@ const ShopBookReview = () => {
       if (contents && contents[currentPage]) {
         dispatch(setReviewPage(currentPage));
       } else {
-        const query = makeQuery(shop.id, currentPage, size);
-        dispatch(fetchReviewAsync(query));
+        const query = makeQuery(currentPage, size);
+        dispatch(fetchReviewAsync({ userId: shop.id, query }));
       }
     }
   };
 
   useEffect(() => {
-    if (shop === null || page !== 0 || contents !== null) return;
-    const query = makeQuery(shop.id, page, size);
-    dispatch(fetchReviewAsync(query));
+    if (shop !== null && page === 0 && contents === null) {
+      const query = makeQuery(page, size);
+      dispatch(fetchReviewAsync({ userId: shop.id, query }));
+    }
   }, [dispatch, shop, page, size, contents]);
+
+  useEffect(() => {
+    dispatch(setReivewsReset());
+  }, []);
 
   if (contents) {
     return (
