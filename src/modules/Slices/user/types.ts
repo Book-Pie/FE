@@ -91,6 +91,16 @@ export interface ThunkApi {
   state: RootState;
 }
 
+export type Reviews = {
+  page: number;
+  pageCount: number;
+  contents: Content[][] | null;
+  empty: boolean;
+  size: number;
+  status: "loading" | "idle";
+  error: string | null;
+};
+
 export interface UserReduce {
   user: UserInfo | null;
   token: string | null;
@@ -99,13 +109,5 @@ export interface UserReduce {
   error: null | string;
   saleInfos: OrderResult[];
   buyInfos: OrderResult[];
-  reviews: {
-    page: number;
-    pageCount: number;
-    contents: Content[][] | null;
-    empty: boolean;
-    size: number;
-    status: "loading" | "idle";
-    error: string | null;
-  };
+  reviews: Reviews;
 }

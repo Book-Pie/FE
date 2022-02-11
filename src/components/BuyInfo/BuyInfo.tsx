@@ -3,7 +3,7 @@ import { useHistory, useParams } from "react-router";
 import { fetchBuyInfoAsync, userBuyInfoSelector, userReduceSelector } from "modules/Slices/user/userSlice";
 import { useAppDispatch, useTypedSelector } from "modules/store";
 import { hyphenFormat, dateArrayFormat, make1000UnitsCommaFormet } from "utils/formatUtil";
-import { Button } from "@mui/material";
+import { Button, Stack } from "@mui/material";
 import { Link } from "react-router-dom";
 import Loading from "elements/Loading";
 import * as Types from "./types";
@@ -23,9 +23,16 @@ const BuyInfo = () => {
 
   const goback = useMemo(
     () => (
-      <Button variant="contained" color="mainDarkBrown" fullWidth sx={{ mt: 2, height: 50 }} onClick={handleGoBack}>
-        뒤로가기
-      </Button>
+      <Stack justifyContent="center" flexDirection="row">
+        <Button
+          variant="outlined"
+          color="info"
+          sx={{ mt: 2, mb: 1, height: 50, fontWeight: "bold", maxWidth: 120, fontSize: 15 }}
+          onClick={handleGoBack}
+        >
+          뒤로가기
+        </Button>
+      </Stack>
     ),
     [handleGoBack],
   );
