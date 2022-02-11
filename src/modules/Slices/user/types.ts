@@ -108,4 +108,5 @@ export interface UserReduce {
     status: "loading" | "idle";
     error: string | null;
   };
+  shop: UserInfo | null;
 }

@@ -41,6 +41,24 @@ export const fetchUserInfoAsync = createAsyncThunk<Types.UserInfo, string, Types
 );
 
 /**
+ *   다른 회원 정보 가져오기
+ *   @param  userId
+ *   @return 유저 정보
+ */
+export const fetchShopUserInfoAsync = createAsyncThunk<Types.UserInfo, string>(
+  `${NAME}/fetchShopUserInfoAsync`,
+  async (shopId, { rejectWithValue }) => {
+    try {
+      const { data } = await client.get<Types.UserInfoAsyncResponse>(`/user/${shopId}`);
+      return data;
+    } catch (error) {
+      const message = errorHandler(error);
+      return rejectWithValue(message);
+    }
+  },
+);
+
+/**
  *   1. 썽크 생성 함수의 첫번째 제너릭은 반환 타입을 준다.
  *   2. 썽크 생성 함수의 두번째 제너릭은 파라미터의 타입을 준다.
  *   3. 썽크 생성 함수의 세번째 제너릭은 {dispatch?, state?, extra?, rejectValue?}에 타입을 설정해줄 수 있다.
@@ -163,6 +181,7 @@ const initialState: Types.UserReduce = {
     status: "idle",
     error: null,
   },
+  shop: null,
 };
 
 const userSlice = createSlice({
@@ -218,6 +237,20 @@ const userSlice = createSlice({
       state.status = "idle";
       state.error = payload ?? "프로필 가져오기를 실패했습니다.";
     });
+
+    builder.addCase(fetchShopUserInfoAsync.pending, state => {
+      state.error = null;
+      state.status = "loading";
+    });
+    builder.addCase(fetchShopUserInfoAsync.fulfilled, (state, { payload }) => {
+      state.shop = payload;
+      state.status = "idle";
+    });
+    builder.addCase(fetchShopUserInfoAsync.rejected, (state, { payload }) => {
+      state.token = null;
+      state.status = "idle";
+    });
+
     builder.addCase(fetchBuyInfoAsync.pending, state => {
       state.status = "loading";
     });
