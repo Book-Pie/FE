@@ -1,4 +1,4 @@
-import noProfileImg from "assets/image/noProfile.jpg";
+import pie3x from "assets/image/pie3x.png";
 import Button from "@mui/material/Button";
 import { useState, useCallback, useMemo, useEffect } from "react";
 import { fetchUserInfoAsync, fetchNickNameUpdateAsync, userReduceSelector } from "modules/Slices/user/userSlice";
@@ -91,7 +91,7 @@ const MyTop = () => {
         {user ? (
           <div>
             <Styled.ProfileImg>
-              <img src={user.image ? `${process.env.BASE_URL}/image/${user.image}` : noProfileImg} alt="myProfileImg" />
+              <img src={user.image ? `${process.env.BASE_URL}/image/${user.image}` : pie3x} alt="myProfileImg" />
             </Styled.ProfileImg>
             <Styled.MyTopUserInfo>
               <PointInfo />

@@ -36,6 +36,7 @@ export const ProfileImg = styled.div`
   padding: 1rem;
 
   img {
+    padding: 30px;
     border-radius: 50%;
     height: 200px;
     width: 200px;
