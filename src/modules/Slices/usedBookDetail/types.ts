@@ -128,6 +128,7 @@ export interface UsedBookDetailResponse {
   usedBookId: number;
   sellerId: number;
   sellerName: string;
+  sellerImage: string;
   price: number;
   title: string;
   content: string;

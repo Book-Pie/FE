@@ -17,12 +17,12 @@ import {
   StoreReviewItemContent,
   StoreReviewItemNickName,
   StoreReviewItemWrapper,
+  StoreReviewProfileImg,
 } from "./styles";
 import {
   ContentWrapper,
   CountWrapper,
   FlexBoxWrapper,
-  PieImg,
   ProductDetailTitle,
   ProfileArea,
   ReviewListEmptyWrapper,
@@ -72,14 +72,16 @@ const UsedBookStoreReview = () => {
   });
 
   const reviewList = storeReviewList.map((item, idx) => {
-    const { buyerName, content, rating, reviewDate, buyerId } = item;
+    const { buyerName, content, rating, reviewDate, buyerId, buyerImage } = item;
     const shopId = String(buyerId);
     return (
       <StoreReviewItemWrapper key={idx}>
         <FlexBoxWrapper>
           <Link to={`/shop/${shopId}`}>
             <ProfileArea>
-              <PieImg src={profileImg} alt="profileImg" />
+              <StoreReviewProfileImg>
+                <img src={buyerImage ? `${process.env.BASE_URL}/image/${buyerImage}` : profileImg} alt="myProfileImg" />
+              </StoreReviewProfileImg>
             </ProfileArea>
           </Link>
           <ContentWrapper>

@@ -6,14 +6,14 @@ import {
   ProductDetailCardWrapper,
   UsedStoreUserThumbnail,
   UsedBookDetailButton,
-  BigPieImg,
   ProductDetailCardFlexWrapper,
 } from "../style";
+import { UsedBookStoreProfileImg } from "./styles";
 import UsedStoreUserContent from "./UsedStoreUserContent";
 
 const ProductDetailCard = () => {
   const { content } = useTypedSelector(usedBookDetailSelector);
-  const { sellerName } = content;
+  const { sellerName, sellerImage } = content;
   const { sellerId } = content;
   const shopId = String(sellerId);
 
@@ -22,7 +22,9 @@ const ProductDetailCard = () => {
       <ProductDetailCardFlexWrapper>
         <UsedStoreUserThumbnail>
           <Link to={`/shop/${shopId}`}>
-            <BigPieImg src={profileImg} alt="profileImg" />
+            <UsedBookStoreProfileImg>
+              <img src={sellerImage ? `${process.env.BASE_URL}/image/${sellerImage}` : profileImg} alt="myProfileImg" />
+            </UsedBookStoreProfileImg>
           </Link>
         </UsedStoreUserThumbnail>
         <UsedStoreUserContent sellerName={sellerName} />
