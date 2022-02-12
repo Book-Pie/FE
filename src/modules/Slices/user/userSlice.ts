@@ -152,9 +152,8 @@ export const fetchBuyInfoAsync = createAsyncThunk<OrderResult, string, Types.Thu
  */
 export const fetchReviewAsync = createAsyncThunk<Types.Review, { userId: number; query: string }, Types.ThunkApi>(
   `${NAME}/fetchReviewAsync`,
-  async ({ query, userId }, { getState, rejectWithValue }) => {
+  async ({ query, userId }, { rejectWithValue }) => {
     try {
-      isLoggedInCheck(getState().userReduce);
       const { data } = await client.get<Types.ReviewAsyncReponse>(`/book-review/myReview/${userId}?${query}`);
       return data;
     } catch (error) {

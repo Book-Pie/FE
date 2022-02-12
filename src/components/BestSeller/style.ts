@@ -6,9 +6,6 @@ export const BestSellerWrapper = styled.div`
   grid-template-rows: repeat(2, 200px);
   row-gap: 10px;
   column-gap: 10px;
-  & > div {
-    ${props => props.theme.shadow[0]};
-  }
 
   @media screen and (max-width: 800px) {
     grid-template-columns: repeat(4, 4fr);
@@ -72,7 +69,7 @@ export const FirstCardWrapper = styled.div`
     line-height: 1.5;
     overflow: hidden;
     text-overflow: ellipsis;
-    -webkit-line-clamp: 5;
+    -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     color: ${props => props.theme.colors.white};
     font-size: 1.5rem;
@@ -166,7 +163,7 @@ export const CardWrapper = styled.div`
     line-height: 1.5;
     overflow: hidden;
     text-overflow: ellipsis;
-    -webkit-line-clamp: 5;
+    -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     padding-right: 5px;
     color: ${p => p.theme.colors.darkGrey};
