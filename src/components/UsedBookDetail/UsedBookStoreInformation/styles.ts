@@ -138,3 +138,17 @@ export const ProductDetailNoneProfileImg = styled(ProductDetailProfileImg)`
     padding: 20px;
   }
 `;
+
+export const BottomArea = styled.div`
+  margin-top: 20px;
+`;
+
+export const UsedStoreFlexBox = styled.div`
+  display: flex;
+  width: 320px;
+  height: 80px;
+
+  div {
+    margin-right: 30px;
+  }
+`;

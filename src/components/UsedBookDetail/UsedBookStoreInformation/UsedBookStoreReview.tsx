@@ -23,10 +23,10 @@ import {
 import {
   ContentWrapper,
   CountWrapper,
-  FlexBoxWrapper,
   ProductDetailTitle,
   ProfileArea,
   ReviewListEmptyWrapper,
+  StoreReviewFlexBoxWrapper,
   UsedBookStoreInformationWrapper,
 } from "../style";
 
@@ -77,7 +77,7 @@ const UsedBookStoreReview = () => {
     const shopId = String(buyerId);
     return (
       <StoreReviewItemWrapper key={idx}>
-        <FlexBoxWrapper>
+        <StoreReviewFlexBoxWrapper>
           <Link to={`/shop/${shopId}`}>
             <ProfileArea>
               {buyerImage ? (
@@ -101,7 +101,7 @@ const UsedBookStoreReview = () => {
             </FlexBox>
             <StoreReviewItemContent dangerouslySetInnerHTML={{ __html: content }} />
           </ContentWrapper>
-        </FlexBoxWrapper>
+        </StoreReviewFlexBoxWrapper>
       </StoreReviewItemWrapper>
     );
   });

@@ -8,7 +8,7 @@ import UsedStoreUserContent from "./UsedStoreUserContent";
 
 const ProductDetailCard = () => {
   const { content } = useTypedSelector(usedBookDetailSelector);
-  const { sellerName, sellerImage } = content;
+  const { sellerName, sellerImage, favoriteCategories, totalSales } = content;
   const { sellerId } = content;
   const shopId = String(sellerId);
 
@@ -26,7 +26,7 @@ const ProductDetailCard = () => {
             </ProductDetailNoneProfileImg>
           )}
         </Link>
-        <UsedStoreUserContent sellerName={sellerName} />
+        <UsedStoreUserContent sellerName={sellerName} totalSales={totalSales} favoriteCategories={favoriteCategories} />
       </ProductDetailCardFlexWrapper>
       <FollowButton>
         <UsedBookDetailButton small>팔로우</UsedBookDetailButton>
