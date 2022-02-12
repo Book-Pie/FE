@@ -102,6 +102,7 @@ export interface UsedBookDetailReplyResponse {
   replyDate: string;
   nickName: string;
   secret: boolean;
+  profile: string;
   subReply: UsedBookDetailSubReplyResponse[];
 }
 
@@ -124,12 +125,20 @@ export interface PagesResponse {
   replyCount: number;
 }
 
+export interface FavoriteCategories {
+  count: number;
+  category: string;
+}
+
 export interface UsedBookDetailResponse {
   usedBookId: number;
   sellerId: number;
   sellerName: string;
   sellerImage: string;
+  favoriteCategories: FavoriteCategories[];
+  totalSales: number;
   price: number;
+  liked: boolean;
   title: string;
   content: string;
   uploadDate: Date;
@@ -195,9 +204,11 @@ export interface UsedBookDetailReduce {
   likeList: PagesResponse[];
   buyList: UsedBookBuyListResponse[];
   relatedUsedBookList: PagesResponse[];
+  liked: boolean;
   list: BuyBookList;
   storeReviewList: UserReviewData[];
   pageCount: number;
+  storeReviewListTotal: number;
   totalElements: number;
   totalPages: number;
   pageNumber: number;

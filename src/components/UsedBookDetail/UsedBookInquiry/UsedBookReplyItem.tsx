@@ -2,7 +2,6 @@ import { useDispatch } from "react-redux";
 import profileImg from "assets/image/pie3x.png";
 import { ClickArea } from "components/Reviews/ReviewList/style";
 import { Button } from "@mui/material";
-import { UsedBookDetailReplyResponse } from "modules/Slices/usedBookDetail/types";
 import { deleteUsedBookDetailReply, editUsedBookDetailReply } from "modules/Slices/usedBookDetail/usedBookDetailSlice";
 import { compareDateFormat } from "utils/formatUtil";
 import LockIcon from "@mui/icons-material/Lock";
@@ -12,29 +11,20 @@ import { useTypedSelector } from "src/modules/store";
 import { userReduceSelector } from "src/modules/Slices/user/userSlice";
 import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
-import { DateContent, SecretItem } from "./styles";
+import { DateContent, NoneProfileImg, ProfileImg, SecretItem } from "./styles";
 import {
   ContentWrapper,
   FlexBoxWrapper,
-  PieImg,
   FlexBox,
-  ProfileArea,
   ReplyItemContent,
   ReplyItemNickName,
   ReplyItemWrapper,
 } from "../style";
 import SubReply from "./SubReply";
-
-export interface UsedBookReplyListParam {
-  review: UsedBookDetailReplyResponse;
-  sellerId: number;
-  sellerName: string;
-  idx: number;
-  page: number;
-}
+import { UsedBookReplyListParam } from "./types";
 
 export const UsedBookReplyItem = ({ review, sellerId, sellerName, page }: UsedBookReplyListParam) => {
-  const { nickName, replyDate, content, replyId, userId, secret, subReply } = review;
+  const { nickName, replyDate, content, replyId, userId, secret, subReply, profile } = review;
   const sx = { width: "12px", fontSize: "12px", padding: "2px", right: "20px" };
   const noId = -1;
   const history = useHistory();
@@ -102,9 +92,15 @@ export const UsedBookReplyItem = ({ review, sellerId, sellerName, page }: UsedBo
         <FlexBoxWrapper>
           <FlexBox>
             <Link to={`/shop/${shopId}`}>
-              <ProfileArea>
-                <PieImg src={profileImg} alt="profileImg" />
-              </ProfileArea>
+              {profile ? (
+                <ProfileImg storeReview>
+                  <img src={`${process.env.BASE_URL}/image/${profile}`} alt="myProfileImg" />
+                </ProfileImg>
+              ) : (
+                <NoneProfileImg storeReview>
+                  <img src={profileImg} alt="myProfileImg" />
+                </NoneProfileImg>
+              )}
             </Link>
             <ContentWrapper>
               <ClickArea>

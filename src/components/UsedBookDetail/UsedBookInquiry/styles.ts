@@ -17,7 +17,7 @@ export const SellerNameTitle = styled.div`
   width: 70px;
 `;
 
-export const ProfileImg = styled.div`
+export const ProfileImg = styled.div<{ storeReview: string }>`
   flex: 6;
   display: flex;
   justify-content: center;
@@ -26,14 +26,14 @@ export const ProfileImg = styled.div`
 
   img {
     border-radius: 50%;
-    height: 200px;
-    width: 200px;
+    height: ${props => (props.storeReview ? "70px" : "200px")};
+    width: ${props => (props.storeReview ? "70px" : "200px")};
     ${({ theme }) => theme.shadow[0]};
   }
 `;
 
 export const NoneProfileImg = styled(ProfileImg)`
   img {
-    padding: 30px;
+    padding: ${props => (props.storeReview ? "13px" : "30px")};
   }
 `;
