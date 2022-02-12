@@ -26,7 +26,7 @@ import {
 const ShopUserReview = () => {
   const { dispatch } = useSignIn();
   const headers = ["별점", "구매자명", "상품명", "내용", "작성일"];
-  const { storeReviewList, pageCount } = useTypedSelector(usedBookDetailSelector);
+  const { storeReviewList, pageCount, storeReviewListTotal } = useTypedSelector(usedBookDetailSelector);
   const { shop } = useTypedSelector(userReduceSelector);
   const [page, setPage] = useState(getShopPage(1));
   const sellerId = shop?.id;
@@ -91,7 +91,7 @@ const ShopUserReview = () => {
     <ShopContentWrapper>
       <ShopTitle>
         <UserReviewTitleSpan>
-          받은 거래 후기 <StoreReviewListCount>{storeReviewList.length * 2}</StoreReviewListCount>
+          받은 거래 후기 <StoreReviewListCount>{storeReviewListTotal}</StoreReviewListCount>
         </UserReviewTitleSpan>
       </ShopTitle>
       {headerList}

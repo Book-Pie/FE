@@ -4,6 +4,12 @@ import { compareDateFormat, make1000UnitsCommaFormet } from "utils/formatUtil";
 import useSignIn from "hooks/useSignIn";
 import Button from "@mui/material/Button";
 import client, { errorHandler, makeAuthTokenHeader } from "api/client";
+import { useState } from "react";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import ClickAwayListener from "@mui/material/ClickAwayListener";
+import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
+import styled from "styled-components";
+import { TagArea, TagContent, RedContent, ButtonArea, DisabledButton, WideRedContent } from "./styles";
 import {
   BookPrice,
   BookStatus,
@@ -12,6 +18,7 @@ import {
   DeliverySpan,
   InteractionArea,
   InteractionSpan,
+  LikeButton,
   Line,
   ProductDetail,
   ProductDetailContent,
@@ -20,22 +27,7 @@ import {
   UsedBookDetailButton,
   UsedBookWrapper,
 } from "../style";
-import { TagArea, TagContent, RedContent, ButtonArea, DisabledButton } from "./styles";
-
-export interface UsedBookAreaProps {
-  title: string;
-  price: number;
-  content: string;
-  view: number;
-  uploadDate: Date;
-  tags: string[];
-  likeCount: number;
-  replyCount: number;
-  usedBookId: number;
-  sellerId: number;
-  saleState: string;
-  bookState: string;
-}
+import { UsedBookAreaProps } from "./types";
 
 const UsedBookArea = ({
   title,
@@ -49,12 +41,18 @@ const UsedBookArea = ({
   sellerId,
   saleState,
   bookState,
+  liked,
 }: UsedBookAreaProps) => {
   const date = compareDateFormat(String(uploadDate));
   const bookPrice = make1000UnitsCommaFormet(String(price));
   const { signIn, dispatch } = useSignIn();
   const history = useHistory();
   const { user, isLoggedIn, token } = signIn;
+  const [open, setOpen] = useState(false);
+
+  const handleTooltipClose = () => {
+    setOpen(false);
+  };
 
   const handleUsedBookDeleteOnClick = async () => {
     try {
@@ -81,11 +79,13 @@ const UsedBookArea = ({
       return false;
     }
     if (user !== null) {
+      setOpen(true);
       dispatch(
         usedBookLike({
           usedBookId,
         }),
       );
+      setTimeout(() => setOpen(false), 2000);
     }
     return false;
   };
@@ -114,6 +114,27 @@ const UsedBookArea = ({
     });
   };
 
+  const LikeTooltip = styled(({ className, ...props }) => <Tooltip {...props} arrow classes={{ popper: className }} />)(
+    ({}) => ({
+      [`& .${tooltipClasses.arrow}`]: {
+        "&:before": {
+          border: "1px solid #dadde9",
+          backgroundColor: "#f5f5f9",
+        },
+      },
+      [`& .${tooltipClasses.tooltip}`]: {
+        backgroundColor: "#f5f5f9",
+        color: "rgba(0, 0, 0, 0.87)",
+        width: 250,
+        height: 40,
+        textAlign: "center",
+        paddingTop: "15px",
+        fontSize: 13,
+        border: "1px solid #dadde9",
+      },
+    }),
+  );
+
   return (
     <UsedBookWrapper>
       <TopInformationArea>
@@ -128,13 +149,13 @@ const UsedBookArea = ({
           {date !== 0 ? (
             <InteractionSpan>
               날짜
-              <RedContent>
+              <WideRedContent>
                 {date} {dayAgo}
-              </RedContent>
+              </WideRedContent>
             </InteractionSpan>
           ) : (
             <InteractionSpan>
-              날짜 <RedContent>{dayAgo}</RedContent>
+              날짜 <WideRedContent>{dayAgo}</WideRedContent>
             </InteractionSpan>
           )}
         </InteractionArea>
@@ -157,11 +178,31 @@ const UsedBookArea = ({
         <ProductDetailContent dangerouslySetInnerHTML={{ __html: content }} />
       </ProductDetail>
       <TagArea>{tags && tags.map((tag, index) => <TagContent key={index}>#{tag}</TagContent>)}</TagArea>
-
       <ButtonArea>
         {user?.id !== sellerId && (
           <>
-            <UsedBookDetailButton onClick={likeClick}>좋아요</UsedBookDetailButton>
+            <ClickAwayListener onClickAway={handleTooltipClose}>
+              <div>
+                <LikeTooltip
+                  PopperProps={{
+                    disablePortal: true,
+                  }}
+                  onClose={handleTooltipClose}
+                  open={open}
+                  arrow
+                  disableFocusListener
+                  disableHoverListener
+                  disableTouchListener
+                  title={liked ? "마이페이지 > 찜목록에 추가되었습니다 ✅" : "찜목록에서 제거되었습니다 ☑️"}
+                >
+                  <LikeButton onClick={likeClick} className={liked ? "UsedBookArea--active" : "UsedBookArea--nomal"}>
+                    <div>
+                      <FavoriteIcon sx={{ paddingTop: 1, fontSize: 30 }} /> 찜
+                    </div>
+                  </LikeButton>
+                </LikeTooltip>
+              </div>
+            </ClickAwayListener>
             {saleState === "TRADING" && <DisabledButton>현재 거래중인 상품입니다.</DisabledButton>}
             {saleState === "SOLD_OUT" && <DisabledButton>판매완료된 상품입니다.</DisabledButton>}
             {saleState === "SALE" && (

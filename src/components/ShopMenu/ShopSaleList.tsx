@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { userReduceSelector } from "src/modules/Slices/user/userSlice";
 import { useTypedSelector } from "src/modules/store";
 import queryString from "query-string";
-import client, { makeAuthTokenHeader } from "src/api/client";
+import client from "src/api/client";
 import noComments from "assets/image/noComments.png";
 import { getShopPage, removeShopPage, setShopPage } from "src/utils/localStorageUtil";
 import { Link } from "react-router-dom";
@@ -17,7 +17,7 @@ import { DateWrapper, ShopContentWrapper, ShopReviewListEmptyWrapper } from "./s
 import { FlexBox } from "../BuyList/styles";
 
 const ShopSaleList = () => {
-  const { user, token, shop } = useTypedSelector(userReduceSelector);
+  const { shop } = useTypedSelector(userReduceSelector);
   const [list, setList] = useState<SaleListState>({
     page: getShopPage(1),
     pageCount: 0,
@@ -29,23 +29,19 @@ const ShopSaleList = () => {
 
   const handleHasMoreList = useCallback(
     async (page: number, limit: number) => {
-      if (!user || !token || !shop) throw new Error("로그인이 필요합니다.");
-      const query = queryString.stringify({ userId: shop.id, page, limit });
-      const { data } = await client.get<SaleListResponse>(`/usedbook/user?${query}`, makeAuthTokenHeader(token));
-      const { pageCount, pages } = data;
-      setList({
-        pageCount,
-        pages,
-        page,
-        isEmpty: pages.length === 0 ? true : false,
-      });
+      if (shop) {
+        const query = queryString.stringify({ userId: shop.id, page, limit });
+        const { data } = await client.get<SaleListResponse>(`/usedbook/user?${query}`);
+        const { pageCount, pages } = data;
+        setList({
+          pageCount,
+          pages,
+          page,
+          isEmpty: pages.length === 0 ? true : false,
+        });
+      }
     },
-    [user, token, shop],
-  );
-
-  const handlePaginationOnChange = useCallback(
-    (_: React.ChangeEvent<unknown>, value: number) => handleHasMoreList(value, limit),
-    [handleHasMoreList, limit],
+    [shop],
   );
 
   useEffect(() => {

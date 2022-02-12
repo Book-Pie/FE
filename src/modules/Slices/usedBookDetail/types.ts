@@ -1,4 +1,5 @@
 import { AppDispatch } from "modules/store";
+import { StateEnumType, UsedBook } from "src/components/UsedBookList/types";
 import { UserReviewData } from "../userReview/types";
 
 export interface UsedBookDetailThunk {
@@ -102,6 +103,7 @@ export interface UsedBookDetailReplyResponse {
   replyDate: string;
   nickName: string;
   secret: boolean;
+  profile: string;
   subReply: UsedBookDetailSubReplyResponse[];
 }
 
@@ -119,29 +121,37 @@ export interface PagesResponse {
   image: string;
   uploadDate: Date;
   modifiedDate: Date;
-  state: string;
+  state: keyof StateEnumType;
   likeCount: number;
   replyCount: number;
 }
 
+export interface FavoriteCategories {
+  count: number;
+  category: string;
+}
+
 export interface UsedBookDetailResponse {
-  usedBookId: number;
-  sellerId: number;
-  sellerName: string;
-  sellerImage: string;
-  price: number;
-  title: string;
-  content: string;
-  uploadDate: Date;
-  view: number;
-  bookState: string;
-  saleState: string;
-  fstCategory: string;
-  sndCategory: string;
-  likeCount: string | number;
-  replyCount: number;
-  tags: string[];
-  images: string[];
+  usedBookId?: number;
+  sellerId?: number;
+  sellerName?: string;
+  sellerImage?: string;
+  favoriteCategories?: FavoriteCategories[];
+  totalSales?: number;
+  price?: number;
+  liked?: boolean;
+  title?: string;
+  content?: string;
+  uploadDate?: Date;
+  view?: number;
+  bookState?: string;
+  saleState?: string;
+  fstCategory?: string;
+  sndCategory?: string;
+  likeCount?: string | number;
+  replyCount?: number;
+  tags?: string[];
+  images?: string[];
 }
 
 export interface UsedBookLikeGetResponse {
@@ -192,12 +202,14 @@ export interface MyUsedBookAsyncSuccess {
 export interface UsedBookDetailReduce {
   content: UsedBookDetailResponse;
   replyList: UsedBookDetailReplyResponse[];
-  likeList: PagesResponse[];
+  likeList: UsedBook[];
   buyList: UsedBookBuyListResponse[];
   relatedUsedBookList: PagesResponse[];
+  liked: boolean;
   list: BuyBookList;
   storeReviewList: UserReviewData[];
   pageCount: number;
+  storeReviewListTotal: number;
   totalElements: number;
   totalPages: number;
   pageNumber: number;

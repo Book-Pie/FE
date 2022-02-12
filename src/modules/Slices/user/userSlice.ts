@@ -246,7 +246,7 @@ const userSlice = createSlice({
       state.shop = payload;
       state.status = "idle";
     });
-    builder.addCase(fetchShopUserInfoAsync.rejected, (state, { payload }) => {
+    builder.addCase(fetchShopUserInfoAsync.rejected, state => {
       state.token = null;
       state.status = "idle";
     });

@@ -8,10 +8,8 @@ import { getMyPageChart, userReviewSelector } from "src/modules/Slices/userRevie
 import { useTypedSelector } from "src/modules/store";
 import FallBack from "./FallBack";
 import { MyContainer, MyRouterWrapper, ShopMenuTabWrapper } from "./styles";
+import { ShopParam } from "./types";
 
-export interface ShopParam {
-  shopId: string;
-}
 const ShopSaleList = lazy(() => import("components/ShopMenu/ShopSaleList"));
 const ShopBookReview = lazy(() => import("components/ShopMenu/ShopBookReview"));
 const ShopUserReview = lazy(() => import("components/ShopMenu/ShopUserReview"));
@@ -22,7 +20,6 @@ const Shop = () => {
   const [value, setValue] = useState(2);
   const { shop } = useTypedSelector(userReduceSelector);
   const { myPageChart } = useTypedSelector(userReviewSelector);
-  const id = String(shopId);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -73,12 +70,12 @@ const Shop = () => {
 
   useEffect(() => {
     dispatch(fetchShopUserInfoAsync(shopId));
-    dispatch(getMyPageChart(String(id)));
+    dispatch(getMyPageChart(shopId));
   }, [dispatch, shopId]);
 
   return (
     <MyContainer>
-      <ShopTop shop={shop} chart={myPageChart} />
+      {shop && <ShopTop shop={shop} chart={myPageChart} />}
       <ShopMenuTabWrapper>
         <Tabs value={value} onChange={handleChange} variant="scrollable" allowScrollButtonsMobile scrollButtons>
           {myMenus}

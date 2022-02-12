@@ -5,9 +5,16 @@ export const TagContent = styled.span`
   color: #dd002c;
 `;
 
-export const TagArea = styled.div``;
+export const TagArea = styled.div`
+  margin-bottom: 20px;
+`;
 
 export const RedContent = styled.span`
+  color: #dd002c;
+`;
+
+export const WideRedContent = styled.span`
+  margin-left: 10px;
   color: #dd002c;
 `;
 
@@ -22,4 +29,8 @@ export const DisabledButton = styled.div`
   border-radius: 5px;
   color: #d1d5d9;
   text-align: center;
+`;
+
+export const HeartArea = styled.span`
+  margin-top: 10px;
 `;

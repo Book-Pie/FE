@@ -5,7 +5,6 @@ import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import Textarea from "src/components/TextArea/Textarea";
 import useSignIn from "src/hooks/useSignIn";
-import { UsedBookDetailSubReplyResponse } from "src/modules/Slices/usedBookDetail/types";
 import {
   addUsedBookDetailSubReply,
   deleteUsedBookDetailSubReply,
@@ -26,21 +25,7 @@ import {
   SubProfileArea,
 } from "../style";
 import { SellerNameTitle } from "./styles";
-
-export interface SubReplyParam {
-  sx: {
-    width: string;
-    fontSize: string;
-    padding: string;
-    right: string;
-  };
-  sellerName: string;
-  subReply?: UsedBookDetailSubReplyResponse;
-  replyId: number;
-  isSubReplyAdd?: boolean;
-  sellerId: number;
-  page: number;
-}
+import { SubReplyParam } from "./types";
 
 const SubReply = ({ sx, replyId, sellerName, sellerId, subReply, isSubReplyAdd, page }: SubReplyParam) => {
   const history = useHistory();
@@ -152,8 +137,6 @@ const SubReply = ({ sx, replyId, sellerName, sellerId, subReply, isSubReplyAdd, 
                       isLoggedIn={isLoggedIn}
                       onChange={handleSubReviewChange}
                       value={SubContent || ""}
-                      limit={100}
-                      height={100}
                       placeholder="상품 문의 작성 시 10자 이상 작성해주세요."
                       checkAuth={() => {
                         if (isLoggedIn) {
@@ -239,8 +222,6 @@ const SubReply = ({ sx, replyId, sellerName, sellerId, subReply, isSubReplyAdd, 
                         isLoggedIn={isLoggedIn}
                         onChange={handleSubReviewChange}
                         value={SubContent || ""}
-                        limit={100}
-                        height={100}
                         placeholder="상품 문의 작성 시 10자 이상 작성해주세요."
                         checkAuth={() => {
                           if (isLoggedIn) {

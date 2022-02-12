@@ -46,6 +46,12 @@ export const ProfileImg = styled.div`
   }
 `;
 
+export const NoneProfileImg = styled(ProfileImg)`
+  img {
+    padding: 30px;
+  }
+`;
+
 export const MyTopPointInfo = styled.div`
   position: relative;
   cursor: pointer;

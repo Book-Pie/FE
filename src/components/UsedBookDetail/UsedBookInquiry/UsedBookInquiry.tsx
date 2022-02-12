@@ -21,12 +21,7 @@ import Pagination from "@mui/material/Pagination";
 import { getUsedBookReplyPage, removeUsedBookReplyPage, setUsedBookReplyPage } from "utils/localStorageUtil";
 import { Box, FormControlLabel } from "@mui/material";
 import { CountWrapper, ProductDetailTitle, UsedBookStoreInformationWrapper, ReviewListEmptyWrapper } from "../style";
-
-export interface submitParam {
-  usedBookId: number;
-  userId: number;
-  content: string;
-}
+import { submitParam } from "./types";
 
 const UsedBookInquiry = () => {
   const { handleSubmit } = useForm<submitParam>();
@@ -144,8 +139,6 @@ const UsedBookInquiry = () => {
           isLoggedIn={isLoggedIn}
           onChange={handleReviewChange}
           value={myContent}
-          limit={100}
-          height={100}
           placeholder="상품 문의 작성 시 10자 이상 작성해주세요."
           checkAuth={() => {
             if (isLoggedIn) {

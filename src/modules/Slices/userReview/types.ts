@@ -143,6 +143,7 @@ export interface GetStoreUserReviewAsyncSuccess {
   data: {
     pageCount: number;
     pages: UserReviewData[];
+    totalElement: number;
   };
   error: string;
 }

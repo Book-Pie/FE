@@ -1,33 +1,41 @@
-import { CardBoldTitle, CardSmallTitle, UsedStoreUserContentWrapper } from "../style";
+import React from "react";
+import { CardBoldTitle, CardSmallTitle, UsedStoreUserContentWrapper, WideCardSmallTitle } from "../style";
+import { BottomArea, UsedStoreFlexBox } from "./styles";
+import { UsedStoreUserContentParam } from "./types";
 
-export interface UsedStoreUserContentParam {
-  sellerName: string;
-}
-
-const UsedStoreUserContent = ({ sellerName }: UsedStoreUserContentParam) => {
+const UsedStoreUserContent = ({ sellerName, favoriteCategories, totalSales }: UsedStoreUserContentParam) => {
   // 임시 데이터
-  const tag1 = "#에세이";
-  const tag2 = "#취미";
-  const goodsCount = 0;
   const followCount = 0;
 
   return (
     <UsedStoreUserContentWrapper>
       <div>
-        <CardSmallTitle>닉네임</CardSmallTitle>
-        <CardSmallTitle>취향</CardSmallTitle>
+        <WideCardSmallTitle>닉네임</WideCardSmallTitle>
+        <WideCardSmallTitle>취향</WideCardSmallTitle>
       </div>
-      <div>
-        <CardBoldTitle>{sellerName}</CardBoldTitle>
-        <CardBoldTitle>{tag1}</CardBoldTitle>
-        <CardBoldTitle>{tag2}</CardBoldTitle>
-      </div>
-      <br />
-      <br />
-      <div>
-        <CardSmallTitle>상품 {goodsCount}</CardSmallTitle>
+      <UsedStoreFlexBox>
+        <div>
+          <CardBoldTitle>{sellerName}</CardBoldTitle>
+        </div>
+        <div>
+          {favoriteCategories &&
+            favoriteCategories
+              .filter((item, idx) => idx <= 2)
+              .map((item, idx) => (
+                <React.Fragment key={idx}>
+                  <CardBoldTitle>
+                    #{item.category}
+                    <br />
+                  </CardBoldTitle>
+                </React.Fragment>
+              ))}
+        </div>
+      </UsedStoreFlexBox>
+
+      <BottomArea>
+        <CardSmallTitle>상품 {totalSales}</CardSmallTitle>
         <CardSmallTitle>팔로우 {followCount}</CardSmallTitle>
-      </div>
+      </BottomArea>
     </UsedStoreUserContentWrapper>
   );
 };

@@ -8,3 +8,12 @@ export interface CategoryParams {
   item: ParentsCategoryData;
   key: number;
 }
+
+export interface HomeCategoryListParam {
+  list: BookItemProps[];
+}
+
+export interface CategorysProps {
+  categorys: ParentsCategoryData[];
+  defaultLocation: string;
+}

@@ -76,8 +76,6 @@ export const Reviews = ({ bookId, categoryName }: ReviewsParam) => {
 
   return (
     <ReviewsContentWrapper className="Reviews">
-      {/* 정렬 부분 */}
-      {/* <ReviewListHeader bookId={bookId} />*/}
       {!!bestComment.length && (
         <>
           <BestReviewsListTitle>베스트 리뷰</BestReviewsListTitle>

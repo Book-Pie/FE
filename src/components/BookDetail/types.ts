@@ -18,6 +18,27 @@ export interface BookDetailPanelProps {
   authorPhoto?: string;
 }
 
+export interface bookInfoHeaderParam {
+  author: string;
+  cover: string;
+  title: string;
+  categoryName: string;
+  publisher: string;
+  ReviewRank: number;
+  averageRating: number;
+}
+
+export interface UsedBookRecommendListParam {
+  isbn: string;
+}
+
+export interface BookRecommendListParam {
+  isbn: string;
+}
+export interface BookDetailParam {
+  isbn13: string;
+}
+
 export interface TextTruncateProps {
   text: string;
   lines: number;

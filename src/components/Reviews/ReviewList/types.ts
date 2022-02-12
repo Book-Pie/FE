@@ -3,6 +3,10 @@ import { getCommentProps } from "modules/Slices/comment/types";
 export type DateDTO = string;
 export type BookId = number;
 
+export interface ReviewListEmptyParam {
+  title: string;
+}
+
 export interface BestReviewItemParam {
   item: getCommentProps;
 }

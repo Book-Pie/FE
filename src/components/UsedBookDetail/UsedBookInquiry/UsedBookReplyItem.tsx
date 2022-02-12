@@ -2,7 +2,6 @@ import { useDispatch } from "react-redux";
 import profileImg from "assets/image/pie3x.png";
 import { ClickArea } from "components/Reviews/ReviewList/style";
 import { Button } from "@mui/material";
-import { UsedBookDetailReplyResponse } from "modules/Slices/usedBookDetail/types";
 import { deleteUsedBookDetailReply, editUsedBookDetailReply } from "modules/Slices/usedBookDetail/usedBookDetailSlice";
 import { compareDateFormat } from "utils/formatUtil";
 import LockIcon from "@mui/icons-material/Lock";
@@ -12,38 +11,27 @@ import { useTypedSelector } from "src/modules/store";
 import { userReduceSelector } from "src/modules/Slices/user/userSlice";
 import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
-import { DateContent, SecretItem } from "./styles";
+import { DateContent, NoneProfileImg, ProfileImg, SecretItem } from "./styles";
 import {
   ContentWrapper,
   FlexBoxWrapper,
-  PieImg,
   FlexBox,
-  ProfileArea,
   ReplyItemContent,
   ReplyItemNickName,
   ReplyItemWrapper,
 } from "../style";
 import SubReply from "./SubReply";
-
-export interface UsedBookReplyListParam {
-  review: UsedBookDetailReplyResponse;
-  sellerId: number;
-  sellerName: string;
-  idx: number;
-  page: number;
-}
+import { UsedBookReplyListParam } from "./types";
 
 export const UsedBookReplyItem = ({ review, sellerId, sellerName, page }: UsedBookReplyListParam) => {
-  const { nickName, replyDate, content, replyId, userId, secret, subReply } = review;
+  const { nickName, replyDate, content, replyId, userId, secret, subReply, profile } = review;
   const sx = { width: "12px", fontSize: "12px", padding: "2px", right: "20px" };
-  const noId = -1;
   const history = useHistory();
   const dispatch = useDispatch();
   const { isLoggedIn, user } = useTypedSelector(userReduceSelector);
   const [isUpdate, setIsUpdate] = useState<boolean>(false);
   const [myContent, setContent] = useState<string>(content);
   const [isSubReplyAdd, setIsSubReplyAdd] = useState<boolean>(false);
-  const { id } = user ?? noId;
   const date = compareDateFormat(replyDate);
   const shopId = String(userId);
   let dayAgo = "일전";
@@ -83,17 +71,18 @@ export const UsedBookReplyItem = ({ review, sellerId, sellerName, page }: UsedBo
     if (myContent.length <= 10) {
       alert("댓글을 10자 이상 입력해주세요.");
     } else if (window.confirm("댓글을 정말로 수정하시겠습니까?") === true) {
-      dispatch(
-        editUsedBookDetailReply({
-          userId: id,
-          replyId,
-          content: myContent,
-          secret,
-        }),
-      );
-      setIsUpdate(!isUpdate);
+      if (user) {
+        dispatch(
+          editUsedBookDetailReply({
+            userId: user.id,
+            replyId,
+            content: myContent,
+            secret,
+          }),
+        );
+        setIsUpdate(!isUpdate);
+      }
     }
-    return false;
   };
 
   return (
@@ -102,13 +91,19 @@ export const UsedBookReplyItem = ({ review, sellerId, sellerName, page }: UsedBo
         <FlexBoxWrapper>
           <FlexBox>
             <Link to={`/shop/${shopId}`}>
-              <ProfileArea>
-                <PieImg src={profileImg} alt="profileImg" />
-              </ProfileArea>
+              {profile ? (
+                <ProfileImg storeReview>
+                  <img src={`${process.env.BASE_URL}/image/${profile}`} alt="myProfileImg" />
+                </ProfileImg>
+              ) : (
+                <NoneProfileImg storeReview>
+                  <img src={profileImg} alt="myProfileImg" />
+                </NoneProfileImg>
+              )}
             </Link>
             <ContentWrapper>
               <ClickArea>
-                {id === sellerId && (
+                {user && user.id === sellerId && (
                   <Button
                     variant="contained"
                     color="mainDarkBrown"
@@ -118,7 +113,7 @@ export const UsedBookReplyItem = ({ review, sellerId, sellerName, page }: UsedBo
                     답글
                   </Button>
                 )}
-                {id === userId && !isUpdate && (
+                {user && user.id === userId && !isUpdate && (
                   <>
                     <Button
                       variant="contained"
@@ -133,7 +128,7 @@ export const UsedBookReplyItem = ({ review, sellerId, sellerName, page }: UsedBo
                     </Button>
                   </>
                 )}
-                {id === userId && isUpdate && (
+                {user && user.id === userId && isUpdate && (
                   <>
                     <Button
                       variant="contained"
@@ -161,15 +156,13 @@ export const UsedBookReplyItem = ({ review, sellerId, sellerName, page }: UsedBo
                 </ReplyItemNickName>
               )}
               {!secret && <ReplyItemNickName>{nickName}</ReplyItemNickName>}
-              {id !== userId && id !== sellerId && secret ? (
+              {user && user.id !== userId && user.id !== sellerId && secret ? (
                 <SecretItem>비밀댓글입니다.</SecretItem>
               ) : isUpdate ? (
                 <Textarea
                   isLoggedIn={isLoggedIn}
                   onChange={handleReviewChange}
                   value={myContent}
-                  limit={100}
-                  height={100}
                   placeholder="상품 문의 작성 시 10자 이상 작성해주세요."
                   checkAuth={() => {
                     if (isLoggedIn) {

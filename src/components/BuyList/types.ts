@@ -1,4 +1,26 @@
-export interface addUserReviewSubmitParam {
+import { ModalItemParam, UsedBookBuyListResponse } from "src/modules/Slices/usedBookDetail/types";
+
+export interface buyConfirmSubmitParam {
+  orderId: string;
+}
+export interface BuyList {
+  pages: UsedBookBuyListResponse[];
+}
+
+export interface UserReviewModalProps {
+  open: boolean;
+  item: ModalItemParam;
+  handleClose: () => void;
+}
+
+export interface IContent {
+  pages: UsedBookBuyListResponse[];
+  titleFilter: string | null;
+  select: string;
+  open: boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+export interface AddUserReviewSubmitParam {
   orderId?: string;
   userReviewId?: string;
   content: string;
@@ -20,7 +42,7 @@ export interface BuyListResponse {
 }
 
 export interface addUserReviewForm {
-  addUserReviewSubmit: (data: addUserReviewSubmitParam) => void;
+  addUserReviewSubmit: (data: AddUserReviewSubmitParam) => void;
 }
 
 export interface MyBuyList {

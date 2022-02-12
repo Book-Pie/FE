@@ -17,15 +17,16 @@ import {
   StoreReviewItemContent,
   StoreReviewItemNickName,
   StoreReviewItemWrapper,
+  StoreReviewNoneProfileImg,
   StoreReviewProfileImg,
 } from "./styles";
 import {
   ContentWrapper,
   CountWrapper,
-  FlexBoxWrapper,
   ProductDetailTitle,
   ProfileArea,
   ReviewListEmptyWrapper,
+  StoreReviewFlexBoxWrapper,
   UsedBookStoreInformationWrapper,
 } from "../style";
 
@@ -76,12 +77,18 @@ const UsedBookStoreReview = () => {
     const shopId = String(buyerId);
     return (
       <StoreReviewItemWrapper key={idx}>
-        <FlexBoxWrapper>
+        <StoreReviewFlexBoxWrapper>
           <Link to={`/shop/${shopId}`}>
             <ProfileArea>
-              <StoreReviewProfileImg>
-                <img src={buyerImage ? `${process.env.BASE_URL}/image/${buyerImage}` : profileImg} alt="myProfileImg" />
-              </StoreReviewProfileImg>
+              {buyerImage ? (
+                <StoreReviewProfileImg>
+                  <img src={`${process.env.BASE_URL}/image/${buyerImage}`} alt="myProfileImg" />
+                </StoreReviewProfileImg>
+              ) : (
+                <StoreReviewNoneProfileImg>
+                  <img src={profileImg} alt="NoneProfileImg" />
+                </StoreReviewNoneProfileImg>
+              )}
             </ProfileArea>
           </Link>
           <ContentWrapper>
@@ -94,7 +101,7 @@ const UsedBookStoreReview = () => {
             </FlexBox>
             <StoreReviewItemContent dangerouslySetInnerHTML={{ __html: content }} />
           </ContentWrapper>
-        </FlexBoxWrapper>
+        </StoreReviewFlexBoxWrapper>
       </StoreReviewItemWrapper>
     );
   });

@@ -7,7 +7,6 @@ import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { Link, useHistory } from "react-router-dom";
 import useSignIn from "hooks/useSignIn";
-import { ModalItemParam } from "modules/Slices/usedBookDetail/types";
 import { addUserReview, editUserReview } from "modules/Slices/userReview/userReviewSlice";
 import {
   RegisterButton,
@@ -21,34 +20,28 @@ import {
   ModalButtonArea,
 } from "./styles";
 import { HoverRating } from "../Rating/Rating";
-import { addUserReviewSubmitParam } from "./types";
+import { AddUserReviewSubmitParam, UserReviewModalProps } from "./types";
 
-export interface userReviewModalProps {
-  open: boolean;
-  item: ModalItemParam;
-  handleClose: () => void;
-}
-
-const Modal = (props: userReviewModalProps) => {
+const Modal = (props: UserReviewModalProps) => {
   const history = useHistory();
   const dispatch = useDispatch();
   const { signIn } = useSignIn();
   const { isLoggedIn } = signIn;
-  const { handleSubmit, register, setValue } = useForm<addUserReviewSubmitParam>();
+  const { handleSubmit, register, setValue } = useForm<AddUserReviewSubmitParam>();
 
   const { open, handleClose, item } = props;
   if (!item) throw new Error("거래상품이 존재하지 않습니다.");
   const {
+    orderId,
     bookId,
+    title,
     reviewDate,
     usedBookTitle,
     image,
     orderDate,
-    orderId,
     price,
     sellerNickName,
     sellerName,
-    title,
     userReviewId,
   } = item;
   let { rating, content } = item;
@@ -70,7 +63,7 @@ const Modal = (props: userReviewModalProps) => {
     }
   };
 
-  const onSubmit = (data: addUserReviewSubmitParam) => {
+  const onSubmit = (data: AddUserReviewSubmitParam) => {
     if (!isLoggedIn) {
       if (window.confirm("로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?")) {
         history.replace("/signIn");

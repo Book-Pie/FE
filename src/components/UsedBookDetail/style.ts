@@ -54,9 +54,15 @@ export const FlexBoxWrapper = styled(FlexBox)`
   justify-content: space-between;
 `;
 
+export const StoreReviewFlexBoxWrapper = styled(FlexBox)`
+  justify-content: space-between;
+  padding-left: 10px;
+`;
+
 export const PieImg = styled.img`
-  width: 45px;
-  height: 45px;
+  width: 80px;
+  height: 80px;
+  padding: 15px;
 `;
 
 export const BigPieImg = styled.img`
@@ -77,7 +83,6 @@ export const ProfileArea = styled.div`
   width: 80px;
   height: 80px;
   margin: 0 10px 0 0;
-  padding: 16.5px 15.3px 16.5px 15.3px;
   border-radius: 40px;
   background-color: #f2f2f2;
 `;
@@ -146,7 +151,15 @@ export const ReviewListEmptyWrapper = styled.div`
 `;
 
 export const CardSmallTitle = styled.span`
-  margin: 0 40px 6px 0;
+  margin: 0 70px 6px 0;
+  font-size: 16px;
+  line-height: 1.88;
+  letter-spacing: -0.4px;
+  color: #525252;
+`;
+
+export const WideCardSmallTitle = styled.span`
+  margin: 0 100px 6px 0;
   font-size: 16px;
   line-height: 1.88;
   letter-spacing: -0.4px;
@@ -154,7 +167,7 @@ export const CardSmallTitle = styled.span`
 `;
 
 export const CardBoldTitle = styled.span`
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
   line-height: 1.67;
   letter-spacing: -0.45px;
@@ -188,7 +201,6 @@ export const UsedStoreUserThumbnail = styled.div`
   width: 120px;
   height: 120px;
   margin-bottom: 8px;
-  padding: 22.8px 21px;
   border-radius: 60px;
   background-color: #f2f2f2;
 `;
@@ -197,7 +209,7 @@ export const ProductDetailCardWrapper = styled.div`
   width: 543px;
   height: 200px;
   margin: 16px 27px 80px 0px;
-  padding: 16px 158px 16px 16px;
+  padding: 16px;
   border-radius: 4px;
   border: solid 1px #4f3629;
   background-color: #fff;
@@ -227,6 +239,62 @@ export const UsedBookDetailButton = styled.button`
   &:hover {
     background-color: #edeae9;
     cursor: pointer;
+  }
+`;
+
+export const LikeButton = styled.button`
+  &.UsedBookArea--nomal {
+    font-size: ${props => (props.small ? "14px" : "18px")};
+    width: ${props => (props.small ? "100px" : "160px")};
+    height: ${props => (props.small ? "35px" : "53px")};
+    margin: 0 10px 0 7px;
+    border-radius: 5px;
+    border: solid 1px #4f3629;
+    background: rgb(204, 204, 204);
+    color: rgb(255, 255, 255);
+    font-weight: 600;
+  }
+  div {
+    display: flex;
+    justify-content: center;
+    align-items: end;
+    padding-bottom: 5px;
+  }
+
+  &:hover {
+    background-color: #edeae9;
+    color: #4f3629;
+    cursor: pointer;
+  }
+
+  &:active,
+  &:hover,
+  &:focus {
+    .MuiSvgIcon-root {
+      color: black;
+    }
+    span {
+      background-color: #edeae9;
+      color: #4f3629;
+    }
+  }
+
+  &.UsedBookArea--active {
+    font-size: ${props => (props.small ? "14px" : "18px")};
+    width: ${props => (props.small ? "100px" : "160px")};
+    height: ${props => (props.small ? "35px" : "53px")};
+    margin: 0 10px 0 7px;
+    border-radius: 5px;
+    border: solid 1px #4f3629;
+    font-weight: 600;
+
+    .MuiSvgIcon-root {
+      color: #dd002c;
+    }
+    span {
+      background-color: #edeae9;
+      color: #4f3629;
+    }
   }
 `;
 
@@ -277,7 +345,7 @@ export const RelatedUsedBookHashTagItem = styled.div`
   font-weight: normal;
 `;
 
-export const RelatedUsedBookBoldTitle = styled.div`
+export const RelatedUsedBookBoldTitle = styled.div<{ brown?: boolean }>`
   color: ${props => (props.brown ? "#4f3629" : "#222")};
   font-size: 20px;
   font-weight: bold;
@@ -355,7 +423,7 @@ export const UsedBookImg = styled.img`
 export const UsedBookWrapper = styled.div`
   width: 600px;
   height: 700px;
-  margin: 21px 28px 50px 0px;
+  margin: 21px 28px 50px 15px;
   object-fit: contain;
 `;
 
@@ -375,7 +443,7 @@ export const InteractionSpan = styled.span`
 `;
 
 export const UsedStoreUserContentWrapper = styled.div`
-  width: 287px;
+  width: 350px;
   height: 120px;
   padding: 5px 0 0 30px;
   margin: 2px 0 6px 0;

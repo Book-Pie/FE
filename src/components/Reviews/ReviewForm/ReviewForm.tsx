@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import { addComment, editComment } from "modules/Slices/comment/commentSlice";
@@ -15,12 +15,9 @@ import { ReviewFormProps } from "./types";
 
 export const ReviewForm = ({ isbn, isMyReview, myComment, categoryName, checkAuth }: ReviewFormProps) => {
   const { handleSubmit } = useForm({ defaultValues: { something: "anything" } });
-  const { reviewDate } = myComment ?? "";
-  const commentDate = reviewDateFormat(reviewDate);
   const myUserStatus = useTypedSelector(userReduceSelector);
   const { isLoggedIn, token } = myUserStatus ?? false;
   const category = categoryName.split(">", 2)[1];
-
   let editStatus = false;
   let myRatingDefault = 3;
   let myContent = "";
@@ -39,11 +36,13 @@ export const ReviewForm = ({ isbn, isMyReview, myComment, categoryName, checkAut
   const [editDisabled, editEnabled] = useState(editStatus);
   const [myReview, setIsMyReview] = useState(isMyReview);
 
-  const handleRatingChange = (event: any) => {
-    setValue(event.target.value);
+  const handleRatingChange = (event: React.SyntheticEvent<Element, Event>, value: number | null) => {
+    if (value !== null) {
+      setValue(value);
+    }
   };
 
-  const handleReviewChange = (event: any) => {
+  const handleReviewChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setContent(event.target.value);
   };
 
@@ -139,7 +138,7 @@ export const ReviewForm = ({ isbn, isMyReview, myComment, categoryName, checkAut
       {editDisabled && (
         <>
           <TextWrapper>
-            <MyReviwContent>{commentDate}</MyReviwContent>
+            {myComment && <MyReviwContent>{reviewDateFormat(myComment.reviewDate)}</MyReviwContent>}
             <MyReviwContent margin dangerouslySetInnerHTML={{ __html: reviewContent }} />
           </TextWrapper>
           <ButtonArea>
@@ -154,8 +153,6 @@ export const ReviewForm = ({ isbn, isMyReview, myComment, categoryName, checkAut
           <TextareaAutosize
             onChange={handleReviewChange}
             value={reviewContent}
-            limit={100}
-            height={100}
             placeholder="리뷰 작성 시 10자 이상 작성해주세요."
             isDisabled={editDisabled}
           />
@@ -181,8 +178,6 @@ export const ReviewForm = ({ isbn, isMyReview, myComment, categoryName, checkAut
           onChange={handleReviewChange}
           checkAuth={checkAuth}
           value={reviewContent}
-          limit={100}
-          height={100}
           placeholder="리뷰 작성 시 10자 이상 작성해주세요."
         />
         <ButtonArea>

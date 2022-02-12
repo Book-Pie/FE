@@ -54,6 +54,21 @@ export const StoreReviewItemNickName = styled.div`
   color: #fff;
 `;
 
+export const ProfileImg = styled.div`
+  flex: 6;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+
+  img {
+    border-radius: 50%;
+    height: 200px;
+    width: 200px;
+    ${({ theme }) => theme.shadow[0]};
+  }
+`;
+
 export const UsedBookStoreProfileImg = styled.div`
   flex: 6;
   display: flex;
@@ -61,7 +76,20 @@ export const UsedBookStoreProfileImg = styled.div`
 
   img {
     width: 120px;
-    height: 80px;
+    height: 120px;
+    margin-bottom: 8px;
+    border-radius: 80%;
+  }
+`;
+
+export const UsedBookStoreNoneProfileImg = styled.div`
+  flex: 6;
+  display: flex;
+  align-items: center;
+
+  img {
+    width: 120px;
+    height: 120px;
     margin-bottom: 8px;
     border-radius: 80%;
   }
@@ -73,9 +101,54 @@ export const StoreReviewProfileImg = styled.div`
   align-items: center;
 
   img {
-    width: 50px;
-    height: 50px;
+    width: 80px;
+    height: 80px;
     margin-bottom: 8px;
     border-radius: 80%;
+  }
+`;
+
+export const StoreReviewNoneProfileImg = styled(StoreReviewProfileImg)`
+  img {
+    padding: 10px;
+  }
+`;
+
+export const FollowButton = styled.div`
+  margin-left: 10px;
+`;
+
+export const ProductDetailProfileImg = styled.div`
+  flex: 6;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+
+  img {
+    border-radius: 50%;
+    height: 100px;
+    width: 100px;
+    ${({ theme }) => theme.shadow[0]};
+  }
+`;
+
+export const ProductDetailNoneProfileImg = styled(ProductDetailProfileImg)`
+  img {
+    padding: 20px;
+  }
+`;
+
+export const BottomArea = styled.div`
+  margin-top: 20px;
+`;
+
+export const UsedStoreFlexBox = styled.div`
+  display: flex;
+  width: 320px;
+  height: 80px;
+
+  div {
+    margin-right: 30px;
   }
 `;

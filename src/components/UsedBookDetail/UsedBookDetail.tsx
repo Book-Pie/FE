@@ -34,6 +34,7 @@ const UsedBookDetail = () => {
     view,
     likeCount,
     replyCount,
+    liked,
   } = usedBookContent.content;
 
   useEffect(() => {
@@ -59,6 +60,7 @@ const UsedBookDetail = () => {
         images={images}
         likeCount={likeCount}
         replyCount={replyCount}
+        liked={liked}
       />
       <UsedBookStoreInformationBottom />
     </>

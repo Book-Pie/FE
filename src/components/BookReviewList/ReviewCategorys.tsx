@@ -1,6 +1,5 @@
 import { memo, useMemo } from "react";
 import { Skeleton, useMediaQuery } from "@mui/material";
-import { ParentsCategoryData } from "modules/Slices/book/types";
 import { Navigation } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
@@ -8,11 +7,7 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 import { Wrapper, CategoryWrapper, SmallCategoryWrapper, CategorySwiperWrapper } from "./styles";
 import Category from "./Category";
-
-export interface CategorysProps {
-  categorys: ParentsCategoryData[];
-  defaultLocation: string;
-}
+import { CategorysProps } from "./types";
 
 const ReviewCategorys = ({ categorys }: CategorysProps) => {
   const matches = useMediaQuery("(max-width:1200px)");
