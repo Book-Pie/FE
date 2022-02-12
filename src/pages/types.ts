@@ -13,6 +13,10 @@ export interface KakaoPayload {
   code: string;
 }
 
+export interface ShopParam {
+  shopId: string;
+}
+
 export interface UsedBook {
   bookState: string;
   content: string;

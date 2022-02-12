@@ -21,12 +21,7 @@ import Pagination from "@mui/material/Pagination";
 import { getUsedBookReplyPage, removeUsedBookReplyPage, setUsedBookReplyPage } from "utils/localStorageUtil";
 import { Box, FormControlLabel } from "@mui/material";
 import { CountWrapper, ProductDetailTitle, UsedBookStoreInformationWrapper, ReviewListEmptyWrapper } from "../style";
-
-export interface submitParam {
-  usedBookId: number;
-  userId: number;
-  content: string;
-}
+import { submitParam } from "./types";
 
 const UsedBookInquiry = () => {
   const { handleSubmit } = useForm<submitParam>();

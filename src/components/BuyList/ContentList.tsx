@@ -10,14 +10,7 @@ import { userReviewSelector } from "modules/Slices/userReview/userReviewSlice";
 import Modal from "./Modal";
 import { BuyContent, BuyTitleContent, ContentText, ContentWrapper, ImgContent, ButtonArea } from "./styles";
 import { Empty } from "../SaleList/style";
-
-export interface IContent {
-  pages: UsedBookBuyListResponse[];
-  titleFilter: string | null;
-  select: string;
-  open: boolean;
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}
+import { IContent } from "./types";
 
 const ContentList = ({ pages, select, titleFilter, open, setOpen }: IContent) => {
   const { signIn, dispatch } = useSignIn();

@@ -1,9 +1,6 @@
 import React from "react";
 import { ReviewEmptyParagraph, ReviewEmptyWrapper } from "./style";
-
-export interface ReviewListEmptyParam {
-  title: string;
-}
+import { ReviewListEmptyParam } from "./types";
 
 export const ReviewListEmpty: React.FC<ReviewListEmptyParam> = ({ title }) => (
   <ReviewEmptyWrapper>

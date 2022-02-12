@@ -1,18 +1,12 @@
 import { useCallback } from "react";
 import noProfileImg from "assets/image/pie3x.png";
 import { dateArrayFormat } from "src/utils/formatUtil";
-import { UserInfo } from "src/modules/Slices/user/types";
 import Rating from "@mui/material/Rating";
-import { GetChartResponse } from "src/modules/Slices/userReview/types";
 import MyChart from "../MyTop/MyChart";
 import { MyChartWrapper, ProfileImg, EmptyChart, TitleSpan, NoneProfileImg } from "../MyTop/style";
 import { ShopTopUserInfo, ShopTopWrapper } from "./styles";
 import { RatingContent } from "../BookDetail/style";
-
-export interface ShopTopParam {
-  shop: UserInfo;
-  chart: GetChartResponse[];
-}
+import { ShopTopParam } from "./types";
 
 const ShopTop = ({ shop, chart }: ShopTopParam) => {
   const getRating = useCallback((point: number) => {

@@ -8,11 +8,8 @@ import BookDetailContent from "./BookDetailContent";
 import BookDetailHeader from "./BookDetailHeader";
 import BookRecommendList from "./BookRecommendList";
 import { BookDetailContentWrapper, FlexColum, FlexWrapper } from "./style";
+import { BookDetailParam } from "./types";
 import UsedBookRecommendList from "./UsedBookRecommendList";
-
-export interface BookDetailParam {
-  isbn13: string;
-}
 
 const BookDetail = () => {
   const { isbn13 } = useParams<BookDetailParam>();

@@ -1,10 +1,6 @@
 import Rating from "@mui/material/Rating";
 import { RatingContent, RatingScore } from "components/BookDetail/style";
-
-export interface ReviewRankProps {
-  ReviewRank: number;
-  title: string;
-}
+import { ReviewRankProps } from "./types";
 
 const StarRating = ({ ReviewRank, title }: ReviewRankProps) => {
   return (

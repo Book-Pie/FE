@@ -8,16 +8,7 @@ import {
   BookTitle,
   SmallBookInfo,
 } from "./style";
-
-export interface bookInfoHeaderParam {
-  author: string;
-  cover: string;
-  title: string;
-  categoryName: string;
-  publisher: string;
-  ReviewRank: number;
-  averageRating: number;
-}
+import { bookInfoHeaderParam } from "./types";
 
 const BookDetailHeader = ({
   author,

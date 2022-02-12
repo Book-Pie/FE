@@ -1,6 +1,5 @@
 import { memo, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { BookItemProps } from "modules/Slices/book/types";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper";
 import "swiper/css/pagination";
@@ -15,10 +14,7 @@ import {
   MainSwiperWrapper,
   ThumbnailWrapper,
 } from "./styles";
-
-export interface HomeCategoryListParam {
-  list: BookItemProps[];
-}
+import { HomeCategoryListParam } from "./types";
 
 const HomeCategoryList = ({ list }: HomeCategoryListParam) => {
   const swiperStyle = useMemo(

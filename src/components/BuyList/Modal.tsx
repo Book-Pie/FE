@@ -7,7 +7,6 @@ import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { Link, useHistory } from "react-router-dom";
 import useSignIn from "hooks/useSignIn";
-import { ModalItemParam } from "modules/Slices/usedBookDetail/types";
 import { addUserReview, editUserReview } from "modules/Slices/userReview/userReviewSlice";
 import {
   RegisterButton,
@@ -21,13 +20,7 @@ import {
   ModalButtonArea,
 } from "./styles";
 import { HoverRating } from "../Rating/Rating";
-import { addUserReviewSubmitParam } from "./types";
-
-export interface userReviewModalProps {
-  open: boolean;
-  item: ModalItemParam;
-  handleClose: () => void;
-}
+import { addUserReviewSubmitParam, userReviewModalProps } from "./types";
 
 const Modal = (props: userReviewModalProps) => {
   const history = useHistory();

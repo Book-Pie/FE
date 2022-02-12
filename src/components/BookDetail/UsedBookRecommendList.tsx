@@ -6,10 +6,7 @@ import { Navigation } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { NormalTitle, RelatedReviewWrapper, RelatedUsedBookSwiper } from "../UsedBookDetail/style";
 import UsedBookCard from "../UsedBookList/UsedBookCard";
-
-export interface UsedBookRecommendListParam {
-  isbn: string;
-}
+import { UsedBookRecommendListParam } from "./types";
 
 const UsedBookRecommendList = ({ isbn }: UsedBookRecommendListParam) => {
   const dispatch = useDispatch();

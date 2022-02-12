@@ -1,13 +1,7 @@
 import React from "react";
-import { FavoriteCategories } from "src/modules/Slices/usedBookDetail/types";
 import { CardBoldTitle, CardSmallTitle, UsedStoreUserContentWrapper, WideCardSmallTitle } from "../style";
 import { BottomArea, UsedStoreFlexBox } from "./styles";
-
-export interface UsedStoreUserContentParam {
-  sellerName: string;
-  favoriteCategories: FavoriteCategories[];
-  totalSales: number;
-}
+import { UsedStoreUserContentParam } from "./types";
 
 const UsedStoreUserContent = ({ sellerName, favoriteCategories, totalSales }: UsedStoreUserContentParam) => {
   // 임시 데이터

@@ -8,10 +8,8 @@ import { getMyPageChart, userReviewSelector } from "src/modules/Slices/userRevie
 import { useTypedSelector } from "src/modules/store";
 import FallBack from "./FallBack";
 import { MyContainer, MyRouterWrapper, ShopMenuTabWrapper } from "./styles";
+import { ShopParam } from "./types";
 
-export interface ShopParam {
-  shopId: string;
-}
 const ShopSaleList = lazy(() => import("components/ShopMenu/ShopSaleList"));
 const ShopBookReview = lazy(() => import("components/ShopMenu/ShopBookReview"));
 const ShopUserReview = lazy(() => import("components/ShopMenu/ShopUserReview"));

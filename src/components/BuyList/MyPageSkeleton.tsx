@@ -1,10 +1,6 @@
 import Box from "@mui/material/Box";
 import Skeleton from "@mui/material/Skeleton";
 
-export interface SkeletonProps {
-  idx: number;
-}
-
 const MyPageSkeleton = () => {
   return (
     <>

@@ -13,10 +13,7 @@ import {
   RelatedUsedBookSwiper,
   RelatedReviewWrapper,
 } from "../UsedBookDetail/style";
-
-export interface BookRecommendListParam {
-  isbn: string;
-}
+import { BookRecommendListParam } from "./types";
 
 const BookRecommendList = ({ isbn }: BookRecommendListParam) => {
   const dispatch = useDispatch();

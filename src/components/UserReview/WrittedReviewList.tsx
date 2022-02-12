@@ -1,19 +1,13 @@
 import Button from "@mui/material/Button";
 import Rating from "@mui/material/Rating";
-import { Dispatch, useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import { UserReduce } from "modules/Slices/user/types";
 import { GetUserReceivedReviewListData } from "modules/Slices/userReview/types";
 import { deleteUserReview } from "modules/Slices/userReview/userReviewSlice";
 import { RatingContent, RatingScore } from "components/BookDetail/style";
 import Modal from "../BuyList/Modal";
 import { ColorContent, ContentItem, ContentWrapper, FlexBox, TitleContentItem } from "../BuyList/styles";
-
-export interface WrittedReviewListProps {
-  contents: GetUserReceivedReviewListData[];
-  dispatch: Dispatch<any>;
-  signIn: UserReduce;
-}
+import { WrittedReviewListProps } from "./types";
 
 const WrittedReviewList = ({ contents, dispatch, signIn }: WrittedReviewListProps) => {
   const [open, setOpen] = useState(false);

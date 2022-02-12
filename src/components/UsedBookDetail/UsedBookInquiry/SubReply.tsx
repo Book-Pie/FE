@@ -5,7 +5,6 @@ import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import Textarea from "src/components/TextArea/Textarea";
 import useSignIn from "src/hooks/useSignIn";
-import { UsedBookDetailSubReplyResponse } from "src/modules/Slices/usedBookDetail/types";
 import {
   addUsedBookDetailSubReply,
   deleteUsedBookDetailSubReply,
@@ -26,21 +25,7 @@ import {
   SubProfileArea,
 } from "../style";
 import { SellerNameTitle } from "./styles";
-
-export interface SubReplyParam {
-  sx: {
-    width: string;
-    fontSize: string;
-    padding: string;
-    right: string;
-  };
-  sellerName: string;
-  subReply?: UsedBookDetailSubReplyResponse;
-  replyId: number;
-  isSubReplyAdd?: boolean;
-  sellerId: number;
-  page: number;
-}
+import { SubReplyParam } from "./types";
 
 const SubReply = ({ sx, replyId, sellerName, sellerId, subReply, isSubReplyAdd, page }: SubReplyParam) => {
   const history = useHistory();
