@@ -1,6 +1,5 @@
 import { useHistory } from "react-router";
 import { userReduceSelector } from "modules/Slices/user/userSlice";
-import { UsedBookDetailResponse } from "modules/Slices/usedBookDetail/types";
 import { useTypedSelector } from "modules/store";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
@@ -10,6 +9,7 @@ import { useMemo } from "react";
 import { Navigation, Pagination } from "swiper";
 import { CategoryArea, UsedBookDetailWrapper, UsedBookImg, SwiperWrapper } from "./style";
 import UsedBookArea from "./UsedBookContent/UsedBookArea";
+import { UsedBookInformationTopParam } from "./types";
 
 const UsedBookInformationTop = ({
   title,
@@ -27,7 +27,8 @@ const UsedBookInformationTop = ({
   sellerId,
   saleState,
   bookState,
-}: UsedBookDetailResponse) => {
+  liked,
+}: UsedBookInformationTopParam) => {
   const history = useHistory();
   const { isLoggedIn } = useTypedSelector(userReduceSelector);
 
@@ -78,6 +79,7 @@ const UsedBookInformationTop = ({
           likeCount={likeCount}
           replyCount={replyCount}
           usedBookId={usedBookId}
+          liked={liked}
           checkAuth={() => {
             if (isLoggedIn) {
               return true;

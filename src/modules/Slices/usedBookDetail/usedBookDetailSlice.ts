@@ -40,6 +40,7 @@ const initialState: UsedBookDetailReduce = {
   likeList: [],
   buyList: [],
   relatedUsedBookList: [],
+  liked: false,
   // 마이페이지
   list: {
     page: 1,
@@ -50,6 +51,7 @@ const initialState: UsedBookDetailReduce = {
   // 상점후기
   storeReviewList: [],
   pageCount: 0,
+  storeReviewListTotal: 0,
   // 상품문의
   totalElements: 0,
   totalPages: 0,
@@ -333,9 +335,11 @@ const usedBookDetailSlice = createSlice({
         state.status = "success";
         if (payload.data === "created") {
           state.content.likeCount = Number(state.content.likeCount) + 1;
+          state.content.liked = true;
         }
         if (payload.data === "deleted") {
           state.content.likeCount = Number(state.content.likeCount) - 1;
+          state.content.liked = false;
         }
       })
       .addCase(usedBookLike.rejected, state => {
@@ -410,6 +414,7 @@ const usedBookDetailSlice = createSlice({
         state.status = "success";
         state.storeReviewList = payload.data.pages;
         state.pageCount = payload.data.pageCount;
+        state.storeReviewListTotal = payload.data.totalElement;
       })
       .addCase(getStoreUserReviewList.rejected, state => {
         state.status = "failed";
