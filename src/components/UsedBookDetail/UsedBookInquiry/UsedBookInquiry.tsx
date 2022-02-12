@@ -139,8 +139,6 @@ const UsedBookInquiry = () => {
           isLoggedIn={isLoggedIn}
           onChange={handleReviewChange}
           value={myContent}
-          limit={100}
-          height={100}
           placeholder="상품 문의 작성 시 10자 이상 작성해주세요."
           checkAuth={() => {
             if (isLoggedIn) {

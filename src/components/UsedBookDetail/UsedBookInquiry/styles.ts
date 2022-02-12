@@ -17,7 +17,7 @@ export const SellerNameTitle = styled.div`
   width: 70px;
 `;
 
-export const ProfileImg = styled.div<{ storeReview: string }>`
+export const ProfileImg = styled.div<{ storeReview: boolean }>`
   flex: 6;
   display: flex;
   justify-content: center;

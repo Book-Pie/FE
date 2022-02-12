@@ -3,7 +3,5 @@ export interface TextareaAutosizeParam {
   onChange: (event: any) => void;
   checkAuth: () => boolean;
   value: string;
-  limit: number;
-  height: number;
   placeholder: string;
 }

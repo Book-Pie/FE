@@ -430,7 +430,6 @@ const usedBookDetailSlice = createSlice({
       .addCase(getRelatedUsedBookList.rejected, state => {
         state.status = "failed";
       })
-
       // 마이페이지 - 중고장터 찜 목록
       .addCase(getUsedBookLikeList.pending, state => {
         state.status = "loading";

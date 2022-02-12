@@ -21,7 +21,7 @@ const BookRecommendList = ({ isbn }: BookRecommendListParam) => {
 
   useEffect(() => {
     dispatch(getBookRecommendList({ isbn }));
-  }, []);
+  }, [dispatch, isbn]);
 
   const swiperStyle = useMemo(
     () => ({

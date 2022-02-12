@@ -7,7 +7,7 @@ export interface BuyList {
   pages: UsedBookBuyListResponse[];
 }
 
-export interface userReviewModalProps {
+export interface UserReviewModalProps {
   open: boolean;
   item: ModalItemParam;
   handleClose: () => void;
@@ -20,7 +20,7 @@ export interface IContent {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
-export interface addUserReviewSubmitParam {
+export interface AddUserReviewSubmitParam {
   orderId?: string;
   userReviewId?: string;
   content: string;
@@ -42,7 +42,7 @@ export interface BuyListResponse {
 }
 
 export interface addUserReviewForm {
-  addUserReviewSubmit: (data: addUserReviewSubmitParam) => void;
+  addUserReviewSubmit: (data: AddUserReviewSubmitParam) => void;
 }
 
 export interface MyBuyList {

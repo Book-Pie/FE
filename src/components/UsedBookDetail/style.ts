@@ -345,7 +345,7 @@ export const RelatedUsedBookHashTagItem = styled.div`
   font-weight: normal;
 `;
 
-export const RelatedUsedBookBoldTitle = styled.div`
+export const RelatedUsedBookBoldTitle = styled.div<{ brown?: boolean }>`
   color: ${props => (props.brown ? "#4f3629" : "#222")};
   font-size: 20px;
   font-weight: bold;

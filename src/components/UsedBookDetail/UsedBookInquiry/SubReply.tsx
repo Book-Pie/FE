@@ -137,8 +137,6 @@ const SubReply = ({ sx, replyId, sellerName, sellerId, subReply, isSubReplyAdd, 
                       isLoggedIn={isLoggedIn}
                       onChange={handleSubReviewChange}
                       value={SubContent || ""}
-                      limit={100}
-                      height={100}
                       placeholder="상품 문의 작성 시 10자 이상 작성해주세요."
                       checkAuth={() => {
                         if (isLoggedIn) {
@@ -224,8 +222,6 @@ const SubReply = ({ sx, replyId, sellerName, sellerId, subReply, isSubReplyAdd, 
                         isLoggedIn={isLoggedIn}
                         onChange={handleSubReviewChange}
                         value={SubContent || ""}
-                        limit={100}
-                        height={100}
                         placeholder="상품 문의 작성 시 10자 이상 작성해주세요."
                         checkAuth={() => {
                           if (isLoggedIn) {

@@ -20,7 +20,6 @@ const Shop = () => {
   const [value, setValue] = useState(2);
   const { shop } = useTypedSelector(userReduceSelector);
   const { myPageChart } = useTypedSelector(userReviewSelector);
-  const id = String(shopId);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -71,12 +70,12 @@ const Shop = () => {
 
   useEffect(() => {
     dispatch(fetchShopUserInfoAsync(shopId));
-    dispatch(getMyPageChart(String(id)));
+    dispatch(getMyPageChart(shopId));
   }, [dispatch, shopId]);
 
   return (
     <MyContainer>
-      <ShopTop shop={shop} chart={myPageChart} />
+      {shop && <ShopTop shop={shop} chart={myPageChart} />}
       <ShopMenuTabWrapper>
         <Tabs value={value} onChange={handleChange} variant="scrollable" allowScrollButtonsMobile scrollButtons>
           {myMenus}

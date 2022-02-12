@@ -106,7 +106,9 @@ const ContentList = ({ pages, select, titleFilter, open, setOpen }: IContent) =>
                   </Link>
                 </ButtonArea>
               </BuyContent>
-              {open ? <Modal open={open} handleClose={handleClose} item={selectedItem} /> : null}
+              {selectedItem !== null && open ? (
+                <Modal open={open} handleClose={handleClose} item={selectedItem} />
+              ) : null}
             </ContentWrapper>
           );
         })

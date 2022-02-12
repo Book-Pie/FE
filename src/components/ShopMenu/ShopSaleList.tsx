@@ -44,11 +44,6 @@ const ShopSaleList = () => {
     [shop],
   );
 
-  const handlePaginationOnChange = useCallback(
-    (_: React.ChangeEvent<unknown>, value: number) => handleHasMoreList(value, limit),
-    [handleHasMoreList, limit],
-  );
-
   useEffect(() => {
     const { pages, pageCount, isEmpty, page } = list;
     if (pages.length === 0 && pageCount === 0 && !isEmpty) handleHasMoreList(page, limit);
