@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { ReviewList } from "components/Reviews/ReviewList/ReviewList";
+import { ReviewList } from "components/Reviews/ReviewList";
 import {
   myReviewComment,
   reviewCommentList,
@@ -12,10 +12,9 @@ import { useHistory } from "react-router";
 import { getShopPage, removeShopPage, setShopPage } from "utils/localStorageUtil";
 import useSignIn from "hooks/useSignIn";
 import { ReviewsParam } from "./types";
-import { ReviewListEmpty } from "../ReviewList/ReviewListEmpty";
-import { BestCommentListWrapper, BestReviewsListTitle, Container } from "../ReviewList/style";
-import BestReviewItem from "../ReviewList/BestReviewItem";
-import { ReviewsContentWrapper } from "./style";
+import { ReviewListEmpty } from "./ReviewListEmpty";
+import { BestCommentListWrapper, BestReviewsListTitle, Container, ReviewsContentWrapper } from "./style";
+import BestReviewItem from "./BestReviewItem";
 import { ReviewForm } from "./ReviewForm";
 
 export const Reviews = ({ bookId, categoryName }: ReviewsParam) => {

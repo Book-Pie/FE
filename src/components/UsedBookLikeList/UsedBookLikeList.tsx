@@ -5,7 +5,7 @@ import { getUsedBookLikeList, usedBookDetailSelector } from "modules/Slices/used
 import { useTypedSelector } from "modules/store";
 import noComments from "assets/image/noComments.png";
 import UsedBookCard from "components/UsedBookList/UsedBookCard";
-import { ReviewListEmptyParagraph, ReviewListEmptyWrapper } from "../Reviews/ReviewList/style";
+import { ReviewListEmptyParagraph, ReviewListEmptyWrapper } from "../Reviews/style";
 import { CountWrapper } from "../UsedBookDetail/style";
 import { ContentWrapper, Title, UsedBookLikeListWrapper, TitleSpan, EmptyWrapper, UsedBookLikeImg } from "./styles";
 
@@ -41,7 +41,6 @@ const UsedBookLikeList = () => {
           ))}
         </UsedBookLikeListWrapper>
       )}
-
       {likeList.length === 0 && (
         <ReviewListEmptyWrapper>
           <EmptyWrapper>

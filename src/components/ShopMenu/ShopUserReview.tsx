@@ -13,7 +13,7 @@ import {
 import { userReduceSelector } from "src/modules/Slices/user/userSlice";
 import ReceivedReviewContent from "../UserReview/ReceivedReviewContent";
 import { Empty } from "../SaleList/style";
-import { ReviewListEmptyParagraph, ReviewListEmptyWrapper } from "../Reviews/ReviewList/style";
+import { ReviewListEmptyParagraph, ReviewListEmptyWrapper } from "../Reviews/style";
 import {
   ShopContentWrapper,
   ShopSaleCell,

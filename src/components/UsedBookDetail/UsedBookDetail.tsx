@@ -1,26 +1,37 @@
-import UsedBookInformationTop from "components/UsedBookDetail/UsedBookInformationTop";
-import UsedBookStoreInformationBottom from "components/UsedBookDetail/UsedBookStoreInformationBottom";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useDispatch } from "react-redux";
-import { useLocation, useRouteMatch } from "react-router";
+import { useHistory, useLocation, useRouteMatch } from "react-router";
 import { usedBookDetailAsync, usedBookDetailSelector } from "modules/Slices/usedBookDetail/usedBookDetailSlice";
-import { useTypedSelector } from "modules/store";
+import { userReduceSelector } from "src/modules/Slices/user/userSlice";
+import { useTypedSelector } from "src/modules/store";
+import { Navigation, Pagination } from "swiper";
+import { Swiper, SwiperSlide } from "swiper/react";
+import {
+  CategoryArea,
+  FlexWrapper,
+  SwiperWrapper,
+  UsedBookDetailWrapper,
+  UsedBookImg,
+  UsedBookStoreInformationLeftWrapper,
+} from "./style";
+import UsedBookInquiry from "./UsedBookInquiry";
+import RelatedUsedBook from "./RelatedUsedBook";
+import UsedBookArea from "./UsedBookArea";
+import UsedBookStoreInformation from "./UsedBookStoreInformation";
+import UsedBookStoreReview from "./UsedBookStoreReview";
 
 const UsedBookDetail = () => {
   const dispatch = useDispatch();
+  const history = useHistory();
   const { pathname } = useLocation();
   const { params } = useRouteMatch<{ id: string }>();
   const { id } = params;
   const usedBookContent = useTypedSelector(usedBookDetailSelector);
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [pathname]);
+  const { isLoggedIn } = useTypedSelector(userReduceSelector);
 
   const {
     usedBookId,
     sellerId,
-    sellerName,
     price,
     bookState,
     content,
@@ -37,32 +48,81 @@ const UsedBookDetail = () => {
     liked,
   } = usedBookContent.content;
 
+  const swiperStyle = useMemo(
+    () => ({
+      paddingBottom: "50px",
+      width: "544px",
+      height: "700px",
+      margin: "21px 28px 50px 0px",
+    }),
+    [],
+  );
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
   useEffect(() => {
     dispatch(usedBookDetailAsync(id));
   }, [dispatch, id]);
 
   return (
     <>
-      <UsedBookInformationTop
-        usedBookId={usedBookId}
-        sellerId={sellerId}
-        sellerName={sellerName}
-        price={price}
-        title={title}
-        content={content}
-        uploadDate={uploadDate}
-        view={view}
-        bookState={bookState}
-        saleState={saleState}
-        fstCategory={fstCategory}
-        sndCategory={sndCategory}
-        tags={tags}
-        images={images}
-        likeCount={likeCount}
-        replyCount={replyCount}
-        liked={liked}
-      />
-      <UsedBookStoreInformationBottom />
+      <CategoryArea>
+        {fstCategory} &gt; {sndCategory}
+      </CategoryArea>
+      <UsedBookDetailWrapper>
+        <SwiperWrapper>
+          <Swiper
+            spaceBetween={30}
+            slidesPerView={5}
+            style={swiperStyle}
+            cssMode
+            navigation
+            modules={[Navigation, Pagination]}
+            pagination={{ clickable: true }}
+          >
+            {images &&
+              images.map((image, idx) => (
+                <SwiperSlide key={idx}>
+                  <UsedBookImg src={`${process.env.BASE_URL}/image/${image}`} alt={`image${idx}`} />
+                </SwiperSlide>
+              ))}
+          </Swiper>
+        </SwiperWrapper>
+        <UsedBookArea
+          title={title}
+          price={price}
+          sellerId={sellerId}
+          saleState={saleState}
+          bookState={bookState}
+          content={content}
+          view={view}
+          uploadDate={uploadDate}
+          tags={tags}
+          likeCount={likeCount}
+          replyCount={replyCount}
+          usedBookId={usedBookId}
+          liked={liked}
+          checkAuth={() => {
+            if (isLoggedIn) {
+              return true;
+            }
+            if (window.confirm("로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?")) {
+              history.replace("/signIn");
+            }
+            return false;
+          }}
+        />
+      </UsedBookDetailWrapper>
+      <FlexWrapper>
+        <UsedBookStoreInformationLeftWrapper>
+          <UsedBookStoreInformation />
+          <UsedBookStoreReview />
+        </UsedBookStoreInformationLeftWrapper>
+        <UsedBookInquiry />
+      </FlexWrapper>
+      <RelatedUsedBook />
     </>
   );
 };

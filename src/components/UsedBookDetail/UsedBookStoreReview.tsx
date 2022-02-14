@@ -7,11 +7,10 @@ import Pagination from "@mui/material/Pagination";
 import { getShopPage, removeShopPage, setShopPage } from "utils/localStorageUtil";
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { ReviewListEmpty } from "components/Reviews/ReviewList/ReviewListEmpty";
+import { ReviewListEmpty } from "components/Reviews/ReviewListEmpty";
 import { useRouteMatch } from "react-router";
 import { Link } from "react-router-dom";
 import {
-  FlexBox,
   RatingContent,
   ReviewDate,
   StoreReviewItemContent,
@@ -19,8 +18,6 @@ import {
   StoreReviewItemWrapper,
   StoreReviewNoneProfileImg,
   StoreReviewProfileImg,
-} from "./styles";
-import {
   ContentWrapper,
   CountWrapper,
   ProductDetailTitle,
@@ -28,7 +25,8 @@ import {
   ReviewListEmptyWrapper,
   StoreReviewFlexBoxWrapper,
   UsedBookStoreInformationWrapper,
-} from "../style";
+  StoreReviewItemFlexBox,
+} from "./style";
 
 const UsedBookStoreReview = () => {
   const { storeReviewList, pageCount, content } = useTypedSelector(usedBookDetailSelector);
@@ -95,10 +93,10 @@ const UsedBookStoreReview = () => {
             <RatingContent>
               <Rating name="read-only" precision={0.5} value={rating} size="small" readOnly />
             </RatingContent>
-            <FlexBox>
+            <StoreReviewItemFlexBox>
               <StoreReviewItemNickName>{buyerName}</StoreReviewItemNickName>
               <ReviewDate>{reviewDate.split("T", 1)}</ReviewDate>
-            </FlexBox>
+            </StoreReviewItemFlexBox>
             <StoreReviewItemContent dangerouslySetInnerHTML={{ __html: content }} />
           </ContentWrapper>
         </StoreReviewFlexBoxWrapper>

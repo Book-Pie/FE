@@ -39,7 +39,7 @@ export interface AddUsedBookDetailReplyParam {
   secret: boolean;
 }
 
-export interface editUsedBookDetailReplyParam {
+export interface EditUsedBookDetailReplyParam {
   userId: number;
   replyId: number;
   content: string;
@@ -148,7 +148,7 @@ export interface UsedBookDetailResponse {
   saleState?: string;
   fstCategory?: string;
   sndCategory?: string;
-  likeCount?: string | number;
+  likeCount?: number;
   replyCount?: number;
   tags?: string[];
   images?: string[];
@@ -161,7 +161,7 @@ export interface UsedBookLikeGetResponse {
   image: string;
 }
 
-export interface usedBookDetailReplyListData {
+export interface UsedBookDetailReplyListData {
   content: UsedBookDetailReplyResponse[];
   pageable: {
     sort: {
@@ -254,9 +254,9 @@ export interface UsedBookLikeGetAsyncSuccess {
   error: null;
 }
 
-export interface usedBookDetailReplyListAsyncSuccess {
+export interface UsedBookDetailReplyListAsyncSuccess {
   success: boolean;
-  data: usedBookDetailReplyListData;
+  data: UsedBookDetailReplyListData;
   error: null;
 }
 

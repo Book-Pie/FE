@@ -17,7 +17,7 @@ import {
   RelatedUsedBookWrapper,
   SwiperWrapper,
   UsedBookThumbnail,
-} from "../style";
+} from "./style";
 
 const RelatedUsedBook = () => {
   const dispatch = useDispatch();
@@ -28,23 +28,27 @@ const RelatedUsedBook = () => {
 
   useEffect(() => {
     if (relatedUsedBookList.length === 0 && Object.keys(content).length !== 0) {
-      dispatch(
-        getRelatedUsedBookList({
-          category: content.fstCategory,
-          tags: content.tags,
-        }),
-      );
+      if (content.fstCategory && content.tags) {
+        dispatch(
+          getRelatedUsedBookList({
+            category: content.fstCategory,
+            tags: content.tags,
+          }),
+        );
+      }
     }
   }, [content, dispatch, relatedUsedBookList]);
 
   useEffect(() => {
     if (Number(id) === usedBookId && Object.keys(content).length !== 0) {
-      dispatch(
-        getRelatedUsedBookList({
-          category: content.fstCategory,
-          tags: content.tags,
-        }),
-      );
+      if (content.fstCategory && content.tags) {
+        dispatch(
+          getRelatedUsedBookList({
+            category: content.fstCategory,
+            tags: content.tags,
+          }),
+        );
+      }
     }
   }, [usedBookId]);
 

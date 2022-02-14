@@ -1,6 +1,6 @@
 import React from "react";
+import range from "lodash/range";
 import { Expander } from "./Expander";
-import { BookSkeleton } from "./BookSkeleton";
 import TextTruncate from "./TextTruncate";
 import { BookDetailCardWrapperProps, BookDetailPanelProps } from "./types";
 import { AuthorTitle, BookDetailTitle, ExpanderArea, Flexbox, ImgWrapper, PhotoImg } from "./style";
@@ -12,7 +12,6 @@ export const BookDetailPanelWrapper: React.FunctionComponent<BookDetailCardWrapp
   if (!children) {
     return null;
   }
-
   if (renderCondition) {
     return <section>{children}</section>;
   }
@@ -36,7 +35,6 @@ export const BookDetailPanel: React.FunctionComponent<BookDetailPanelProps> = ({
         {authorPhoto && (
           <ImgWrapper>{authorPhoto && <PhotoImg src={authorPhoto} width="140" height="165" />}</ImgWrapper>
         )}
-
         <div>
           {authorName && <AuthorTitle>{authorName}</AuthorTitle>}
           {useTruncate ? (
@@ -59,6 +57,14 @@ export const BookDetailPanel: React.FunctionComponent<BookDetailPanelProps> = ({
       </Flexbox>
     </BookDetailPanelWrapper>
   ) : useSkeleton ? (
-    <BookSkeleton />
+    <ul className="Skeleton_Wrapper BookDetailSectionPlaceholder_List">
+      {range(0, 3).map((value, index) => (
+        <li className="BookDetailSectionPlaceholder_Item" key={index}>
+          <p className="BookDetailSectionPlaceholder_Title Skeleton" />
+          <p className="BookDetailSectionPlaceholder_FullText Skeleton" />
+          <p className="BookDetailSectionPlaceholder_Text Skeleton" />
+        </li>
+      ))}
+    </ul>
   ) : null;
 };

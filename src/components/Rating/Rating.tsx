@@ -25,8 +25,6 @@ export const SmallStarIcon = styled(StarIcon)`
 export const HoverRating = ({ isDisabled, rating, handleChange }: HoverRatingProps) => {
   const [hover, setHover] = useState(-1);
 
-  console.log("rating 타입 : ", typeof rating);
-
   return (
     <Box
       sx={{

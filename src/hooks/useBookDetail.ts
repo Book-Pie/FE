@@ -3,9 +3,9 @@ import { useDispatch } from "react-redux";
 import { bookDetailAsync } from "modules/Slices/book/bookSlice";
 import { useTypedSelector } from "modules/store";
 import { bookInfo } from "modules/Slices/book/types";
-import { paramProps } from "components/BookDetail/types";
+import { ParamProps } from "components/BookDetail/types";
 
-export const useBookDetail = ({ isbn13 }: paramProps) => {
+export const useBookDetail = ({ isbn13 }: ParamProps) => {
   const dispatch = useDispatch();
   const bookDetailContent = useTypedSelector(state => state.bookReduce.content.data);
   const [bookContent, setBookContent] = useState<bookInfo[]>([]);

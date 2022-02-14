@@ -67,7 +67,7 @@ const WrittedReviewList = ({ contents, dispatch, signIn }: WrittedReviewListProp
                 </form>
               </FlexBox>
             </ContentItem>
-            {open ? <Modal open={open} handleClose={handleClose} item={selectedItem} /> : null}
+            {selectedItem && open ? <Modal open={open} handleClose={handleClose} item={selectedItem} /> : null}
           </ContentWrapper>
         );
       })}

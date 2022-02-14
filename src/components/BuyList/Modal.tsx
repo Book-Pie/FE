@@ -22,14 +22,13 @@ import {
 import { HoverRating } from "../Rating/Rating";
 import { AddUserReviewSubmitParam, UserReviewModalProps } from "./types";
 
-const Modal = (props: UserReviewModalProps) => {
+const Modal = ({ open, handleClose, item }: UserReviewModalProps) => {
   const history = useHistory();
   const dispatch = useDispatch();
   const { signIn } = useSignIn();
   const { isLoggedIn } = signIn;
   const { handleSubmit, register, setValue } = useForm<AddUserReviewSubmitParam>();
 
-  const { open, handleClose, item } = props;
   if (!item) throw new Error("거래상품이 존재하지 않습니다.");
   const {
     orderId,
