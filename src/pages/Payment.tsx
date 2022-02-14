@@ -4,9 +4,9 @@ import { make1000UnitsCommaFormet } from "utils/formatUtil";
 import TextField from "@mui/material/TextField";
 import logo from "assets/image/logo-removebg.png";
 import { useTypedSelector } from "modules/store";
-import { userSelector } from "modules/Slices/user/userSlice";
+import { userReduceSelector, userSelector } from "modules/Slices/user/userSlice";
 import usePopup from "hooks/usePopup";
-import client, { errorHandler } from "api/client";
+import client, { errorHandler, makeAuthTokenHeader } from "api/client";
 import * as Styled from "./styles";
 
 const { IMP } = window as any;
@@ -18,7 +18,7 @@ const Payment = () => {
     result: "",
   });
 
-  const user = useTypedSelector(userSelector);
+  const { user, token } = useTypedSelector(userReduceSelector);
   const { handlePopupClose, handlePopupMessage, popupState } = usePopup();
   const { isOpen, isSuccess, message } = popupState;
 
@@ -39,7 +39,7 @@ const Payment = () => {
   const handleCloseOnClick = () => window.close();
   const handlePointPaymentOnClick = ({ currentTarget: { id } }: React.MouseEvent<HTMLButtonElement>) => {
     try {
-      if (!user) throw new Error("로그인이 핑요합니다.");
+      if (!user || !token) throw new Error("로그인이 핑요합니다.");
       if (Number(price) <= 1000) throw new Error("최소 1,000원이상 결제 가능합니다.");
       const { email, name, phone, address, id: userId } = user;
 
@@ -71,7 +71,7 @@ const Payment = () => {
             userId,
           };
 
-          await client.post("/point", data);
+          await client.post("/point", data, makeAuthTokenHeader(token));
           handlePopupMessage(true, "결제에 성공하였습니다.");
           setPayment({
             isSuccess: true,
