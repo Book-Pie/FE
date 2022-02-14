@@ -10,8 +10,8 @@ import {
   GetRelatedUsedBookListAsyncSuccess,
   GetRelatedUsedBookListParam,
   GetStoreUserReviewAsyncSuccess,
-  getStoreUserReviewListParam,
-  getUserReviewListParam,
+  GetStoreUserReviewListParam,
+  GetUserReviewListParam,
   ThunkApi,
 } from "../userReview/types";
 import {
@@ -19,14 +19,14 @@ import {
   AddUsedBookDetailReplyParam,
   DeleteUsedBookDetailParam,
   DeleteUsedBookDetailSubReply,
-  editUsedBookDetailReplyParam,
+  EditUsedBookDetailReplyParam,
   GetUsedBookBuyConfirmParam,
   GetUsedBookBuyListAsyncSuccess,
   GetUsedBookLikeListAsyncSuccess,
   UsedBookDetailAsyncSuccess,
   UsedBookDetailFail,
   UsedBookDetailReduce,
-  usedBookDetailReplyListAsyncSuccess,
+  UsedBookDetailReplyListAsyncSuccess,
   UsedBookDetailReplyListParam,
   UsedBookDetailThunk,
   UsedBookLikeAsyncSuccess,
@@ -115,7 +115,7 @@ export const usedBookView = createAsyncThunk<UsedBookViewAsyncSuccess, string>(
 
 // 중고장터 댓글 리스트
 export const usedBookDetailReplyList = createAsyncThunk<
-  usedBookDetailReplyListAsyncSuccess,
+  UsedBookDetailReplyListAsyncSuccess,
   UsedBookDetailReplyListParam
 >(`${name}/replyList`, async ({ usedBookId, page }, { rejectWithValue }) => {
   try {
@@ -144,7 +144,7 @@ export const addUsedBookDetailReply = createAsyncThunk<AddUsedBookDetailReplyAsy
 // 중고장터 댓글 수정
 export const editUsedBookDetailReply = createAsyncThunk<
   AddUsedBookDetailReplyAsyncSuccess,
-  editUsedBookDetailReplyParam
+  EditUsedBookDetailReplyParam
 >(`${name}/editReply`, async (data, { rejectWithValue }) => {
   try {
     const response = await http.put(`/reply/usedbook/`, data);
@@ -170,7 +170,7 @@ export const deleteUsedBookDetailReply = createAsyncThunk(
 );
 
 // 중고장터 상점후기
-export const getStoreUserReviewList = createAsyncThunk<GetStoreUserReviewAsyncSuccess, getStoreUserReviewListParam>(
+export const getStoreUserReviewList = createAsyncThunk<GetStoreUserReviewAsyncSuccess, GetStoreUserReviewListParam>(
   `${name}/storeUserReviewList`,
   async ({ sellerId, page }, { rejectWithValue }) => {
     try {
@@ -259,7 +259,7 @@ export const getUsedBookLikeList = createAsyncThunk<GetUsedBookLikeListAsyncSucc
 );
 
 // 마이페이지 - 중고장터 구매 목록
-export const getUsedBookBuyList = createAsyncThunk<GetUsedBookBuyListAsyncSuccess, getUserReviewListParam>(
+export const getUsedBookBuyList = createAsyncThunk<GetUsedBookBuyListAsyncSuccess, GetUserReviewListParam>(
   `${myPage}/${name}/buy/list`,
   async ({ query, token }, { rejectWithValue }) => {
     try {

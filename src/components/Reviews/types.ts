@@ -1,4 +1,4 @@
-import { getCommentProps } from "modules/Slices/comment/types";
+import { GetCommentProps } from "modules/Slices/comment/types";
 
 export type DateDTO = string;
 export type BookId = number;
@@ -8,7 +8,7 @@ export interface ReviewListEmptyParam {
 }
 
 export interface BestReviewItemParam {
-  item: getCommentProps;
+  item: GetCommentProps;
 }
 
 export interface Review {
@@ -19,7 +19,7 @@ export interface Review {
 }
 
 export interface ReviewListProps {
-  commentList: getCommentProps[];
+  commentList: GetCommentProps[];
   pageCount: number;
   totalCount: number;
   page: number;
@@ -36,7 +36,7 @@ export interface Comment {
 
 export interface ReviewItemProps {
   key: number;
-  content: getCommentProps;
+  content: GetCommentProps;
   children?: React.ReactNode;
 }
 
@@ -50,7 +50,42 @@ export interface TruncateProps {
 export interface ReviewsWriteProps {
   bookId: string;
   myReviewCheck: boolean;
-  myComment?: getCommentProps;
+  myComment?: GetCommentProps;
+  categoryName: string;
+  checkAuth: () => boolean;
+}
+
+export interface ReviewTextareaProps {
+  content?: string;
+  autoFocus: boolean;
+  onChange: (event: React.ChangeEvent<any>) => void;
+  onClick?: (event: React.ChangeEvent<any>) => void;
+  isDisabled: boolean;
+}
+
+export interface MyReviewCommentParam {
+  bookId: string;
+  token: string;
+}
+
+export interface ReviewsParam {
+  bookId: string;
+  categoryName: string;
+}
+
+export interface ReviewsParams {
+  bookId: string;
+  query: string;
+  token: string | null;
+}
+
+export interface ReviewFormProps {
+  isbn: string;
+  isMyReview: boolean | null;
+  onSubmit?: (reviewContent: string) => void;
+  onCancel?: () => void;
+  isDisabled?: boolean;
+  myComment: GetCommentProps | null;
   categoryName: string;
   checkAuth: () => boolean;
 }

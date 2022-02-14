@@ -23,8 +23,8 @@ import {
   ReplyItemContent,
   SubReplyItemContent,
   SubProfileArea,
-} from "../style";
-import { SellerNameTitle } from "./styles";
+  SellerNameTitle,
+} from "./style";
 import { SubReplyParam } from "./types";
 
 const SubReply = ({ sx, replyId, sellerName, sellerId, subReply, isSubReplyAdd, page }: SubReplyParam) => {
@@ -59,51 +59,47 @@ const SubReply = ({ sx, replyId, sellerName, sellerId, subReply, isSubReplyAdd, 
   const addSubReplyClick = () => {
     if (SubContent?.length === 0) {
       alert("댓글을 입력해주세요.");
-    } else if (!!SubContent && SubContent.length <= 10) {
-      alert("댓글을 10자 이상 입력해주세요.");
-    } else if (window.confirm("답글을 등록 하시겠습니까?") === true) {
-      if (SubContent && user) {
-        const { id } = user;
-        if (id === sellerId) {
-          dispatch(
-            addUsedBookDetailSubReply({
-              content: SubContent,
-              parentReplyId: replyId,
-              userId: id,
-              usedBookId,
-              page,
-            }),
-          );
-          setIsSubReplyAdd(false);
-        }
+    } else if (!!SubContent && SubContent.length <= 5) {
+      alert("댓글을 5자 이상 입력해주세요.");
+    } else if (SubContent && user) {
+      const { id } = user;
+      if (id === sellerId && usedBookId) {
+        dispatch(
+          addUsedBookDetailSubReply({
+            content: SubContent,
+            parentReplyId: replyId,
+            userId: id,
+            usedBookId,
+            page,
+          }),
+        );
+        setIsSubReplyAdd(false);
       }
     }
     return false;
   };
 
   const editReview = () => {
-    if (!!SubContent && SubContent.length <= 10) {
-      alert("댓글을 10자 이상 입력해주세요.");
-    } else if (window.confirm("답글을 정말로 수정하시겠습니까?") === true) {
-      if (SubContent && subReply) {
-        const { replyId } = subReply;
-        dispatch(
-          editUsedBookDetailSubReply({
-            content: SubContent,
-            page,
-            replyId,
-            usedBookId,
-          }),
-        );
-        setIsSubReplyUpdate(!isSubReplyUpdate);
-      }
+    if (!!SubContent && SubContent.length <= 5) {
+      alert("댓글을 5자 이상 입력해주세요.");
+    } else if (SubContent && subReply && usedBookId) {
+      const { replyId } = subReply;
+      dispatch(
+        editUsedBookDetailSubReply({
+          content: SubContent,
+          page,
+          replyId,
+          usedBookId,
+        }),
+      );
+      setIsSubReplyUpdate(!isSubReplyUpdate);
     }
     return false;
   };
 
   const deleteSubReply = () => {
     if (window.confirm("답글을 정말로 삭제하시겠습니까?") === true) {
-      if (subReply) {
+      if (subReply && usedBookId) {
         const { replyId } = subReply;
         dispatch(deleteUsedBookDetailSubReply({ replyId, usedBookId, page }));
       }

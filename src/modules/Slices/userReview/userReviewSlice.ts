@@ -9,11 +9,11 @@ import {
   EditUserReviewAsyncSuccess,
   GetChartAsyncSuccess,
   GetUserReviewListAsyncSuccess,
-  getUserReviewListParam,
-  userReviewInfo,
+  GetUserReviewListParam,
+  UserReviewInfo,
 } from "./types";
 
-const initialState: userReviewInfo = {
+const initialState: UserReviewInfo = {
   userReviewList: [],
   receivedReviewList: [],
   myPageChart: [],
@@ -45,7 +45,7 @@ export const addUserReview = createAsyncThunk<AddUserReviewAsyncSuccess, AddUser
 );
 
 // 마이페이지 - 내가 작성한 회원리뷰 조회
-export const getUserReviewList = createAsyncThunk<GetUserReviewListAsyncSuccess, getUserReviewListParam>(
+export const getUserReviewList = createAsyncThunk<GetUserReviewListAsyncSuccess, GetUserReviewListParam>(
   `${name}/list`,
   async ({ query, token }, { rejectWithValue }) => {
     try {
@@ -61,7 +61,7 @@ export const getUserReviewList = createAsyncThunk<GetUserReviewListAsyncSuccess,
 );
 
 // 마이페이지 - 내게 달린 회원리뷰 조회
-export const getMyReceivedUserReviewList = createAsyncThunk<GetUserReviewListAsyncSuccess, getUserReviewListParam>(
+export const getMyReceivedUserReviewList = createAsyncThunk<GetUserReviewListAsyncSuccess, GetUserReviewListParam>(
   `${name}/receivedReviewList`,
   async ({ query, token }, { rejectWithValue }) => {
     try {

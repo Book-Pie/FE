@@ -1,21 +1,21 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "modules/store";
 import http from "api/http";
-import { MyReviewCommentParam, ReviewsParams } from "components/Reviews/ReviewForm/types";
+import { MyReviewCommentParam, ReviewsParams } from "components/Reviews/types";
 import {
-  commentAsyncSuccess,
+  CommentAsyncSuccess,
   MyCommentAsyncSuccess,
-  deleteCommentProps,
+  DeleteCommentProps,
   CommentId,
-  commentReduceProps,
-  addCommentProps,
+  CommentReduceProps,
+  AddCommentProps,
   EditCommentProps,
   CommentLikeSuccess,
   BestCommentAsyncSuccess,
   BestCommentProps,
 } from "./types";
 
-const initialState: commentReduceProps = {
+const initialState: CommentReduceProps = {
   content: [],
   myCommentCheck: false,
   myComment: null,
@@ -45,7 +45,7 @@ const initialState: commentReduceProps = {
 const name = "comments";
 
 // 댓글 리스트
-export const reviewCommentList = createAsyncThunk<commentAsyncSuccess, ReviewsParams>(
+export const reviewCommentList = createAsyncThunk<CommentAsyncSuccess, ReviewsParams>(
   `${name}/commentList`,
   async ({ bookId, query, token }, { rejectWithValue }) => {
     try {
@@ -68,7 +68,7 @@ export const reviewCommentList = createAsyncThunk<commentAsyncSuccess, ReviewsPa
 );
 
 // 댓글 작성
-export const addComment = createAsyncThunk<MyCommentAsyncSuccess, addCommentProps>(
+export const addComment = createAsyncThunk<MyCommentAsyncSuccess, AddCommentProps>(
   `${name}/create`,
   async ({ data, token }, { rejectWithValue }) => {
     try {
@@ -85,7 +85,7 @@ export const addComment = createAsyncThunk<MyCommentAsyncSuccess, addCommentProp
 // 댓글 삭제하기
 export const deleteComment = createAsyncThunk(
   `${name}/delete`,
-  async ({ id, token }: deleteCommentProps, { rejectWithValue }) => {
+  async ({ id, token }: DeleteCommentProps, { rejectWithValue }) => {
     try {
       await http.delete(`/book-review/${id}`, {
         headers: { "X-AUTH-TOKEN": token },

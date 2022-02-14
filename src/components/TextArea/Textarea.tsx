@@ -1,7 +1,7 @@
-import { TextareaAutosize } from "../Reviews/ReviewForm/style";
+import { TextareaAutosize } from "../Reviews/style";
 import { TextareaAutosizeParam } from "./types";
 
-const Textarea: React.FC<TextareaAutosizeParam> = ({ isLoggedIn, onChange, checkAuth, value, placeholder }) => {
+const Textarea = ({ isLoggedIn, onChange, checkAuth, value, placeholder }: TextareaAutosizeParam) => {
   return isLoggedIn ? (
     <TextareaAutosize onChange={onChange} value={value} placeholder={placeholder} />
   ) : (

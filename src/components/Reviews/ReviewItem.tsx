@@ -23,7 +23,7 @@ import {
 } from "./style";
 import { ReviewItemProps } from "./types";
 
-export const ReviewItem: React.FC<ReviewItemProps> = ({ content }) => {
+export const ReviewItem = ({ content }: ReviewItemProps) => {
   const dispatch = useDispatch();
   const history = useHistory();
   const { reviewId, likeCheck, reviewLikeCount, reviewDate, nickName, rating, userId } = content;

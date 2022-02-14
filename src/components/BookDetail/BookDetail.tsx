@@ -4,10 +4,24 @@ import { useEffect } from "react";
 import { useLocation, useParams } from "react-router";
 import { commentsSelector } from "src/modules/Slices/comment/commentSlice";
 import { useTypedSelector } from "src/modules/store";
-import BookDetailContent from "./BookDetailContent";
-import BookDetailHeader from "./BookDetailHeader";
+import StarRating from "../Rating/StarRating";
+import { Reviews } from "../Reviews/Reviews";
+import { BookDetailPanel, BookDetailPanelWrapper } from "./BookDetailCard";
 import BookRecommendList from "./BookRecommendList";
-import { BookDetailContentWrapper, FlexColum, FlexWrapper } from "./style";
+import {
+  BookCategory,
+  BookDetailContentWrapper,
+  BookDetailHeaderWrapper,
+  BookDetailImg,
+  BookDetailTopContent,
+  BookInfo,
+  BookTitle,
+  CardBase,
+  Container,
+  FlexColum,
+  FlexWrapper,
+  SmallBookInfo,
+} from "./style";
 import { BookDetailParam } from "./types";
 import UsedBookRecommendList from "./UsedBookRecommendList";
 
@@ -44,25 +58,39 @@ const BookDetail = () => {
 
     return (
       <>
-        <BookDetailHeader
-          ReviewRank={ReviewRank}
-          title={title}
-          author={author}
-          cover={cover}
-          categoryName={categoryName}
-          publisher={publisher}
-          averageRating={averageRating}
-        />
+        <BookDetailHeaderWrapper>
+          <BookDetailTopContent>
+            <BookDetailImg src={cover} />
+            <BookInfo>
+              <BookCategory>{categoryName}</BookCategory>
+              <BookTitle>{title}</BookTitle>
+              <SmallBookInfo>{author}</SmallBookInfo>
+              <SmallBookInfo>{publisher}</SmallBookInfo>
+              <StarRating ReviewRank={ReviewRank} title="알라딘" />
+              <br />
+              <StarRating ReviewRank={averageRating} title="북파이" />
+            </BookInfo>
+          </BookDetailTopContent>
+        </BookDetailHeaderWrapper>
         <BookDetailContentWrapper>
-          <BookDetailContent
-            bookIntroText={fullDescription}
-            authorIntroText={fullDescription2}
-            bookId={isbn13}
-            categoryName={categoryName}
-            authorInfo={authorInfo}
-            authorName={authorName}
-            authorPhoto={authorPhoto}
-          />
+          <Container>
+            {authorInfo && (
+              <CardBase>
+                <BookDetailPanel title="저자 소개" authorName={authorName} authorPhoto={authorPhoto}>
+                  {authorInfo}
+                </BookDetailPanel>
+              </CardBase>
+            )}
+            <CardBase>
+              <BookDetailPanel title="기본 정보">{fullDescription}</BookDetailPanel>
+            </CardBase>
+            <CardBase>
+              <BookDetailPanel title="출판사제공 책소개">{fullDescription2}</BookDetailPanel>
+            </CardBase>
+            <BookDetailPanelWrapper>
+              <Reviews bookId={isbn13} categoryName={categoryName} />
+            </BookDetailPanelWrapper>
+          </Container>
           <UsedBookRecommendList isbn={isbn13} />
           <BookRecommendList isbn={isbn13} />
         </BookDetailContentWrapper>

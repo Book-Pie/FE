@@ -18,16 +18,6 @@ export interface BookDetailPanelProps {
   authorPhoto?: string;
 }
 
-export interface bookInfoHeaderParam {
-  author: string;
-  cover: string;
-  title: string;
-  categoryName: string;
-  publisher: string;
-  ReviewRank: number;
-  averageRating: number;
-}
-
 export interface UsedBookRecommendListParam {
   isbn: string;
 }
@@ -60,27 +50,7 @@ export interface ExpanderProps {
   onClick: (e: React.SyntheticEvent<any>) => void;
 }
 
-export interface paramProps {
+export interface ParamProps {
   isbn13: string;
   id?: number;
-}
-
-export interface matchProps {
-  isExact: boolean;
-  params: paramProps;
-  url: string;
-}
-
-export interface BookDetailProps {
-  match: matchProps;
-}
-
-export interface bookDetailContentProps {
-  bookIntroText: string;
-  authorIntroText: string;
-  categoryName: string;
-  bookId: string;
-  authorInfo: string;
-  authorName: string;
-  authorPhoto: string;
 }

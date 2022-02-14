@@ -1,12 +1,11 @@
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
-import React from "react";
 import { ReviewItem } from "./ReviewItem";
 import { ReviewListEmpty } from "./ReviewListEmpty";
 import { CommentUl, ReviewsListTitle, ReviewsListWrapper } from "./style";
 import { ReviewListProps } from "./types";
 
-export const ReviewList: React.FC<ReviewListProps> = ({ commentList, page, pageCount, totalCount, onChange }) => {
+export const ReviewList = ({ commentList, page, pageCount, totalCount, onChange }: ReviewListProps) => {
   return (
     <ReviewsListWrapper>
       <ReviewsListTitle>회원 리뷰 ({totalCount}건)</ReviewsListTitle>

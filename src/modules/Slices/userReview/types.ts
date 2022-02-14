@@ -1,4 +1,4 @@
-import { addUserReviewSubmitParam } from "components/BuyList/types";
+import { AddUserReviewSubmitParam } from "components/BuyList/types";
 import { ReceivedReviewList } from "src/components/UserReview/types";
 import { AppDispatch } from "src/modules/store";
 import { ErrorHandling } from "../comment/types";
@@ -9,15 +9,9 @@ export interface GetRelatedUsedBookListParam {
   tags: string[];
 }
 
-export interface getStoreUserReviewListParam {
+export interface GetStoreUserReviewListParam {
   sellerId: number;
   page: number;
-}
-
-export interface addUserReviewData {
-  orderId: number;
-  content: string;
-  rating: number;
 }
 
 export interface EditUserReviewSubmitData {
@@ -29,17 +23,6 @@ export interface EditUserReviewSubmitData {
 export interface DeleteUserReviewParam {
   userReviewId: number;
   token: string;
-}
-
-export interface getUserReviewListData {
-  userReviewId: number;
-  sellerId: number;
-  sellerName: string;
-  usedBookId: number;
-  usedBookTitle: string;
-  content: string;
-  rating: number;
-  reviewDate: string;
 }
 
 export interface GetUserReceivedReviewListData {
@@ -72,7 +55,7 @@ export interface UserReviewData {
 }
 
 export interface AddUserReviewParam {
-  data: addUserReviewSubmitParam;
+  data: AddUserReviewSubmitParam;
   token: string;
 }
 
@@ -154,7 +137,7 @@ export interface DeleteUserReviewAsyncSuccess {
   error: string;
 }
 
-export interface getUserReviewListParam {
+export interface GetUserReviewListParam {
   query: string;
   token: string;
 }
@@ -186,7 +169,7 @@ export interface GetChartAsyncSuccess {
   error: string;
 }
 
-export interface userReviewInfo {
+export interface UserReviewInfo {
   userReviewList: GetUserReceivedReviewListData[];
   receivedReviewList: GetUserReceivedReviewListData[];
   myPageChart: GetChartResponse[];

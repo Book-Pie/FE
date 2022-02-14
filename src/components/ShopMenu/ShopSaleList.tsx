@@ -11,7 +11,7 @@ import { Box, Skeleton } from "@mui/material";
 import { SaleListResponse, SaleListState, StateEnumType } from "../SaleList/types";
 import { EmptyWrapper, Title, TitleSpan, UsedBookLikeImg, UsedBookLikeListWrapper } from "../UsedBookLikeList/styles";
 import { CountWrapper } from "../UsedBookDetail/style";
-import { ReviewListEmptyParagraph } from "../Reviews/ReviewList/style";
+import { ReviewListEmptyParagraph } from "../Reviews/style";
 import { UsedBookCardWrapper } from "../UsedBookList/style";
 import { DateWrapper, ShopContentWrapper, ShopReviewListEmptyWrapper } from "./styles";
 import { FlexBox } from "../BuyList/styles";

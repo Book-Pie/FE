@@ -68,6 +68,14 @@ export const CardTitle = styled.h2`
   font-weight: 700;
 `;
 
+export const CardBase = styled.div`
+  padding: 20px;
+  margin: 0 auto;
+  margin-top: 50px;
+  overflow-y: hidden;
+  border-bottom: 2px solid #eeeeee;
+`;
+
 export const BookDetailTitle = styled.h2`
   font-size: 18px;
   font-weight: 700;

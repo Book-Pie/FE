@@ -1,15 +1,9 @@
-import { AppDispatch } from "modules/store";
-
-export interface myReviewCommentProps {
-  myUserId: number;
-}
-
 export interface ErrorHandling {
   status: number;
   message: string;
 }
 
-export interface addCommentProps {
+export interface AddCommentProps {
   data: {
     isbn: string;
     content: string;
@@ -31,7 +25,7 @@ export interface EditCommentProps {
 
 // 통신 성공 시 반환하는 타입
 
-export interface getCommentProps {
+export interface GetCommentProps {
   reviewId: number;
   isbn: string;
   userId: number;
@@ -43,14 +37,14 @@ export interface getCommentProps {
   likeCheck: boolean;
 }
 
-export interface sortProps {
+export interface SortProps {
   empty: boolean;
   sorted: boolean;
   unsorted: boolean;
 }
 
-export interface pageableProps {
-  sort: sortProps;
+export interface PageableProps {
+  sort: SortProps;
   offset: number;
   pageSize: number;
   pageNumber: number;
@@ -58,13 +52,9 @@ export interface pageableProps {
   unpaged: boolean;
 }
 
-export interface deleteCommentProps {
+export interface DeleteCommentProps {
   id: number;
   token: string;
-}
-
-export interface commentListProps {
-  bookId: number;
 }
 
 export interface BestCommentProps {
@@ -76,7 +66,7 @@ export interface CommentId {
   token: string;
 }
 
-export interface commentLikeResponse {
+export interface CommentLikeResponse {
   reviewLikeId: number;
   reviewId: number;
   userId: number;
@@ -85,28 +75,28 @@ export interface commentLikeResponse {
 
 // 통신 성공 시 반환하는 타입 데이터
 
-export interface commentData {
+export interface CommentData {
   myCommentCheck: boolean;
   last: boolean;
   averageRating: number;
   totalPages: number;
-  pageable: pageableProps;
-  content: getCommentProps[];
+  pageable: PageableProps;
+  content: GetCommentProps[];
   first: boolean;
   totalElements: number;
   empty: boolean;
 }
 
 // 리듀가 사용할 데이터 타입
-export interface commentReduceProps {
+export interface CommentReduceProps {
   myCommentCheck: boolean | null;
-  myComment: getCommentProps | null;
-  bestComment: getCommentProps[];
+  myComment: GetCommentProps | null;
+  bestComment: GetCommentProps[];
   last: boolean;
   averageRating: number;
   totalPages: number;
-  pageable: pageableProps;
-  content: getCommentProps[];
+  pageable: PageableProps;
+  content: GetCommentProps[];
   first: boolean;
   totalElements: number;
   empty: boolean;
@@ -115,45 +105,34 @@ export interface commentReduceProps {
 }
 
 // 실패 했을 때
-export interface commentAsyncFail {
+export interface CommentAsyncFail {
   status: number;
   data: any;
-}
-
-export interface commentThunkApi {
-  dispatch: AppDispatch;
-  rejectValue: commentAsyncFail;
 }
 
 // 성공했을 때 반환 타입
 export interface CommentLikeSuccess {
   success: boolean;
-  data: commentLikeResponse;
+  data: CommentLikeResponse;
   error: null;
 }
 
-export interface commentSuccess {
+export interface CommentAsyncSuccess {
   success: boolean;
-  data: string;
-  error: null;
-}
-
-export interface commentAsyncSuccess {
-  success: boolean;
-  data: commentData;
+  data: CommentData;
   error: null;
 }
 
 // 나의 댓글
 export interface MyCommentAsyncSuccess {
   success: boolean;
-  data: getCommentProps;
+  data: GetCommentProps;
   error: null;
 }
 
 // 베스트 댓글
 export interface BestCommentAsyncSuccess {
   success: boolean;
-  data: getCommentProps[];
+  data: GetCommentProps[];
   error: null;
 }

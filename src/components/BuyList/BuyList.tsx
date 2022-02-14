@@ -16,11 +16,11 @@ import { getShopPage, removeShopPage, setShopPage } from "utils/localStorageUtil
 import { Empty } from "components/SaleList/style";
 import { getUsedBookBuyList, usedBookDetailSelector } from "modules/Slices/usedBookDetail/usedBookDetailSlice";
 import { useTypedSelector } from "modules/store";
+import { UsedBookBuyListResponse } from "src/modules/Slices/usedBookDetail/types";
 import ContentList from "./ContentList";
 import MyPageSkeleton from "./MyPageSkeleton";
-import { ReviewListEmptyParagraph, ReviewListEmptyWrapper } from "../Reviews/ReviewList/style";
+import { ReviewListEmptyParagraph, ReviewListEmptyWrapper } from "../Reviews/style";
 import { BuyListWrapper, FlexBox } from "./styles";
-import { BuyListResponse } from "./types";
 import { UserReviewCell, UserReviewHeader } from "../UserReview/styles";
 
 const BuyList = () => {
@@ -76,10 +76,10 @@ const BuyList = () => {
     [handleHasMoreList],
   );
 
-  const handleTitlteFilterOnChange = useCallback(
+  const handleTitleFilterOnChange = useCallback(
     (
       _: React.SyntheticEvent<Element, Event>,
-      value: string | null | BuyListResponse,
+      value: string | null | UsedBookBuyListResponse,
       reason: AutocompleteChangeReason,
     ) => {
       if (value && typeof value !== "string") {
@@ -140,7 +140,7 @@ const BuyList = () => {
         <Autocomplete
           sx={{ width: 250 }}
           freeSolo
-          onChange={handleTitlteFilterOnChange}
+          onChange={handleTitleFilterOnChange}
           options={pages}
           getOptionLabel={option => (option.title ? option.title : "")}
           renderOption={(props, option) => (

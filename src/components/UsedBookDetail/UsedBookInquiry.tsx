@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useHistory, useRouteMatch } from "react-router";
-import UsedBookReplyItem from "components/UsedBookDetail/UsedBookInquiry/UsedBookReplyItem";
-import { ReviewListEmpty } from "components/Reviews/ReviewList/ReviewListEmpty";
+import UsedBookReplyItem from "components/UsedBookDetail/UsedBookReplyItem";
+import { ReviewListEmpty } from "components/Reviews/ReviewListEmpty";
 import Textarea from "components/TextArea/Textarea";
 import { userReduceSelector } from "modules/Slices/user/userSlice";
 import {
@@ -20,11 +20,11 @@ import Stack from "@mui/material/Stack";
 import Pagination from "@mui/material/Pagination";
 import { getUsedBookReplyPage, removeUsedBookReplyPage, setUsedBookReplyPage } from "utils/localStorageUtil";
 import { Box, FormControlLabel } from "@mui/material";
-import { CountWrapper, ProductDetailTitle, UsedBookStoreInformationWrapper, ReviewListEmptyWrapper } from "../style";
-import { submitParam } from "./types";
+import { CountWrapper, ProductDetailTitle, UsedBookStoreInformationWrapper, ReviewListEmptyWrapper } from "./style";
+import { SubmitParam } from "./types";
 
 const UsedBookInquiry = () => {
-  const { handleSubmit } = useForm<submitParam>();
+  const { handleSubmit } = useForm<SubmitParam>();
   const history = useHistory();
   const dispatch = useDispatch();
   const { params } = useRouteMatch<{ id: string }>();
@@ -78,14 +78,14 @@ const UsedBookInquiry = () => {
     [handleHasMoreList, totalPages],
   );
 
-  const addReply: SubmitHandler<submitParam> = () => {
+  const addReply: SubmitHandler<SubmitParam> = () => {
     if (!isLoggedIn) {
       if (window.confirm("로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?")) {
         history.replace("/signIn");
       }
       return false;
     }
-    if (user !== null) {
+    if (user !== null && usedBookId) {
       dispatch(
         addUsedBookDetailReply({
           usedBookId,
@@ -155,7 +155,9 @@ const UsedBookInquiry = () => {
         <>
           {replyList.map((reply, idx) => (
             <div key={idx}>
-              <UsedBookReplyItem idx={idx} review={reply} sellerId={sellerId} sellerName={sellerName} page={page} />
+              {sellerId && sellerName && (
+                <UsedBookReplyItem idx={idx} review={reply} sellerId={sellerId} sellerName={sellerName} page={page} />
+              )}
             </div>
           ))}
           <Stack mt={5} justifyContent="center" direction="row">
