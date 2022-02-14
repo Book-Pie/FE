@@ -67,7 +67,7 @@ const Point = () => {
           pointId,
           cancelAmount: amount,
         };
-        await client.post("/point", payload);
+        await client.post("/point", payload, makeAuthTokenHeader(token));
         alert("환불이 되었습니다.");
         handlePointFetch();
         reduxDispatch(fetchUserInfoAsync(token));
