@@ -9,8 +9,13 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import ClickAwayListener from "@mui/material/ClickAwayListener";
 import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import styled from "styled-components";
-import { TagArea, TagContent, RedContent, ButtonArea, DisabledButton, WideRedContent } from "./styles";
 import {
+  TagArea,
+  TagContent,
+  RedContent,
+  ButtonArea,
+  DisabledButton,
+  WideRedContent,
   BookPrice,
   BookStatus,
   BuyButton,
@@ -26,7 +31,7 @@ import {
   TopInformationArea,
   UsedBookDetailButton,
   UsedBookWrapper,
-} from "../style";
+} from "./style";
 import { UsedBookAreaProps } from "./types";
 
 const UsedBookArea = ({

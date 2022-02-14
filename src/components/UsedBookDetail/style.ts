@@ -215,17 +215,17 @@ export const ProductDetailCardWrapper = styled.div`
   background-color: #fff;
 `;
 
-export const UsedBookStoreInformationWrapper = styled.div.attrs(props => ({
+export const UsedBookStoreInformationWrapper = styled.div.attrs<{ height?: string }>(props => ({
   type: "text",
   height: props.height,
-}))`
+}))<{ height?: string }>`
   width: 544px;
   height: ${props => props.height};
   border-top: 1px solid #4f3629;
   margin-right: 45px;
 `;
 
-export const UsedBookDetailButton = styled.button`
+export const UsedBookDetailButton = styled.button<{ small?: boolean }>`
   font-size: ${props => (props.small ? "14px" : "18px")};
   width: ${props => (props.small ? "100px" : "160px")};
   height: ${props => (props.small ? "35px" : "53px")};
@@ -242,7 +242,7 @@ export const UsedBookDetailButton = styled.button`
   }
 `;
 
-export const LikeButton = styled.button`
+export const LikeButton = styled.button<{ small?: boolean }>`
   &.UsedBookArea--nomal {
     font-size: ${props => (props.small ? "14px" : "18px")};
     width: ${props => (props.small ? "100px" : "160px")};
@@ -501,5 +501,211 @@ export const SwiperWrapper = styled.div`
   .swiper-button-prev {
     border-color: ${props => props.theme.colors.mainDarkBrown} !important;
     color: ${props => props.theme.colors.mainDarkBrown} !important;
+  }
+`;
+
+export const TagContent = styled.span`
+  padding: 5px;
+  color: #dd002c;
+`;
+
+export const TagArea = styled.div`
+  margin-bottom: 20px;
+`;
+
+export const RedContent = styled.span`
+  color: #dd002c;
+`;
+
+export const WideRedContent = styled.span`
+  margin-left: 10px;
+  color: #dd002c;
+`;
+
+export const ButtonArea = styled.div`
+  display: flex;
+`;
+
+export const DisabledButton = styled.div`
+  width: 24rem;
+  padding: 15px;
+  border: 1px solid #d1d5d9;
+  border-radius: 5px;
+  color: #d1d5d9;
+  text-align: center;
+`;
+
+export const HeartArea = styled.span`
+  margin-top: 10px;
+`;
+
+export const DateContent = styled.div`
+  color: #4f3629;
+  font-weight: 700;
+`;
+
+export const SecretItem = styled.div`
+  color: #d1d5d9;
+`;
+
+export const SellerNameTitle = styled.div`
+  margin-top: 20px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 70px;
+`;
+
+export const ProfileImg = styled.div<{ storeReview: boolean }>`
+  flex: 6;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+
+  img {
+    border-radius: 50%;
+    height: ${props => (props.storeReview ? "70px" : "200px")};
+    width: ${props => (props.storeReview ? "70px" : "200px")};
+    ${({ theme }) => theme.shadow[0]};
+  }
+`;
+
+export const NoneProfileImg = styled(ProfileImg)`
+  img {
+    padding: ${props => (props.storeReview ? "13px" : "30px")};
+  }
+`;
+
+export const ReviewDate = styled.div`
+  color: #d6d0cd;
+  margin-right: 50px;
+`;
+
+export const RatingContent = styled.span`
+  font-size: 15px;
+  margin-bottom: 10px;
+`;
+
+export const StoreReviewItemFlexBox = styled(FlexBox)`
+  justify-content: space-between;
+`;
+
+export const StoreReviewItemWrapper = styled.div`
+  width: 543px;
+  height: 130px;
+  margin: 0 0 20px;
+  padding: 16px;
+  background-color: #51382b;
+  border-radius: 8px;
+`;
+
+export const StoreReviewItemContent = styled.div`
+  width: 354px;
+  height: 39px;
+  margin: 8px 40px 12px 0px;
+  font-family: Pretendard;
+  font-size: 15px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.25;
+  letter-spacing: -0.4px;
+  text-align: left;
+  color: #d6d0cd;
+`;
+
+export const StoreReviewItemNickName = styled.div`
+  width: 200px;
+  height: 21px;
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.45px;
+  text-align: left;
+  color: #fff;
+`;
+
+export const UsedBookStoreProfileImg = styled.div`
+  flex: 6;
+  display: flex;
+  align-items: center;
+
+  img {
+    width: 120px;
+    height: 120px;
+    margin-bottom: 8px;
+    border-radius: 80%;
+  }
+`;
+
+export const UsedBookStoreNoneProfileImg = styled.div`
+  flex: 6;
+  display: flex;
+  align-items: center;
+
+  img {
+    width: 120px;
+    height: 120px;
+    margin-bottom: 8px;
+    border-radius: 80%;
+  }
+`;
+
+export const StoreReviewProfileImg = styled.div`
+  flex: 6;
+  display: flex;
+  align-items: center;
+
+  img {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 8px;
+    border-radius: 80%;
+  }
+`;
+
+export const StoreReviewNoneProfileImg = styled(StoreReviewProfileImg)`
+  img {
+    padding: 10px;
+  }
+`;
+
+export const FollowButton = styled.div`
+  margin-left: 10px;
+`;
+
+export const ProductDetailProfileImg = styled.div`
+  flex: 6;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+
+  img {
+    border-radius: 50%;
+    height: 100px;
+    width: 100px;
+    ${({ theme }) => theme.shadow[0]};
+  }
+`;
+
+export const ProductDetailNoneProfileImg = styled(ProductDetailProfileImg)`
+  img {
+    padding: 20px;
+  }
+`;
+
+export const BottomArea = styled.div`
+  margin-top: 20px;
+`;
+
+export const UsedStoreFlexBox = styled.div`
+  display: flex;
+  width: 320px;
+  height: 80px;
+
+  div {
+    margin-right: 30px;
   }
 `;

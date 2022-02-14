@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
 import profileImg from "assets/image/pie3x.png";
-import { ClickArea } from "components/Reviews/ReviewList/style";
+import { ClickArea } from "components/Reviews/style";
 import { Button } from "@mui/material";
 import { deleteUsedBookDetailReply, editUsedBookDetailReply } from "modules/Slices/usedBookDetail/usedBookDetailSlice";
 import { compareDateFormat } from "utils/formatUtil";
@@ -11,7 +11,6 @@ import { useTypedSelector } from "src/modules/store";
 import { userReduceSelector } from "src/modules/Slices/user/userSlice";
 import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
-import { DateContent, NoneProfileImg, ProfileImg, SecretItem } from "./styles";
 import {
   ContentWrapper,
   FlexBoxWrapper,
@@ -19,7 +18,11 @@ import {
   ReplyItemContent,
   ReplyItemNickName,
   ReplyItemWrapper,
-} from "../style";
+  DateContent,
+  NoneProfileImg,
+  ProfileImg,
+  SecretItem,
+} from "./style";
 import SubReply from "./SubReply";
 import { UsedBookReplyListParam } from "./types";
 

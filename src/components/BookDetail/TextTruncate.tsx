@@ -14,7 +14,7 @@ export const TextTruncate = ({ lines, text, lineHeight, renderExpander }: TextTr
         setTruncate(true);
       }
     }
-  }, []);
+  }, [lineHeight, lines]);
 
   const style = {
     WebkitLineClamp: isTruncated && !isExpanded ? lines : "unset",

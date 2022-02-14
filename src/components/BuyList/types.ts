@@ -1,15 +1,32 @@
 import { ModalItemParam, UsedBookBuyListResponse } from "src/modules/Slices/usedBookDetail/types";
 
-export interface buyConfirmSubmitParam {
-  orderId: string;
-}
 export interface BuyList {
   pages: UsedBookBuyListResponse[];
 }
 
+export interface UserReviewModalItemProps {
+  image?: string;
+  price?: number;
+  orderId?: string;
+  bookId?: number;
+  title?: string;
+  reviewDate?: string;
+  usedBookTitle?: string;
+  orderDate?: string;
+  sellerNickName?: string;
+  buyerNickName?: string;
+  userReviewId?: number;
+  content?: string;
+  rating?: number;
+  reviewId?: number;
+  state?: string;
+  buyerName?: string;
+  sellerName?: string;
+}
+
 export interface UserReviewModalProps {
   open: boolean;
-  item: ModalItemParam;
+  item: UserReviewModalItemProps;
   handleClose: () => void;
 }
 
@@ -39,10 +56,6 @@ export interface BuyListResponse {
   buyerNickName: string;
   state: string;
   orderDate: string;
-}
-
-export interface addUserReviewForm {
-  addUserReviewSubmit: (data: AddUserReviewSubmitParam) => void;
 }
 
 export interface MyBuyList {

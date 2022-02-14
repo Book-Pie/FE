@@ -3,7 +3,7 @@ import { AxiosError } from "axios";
 import { RootState } from "modules/store";
 import http from "api/http";
 import client, { errorHandler } from "api/client";
-import { paramProps } from "src/components/BookDetail/types";
+import { ParamProps } from "src/components/BookDetail/types";
 
 import {
   BookReduce,
@@ -137,7 +137,7 @@ export const getReviewBook = createAsyncThunk<GetBookAsyncSuccess, string>(
 );
 
 // 리뷰 상세페이지
-export const bookDetailAsync = createAsyncThunk<BookAsyncSuccess, paramProps>(
+export const bookDetailAsync = createAsyncThunk<BookAsyncSuccess, ParamProps>(
   `${name}/bookDetailAsync`,
   async ({ isbn13 }, { rejectWithValue }) => {
     try {

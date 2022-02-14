@@ -12,7 +12,7 @@ import {
   userReviewSelector,
 } from "modules/Slices/userReview/userReviewSlice";
 import { CancelButton, FlexBox, UserReviewButtonArea } from "../BuyList/styles";
-import { ReviewListEmptyParagraph, ReviewListEmptyWrapper } from "../Reviews/ReviewList/style";
+import { ReviewListEmptyParagraph, ReviewListEmptyWrapper } from "../Reviews/style";
 import { Empty } from "../SaleList/style";
 import WrittedReviewList from "./WrittedReviewList";
 import ReceivedReviewContent from "./ReceivedReviewContent";
