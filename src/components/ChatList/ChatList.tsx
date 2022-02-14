@@ -39,6 +39,7 @@ const ChatList = () => {
           client.get<Types.SellerChatListResponse>(`${BASE_URL}/kafka/list/buyer/${id}`),
         ]);
         const combineData = [...sellerData, ...buyerData];
+
         const promisesResolved = combineData
           .map(({ bookId }) => client.get<Types.UsedbookDetailResponse>(`/usedbook/${bookId}`))
           .map(promise => promise.catch(e => ({ success: false, data: null, error: errorHandler(e) })));
@@ -50,11 +51,9 @@ const ChatList = () => {
           .then(checkFailed)) as Types.UsedbookDetailResponse[];
 
         const usedbookAndChatCombineData = usedbookResponses
-          .map(({ data }) => {
-            const { usedBookId } = data;
-            const [findChatData] = combineData.filter(({ bookId }) => bookId === usedBookId);
+          .map(({ data }, idx) => {
             return {
-              ...findChatData,
+              ...combineData[idx],
               bookInfo: data,
             };
           })
