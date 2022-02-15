@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice, current, PayloadAction } from "@reduxjs/toolkit";
-import client, { errorHandler } from "api/client";
+import client, { errorHandler, makeAuthTokenHeader } from "api/client";
 import { RootState } from "modules/store";
 
 import { getFreeBoardPage } from "utils/localStorageUtil";
@@ -11,13 +11,16 @@ export const freeboardUpdateAsync = createAsyncThunk<string, Types.FreeboardUpda
   `${name}/freeboardUpdateAsync`,
   async (payload, { extra, rejectWithValue, dispatch, getState }) => {
     const { history } = extra;
-    const { freeBoardReduce } = getState();
+    const { freeBoardReduce, userReduce } = getState();
     const { list } = freeBoardReduce;
+    const { token } = userReduce;
     try {
+      if (!token) throw new Error("로그인이 필요합니다.");
       const page = list?.page ?? getFreeBoardPage() ?? 0;
       const { success } = await client.put<Types.FreeboardUpdateAsyncPayload, Types.FreeboardUpdateResponse>(
         "/board",
         payload,
+        makeAuthTokenHeader(token),
       );
       if (!success) throw new Error("수정에 실패했습니다.");
       dispatch(freeboardsAsync(page));
@@ -34,13 +37,16 @@ export const freeboardInsertAsync = createAsyncThunk<void, Types.FreeboardInsert
   `${name}/freeboardInsertAsync`,
   async (payload, { extra, rejectWithValue, dispatch, getState }) => {
     const { history } = extra;
-    const { freeBoardReduce } = getState();
+    const { freeBoardReduce, userReduce } = getState();
     const { list, keyWord } = freeBoardReduce;
+    const { token } = userReduce;
     try {
+      if (!token) throw new Error("로그인이 필요합니다.");
       const page = list?.page ?? getFreeBoardPage() ?? 0;
       const { success } = await client.post<Types.FreeboardInsertAsyncPayload, Types.FreeboardInsertResponse>(
         "/board",
         payload,
+        makeAuthTokenHeader(token),
       );
       if (!success) throw new Error("등록에 실패했습니다.");
       dispatch(setContentInit());
@@ -61,13 +67,15 @@ export const freeboardInsertAsync = createAsyncThunk<void, Types.FreeboardInsert
 export const freeboardDeleteAsync = createAsyncThunk<string, string, Types.ThunkApi>(
   `${name}/freeboardDeleteAsync`,
   async (boardId, { extra, rejectWithValue, getState, dispatch }) => {
-    const { freeBoardReduce } = getState();
+    const { freeBoardReduce, userReduce } = getState();
     const { list, keyWord } = freeBoardReduce;
+    const { token } = userReduce;
     const { history } = extra;
     try {
+      if (!token) throw new Error("로그인이 필요합니다.");
       if (list) {
         const { page, contents } = list;
-        const { data } = await client.delete(`/board/${boardId}`);
+        const { data } = await client.delete(`/board/${boardId}`, makeAuthTokenHeader(token));
         if (data.success === false) throw new Error("삭제에 실패했습니다.");
 
         if (keyWord) {
@@ -153,10 +161,13 @@ export const freeboardCommentsAsync = createAsyncThunk<
 
 export const freeboardCommentInsertAsync = createAsyncThunk<void, Types.FreeboardInsertParam, Types.ThunkApi>(
   `${name}/freeboardCommentInsertAsync`,
-  async (payload, { rejectWithValue, dispatch }) => {
+  async (payload, { rejectWithValue, dispatch, getState }) => {
+    const { userReduce } = getState();
+    const { token } = userReduce;
     try {
+      if (!token) throw new Error("로그인이 필요합니다.");
       const { boardId } = payload;
-      await client.post("/reply/board", payload);
+      await client.post("/reply/board", payload, makeAuthTokenHeader(token));
       dispatch(freeboardCommentsAsync({ boardId, page: 0, isReload: true }));
       return undefined;
     } catch (error) {
@@ -168,9 +179,12 @@ export const freeboardCommentInsertAsync = createAsyncThunk<void, Types.Freeboar
 
 export const freeboardCommentDeleteAsync = createAsyncThunk<string, Types.FreeboardDeleteParam, Types.ThunkApi>(
   `${name}/freeboardCommentDeleteAsync`,
-  async ({ boardId, replyId }, { rejectWithValue, dispatch }) => {
+  async ({ boardId, replyId }, { rejectWithValue, dispatch, getState }) => {
+    const { userReduce } = getState();
+    const { token } = userReduce;
     try {
-      await client.delete(`/reply/board/${replyId}`);
+      if (!token) throw new Error("로그인이 필요합니다.");
+      await client.delete(`/reply/board/${replyId}`, makeAuthTokenHeader(token));
       dispatch(freeboardCommentsAsync({ boardId, page: 0, isReload: true }));
       return "삭제가 완료되었습니다.";
     } catch (error) {
@@ -181,9 +195,12 @@ export const freeboardCommentDeleteAsync = createAsyncThunk<string, Types.Freebo
 );
 export const freeboardCommentUpdateAsync = createAsyncThunk<string, Types.FreeboardUpdateParam, Types.ThunkApi>(
   `${name}/freeboardCommentUpdateAsync`,
-  async (payload, { rejectWithValue, dispatch }) => {
+  async (payload, { rejectWithValue, dispatch, getState }) => {
+    const { userReduce } = getState();
+    const { token } = userReduce;
     try {
-      const { data } = await client.put("/reply/board", payload);
+      if (!token) throw new Error("로그인이 필요합니다.");
+      const { data } = await client.put("/reply/board", payload, makeAuthTokenHeader(token));
       dispatch(freeboardCommentsAsync({ boardId: data.boardId, page: 0, isReload: true }));
       return "업데이트가 되었습니다.";
     } catch (error) {
@@ -195,9 +212,12 @@ export const freeboardCommentUpdateAsync = createAsyncThunk<string, Types.Freebo
 
 export const subReplyInsertAsync = createAsyncThunk<void, Types.SubReplyInsertParam, Types.ThunkApi>(
   `${name}/subRelyInsertAsync`,
-  async ({ boardId, payload }, { rejectWithValue, dispatch }) => {
+  async ({ boardId, payload }, { rejectWithValue, dispatch, getState }) => {
+    const { userReduce } = getState();
+    const { token } = userReduce;
     try {
-      await client.post("/reply", payload);
+      if (!token) throw new Error("로그인이 필요합니다.");
+      await client.post("/reply", payload, makeAuthTokenHeader(token));
       dispatch(freeboardCommentsAsync({ boardId, page: 0, isReload: true }));
       return undefined;
     } catch (error) {
@@ -209,9 +229,12 @@ export const subReplyInsertAsync = createAsyncThunk<void, Types.SubReplyInsertPa
 
 export const subReplyDeleteAsync = createAsyncThunk<string, Types.SubReplyDeleteParam, Types.ThunkApi>(
   `${name}/subRelyInsertAsync`,
-  async ({ boardId, subReplyId }, { rejectWithValue, dispatch }) => {
+  async ({ boardId, subReplyId }, { rejectWithValue, dispatch, getState }) => {
+    const { userReduce } = getState();
+    const { token } = userReduce;
     try {
-      await client.delete(`/reply/${subReplyId}`);
+      if (!token) throw new Error("로그인이 필요합니다.");
+      await client.delete(`/reply/${subReplyId}`, makeAuthTokenHeader(token));
       dispatch(freeboardCommentsAsync({ boardId, page: 0, isReload: true }));
       return "삭제가 되었습니다.";
     } catch (error) {
@@ -223,9 +246,12 @@ export const subReplyDeleteAsync = createAsyncThunk<string, Types.SubReplyDelete
 
 export const subReplyUpdateAsync = createAsyncThunk<string, Types.SubReplyUpdateParam, Types.ThunkApi>(
   `${name}/subRelyInsertAsync`,
-  async ({ boardId, payload }, { rejectWithValue, dispatch }) => {
+  async ({ boardId, payload }, { rejectWithValue, dispatch, getState }) => {
+    const { userReduce } = getState();
+    const { token } = userReduce;
     try {
-      await client.put("/reply", payload);
+      if (!token) throw new Error("로그인이 필요합니다.");
+      await client.put("/reply", payload, makeAuthTokenHeader(token));
       dispatch(freeboardCommentsAsync({ boardId, page: 0, isReload: true }));
       return "업데이트가 되었습니다.";
     } catch (error) {

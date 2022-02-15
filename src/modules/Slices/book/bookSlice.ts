@@ -1,8 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 import { RootState } from "modules/store";
-import http from "api/http";
-import client, { errorHandler } from "api/client";
+import client, { http, errorHandler } from "api/client";
 import { ParamProps } from "src/components/BookDetail/types";
 
 import {
