@@ -148,7 +148,6 @@ const FreeBoardList = () => {
                     </div>
                     <div>
                       <span>{dateArrayFormat(boardDate)[0]}</span>
-                      <span>{dateArrayFormat(boardDate)[1]}</span>
                     </div>
                   </div>
                 );
@@ -175,27 +174,21 @@ const FreeBoardList = () => {
             </Stack>
           )}
           <Styled.FreeBoardListSearch onSubmit={handleSubmit(onSubmit)}>
-            <div>
-              <Controller
-                name="title"
-                control={control}
-                rules={titleOptions}
-                render={({ field }) => (
-                  <TextField
-                    {...field}
-                    type="text"
-                    size={min900 ? "medium" : "small"}
-                    color="mainDarkBrown"
-                    placeholder="자유게시판 제목을 입력해주세요."
-                  />
-                )}
-              />
-              <Button variant="contained" size={min900 ? "large" : "small"} color="mainDarkBrown" type="submit">
-                검색
-              </Button>
-            </div>
-            <ErrorMessage message={errors.title?.message} />
+            <Controller
+              name="title"
+              control={control}
+              rules={titleOptions}
+              render={({ field }) => (
+                <TextField {...field} type="text" color="mainDarkBrown" placeholder="자유게시판 제목을 입력해주세요." />
+              )}
+            />
+            <Button variant="contained" size={min900 ? "large" : "small"} color="mainDarkBrown" type="submit">
+              검색
+            </Button>
           </Styled.FreeBoardListSearch>
+          <div>
+            <ErrorMessage message={errors.title?.message} />
+          </div>
         </Styled.FreeBoardListWrapper>
       </>
     );
