@@ -6,8 +6,9 @@ WORKDIR /app
 RUN mkdir ./build
 ADD ./build ./build
 
+# 도커 nginx 설정 파일 삭제
 RUN rm /etc/nginx/conf.d/default.conf
-
+# nginx 설정 파일 복사
 COPY nginx.conf /etc/nginx/conf.d
 
 CMD ["nginx", "-g", "daemon off;"]
