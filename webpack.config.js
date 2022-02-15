@@ -20,13 +20,13 @@ const KAKAO_CLIENT_ID = process.env.KAKAO_CLIENT_ID ?? "";
 const KAKAO_CLIENT_KEY = process.env.KAKAO_JDK_KEY ?? "";
 const PAYMENT_IMP_KEY = process.env.PAYMENT_IMP_KEY ?? "";
 const KAKAO_REDIRECT_PATH_DEV = "http://localhost:3000/oAuth/kakao";
-const KAKAO_REDIRECT_PATH_PRO = "http://www.react-dev.p-e.kr/oAuth/kakao";
+const KAKAO_REDIRECT_PATH_PRO = "http://dzjv6uzpvhcwz.cloudfront.net/oAuth/kakao";
 const KAKAO_OAUTH_URL_DEV = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_CLIENT_ID}&redirect_uri=${KAKAO_REDIRECT_PATH_DEV}&response_type=code`;
 const KAKAO_OAUTH_URL_PRO = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_CLIENT_ID}&redirect_uri=${KAKAO_REDIRECT_PATH_PRO}&response_type=code`;
 const NAVER_OAUTH_URL_DEV =
   "https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=qtbZhYGrYVHhLWesnRyJ&redirect_uri=http://localhost:3000/oAuth/naver&state=state";
 const NAVER_OAUTH_URL_PRO =
-  "https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=qtbZhYGrYVHhLWesnRyJ&redirect_uri=http://www.react-dev.p-e.kr/oAuth/naver&state=state";
+  "https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=qtbZhYGrYVHhLWesnRyJ&redirect_uri=http://dzjv6uzpvhcwz.cloudfront.net/oAuth/naver&state=state";
 const BASE_URL_DEV = "http://localhost:3000/api";
 const BASE_URL_PRO = "http://3.34.100.122:8080/api";
 const CHAT_BASE_URL = "http://ec2-3-34-249-63.ap-northeast-2.compute.amazonaws.com:8081";
