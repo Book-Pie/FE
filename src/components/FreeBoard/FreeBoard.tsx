@@ -187,13 +187,17 @@ const FreeBoard = () => {
                 </div>
               </div>
               <div>
-                <Button variant="contained" color="mainDarkBrown">
-                  <Link to="/community/freeboard">목록보기</Link>
-                </Button>
-                {user && (
-                  <Button variant="contained" color="info">
-                    <Link to="insert">게시글 등록</Link>
+                <Link to="/community/freeboard">
+                  <Button variant="contained" color="mainDarkBrown">
+                    목록보기
                   </Button>
+                </Link>
+                {user && (
+                  <Link to="insert">
+                    <Button variant="contained" color="info">
+                      게시글 등록
+                    </Button>
+                  </Link>
                 )}
                 {user?.id === userId && (
                   <>

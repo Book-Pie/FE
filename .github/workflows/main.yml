@@ -1,11 +1,11 @@
 name: React build
 on: 
   push:                              
-    branches: [ action ] # action Branch에서 push 이벤트가 일어났을 때만 실행
+    branches: [ release ] # action Branch에서 push 이벤트가 일어났을 때만 실행
 
 jobs:
   build:
-    runs-on: [ubuntu-latest]
+    runs-on: ubuntu-18.04
     steps:
       - name: Checkout source code.   # 레포지토리 체크아웃
         uses: actions/checkout@v2
