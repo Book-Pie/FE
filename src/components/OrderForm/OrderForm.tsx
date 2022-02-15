@@ -15,8 +15,7 @@ import DaumPostModal from "elements/DaumPostModal";
 import { fetchUserInfoAsync, userReduceSelector } from "modules/Slices/user/userSlice";
 import { useAppDispatch, useTypedSelector } from "modules/store";
 import usePopup from "hooks/usePopup";
-import client, { errorHandler } from "api/client";
-import { makeAuthTokenHeader } from "api/http";
+import client, { errorHandler, makeAuthTokenHeader } from "api/client";
 import * as Styled from "./style";
 import * as Types from "./types";
 

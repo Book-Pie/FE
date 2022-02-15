@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
-import http from "api/http";
+import { makeAuthTokenHeader, http } from "src/api/client";
 import { RootState } from "modules/store";
 import {
   AddUsedBookDetailSubReplyParam,
@@ -88,9 +88,9 @@ export const usedBookDetailAsync = createAsyncThunk<UsedBookDetailAsyncSuccess, 
 // 중고장터 좋아요 추가 및 취소
 export const usedBookLike = createAsyncThunk<UsedBookLikeAsyncSuccess, UsedBookLikeParam>(
   `${name}/like`,
-  async ({ usedBookId }, { rejectWithValue }) => {
+  async ({ usedBookId, token }, { rejectWithValue }) => {
     try {
-      const response = await http.post(`/usedbook/like/${usedBookId}`, usedBookId);
+      const response = await http.post(`/usedbook/like/${usedBookId}`, usedBookId, makeAuthTokenHeader(token));
       return response.data;
     } catch (error: any) {
       console.error(error);
@@ -279,9 +279,13 @@ export const usedBookBuyConfirm = createAsyncThunk<string, GetUsedBookBuyConfirm
   `${myPage}/${name}/buy/confirm`,
   async ({ token, orderId }, { rejectWithValue }) => {
     try {
-      await http.post(`/order/end/${orderId}`, {
-        headers: { "X-AUTH-TOKEN": token },
-      });
+      await http.post(
+        `/order/end/${orderId}`,
+        {},
+        {
+          headers: { "X-AUTH-TOKEN": token },
+        },
+      );
       return orderId;
     } catch (error: any) {
       console.error(error);

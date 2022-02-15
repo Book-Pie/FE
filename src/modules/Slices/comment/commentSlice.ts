@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "modules/store";
-import http from "api/http";
+import { http } from "src/api/client";
 import { MyReviewCommentParam, ReviewsParams } from "components/Reviews/types";
 import {
   CommentAsyncSuccess,

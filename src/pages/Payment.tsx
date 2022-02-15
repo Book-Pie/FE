@@ -4,7 +4,7 @@ import { make1000UnitsCommaFormet } from "utils/formatUtil";
 import TextField from "@mui/material/TextField";
 import logo from "assets/image/logo-removebg.png";
 import { useTypedSelector } from "modules/store";
-import { userReduceSelector, userSelector } from "modules/Slices/user/userSlice";
+import { userReduceSelector } from "modules/Slices/user/userSlice";
 import usePopup from "hooks/usePopup";
 import client, { errorHandler, makeAuthTokenHeader } from "api/client";
 import * as Styled from "./styles";
@@ -40,7 +40,7 @@ const Payment = () => {
   const handlePointPaymentOnClick = ({ currentTarget: { id } }: React.MouseEvent<HTMLButtonElement>) => {
     try {
       if (!user || !token) throw new Error("로그인이 핑요합니다.");
-      if (Number(price) <= 1000) throw new Error("최소 1,000원이상 결제 가능합니다.");
+      if (Number(price) < 1000) throw new Error("최소 1,000원이상 결제 가능합니다.");
       const { email, name, phone, address, id: userId } = user;
 
       const data = {

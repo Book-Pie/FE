@@ -83,11 +83,12 @@ const UsedBookArea = ({
       }
       return false;
     }
-    if (user !== null) {
+    if (user !== null && token !== null) {
       setOpen(true);
       dispatch(
         usedBookLike({
           usedBookId,
+          token,
         }),
       );
       setTimeout(() => setOpen(false), 2000);
