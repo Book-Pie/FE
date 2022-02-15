@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "modules/store";
-import { http } from "src/api/client";
+import { errorHandler, http, makeAuthTokenHeader } from "src/api/client";
 import { MyReviewCommentParam, ReviewsParams } from "components/Reviews/types";
 import {
   CommentAsyncSuccess,
@@ -54,15 +54,13 @@ export const reviewCommentList = createAsyncThunk<CommentAsyncSuccess, ReviewsPa
         return response.data;
       }
       if (token) {
-        const response = await http.get(`/book-review/${bookId}?&${query}`, {
-          headers: { "X-AUTH-TOKEN": token },
-        });
+        const response = await http.get(`/book-review/${bookId}?&${query}`, makeAuthTokenHeader(token));
         return response.data;
       }
       return false;
-    } catch (error: any) {
-      console.log(error);
-      return rejectWithValue(error.response.data);
+    } catch (error) {
+      const message = errorHandler(error);
+      return rejectWithValue(message);
     }
   },
 );
@@ -72,12 +70,11 @@ export const addComment = createAsyncThunk<MyCommentAsyncSuccess, AddCommentProp
   `${name}/create`,
   async ({ data, token }, { rejectWithValue }) => {
     try {
-      const response = await http.post(`/book-review/`, data, {
-        headers: { "X-AUTH-TOKEN": token },
-      });
+      const response = await http.post(`/book-review/`, data, makeAuthTokenHeader(token));
       return response.data;
-    } catch (error: any) {
-      return rejectWithValue(error.response.data);
+    } catch (error) {
+      const message = errorHandler(error);
+      return rejectWithValue(message);
     }
   },
 );
@@ -87,13 +84,11 @@ export const deleteComment = createAsyncThunk(
   `${name}/delete`,
   async ({ id, token }: DeleteCommentProps, { rejectWithValue }) => {
     try {
-      await http.delete(`/book-review/${id}`, {
-        headers: { "X-AUTH-TOKEN": token },
-      });
+      await http.delete(`/book-review/${id}`, makeAuthTokenHeader(token));
       return id;
-    } catch (error: any) {
-      console.error(error);
-      return rejectWithValue(error.response.data);
+    } catch (error) {
+      const message = errorHandler(error);
+      return rejectWithValue(message);
     }
   },
 );
@@ -103,13 +98,11 @@ export const editComment = createAsyncThunk<MyCommentAsyncSuccess, EditCommentPr
   `${name}/edit`,
   async ({ data, token }, { rejectWithValue }) => {
     try {
-      const response = await http.put(`/book-review`, data, {
-        headers: { "X-AUTH-TOKEN": token },
-      });
+      const response = await http.put(`/book-review`, data, makeAuthTokenHeader(token));
       return response.data;
-    } catch (error: any) {
-      console.error(error);
-      return rejectWithValue(error.response.data);
+    } catch (error) {
+      const message = errorHandler(error);
+      return rejectWithValue(message);
     }
   },
 );
@@ -119,13 +112,11 @@ export const myReviewComment = createAsyncThunk<MyCommentAsyncSuccess, MyReviewC
   `${name}/myComment`,
   async ({ bookId, token }, { rejectWithValue }) => {
     try {
-      const response = await http.get(`/book-review/my/${bookId}`, {
-        headers: { "X-AUTH-TOKEN": token },
-      });
+      const response = await http.get(`/book-review/my/${bookId}`, makeAuthTokenHeader(token));
       return response.data;
-    } catch (error: any) {
-      console.log(error);
-      return rejectWithValue(error.response.data);
+    } catch (error) {
+      const message = errorHandler(error);
+      return rejectWithValue(message);
     }
   },
 );
@@ -135,17 +126,11 @@ export const commentLike = createAsyncThunk<CommentLikeSuccess, CommentId>(
   `${name}/like`,
   async ({ reviewId, token }, { rejectWithValue }) => {
     try {
-      const response = await http.post(
-        `/book-review/like`,
-        { reviewId },
-        {
-          headers: { "X-AUTH-TOKEN": token },
-        },
-      );
+      const response = await http.post(`/book-review/like`, { reviewId }, makeAuthTokenHeader(token));
       return response.data;
-    } catch (error: any) {
-      console.error(error);
-      return rejectWithValue(error.response.data);
+    } catch (error) {
+      const message = errorHandler(error);
+      return rejectWithValue(message);
     }
   },
 );
@@ -157,9 +142,9 @@ export const reviewBestComment = createAsyncThunk<BestCommentAsyncSuccess, BestC
     try {
       const response = await http.get(`/book-review/bestReview/${bookId}`);
       return response.data;
-    } catch (error: any) {
-      console.error(error);
-      return rejectWithValue(error.response.data);
+    } catch (error) {
+      const message = errorHandler(error);
+      return rejectWithValue(message);
     }
   },
 );

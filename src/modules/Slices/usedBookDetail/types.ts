@@ -1,6 +1,12 @@
-import { AppDispatch } from "modules/store";
+import { AppDispatch, RootState } from "modules/store";
 import { StateEnumType, UsedBook } from "src/components/UsedBookList/types";
 import { UserReviewData } from "../userReview/types";
+
+export interface UsedBookThunkApi {
+  dispatch: AppDispatch;
+  state: RootState;
+  rejectValue: string;
+}
 
 export interface UsedBookDetailThunk {
   dispatch: AppDispatch;
@@ -40,10 +46,8 @@ export interface AddUsedBookDetailReplyParam {
 }
 
 export interface EditUsedBookDetailReplyParam {
-  userId: number;
   replyId: number;
   content: string;
-  secret: boolean;
 }
 
 export interface UsedBookLikeParam {
