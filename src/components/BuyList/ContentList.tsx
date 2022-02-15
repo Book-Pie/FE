@@ -8,7 +8,15 @@ import useSignIn from "hooks/useSignIn";
 import { useTypedSelector } from "modules/store";
 import { userReviewSelector } from "modules/Slices/userReview/userReviewSlice";
 import Modal from "./Modal";
-import { BuyContent, BuyTitleContent, ContentText, ContentWrapper, ImgContent, ButtonArea } from "./styles";
+import {
+  BuyContent,
+  BuyTitleContent,
+  ContentText,
+  ContentWrapper,
+  ImgContent,
+  ButtonArea,
+  ContentTitle,
+} from "./styles";
 import { Empty } from "../SaleList/style";
 import { IContent } from "./types";
 
@@ -65,18 +73,20 @@ const ContentList = ({ pages, select, titleFilter, open, setOpen }: IContent) =>
                   )}
                 </Link>
               </BuyContent>
+              <BuyTitleContent>
+                <Link to={`/usedBook/${bookId}`}>
+                  <ContentTitle>{title}</ContentTitle>
+                </Link>
+              </BuyTitleContent>
+              <BuyContent>
+                <ContentText>{price}</ContentText>
+              </BuyContent>
               <BuyContent>
                 <ContentText>
                   {state === "SALE" && "거래취소"}
                   {state === "TRADING" && "거래중"}
                   {state === "SOLD_OUT" && "거래완료"}
                 </ContentText>
-              </BuyContent>
-              <BuyTitleContent>
-                <ContentText>{title}</ContentText>
-              </BuyTitleContent>
-              <BuyContent>
-                <ContentText>{price}</ContentText>
               </BuyContent>
               <BuyContent>
                 <ContentText>{orderDate.split("T", 1)}</ContentText>

@@ -26,7 +26,7 @@ import { UserReviewCell, UserReviewHeader } from "../UserReview/styles";
 const BuyList = () => {
   const { signIn, dispatch } = useSignIn();
   const { user } = signIn;
-  const [headers] = useState<string[]>(["사진", "거래상태", "상품명", "가격", "구매일", "기능"]);
+  const [headers] = useState<string[]>(["사진", "상품명", "가격", "거래상태", "구매일", "기능"]);
   const [select, setSelect] = useState<string>("NONE");
   const [limit, setLimit] = useState(5);
   const [titleFilter, setTitleFilter] = useState<string | null>(null);
