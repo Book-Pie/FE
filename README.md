@@ -100,7 +100,7 @@
 
 <br>
 
-> ### 프로젝트 실행 해보기
+> #### 프로젝트 실행 해보기
 
 ```js
  mkdir bookpie
@@ -112,7 +112,10 @@
  yarn serve
  브라우저 localhost:3000 접속 
 ```
-> 📁 프로젝트 구조
+
+<br>
+
+> #### 📁 프로젝트 구조
 
 ```ts
 ├── .github 
@@ -164,34 +167,57 @@
  - Git, Github
    - 개발자들의 코드 버전 관리 및 공유하기 위해 사용했습니다.
 
-<br>
-
 ---
+
+### 👨‍💻 협업 방식
+
+#### 테스트 서버 배포 환경 그림
+ 
+<div align=center>
+    <img src=https://user-images.githubusercontent.com/26589722/154127777-bfb20c91-6ba8-4b3b-8f6a-e2b075678868.png width=80%  />
+</div>
 <br>
 
-### 👨‍💻 우리가 개발한 방식
-
-<br>
-
-> 개발 프로세스 설명
+> #### 📜 개발 과정 설명
 1. 개발자들은 각자 `feature/{{기능이름}} branch`에서 개발 진행한다.
 2. 완성된 기능을 `develop branch`에 PR 후 리뷰를 통과하면 merge를한다.
 3. `deploy branch`에서 develop pull를 해서 코드를 갱신 후 push를 한다.
 4. github Webhook🪝을 이용하여 `https://www.jenkins.p-e.kr`로 push 메세지를 트리거한다.   
-5. jenkins는 push 메시지 받고 deploy branch를 pull 후 배포 스크립트를 진행한다.
-   - 배포 진행 상황을 슬랙메세지로 확인 할 수있다.
-   
+5. `jenkins`는 push 메시지 받고 배포 스크립트를 진행한다.
 6. `http://www.react-dev.p-e.kr` 접속을 해서 신규 기능이 잘 작동하는지 체크를 한다.
 7. 1 ~ 6번을 반복을 한다.
 
 
 ---
+
+#### 배포 환경 그림
+ 
+<div align=center>
+    <img src=https://user-images.githubusercontent.com/26589722/154129935-d231f47f-2ed9-40ed-95d9-61fdac944aa8.png width=80%  />
+</div>
 <br>
 
-> 배포 프로세스 설명
+> #### 📜 배포 과정 설명
+1. `main branch`에서 push를 진행를 한다.
+2. main branch push를 감지한 github은 `git action` 배포 스크립트를 실행한다.
+3. 빌드가 완료되고 AWS S3에 파일을 배포를하고 유저는 `CloudFront`를 통해 배포된 사이트([BookPie 사이트](http://dzjv6uzpvhcwz.cloudfront.net/))를 접속한다.
 
-<!-- 개발 환경 -->
-<!-- 배포 환경 -->
+---
+
+#### Git Conventions
+
+[VincentDriessen의 Git Flow](https://nvie.com/posts/a-successful-git-branching-model/) 를 따릅니다.   
+배포를 위해 사용하고 있는 S3, CloudFront 에서 Main 브랜치에 커밋 푸시가 일어날 때마다 배포를 진행하므로, 배포를 진행해야 할 때에만 main 브랜치에 머지를 진행합니다.
+
+- 브랜치 종류
+  - main: main 브랜치를 기준으로 배포를 진행합니다.
+  - develop: 개발을 진행하는 중심 브랜치입니다.
+  - release: QA를 진행하는 브랜치입니다.
+  - feature: 새로운 기능을 개발하는 브랜치입니다.
+  - deploy: 테스트 서버 배포를 진행합니다.
+- Feature 브랜치 네이밍 규칙
+  - `{브랜치 종류}/{{기능이름}}`
+  - ex) `feature/login`
 
 
 
