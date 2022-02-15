@@ -136,8 +136,11 @@ const Header = () => {
             <Link to="/book">리뷰</Link>
           </span>
           <span>
-            <Link to="/community">커뮤니티</Link>
+            <span>커뮤니티</span>
             <ul>
+              <li>
+                <Link to="/community">공지사항</Link>
+              </li>
               <li>
                 <Link to="/community/freeboard">자유게시판</Link>
               </li>

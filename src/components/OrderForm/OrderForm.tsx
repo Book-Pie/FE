@@ -93,7 +93,7 @@ const OrderForm = ({ usedBook }: Types.OrderFormProps) => {
       const message = errorHandler(e);
       handlePopupMessage(false, message);
     } finally {
-      setIsLoading(true);
+      setIsLoading(false);
     }
   };
 

@@ -2,10 +2,14 @@ import styled from "styled-components";
 
 export const FreeBoardListWrapper = styled.div`
   margin: 20px 0;
+
+  .MuiInputBase-root {
+    height: 100%;
+  }
 `;
 
 export const FreeBoardListRow = styled.div`
-  min-height: 400px;
+  min-height: 300px;
   & > div {
     display: flex;
     align-items: center;
@@ -32,7 +36,7 @@ export const FreeBoardListRow = styled.div`
       flex-wrap: wrap;
       gap: 10px;
       justify-content: center;
-      font-size: 15px;
+      font-size: 13px;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -130,12 +134,11 @@ export const Empty = styled.div`
 `;
 
 export const FreeBoardListSearch = styled.form`
-  & > div {
-    margin-top: 20px;
-    justify-content: center;
-    display: flex;
-    gap: 20px;
-  }
+  height: 45px;
+  margin-top: 20px;
+  justify-content: center;
+  display: flex;
+  gap: 20px;
   input {
     width: 250px;
   }
