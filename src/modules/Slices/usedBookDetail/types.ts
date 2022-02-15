@@ -48,6 +48,7 @@ export interface EditUsedBookDetailReplyParam {
 
 export interface UsedBookLikeParam {
   usedBookId: number;
+  token: string;
 }
 
 export interface UsedBookBuyListResponse {
