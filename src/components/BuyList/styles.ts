@@ -48,6 +48,10 @@ export const ContentText = styled.div`
   margin: 60px auto;
 `;
 
+export const ContentTitle = styled(ContentText)`
+  color: #52a4c3;
+`;
+
 export const ButtonArea = styled.div`
   align-content: center;
   margin: 50px auto;

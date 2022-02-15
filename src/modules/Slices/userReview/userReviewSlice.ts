@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { http } from "src/api/client";
+import { errorHandler, http, makeAuthTokenHeader } from "src/api/client";
 import { RootState } from "modules/store";
 import {
   AddUserReviewAsyncSuccess,
@@ -33,13 +33,11 @@ export const addUserReview = createAsyncThunk<AddUserReviewAsyncSuccess, AddUser
   `${name}/add`,
   async ({ data, token }, { rejectWithValue }) => {
     try {
-      const response = await http.post(`/userreview`, data, {
-        headers: { "X-AUTH-TOKEN": token },
-      });
+      const response = await http.post(`/userreview`, data, makeAuthTokenHeader(token));
       return response.data;
-    } catch (error: any) {
-      console.error(error);
-      return rejectWithValue(error.response.data);
+    } catch (error) {
+      const message = errorHandler(error);
+      return rejectWithValue(message);
     }
   },
 );
@@ -49,13 +47,11 @@ export const getUserReviewList = createAsyncThunk<GetUserReviewListAsyncSuccess,
   `${name}/list`,
   async ({ query, token }, { rejectWithValue }) => {
     try {
-      const response = await http.get(`/userreview/me?${query}`, {
-        headers: { "X-AUTH-TOKEN": token },
-      });
+      const response = await http.get(`/userreview/me?${query}`, makeAuthTokenHeader(token));
       return response.data;
-    } catch (error: any) {
-      console.error(error);
-      return rejectWithValue(error.response.data);
+    } catch (error) {
+      const message = errorHandler(error);
+      return rejectWithValue(message);
     }
   },
 );
@@ -65,13 +61,11 @@ export const getMyReceivedUserReviewList = createAsyncThunk<GetUserReviewListAsy
   `${name}/receivedReviewList`,
   async ({ query, token }, { rejectWithValue }) => {
     try {
-      const response = await http.get(`/userreview/to-me?${query}`, {
-        headers: { "X-AUTH-TOKEN": token },
-      });
+      const response = await http.get(`/userreview/to-me?${query}`, makeAuthTokenHeader(token));
       return response.data;
-    } catch (error: any) {
-      console.error(error);
-      return rejectWithValue(error.response.data);
+    } catch (error) {
+      const message = errorHandler(error);
+      return rejectWithValue(message);
     }
   },
 );
@@ -81,13 +75,11 @@ export const editUserReview = createAsyncThunk<EditUserReviewAsyncSuccess, AddUs
   `${name}/edit`,
   async ({ data, token }, { rejectWithValue }) => {
     try {
-      const response = await http.put(`/userreview`, data, {
-        headers: { "X-AUTH-TOKEN": token },
-      });
+      const response = await http.put(`/userreview`, data, makeAuthTokenHeader(token));
       return response.data;
-    } catch (error: any) {
-      console.error(error);
-      return rejectWithValue(error.response.data);
+    } catch (error) {
+      const message = errorHandler(error);
+      return rejectWithValue(message);
     }
   },
 );
@@ -97,13 +89,11 @@ export const deleteUserReview = createAsyncThunk<DeleteUserReviewAsyncSuccess, D
   `${name}/delete`,
   async ({ userReviewId, token }, { rejectWithValue }) => {
     try {
-      const response = await http.delete(`/userreview/${userReviewId}`, {
-        headers: { "X-AUTH-TOKEN": token },
-      });
+      const response = await http.delete(`/userreview/${userReviewId}`, makeAuthTokenHeader(token));
       return response.data;
-    } catch (error: any) {
-      console.error(error);
-      return rejectWithValue(error.response.data);
+    } catch (error) {
+      const message = errorHandler(error);
+      return rejectWithValue(message);
     }
   },
 );
@@ -115,9 +105,9 @@ export const getMyPageChart = createAsyncThunk<GetChartAsyncSuccess, string>(
     try {
       const response = await http.get(`/book-review/myCategory/${id}`);
       return response.data;
-    } catch (error: any) {
-      console.error(error);
-      return rejectWithValue(error.response.data);
+    } catch (error) {
+      const message = errorHandler(error);
+      return rejectWithValue(message);
     }
   },
 );

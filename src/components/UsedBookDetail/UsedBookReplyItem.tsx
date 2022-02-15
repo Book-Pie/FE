@@ -74,17 +74,13 @@ export const UsedBookReplyItem = ({ review, sellerId, sellerName, page }: UsedBo
     if (myContent.length <= 10) {
       alert("댓글을 10자 이상 입력해주세요.");
     } else if (window.confirm("댓글을 정말로 수정하시겠습니까?") === true) {
-      if (user) {
-        dispatch(
-          editUsedBookDetailReply({
-            userId: user.id,
-            replyId,
-            content: myContent,
-            secret,
-          }),
-        );
-        setIsUpdate(!isUpdate);
-      }
+      dispatch(
+        editUsedBookDetailReply({
+          replyId,
+          content: myContent,
+        }),
+      );
+      setIsUpdate(!isUpdate);
     }
   };
 

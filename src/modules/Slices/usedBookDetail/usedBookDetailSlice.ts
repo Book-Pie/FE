@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { AxiosError } from "axios";
-import { makeAuthTokenHeader, http } from "src/api/client";
+import { makeAuthTokenHeader, http, errorHandler } from "src/api/client";
 import { RootState } from "modules/store";
 import {
   AddUsedBookDetailSubReplyParam,
@@ -12,7 +11,6 @@ import {
   GetStoreUserReviewAsyncSuccess,
   GetStoreUserReviewListParam,
   GetUserReviewListParam,
-  ThunkApi,
 } from "../userReview/types";
 import {
   AddUsedBookDetailReplyAsyncSuccess,
@@ -24,13 +22,13 @@ import {
   GetUsedBookBuyListAsyncSuccess,
   GetUsedBookLikeListAsyncSuccess,
   UsedBookDetailAsyncSuccess,
-  UsedBookDetailFail,
   UsedBookDetailReduce,
   UsedBookDetailReplyListAsyncSuccess,
   UsedBookDetailReplyListParam,
   UsedBookDetailThunk,
   UsedBookLikeAsyncSuccess,
   UsedBookLikeParam,
+  UsedBookThunkApi,
   UsedBookViewAsyncSuccess,
 } from "./types";
 
@@ -68,19 +66,11 @@ export const usedBookDetailAsync = createAsyncThunk<UsedBookDetailAsyncSuccess, 
   async (id, { rejectWithValue, dispatch }) => {
     try {
       const response = await http.get(`/usedbook/${id}`);
-      const { data } = response;
-      const { success } = data;
-      if (!success) {
-        if (data.error.code === 200) {
-          return console.log(data);
-        }
-      }
       dispatch(usedBookView(id));
-      return data;
-    } catch (err) {
-      const error = err as AxiosError<UsedBookDetailFail>;
-      if (!error.response) throw err;
-      return rejectWithValue(error.message);
+      return response.data;
+    } catch (error) {
+      const message = errorHandler(error);
+      return rejectWithValue(message);
     }
   },
 );
@@ -92,9 +82,9 @@ export const usedBookLike = createAsyncThunk<UsedBookLikeAsyncSuccess, UsedBookL
     try {
       const response = await http.post(`/usedbook/like/${usedBookId}`, usedBookId, makeAuthTokenHeader(token));
       return response.data;
-    } catch (error: any) {
-      console.error(error);
-      return rejectWithValue(error.response.data);
+    } catch (error) {
+      const message = errorHandler(error);
+      return rejectWithValue(message);
     }
   },
 );
@@ -106,9 +96,9 @@ export const usedBookView = createAsyncThunk<UsedBookViewAsyncSuccess, string>(
     try {
       const response = await http.post(`/usedbook/view/${id}`, id);
       return response.data;
-    } catch (error: any) {
-      console.error(error);
-      return rejectWithValue(error.response.data);
+    } catch (error) {
+      const message = errorHandler(error);
+      return rejectWithValue(message);
     }
   },
 );
@@ -121,50 +111,61 @@ export const usedBookDetailReplyList = createAsyncThunk<
   try {
     const response = await http.get(`/reply/usedbook/${usedBookId}?page=${page}&size=5`);
     return response.data;
-  } catch (error: any) {
-    console.error(error);
-    return rejectWithValue(error.response.data);
+  } catch (error) {
+    const message = errorHandler(error);
+    return rejectWithValue(message);
   }
 });
 
 // 중고장터 댓글 작성
-export const addUsedBookDetailReply = createAsyncThunk<AddUsedBookDetailReplyAsyncSuccess, AddUsedBookDetailReplyParam>(
-  `${name}/addReply`,
-  async (data, { rejectWithValue }) => {
-    try {
-      const response = await http.post(`/reply/usedbook`, data);
-      return response.data;
-    } catch (error: any) {
-      console.error(error);
-      return rejectWithValue(error.response.data);
-    }
-  },
-);
+export const addUsedBookDetailReply = createAsyncThunk<
+  AddUsedBookDetailReplyAsyncSuccess,
+  AddUsedBookDetailReplyParam,
+  UsedBookThunkApi
+>(`${name}/addReply`, async (data, { rejectWithValue, getState }) => {
+  try {
+    const { userReduce } = getState();
+    const { token } = userReduce;
+    if (!token) throw new Error("로그인이 필요합니다.");
+    const response = await http.post(`/reply/usedbook`, data, makeAuthTokenHeader(token));
+    return response.data;
+  } catch (error) {
+    const message = errorHandler(error);
+    return rejectWithValue(message);
+  }
+});
 
 // 중고장터 댓글 수정
 export const editUsedBookDetailReply = createAsyncThunk<
   AddUsedBookDetailReplyAsyncSuccess,
-  EditUsedBookDetailReplyParam
->(`${name}/editReply`, async (data, { rejectWithValue }) => {
+  EditUsedBookDetailReplyParam,
+  UsedBookThunkApi
+>(`${name}/editReply`, async (data, { rejectWithValue, getState }) => {
   try {
-    const response = await http.put(`/reply/usedbook/`, data);
+    const { userReduce } = getState();
+    const { token } = userReduce;
+    if (!token) throw new Error("로그인이 필요합니다.");
+    const response = await http.put(`/reply/usedbook/`, data, makeAuthTokenHeader(token));
     return response.data;
-  } catch (error: any) {
-    console.error(error);
-    return rejectWithValue(error.response.data);
+  } catch (error) {
+    const message = errorHandler(error);
+    return rejectWithValue(message);
   }
 });
 
 // 중고장터 댓글 삭제
-export const deleteUsedBookDetailReply = createAsyncThunk(
+export const deleteUsedBookDetailReply = createAsyncThunk<any, DeleteUsedBookDetailParam, UsedBookThunkApi>(
   `${name}/deleteReply`,
-  async ({ id }: DeleteUsedBookDetailParam, { rejectWithValue }) => {
+  async ({ id }: DeleteUsedBookDetailParam, { rejectWithValue, getState }) => {
     try {
-      await http.delete(`/reply/usedbook/${id}`);
+      const { userReduce } = getState();
+      const { token } = userReduce;
+      if (!token) throw new Error("로그인이 필요합니다.");
+      await http.delete(`/reply/usedbook/${id}`, makeAuthTokenHeader(token));
       return id;
-    } catch (error: any) {
-      console.error(error);
-      return rejectWithValue(error.response.data);
+    } catch (error) {
+      const message = errorHandler(error);
+      return rejectWithValue(message);
     }
   },
 );
@@ -176,9 +177,9 @@ export const getStoreUserReviewList = createAsyncThunk<GetStoreUserReviewAsyncSu
     try {
       const response = await http.get(`/userreview/${sellerId}?page=${page}&limit=3`);
       return response.data;
-    } catch (error: any) {
-      console.error(error);
-      return rejectWithValue(error.response.data);
+    } catch (error) {
+      const message = errorHandler(error);
+      return rejectWithValue(message);
     }
   },
 );
@@ -190,54 +191,63 @@ export const getRelatedUsedBookList = createAsyncThunk<GetRelatedUsedBookListAsy
     try {
       const response = await http.post(`/usedbook/recommendation`, data);
       return response.data;
-    } catch (error: any) {
-      console.error(error);
-      return rejectWithValue(error.response.data);
+    } catch (error) {
+      const message = errorHandler(error);
+      return rejectWithValue(message);
     }
   },
 );
 
 // 중고장터 대댓글 작성
-export const addUsedBookDetailSubReply = createAsyncThunk<string, AddUsedBookDetailSubReplyParam, ThunkApi>(
+export const addUsedBookDetailSubReply = createAsyncThunk<string, AddUsedBookDetailSubReplyParam, UsedBookThunkApi>(
   `${name}/add/subReply`,
-  async ({ content, page, parentReplyId, usedBookId, userId }, { rejectWithValue, dispatch }) => {
+  async ({ content, page, parentReplyId, usedBookId, userId }, { rejectWithValue, dispatch, getState }) => {
     try {
-      await http.post(`/reply`, { userId, parentReplyId, content });
+      const { userReduce } = getState();
+      const { token } = userReduce;
+      if (!token) throw new Error("로그인이 필요합니다.");
+      await http.post(`/reply`, { userId, parentReplyId, content }, makeAuthTokenHeader(token));
       dispatch(usedBookDetailReplyList({ usedBookId, page }));
       return "댓글 작성완료";
-    } catch (error: any) {
-      console.error(error);
-      return rejectWithValue(error.response.data);
+    } catch (error) {
+      const message = errorHandler(error);
+      return rejectWithValue(message);
     }
   },
 );
 
 // 중고장터 대댓글 수정
-export const editUsedBookDetailSubReply = createAsyncThunk<string, EditUsedBookDetailSubReply, ThunkApi>(
+export const editUsedBookDetailSubReply = createAsyncThunk<string, EditUsedBookDetailSubReply, UsedBookThunkApi>(
   `${name}/edit/subReply`,
-  async ({ replyId, content, usedBookId, page }, { rejectWithValue, dispatch }) => {
+  async ({ replyId, content, usedBookId, page }, { rejectWithValue, dispatch, getState }) => {
     try {
-      await http.put(`/reply`, { replyId, content });
+      const { userReduce } = getState();
+      const { token } = userReduce;
+      if (!token) throw new Error("로그인이 필요합니다.");
+      await http.put(`/reply`, { replyId, content }, makeAuthTokenHeader(token));
       dispatch(usedBookDetailReplyList({ usedBookId, page }));
       return "수정완료 되었습니다.";
-    } catch (error: any) {
-      console.error(error);
-      return rejectWithValue(error.response.data);
+    } catch (error) {
+      const message = errorHandler(error);
+      return rejectWithValue(message);
     }
   },
 );
 
 // 중고장터 대댓글 삭제
-export const deleteUsedBookDetailSubReply = createAsyncThunk<string, DeleteUsedBookDetailSubReply, ThunkApi>(
+export const deleteUsedBookDetailSubReply = createAsyncThunk<string, DeleteUsedBookDetailSubReply, UsedBookThunkApi>(
   `${name}/delete/subReply`,
-  async ({ replyId, usedBookId, page }, { rejectWithValue, dispatch }) => {
+  async ({ replyId, usedBookId, page }, { rejectWithValue, dispatch, getState }) => {
     try {
-      await http.delete(`/reply/${replyId}`);
+      const { userReduce } = getState();
+      const { token } = userReduce;
+      if (!token) throw new Error("로그인이 필요합니다.");
+      await http.delete(`/reply/${replyId}`, makeAuthTokenHeader(token));
       dispatch(usedBookDetailReplyList({ usedBookId, page }));
       return "삭제완료 되었습니다.";
-    } catch (error: any) {
-      console.error(error);
-      return rejectWithValue(error.response.data);
+    } catch (error) {
+      const message = errorHandler(error);
+      return rejectWithValue(message);
     }
   },
 );
@@ -247,13 +257,11 @@ export const getUsedBookLikeList = createAsyncThunk<GetUsedBookLikeListAsyncSucc
   `${myPage}/${name}/like/list`,
   async (token, { rejectWithValue }) => {
     try {
-      const response = await http.get(`/usedbook/like`, {
-        headers: { "X-AUTH-TOKEN": token },
-      });
+      const response = await http.get(`/usedbook/like`, makeAuthTokenHeader(token));
       return response.data;
-    } catch (error: any) {
-      console.error(error);
-      return rejectWithValue(error.response.data);
+    } catch (error) {
+      const message = errorHandler(error);
+      return rejectWithValue(message);
     }
   },
 );
@@ -263,13 +271,11 @@ export const getUsedBookBuyList = createAsyncThunk<GetUsedBookBuyListAsyncSucces
   `${myPage}/${name}/buy/list`,
   async ({ query, token }, { rejectWithValue }) => {
     try {
-      const response = await http.get(`/order/buyer?${query}`, {
-        headers: { "X-AUTH-TOKEN": token },
-      });
+      const response = await http.get(`/order/buyer?${query}`, makeAuthTokenHeader(token));
       return response.data;
-    } catch (error: any) {
-      console.error(error);
-      return rejectWithValue(error.response.data);
+    } catch (error) {
+      const message = errorHandler(error);
+      return rejectWithValue(message);
     }
   },
 );
@@ -279,17 +285,11 @@ export const usedBookBuyConfirm = createAsyncThunk<string, GetUsedBookBuyConfirm
   `${myPage}/${name}/buy/confirm`,
   async ({ token, orderId }, { rejectWithValue }) => {
     try {
-      await http.post(
-        `/order/end/${orderId}`,
-        {},
-        {
-          headers: { "X-AUTH-TOKEN": token },
-        },
-      );
+      await http.post(`/order/end/${orderId}`, {}, makeAuthTokenHeader(token));
       return orderId;
-    } catch (error: any) {
-      console.error(error);
-      return rejectWithValue(error.response.data);
+    } catch (error) {
+      const message = errorHandler(error);
+      return rejectWithValue(message);
     }
   },
 );
@@ -299,13 +299,11 @@ export const addUserReview = createAsyncThunk<AddUserReviewAsyncSuccess, AddUser
   `${name}/add`,
   async ({ data, token }, { rejectWithValue }) => {
     try {
-      const response = await http.post(`/userreview`, data, {
-        headers: { "X-AUTH-TOKEN": token },
-      });
+      const response = await http.post(`/userreview`, data, makeAuthTokenHeader(token));
       return response.data;
-    } catch (error: any) {
-      console.error(error);
-      return rejectWithValue(error.response.data);
+    } catch (error) {
+      const message = errorHandler(error);
+      return rejectWithValue(message);
     }
   },
 );

@@ -29,7 +29,7 @@ import {
 } from "./style";
 
 const UsedBookStoreReview = () => {
-  const { storeReviewList, pageCount, content } = useTypedSelector(usedBookDetailSelector);
+  const { storeReviewList, pageCount, content, storeReviewListTotal } = useTypedSelector(usedBookDetailSelector);
   const { params } = useRouteMatch<{ id: string }>();
   const { id } = params;
   const [page, setPage] = useState(getShopPage(1));
@@ -108,7 +108,7 @@ const UsedBookStoreReview = () => {
     <UsedBookStoreInformationWrapper height="500px">
       <ProductDetailTitle>
         <div>
-          상점후기 <CountWrapper>{pageCount * 3}</CountWrapper>
+          상점후기 <CountWrapper>{storeReviewListTotal}</CountWrapper>
         </div>
       </ProductDetailTitle>
       {reviewList.length ? (

@@ -65,10 +65,9 @@ export const mainNovelList = createAsyncThunk<GetBookAsyncSuccess>(
       const novel = 1;
       const { data } = await http.get(`/book/byCategory?categoryId=${novel}&page=1`);
       return data;
-    } catch (err) {
-      const error = err as AxiosError<GetBookAsyncFail>;
-      if (!error.response) throw err;
-      return rejectWithValue(error.response.data);
+    } catch (error) {
+      const message = errorHandler(error);
+      return rejectWithValue(message);
     }
   },
 );
@@ -81,10 +80,9 @@ export const mainMagazineList = createAsyncThunk<GetBookAsyncSuccess>(
       const magazine = 2913;
       const { data } = await http.get(`/book/byCategory?categoryId=${magazine}&page=1`);
       return data;
-    } catch (err) {
-      const error = err as AxiosError<GetBookAsyncFail>;
-      if (!error.response) throw err;
-      return rejectWithValue(error.response.data);
+    } catch (error) {
+      const message = errorHandler(error);
+      return rejectWithValue(message);
     }
   },
 );
@@ -97,10 +95,9 @@ export const mainEconomicList = createAsyncThunk<GetBookAsyncSuccess>(
       const economic = 656;
       const { data } = await http.get(`/book/byCategory?categoryId=${economic}&page=1`);
       return data;
-    } catch (err) {
-      const error = err as AxiosError<GetBookAsyncFail>;
-      if (!error.response) throw err;
-      return rejectWithValue(error.response.data);
+    } catch (error) {
+      const message = errorHandler(error);
+      return rejectWithValue(message);
     }
   },
 );
@@ -112,10 +109,9 @@ export const getDefaultBookList = createAsyncThunk<GetBookAsyncSuccess, number>(
     try {
       const { data } = await http.get(`/book/byCategory?categoryId=74&page=${page}`);
       return data;
-    } catch (err) {
-      const error = err as AxiosError<GetBookAsyncFail>;
-      if (!error.response) throw err;
-      return rejectWithValue(error.response.data);
+    } catch (error) {
+      const message = errorHandler(error);
+      return rejectWithValue(message);
     }
   },
 );
@@ -127,10 +123,9 @@ export const getReviewBook = createAsyncThunk<GetBookAsyncSuccess, string>(
     try {
       const { data } = await http.get(`/book/byCategory?${query}&size=16`);
       return data;
-    } catch (err) {
-      const error = err as AxiosError<GetBookAsyncFail>;
-      if (!error.response) throw err;
-      return rejectWithValue(error.response.data);
+    } catch (error) {
+      const message = errorHandler(error);
+      return rejectWithValue(message);
     }
   },
 );
@@ -141,18 +136,10 @@ export const bookDetailAsync = createAsyncThunk<BookAsyncSuccess, ParamProps>(
   async ({ isbn13 }, { rejectWithValue }) => {
     try {
       const response = await http.get(`book/${isbn13}`);
-      const { data } = response;
-      const { success } = data;
-      if (!success) {
-        if (data.error.code === 200) {
-          return console.log(data);
-        }
-      }
-      return data;
-    } catch (err) {
-      const error = err as AxiosError<BookAsyncFail>;
-      if (!error.response) throw err;
-      return rejectWithValue(error.response.data);
+      return response.data;
+    } catch (error) {
+      const message = errorHandler(error);
+      return rejectWithValue(message);
     }
   },
 );
@@ -164,10 +151,9 @@ export const getBookRecommendList = createAsyncThunk<GetBookRecommendListAsyncSu
     try {
       const { data } = await http.get(`/book/recommend?isbn=${isbn}`);
       return data;
-    } catch (err) {
-      const error = err as AxiosError<GetBookAsyncFail>;
-      if (!error.response) throw err;
-      return rejectWithValue(error.response.data);
+    } catch (error) {
+      const message = errorHandler(error);
+      return rejectWithValue(message);
     }
   },
 );
@@ -180,10 +166,9 @@ export const getRecommendUsedBookList = createAsyncThunk<
   try {
     const { data } = await http.get(`/usedbook/isbn/${isbn}`);
     return data;
-  } catch (err) {
-    const error = err as AxiosError<GetBookAsyncFail>;
-    if (!error.response) throw err;
-    return rejectWithValue(error.response.data);
+  } catch (error) {
+    const message = errorHandler(error);
+    return rejectWithValue(message);
   }
 });
 
