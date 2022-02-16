@@ -1,6 +1,6 @@
 import { useAppDispatch, useTypedSelector } from "modules/store";
 import queryString from "query-string";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import {
   userReviewsSelector,
   fetchReviewAsync,
@@ -12,6 +12,7 @@ import { Stack, Typography } from "@mui/material";
 import Pagination from "@mui/material/Pagination";
 import Loading from "elements/Loading";
 import noComments from "assets/image/noComments.png";
+import { UserInfo } from "src/modules/Slices/user/types";
 import * as Styled from "./style";
 import MyReviewTable from "./MyReviewTable";
 
@@ -21,34 +22,39 @@ const MyReview = () => {
   const user = useTypedSelector(userSelector);
   const dispatch = useAppDispatch();
 
-  const makeQuery = (page: number, size: number) => {
-    return queryString.stringify({
+  const makeQuery = (page: number, size: number) =>
+    queryString.stringify({
       page,
       size,
     });
-  };
+
+  const hasMoreMyReviews = useCallback(
+    (page: number, size: number, userId: number) => {
+      const query = makeQuery(page, size);
+      dispatch(fetchReviewAsync({ userId, query }));
+    },
+    [dispatch],
+  );
 
   const handlePaginationOnChange = (_: any, value: number) => {
-    if (user) {
-      const currentPage = value - 1;
-      if (contents && contents[currentPage]) {
-        dispatch(setReviewPage(currentPage));
-      } else {
-        const query = makeQuery(currentPage, size);
-        dispatch(fetchReviewAsync({ userId: user.id, query }));
-      }
+    if (user === null) return;
+    const currentPage = value - 1;
+    if (contents && contents[currentPage]) {
+      dispatch(setReviewPage(currentPage));
+      return;
     }
+
+    hasMoreMyReviews(currentPage, size, user.id);
   };
 
   useEffect(() => {
-    if (user !== null && page === 0 && contents === null) {
-      const query = makeQuery(page, size);
-      dispatch(fetchReviewAsync({ userId: user.id, query }));
-    }
-    return () => {
-      if (contents !== null) dispatch(setReivewsReset());
-    };
-  }, [dispatch, user, page, size, contents]);
+    if (user === null || page !== 0 || contents !== null) return;
+    hasMoreMyReviews(page, size, user.id);
+  }, [user, page, size, contents, hasMoreMyReviews]);
+
+  useEffect(() => {
+    dispatch(setReivewsReset());
+  }, [dispatch]);
 
   if (contents) {
     return (

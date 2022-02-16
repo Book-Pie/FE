@@ -84,23 +84,23 @@
 <hr/>
 
 ### 💻 기술 스택
-- `TypeScript` : 정적 타입을 도입해서 코드 안전성 및 유지보수 쉽기 위해 사용
+- `TypeScript` : 정적 타입을 도입해서 코드 안전성 및 유지보수 쉽기 위해 사용했습니다.
 - `React`: 웹UI 라이브러리
 - `Redux/tookit` : 클라이언트 전역상태 관리 라이브러리
-- `Axios` : 서버와 RESTful 통신을 위해 사용
+- `Axios` : 서버와 RESTful 통신을 위해 사용했습니다.
 - `React-Query` : 서버의 상태를 관리하기 위한 라이브러리
 - `React-hook-form` : form 유효성 검사를 위한 라이브러리
 - `Sockjs-client` : 서버와 양방향 통신을 위한 라이브러리
-- `Styled-components` : css-in-js을 통해 컴포넌트 스타일을 관리하기 위해 사용
-- `ESLint` : 코드의 컨벤션 검사를 위해 사용
-- `Pretiier` : 코드의 컨벤션 유지를 위해 사용
-- `Webpack` : 모듈을 병합하여 하나의 결과물을 만들기 위해 사용
+- `Styled-components` : css-in-js을 통해 컴포넌트 스타일을 관리하기 위해 사용했습니다.
+- `ESLint` : 코드의 컨벤션 검사를 위해 사용했습니다.
+- `Pretiier` : 코드의 컨벤션 유지를 위해 사용했습니다.
+- `Webpack` : 모듈을 병합하여 하나의 결과물을 만들기 위해 사용했습니다.
 - `Babel` : TSX,Typescript 코드 JS로 변경해주는 트랜스파일러  
 
 
 <br>
 
-> #### 프로젝트 실행 해보기
+> #### ⚙ 프로젝트 실행 해보기
 
 ```js
  mkdir bookpie
@@ -156,7 +156,7 @@
 
  - Slack 
    - 협업자들과 기술 공유 및 개발 진행 상황 공유하기 위해 사용했습니다.
-   - 일반, 프론트, 백엔드 3개 채널로 관심사를 나누어 소통의 복잡도를 낮추었다.
+   - 일반, 프론트, 백엔드 3개 채널로 관심사를 나누어 소통의 복잡도를 낮추었습니다.
  - JIRA
    - jira의 스케쥴 대시보드를 이용해 프론트, 백엔드 진행 상황 공유 및 개발 이력을 남기기 위해 사용했습니다.
    - 개발 이력을 남겨서 불 필요한 소통을 줄였습니다.
@@ -183,8 +183,8 @@
 2. 완성된 기능을 `develop branch`에 PR 후 리뷰를 통과하면 merge를한다.
 3. `deploy branch`에서 develop pull를 해서 코드를 갱신 후 push를 한다.
 4. github Webhook🪝을 이용하여 `https://www.jenkins.p-e.kr`로 push 메세지를 트리거한다.   
-5. `jenkins`는 push 메시지 받고 배포 스크립트를 진행한다.
-6. `http://www.react-dev.p-e.kr` 접속을 해서 신규 기능이 잘 작동하는지 체크를 한다.
+5. `jenkins`는 push 메시지를 받고 배포 스크립트를 진행한다.
+6. `http://www.react-dev.p-e.kr` 접속해서 신규 기능이 잘 작동하는지 확인을 한다.
 7. 1 ~ 6번을 반복을 한다.
 
 
