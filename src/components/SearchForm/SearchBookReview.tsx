@@ -31,7 +31,7 @@ const SearchBookReview = () => {
   return (
     <Styled.SearchWrapper>
       <Typography variant="h5" mt={2} fontWeight="bold">
-        리뷰 검색결과
+        도서 검색결과
         {pageCount > 1 && (
           <>
             (총<span>{pageCount * 8}개</span>)
