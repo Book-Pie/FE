@@ -291,16 +291,13 @@ const userSlice = createSlice({
 
       if (state.reviews.contents) {
         state.reviews.contents[pageNumber] = content;
-        state.reviews.page = pageNumber;
-        state.reviews.pageCount = totalPages;
       } else {
         state.reviews.contents = [content];
         state.reviews.empty = empty;
         state.reviews.size = size;
-        state.reviews.page = pageNumber;
-        state.reviews.pageCount = totalPages;
       }
-
+      state.reviews.page = pageNumber;
+      state.reviews.pageCount = totalPages;
       state.reviews.status = "idle";
     });
     builder.addCase(fetchReviewAsync.rejected, (state, action) => {

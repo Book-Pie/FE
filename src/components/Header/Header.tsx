@@ -122,7 +122,7 @@ const Header = () => {
           <img src={logo} alt="logo" />
         </Link>
         <Styled.SearchWrapper onSubmit={handleSubmit(onSubmit)}>
-          <input type="text" id="title" {...register("title", titleOptions)} />
+          <input type="text" id="title" placeholder="검색어를 입력해주세요" {...register("title", titleOptions)} />
           <Tooltip title="검색">
             <img src={searchImg} alt="search" />
           </Tooltip>

@@ -17,6 +17,17 @@ jobs:
       - name: yarn 버전 확인
         run: yarn --version 
 
+      - name: 환경변수 생성
+        run: | 
+           echo "KAKAO_CLIENT_ID=$KAKAO_CLIENT_ID" >> .env
+           echo "KAKAO_JDK_KEY=$KAKAO_JDK_KEY" >> .env
+           echo "PAYMENT_IMP_KEY=$PAYMENT_IMP_KEY" >> .env 
+        env: 
+          KAKAO_CLIENT_ID: ${{ secrets.KAKAO_CLIENT_ID }}
+          KAKAO_JDK_KEY: ${{ secrets.KAKAO_JDK_KEY }}
+          PAYMENT_IMP_KEY: ${{ secrets.PAYMENT_IMP_KEY }}
+
+
       - name: 빌드하기  
         uses: borales/actions-yarn@v2.3.0
         with:

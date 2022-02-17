@@ -98,12 +98,8 @@ const Aladin = () => {
     <Styled.SearchWrapper>
       <Loading isLoading={loading} />
       <Typography variant="h4" mt={2} fontWeight="bold">
-        리뷰 검색결과
-        {pageCount > 1 && (
-          <>
-            (총<span>{pageCount * 8}개</span>)
-          </>
-        )}
+        도서 검색결과
+        {pageCount > 1 && <span>(총{pageCount * 8}개)</span>}
       </Typography>
       <AladinFilter />
       <Grid container spacing={2}>
