@@ -1,14 +1,11 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { AxiosError } from "axios";
 import { RootState } from "modules/store";
 import client, { http, errorHandler } from "api/client";
 import { ParamProps } from "src/components/BookDetail/types";
 
 import {
   BookReduce,
-  GetBookAsyncFail,
   GetBookAsyncSuccess,
-  BookAsyncFail,
   BookAsyncSuccess,
   GetBookRecommendListParam,
   GetBookRecommendListAsyncSuccess,
@@ -40,6 +37,8 @@ const initialState: BookReduce = {
     pages: [],
     pageCount: 1,
     isEmpty: false,
+    searchCategoryName: "",
+    totalItems: 0,
   },
 };
 
@@ -260,9 +259,11 @@ export const bookSlice = createSlice({
         state.status = "loading";
       })
       .addCase(getDefaultBookList.fulfilled, (state, { payload }) => {
-        const { item } = payload.data;
+        const { item, searchCategoryName, totalResults } = payload.data;
         if (state.list.pages.length === 0) {
           state.list.pages = item;
+          state.list.searchCategoryName = searchCategoryName;
+          state.list.totalItems = totalResults;
         } else {
           state.list.pages = [...state.list.pages, ...item];
         }
@@ -284,9 +285,11 @@ export const bookSlice = createSlice({
         state.status = "loading";
       })
       .addCase(getReviewBook.fulfilled, (state, { payload }) => {
-        const { item } = payload.data;
+        const { item, searchCategoryName, totalResults } = payload.data;
         if (state.list.pages.length === 0) {
           state.list.pages = item;
+          state.list.searchCategoryName = searchCategoryName;
+          state.list.totalItems = totalResults;
         } else {
           state.list.pages = [...state.list.pages, ...item];
         }

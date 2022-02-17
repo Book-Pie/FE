@@ -73,6 +73,8 @@ export interface GetBookAsyncSuccess {
     totalResults: number;
     startIndex: number;
     item: BookItemProps[];
+    searchCategoryName: string;
+    itemsPerPage: number;
   };
   error: null;
 }
@@ -203,5 +205,7 @@ export interface BookReduce {
     pages: BookItemProps[];
     pageCount: number;
     isEmpty: boolean;
+    searchCategoryName: string;
+    totalItems: number;
   };
 }
