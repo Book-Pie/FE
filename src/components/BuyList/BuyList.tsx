@@ -163,7 +163,6 @@ const BuyList = () => {
             }}
           >
             <MenuItem value="NONE">전체</MenuItem>
-            <MenuItem value="SALE">거래 취소</MenuItem>
             <MenuItem value="TRADING">거래 중</MenuItem>
             <MenuItem value="SOLD_OUT">거래완료</MenuItem>
           </Select>
@@ -183,7 +182,6 @@ const BuyList = () => {
             <MenuItem value={5}>5개</MenuItem>
             <MenuItem value={10}>10개</MenuItem>
             <MenuItem value={20}>20개</MenuItem>
-            <MenuItem value={50}>50개</MenuItem>
           </Select>
         </FormControl>
       </Stack>

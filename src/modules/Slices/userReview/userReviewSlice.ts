@@ -188,6 +188,7 @@ const userReviewSlice = createSlice({
       .addCase(deleteUserReview.fulfilled, (state, { payload }) => {
         state.status = "success";
         state.list.pages = state.list.pages.filter(v => v.userReviewId !== payload.data);
+        state.list.isEmpty = true;
         alert("해당 리뷰를 삭제하였습니다.");
       })
       .addCase(deleteUserReview.rejected, state => {

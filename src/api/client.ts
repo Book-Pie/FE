@@ -56,6 +56,11 @@ export const errorHandler = (error: any) => {
   return error?.message || error || "클라이언트에서 오류가 발생 했습니다.";
 };
 
+export const makeDeleteTokenHeader = (checkItems: number[], token: string): AxiosRequestConfig => ({
+  data: { id: checkItems },
+  headers: { "X-AUTH-TOKEN": token },
+});
+
 export const makeAuthTokenHeader = (token: string): AxiosRequestConfig => ({
   headers: { "X-AUTH-TOKEN": token },
 });

@@ -64,6 +64,11 @@ export interface EditUserReviewParam {
   token: string;
 }
 
+export interface DeleteUsedBookLikeParam {
+  checkItems: number[];
+  token: string;
+}
+
 export interface ThunkApi {
   dispatch: AppDispatch;
   rejectValue: string;
@@ -97,6 +102,12 @@ export interface AddUserReviewAsyncSuccess {
     orderId: number;
     reviewId: number;
   };
+  error: string;
+}
+
+export interface DeleteUsedBookLikeAsyncSuccess {
+  success: boolean;
+  data: boolean;
   error: string;
 }
 

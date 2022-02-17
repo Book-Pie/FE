@@ -1,10 +1,11 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { makeAuthTokenHeader, http, errorHandler } from "src/api/client";
+import { makeAuthTokenHeader, http, errorHandler, makeDeleteTokenHeader } from "src/api/client";
 import { RootState } from "modules/store";
 import {
   AddUsedBookDetailSubReplyParam,
   AddUserReviewAsyncSuccess,
   AddUserReviewParam,
+  DeleteUsedBookLikeParam,
   EditUsedBookDetailSubReply,
   GetRelatedUsedBookListAsyncSuccess,
   GetRelatedUsedBookListParam,
@@ -266,6 +267,20 @@ export const getUsedBookLikeList = createAsyncThunk<GetUsedBookLikeListAsyncSucc
   },
 );
 
+// 마이페이지 - 찜 다중 삭제
+export const deleteUsedBookLike = createAsyncThunk<number[], DeleteUsedBookLikeParam>(
+  `${myPage}/${name}/like/delete`,
+  async ({ checkItems, token }, { rejectWithValue }) => {
+    try {
+      await http.delete(`/usedbook/like`, makeDeleteTokenHeader(checkItems, token));
+      return checkItems;
+    } catch (error) {
+      const message = errorHandler(error);
+      return rejectWithValue(message);
+    }
+  },
+);
+
 // 마이페이지 - 중고장터 구매 목록
 export const getUsedBookBuyList = createAsyncThunk<GetUsedBookBuyListAsyncSuccess, GetUserReviewListParam>(
   `${myPage}/${name}/buy/list`,
@@ -286,6 +301,20 @@ export const usedBookBuyConfirm = createAsyncThunk<string, GetUsedBookBuyConfirm
   async ({ token, orderId }, { rejectWithValue }) => {
     try {
       await http.post(`/order/end/${orderId}`, {}, makeAuthTokenHeader(token));
+      return orderId;
+    } catch (error) {
+      const message = errorHandler(error);
+      return rejectWithValue(message);
+    }
+  },
+);
+
+// 마이페이지 - 중고장터 구매취소
+export const usedBookBuyCancel = createAsyncThunk<string, GetUsedBookBuyConfirmParam>(
+  `${myPage}/${name}/buy/cancel`,
+  async ({ orderId, token }, { rejectWithValue }) => {
+    try {
+      await http.delete(`/order/${orderId}`, makeAuthTokenHeader(token));
       return orderId;
     } catch (error) {
       const message = errorHandler(error);
@@ -443,6 +472,18 @@ const usedBookDetailSlice = createSlice({
       .addCase(getUsedBookLikeList.rejected, state => {
         state.status = "failed";
       })
+      // 마이페이지 - 중고장터 찜 다중 삭제
+      .addCase(deleteUsedBookLike.pending, state => {
+        state.status = "loading";
+      })
+      .addCase(deleteUsedBookLike.fulfilled, (state, { payload }) => {
+        state.status = "success";
+        state.likeList = state.likeList.filter((item, idx) => item.id !== payload[idx]);
+      })
+      .addCase(deleteUsedBookLike.rejected, state => {
+        state.status = "failed";
+        alert("찜 삭제가 실패했습니다.");
+      })
       // 마이페이지 - 중고장터 구매 목록
       .addCase(getUsedBookBuyList.pending, state => {
         state.status = "loading";
@@ -470,6 +511,18 @@ const usedBookDetailSlice = createSlice({
         alert("구매확정이 완료되었습니다.");
       })
       .addCase(usedBookBuyConfirm.rejected, state => {
+        state.status = "failed";
+      })
+      // 마이페이지 - 중고장터 구매취소
+      .addCase(usedBookBuyCancel.pending, state => {
+        state.status = "loading";
+      })
+      .addCase(usedBookBuyCancel.fulfilled, (state, { payload }) => {
+        state.status = "success";
+        state.list.pages.map(v => (v.orderId !== payload ? v : { ...v, state: "SALE" }));
+        alert("구매취소가 완료되었습니다.");
+      })
+      .addCase(usedBookBuyCancel.rejected, state => {
         state.status = "failed";
       })
       // 회원 리뷰 작성

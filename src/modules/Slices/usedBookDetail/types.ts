@@ -62,7 +62,7 @@ export interface UsedBookBuyListResponse {
   title: string;
   image: string;
   price: number;
-  state: string;
+  state: keyof StateEnumType;
   orderDate: string;
   sellerNickName: string;
   buyerNickName: string;
