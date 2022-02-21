@@ -34,6 +34,7 @@ export const ProfileImg = styled.div`
   justify-content: center;
   align-items: center;
   padding: 1rem;
+  flex-direction: column;
 
   img {
     border-radius: 50%;

@@ -11,11 +11,11 @@ import { Link, useRouteMatch } from "react-router-dom";
 import { Navigation } from "swiper";
 import {
   NormalTitle,
+  RelatedProductSwiperWrapper,
   RelatedUsedBookBoldTitle,
   RelatedUsedBookHashTagItem,
   RelatedUsedBookItemContentWrapper,
   RelatedUsedBookWrapper,
-  SwiperWrapper,
   UsedBookThumbnail,
 } from "./style";
 
@@ -94,7 +94,7 @@ const RelatedUsedBook = () => {
   return (
     <RelatedUsedBookWrapper>
       <NormalTitle>연관 상품</NormalTitle>
-      <SwiperWrapper>
+      <RelatedProductSwiperWrapper>
         <Swiper
           modules={[Navigation]}
           slidesPerView={5}
@@ -105,7 +105,7 @@ const RelatedUsedBook = () => {
         >
           {list}
         </Swiper>
-      </SwiperWrapper>
+      </RelatedProductSwiperWrapper>
     </RelatedUsedBookWrapper>
   );
 };

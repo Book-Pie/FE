@@ -63,6 +63,7 @@ export const DeleteButton = styled.button`
 
 export const ClickArea = styled.div`
   text-align: right;
+  margin-bottom: 1rem;
 `;
 
 export const ReviewContentTop = styled.div`

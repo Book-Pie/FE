@@ -105,7 +105,7 @@ const UsedBookStoreReview = () => {
   });
 
   return (
-    <UsedBookStoreInformationWrapper height="500px">
+    <UsedBookStoreInformationWrapper height="500px" width="100">
       <ProductDetailTitle>
         <div>
           상점후기 <CountWrapper>{storeReviewListTotal}</CountWrapper>

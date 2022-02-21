@@ -101,7 +101,7 @@ const UsedBookInquiry = () => {
   };
 
   return (
-    <UsedBookStoreInformationWrapper>
+    <UsedBookStoreInformationWrapper width="80">
       <form onSubmit={handleSubmit(addReply)}>
         <ProductDetailTitle>
           <div>

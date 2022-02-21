@@ -10,7 +10,7 @@ import {
   CategoryArea,
   FlexWrapper,
   SwiperWrapper,
-  UsedBookDetailWrapper,
+  UsedBookDetailInformationTop,
   UsedBookImg,
   UsedBookStoreInformationLeftWrapper,
 } from "./style";
@@ -50,10 +50,10 @@ const UsedBookDetail = () => {
 
   const swiperStyle = useMemo(
     () => ({
-      paddingBottom: "50px",
-      width: "544px",
+      paddingBottom: "3rem",
+      width: "35rem",
       height: "700px",
-      margin: "21px 28px 50px 0px",
+      margin: "21px 0px 0px 0px",
     }),
     [],
   );
@@ -71,7 +71,7 @@ const UsedBookDetail = () => {
       <CategoryArea>
         {fstCategory} &gt; {sndCategory}
       </CategoryArea>
-      <UsedBookDetailWrapper>
+      <UsedBookDetailInformationTop>
         <SwiperWrapper>
           <Swiper
             spaceBetween={30}
@@ -114,7 +114,7 @@ const UsedBookDetail = () => {
             return false;
           }}
         />
-      </UsedBookDetailWrapper>
+      </UsedBookDetailInformationTop>
       <FlexWrapper>
         <UsedBookStoreInformationLeftWrapper>
           <UsedBookStoreInformation />
