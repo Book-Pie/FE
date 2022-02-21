@@ -2,13 +2,14 @@ import { useCallback } from "react";
 import noProfileImg from "assets/image/pie3x.png";
 import { dateArrayFormat } from "src/utils/formatUtil";
 import Rating from "@mui/material/Rating";
+import { useMediaQuery } from "@mui/material";
 import MyChart from "../MyTop/MyChart";
 import { MyChartWrapper, ProfileImg, EmptyChart, TitleSpan, NoneProfileImg } from "../MyTop/style";
 import { ShopTopUserInfo, ShopTopWrapper } from "./styles";
 import { RatingContent } from "../BookDetail/style";
 import { ShopTopParam } from "./types";
 
-const ShopTop = ({ shop, chart }: ShopTopParam) => {
+  const matches = useMediaQuery("(max-width:900px)");
   const getRating = useCallback((point: number) => {
     let rating = "브론즈";
     if (point >= 100000) {
@@ -44,7 +45,7 @@ const ShopTop = ({ shop, chart }: ShopTopParam) => {
         </RatingContent>
       </ShopTopUserInfo>
       <MyChartWrapper>
-        <TitleSpan>선호 장르</TitleSpan>
+            {!matches && <TitleSpan>선호 장르</TitleSpan>}
         {chart.length !== 0 ? (
           <MyChart data={chart} />
         ) : (

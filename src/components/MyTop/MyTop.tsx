@@ -5,7 +5,7 @@ import { fetchUserInfoAsync, fetchNickNameUpdateAsync, userReduceSelector } from
 import { useForm, Controller, RegisterOptions } from "react-hook-form";
 import { hookFormSpecialChractersCheck, makeOption, FormErrorMessages } from "utils/hookFormUtil";
 import ErrorMessage from "elements/ErrorMessage";
-import { Input } from "@mui/material";
+import { Input, useMediaQuery } from "@mui/material";
 import Popup from "elements/Popup";
 import { dateArrayFormat, make1000UnitsCommaFormet } from "utils/formatUtil";
 import { useAppDispatch, useTypedSelector } from "modules/store";
@@ -31,6 +31,7 @@ const MyTop = () => {
   const { errors } = formState;
   const { user, token } = useTypedSelector(userReduceSelector);
   const { myPageChart } = useTypedSelector(userReviewSelector);
+  const matches = useMediaQuery("(max-width:900px)");
 
   const nickNameOptions = useMemo<RegisterOptions>(
     () => ({
@@ -153,7 +154,7 @@ const MyTop = () => {
           <Skeletons />
         )}
         <Styled.MyChartWrapper>
-          <Styled.TitleSpan>선호 장르</Styled.TitleSpan>
+          {!matches && <Styled.TitleSpan>선호 장르</Styled.TitleSpan>}
           {myPageChart.length !== 0 ? (
             <MyChart data={myPageChart} />
           ) : (
