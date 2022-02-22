@@ -195,13 +195,13 @@ export const UsedBookCardWrapper = styled.div<{ width?: number }>`
   }
 
   @media screen and (max-width: 1000px) {
-    width: 25%;
+    width: ${props => (props.width === 100 ? 80 : 25)}%;
     padding: 0 0.3rem;
     margin-top: 0.8rem;
   }
 
   @media screen and (max-width: 800px) {
-    width: 33.3%;
+    width: ${props => (props.width === 100 ? 70 : 33.3)}%;
     padding: 0 0.3rem;
     margin-top: 0.8rem;
     .usedBookCard__imgBox {

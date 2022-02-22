@@ -6,8 +6,16 @@ export const CommentUl = styled.ul`
 
 export const Container = styled.div`
   margin: 0 auto;
-  width: 700px;
+  width: 44rem;
   margin-top: 50px;
+
+  @media screen and (max-width: 730px) {
+    width: 90%;
+  }
+
+  ${({ theme }) => theme.media.mobile} {
+    width: 90%;
+  }
 `;
 
 export const ReviewListEmptyWrapper = styled.div`
@@ -41,8 +49,19 @@ export const ReviewContent = styled.div`
 `;
 
 export const ContentWrapper = styled.div`
-  max-width: 600px;
+  // max-width: 600px;
+  min-width: 37.5rem;
   padding-left: 20px;
+
+  @media screen and (max-width: 750px) {
+    min-width: 30rem;
+    margin-right: 1rem;
+  }
+
+  ${({ theme }) => theme.media.mobile} {
+    min-width: 12rem;
+    margin-right: 1rem;
+  }
 `;
 
 export const ReplyDate = styled.p`
@@ -63,17 +82,43 @@ export const DeleteButton = styled.button`
 
 export const ClickArea = styled.div`
   text-align: right;
-  margin-bottom: 1rem;
+  padding-top: 0.5rem;
+
+  @media screen and (max-width: 750px) {
+    padding-top: 0.5rem;
+    margin-right: 1rem;
+  }
+
+  ${({ theme }) => theme.media.mobile} {
+    padding-top: 0.5rem;
+    margin-right: 1rem;
+  }
 `;
 
 export const ReviewContentTop = styled.div`
-  width: 120px;
+  margin-right: 1rem;
+
+  @media screen and (max-width: 750px) {
+    margin-left: 1rem;
+  }
+
+  ${({ theme }) => theme.media.mobile} {
+    margin-left: 1rem;
+  }
 `;
 
 export const ReviewContentBottom = styled.div``;
 
 export const ReviewsListTitle = styled.h4`
   padding: 30px 0;
+
+  @media screen and (max-width: 750px) {
+    padding-left: 1rem;
+  }
+
+  ${({ theme }) => theme.media.mobile} {
+    padding-left: 1rem;
+  }
 `;
 
 export const BestReviewsListTitle = styled(ReviewsListTitle)`
@@ -102,7 +147,11 @@ export const BestReviewContent = styled.div`
 export const ReviewsListWrapper = styled.div``;
 
 export const ContentArea = styled.div`
-  width: 560px;
+  width: 100%;
+
+  ${({ theme }) => theme.media.mobile} {
+    width: 90%;
+  }
 `;
 
 export const LikeButton = styled.button`
@@ -192,6 +241,12 @@ export const TextWrapper = styled.div`
 
 export const ButtonArea = styled.div`
   text-align: right;
+
+  ${({ theme }) => theme.media.mobile} {
+    .MuiButtonBase-root {
+      font-size: 0.6rem;
+    }
+  }
 `;
 
 export const ReviewsContentWrapper = styled.div`

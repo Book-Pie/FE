@@ -5,10 +5,11 @@ export const RelatedUsedBookSwiper = styled.div`
 
   .swiper-wrapper {
     display: flex;
+    margin-left: 1rem;
   }
 
   .swiper-slide {
-    width: 200px;
+    width: 10rem;
     color: ${props => props.theme.colors.darkGrey};
   }
 
@@ -26,13 +27,33 @@ export const RelatedUsedBookSwiper = styled.div`
   }
 
   .swiper-button-next {
-    border-color: ${props => props.theme.colors.mainDarkBrown} !important;
-    color: ${props => props.theme.colors.mainDarkBrown} !important;
+    align-items: center;
+    background-color: rgb(255, 255, 255);
+    box-sizing: border-box;
+    border: 1px solid rgb(249, 249, 249);
+    border-radius: 50%;
+    box-shadow: rgb(0 0 0 / 20%) 0px 0px 4px 0px;
+    background-size: 12px;
+    width: 25px;
+    height: 25px;
+    background-size: 50% auto;
+    background-position: center;
   }
+
   .swiper-button-prev {
-    border-color: ${props => props.theme.colors.mainDarkBrown} !important;
-    color: ${props => props.theme.colors.mainDarkBrown} !important;
+    align-items: center;
+    background-color: rgb(255, 255, 255);
+    box-sizing: border-box;
+    border: 1px solid rgb(249, 249, 249);
+    border-radius: 50%;
+    box-shadow: rgb(0 0 0 / 20%) 0px 0px 4px 0px;
+    background-size: 12px;
+    width: 25px;
+    height: 25px;
+    background-size: 50% auto;
+    background-position: center;
   }
+  --swiper-navigation-size: 12px;
 `;
 
 export const RelatedReviewWrapper = styled.div`
@@ -40,6 +61,34 @@ export const RelatedReviewWrapper = styled.div`
   width: 100%;
   height: 600px;
   margin: 10px auto 0 auto;
+
+  .swiper-button-next {
+    position: relative;
+    top: -9px;
+    left: 40px;
+  }
+
+  .swiper-button-prev {
+    position: relative;
+    top: 10px;
+    left: 10px;
+  }
+
+  ${({ theme }) => theme.media.mobile} {
+    height: 18rem;
+
+    .swiper-button-next {
+      position: relative;
+      top: -9px;
+      left: 52px;
+    }
+
+    .swiper-button-prev {
+      position: relative;
+      top: 10px;
+      left: 22px;
+    }
+  }
 `;
 
 export const FlexBox = styled.div`
@@ -370,13 +419,13 @@ export const ProductDetailContent = styled.div`
   color: #707070;
 
   @media screen and (max-width: 930px) {
-    height: 10rem;
+    height: 5rem;
   }
 `;
 
 export const RelatedUsedBookItemContentWrapper = styled.div`
-  width: 187px;
-  height: 140px;
+  width: 12rem;
+  height: 18rem;
   text-align: center;
 `;
 
@@ -390,15 +439,33 @@ export const RelatedUsedBookBoldTitle = styled.div<{ brown?: boolean }>`
   color: ${props => (props.brown ? "#4f3629" : "#222")};
   font-size: 20px;
   font-weight: bold;
-  margin: 20px 0px 10px 0px;
-  width: 187px;
+  width: 12rem;
+  text-align: center;
+
+  @media screen and (max-width: 730px) {
+    width: 10rem;
+  }
+
+  ${({ theme }) => theme.media.mobile} {
+    width: 5rem;
+  }
 `;
 
 export const UsedBookThumbnail = styled.img`
-  width: 187px;
-  height: 281px;
+  width: 12rem;
+  height: 18rem;
   margin: 0 21px 20px 0;
   border: 0.5px solid black;
+
+  @media screen and (max-width: 730px) {
+    width: 10rem;
+    height: 15rem;
+  }
+
+  ${({ theme }) => theme.media.mobile} {
+    width: 6rem;
+    height: 8rem;
+  }
 `;
 
 export const RelatedUsedBookWrapper = styled.div`
@@ -409,10 +476,11 @@ export const RelatedUsedBookWrapper = styled.div`
 `;
 
 export const NormalTitle = styled.div`
-  margin: 30px 0 30px 0;
+  margin: 30px 0 10px 0;
   color: #4f3629;
   font-size: 25px;
   font-weight: bold;
+  margin-left: 1rem;
 `;
 
 export const DeliverySpan = styled.div`

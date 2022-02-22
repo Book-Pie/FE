@@ -11,6 +11,7 @@ import queryString from "query-string";
 import { useHistory } from "react-router";
 import { getShopPage, removeShopPage, setShopPage } from "utils/localStorageUtil";
 import useSignIn from "hooks/useSignIn";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import { ReviewsParam } from "./types";
 import { ReviewListEmpty } from "./ReviewListEmpty";
 import { BestCommentListWrapper, BestReviewsListTitle, Container, ReviewsContentWrapper } from "./style";
@@ -24,6 +25,7 @@ export const Reviews = ({ bookId, categoryName }: ReviewsParam) => {
   const { user, isLoggedIn, token } = signIn;
   const { myCommentCheck, content, myComment, totalElements, totalPages, bestComment } = reviewSelector;
   const [page, setPage] = useState(getShopPage(1));
+  const matches = useMediaQuery("(max-width:750px)");
 
   const handleHasMoreList = useCallback(
     async (page: number) => {
@@ -79,11 +81,15 @@ export const Reviews = ({ bookId, categoryName }: ReviewsParam) => {
         <>
           <BestReviewsListTitle>베스트 리뷰</BestReviewsListTitle>
           <BestCommentListWrapper>
-            {bestComment.map((item, idx) => (
-              <div key={idx}>
-                <BestReviewItem item={item} />
-              </div>
-            ))}
+            {matches ? (
+              <BestReviewItem item={bestComment[0]} />
+            ) : (
+              bestComment.map((item, idx) => (
+                <div key={idx}>
+                  <BestReviewItem item={item} />
+                </div>
+              ))
+            )}
           </BestCommentListWrapper>
         </>
       )}

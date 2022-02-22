@@ -8,7 +8,6 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import {
   NormalTitle,
   RelatedUsedBookBoldTitle,
-  RelatedUsedBookItemContentWrapper,
   UsedBookThumbnail,
   RelatedUsedBookSwiper,
   RelatedReviewWrapper,
@@ -39,9 +38,7 @@ const BookRecommendList = ({ isbn }: BookRecommendListParam) => {
         <SwiperSlide key={idx}>
           <Link to={`${isbn13}`}>
             <UsedBookThumbnail src={bookImageURL} alt={`image${idx}`} />
-            <RelatedUsedBookItemContentWrapper>
-              <RelatedUsedBookBoldTitle>{bookname}</RelatedUsedBookBoldTitle>
-            </RelatedUsedBookItemContentWrapper>
+            <RelatedUsedBookBoldTitle>{bookname}</RelatedUsedBookBoldTitle>
           </Link>
         </SwiperSlide>
       );

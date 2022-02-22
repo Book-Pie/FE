@@ -95,8 +95,16 @@ export const ExpanderArea = styled.div`
 
 export const Container = styled.div`
   margin: 0 auto;
-  width: 700px;
+  width: 44rem;
   min-height: 1200px;
+
+  @media screen and (max-width: 730px) {
+    width: 100%;
+  }
+
+  ${({ theme }) => theme.media.mobile} {
+    width: 100%;
+  }
 `;
 
 export const A = styled.a`

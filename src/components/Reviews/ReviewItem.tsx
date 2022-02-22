@@ -1,7 +1,7 @@
-import React from "react";
 import { commentLike, deleteComment } from "modules/Slices/comment/commentSlice";
 import { useDispatch } from "react-redux";
 import { Rating } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import { useTypedSelector } from "modules/store";
 import { userReduceSelector } from "modules/Slices/user/userSlice";
@@ -67,7 +67,13 @@ export const ReviewItem = ({ content }: ReviewItemProps) => {
 
   return (
     <ReviewItemWrapper>
-      <ClickArea>{user?.id === userId && <DeleteButton onClick={deleteClick}>x</DeleteButton>}</ClickArea>
+      <ClickArea>
+        {user?.id === userId && (
+          <DeleteButton onClick={deleteClick}>
+            <DeleteIcon sx={{ fontSize: 16 }} />
+          </DeleteButton>
+        )}
+      </ClickArea>
       <ReviewContent>
         <ReviewContentTop>
           <Rating name="read-only" precision={0.5} value={rating} size="small" readOnly />
@@ -81,17 +87,17 @@ export const ReviewItem = ({ content }: ReviewItemProps) => {
         <ReviewContentBottom>
           <ContentWrapper>
             <ContentArea dangerouslySetInnerHTML={{ __html: content.content }} />
-            <ClickArea>
-              <LikeButton onClick={likeClick}>
-                <ThumbUpIcon sx={{ fontSize: 12 }} />
-                좋아요
-                {likeCheck}
-                {reviewLikeCount}
-              </LikeButton>
-            </ClickArea>
           </ContentWrapper>
         </ReviewContentBottom>
       </ReviewContent>
+      <ClickArea>
+        <LikeButton onClick={likeClick}>
+          <ThumbUpIcon sx={{ fontSize: 12 }} />
+          좋아요
+          {likeCheck}
+          {reviewLikeCount}
+        </LikeButton>
+      </ClickArea>
     </ReviewItemWrapper>
   );
 };

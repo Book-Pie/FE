@@ -1,5 +1,11 @@
 import styled from "styled-components";
 
+export const BookContainer = styled.main`
+  ${({ theme }) => theme.media.mobile} {
+    font-size: 0.6rem;
+  }
+`;
+
 export const CommunityContainer = styled.main`
   margin: 0 0.9rem;
   min-height: 500px;
