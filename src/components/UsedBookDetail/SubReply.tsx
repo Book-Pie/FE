@@ -24,6 +24,7 @@ import {
   SubReplyItemContent,
   SubProfileArea,
   SellerNameTitle,
+  SubContentButtonWrapper,
 } from "./style";
 import { SubReplyParam } from "./types";
 
@@ -147,57 +148,58 @@ const SubReply = ({ sx, replyId, sellerName, sellerId, subReply, isSubReplyAdd, 
                   ) : (
                     <SubReplyItemContent dangerouslySetInnerHTML={{ __html: subReply.content }} />
                   )}
-                  {user && user.id === sellerId && (
-                    <>
-                      {!isSubReplyUpdate && (
-                        <>
-                          <Button
-                            variant="contained"
-                            color="mainDarkBrown"
-                            sx={{ ...sx, marginRight: "10px", right: "-190px" }}
-                            onClick={handleSubReplyEditMode}
-                          >
-                            답글 수정
-                          </Button>
-                          <Button
-                            variant="outlined"
-                            color="mainDarkBrown"
-                            sx={{ ...sx, marginRight: "10px", right: "-190px" }}
-                            onClick={deleteSubReply}
-                          >
-                            삭제
-                          </Button>
-                        </>
-                      )}
-                      {isSubReplyUpdate && (
-                        <>
-                          <Button
-                            variant="contained"
-                            color="mainDarkBrown"
-                            sx={{ ...sx, marginRight: "10px", right: "-190px" }}
-                            onClick={editReview}
-                          >
-                            답글 수정
-                          </Button>
-                          <Button
-                            variant="outlined"
-                            color="mainDarkBrown"
-                            sx={{ ...sx, marginRight: "10px", right: "-190px" }}
-                            onClick={handleSubReplyCancelMode}
-                          >
-                            취소
-                          </Button>
-                        </>
-                      )}
-                    </>
-                  )}
                 </SubContentWrapper>
               </FlexBox>
             </FlexBoxWrapper>
+            <SubContentButtonWrapper>
+              {user && user.id === sellerId && (
+                <>
+                  {!isSubReplyUpdate && (
+                    <>
+                      <Button
+                        variant="contained"
+                        color="mainDarkBrown"
+                        sx={{ ...sx, marginRight: "10px", right: "-190px" }}
+                        onClick={handleSubReplyEditMode}
+                      >
+                        답글 수정
+                      </Button>
+                      <Button
+                        variant="outlined"
+                        color="mainDarkBrown"
+                        sx={{ ...sx, marginRight: "10px", right: "-190px" }}
+                        onClick={deleteSubReply}
+                      >
+                        삭제
+                      </Button>
+                    </>
+                  )}
+                  {isSubReplyUpdate && (
+                    <>
+                      <Button
+                        variant="contained"
+                        color="mainDarkBrown"
+                        sx={{ ...sx, marginRight: "10px", right: "-190px" }}
+                        onClick={editReview}
+                      >
+                        답글 수정
+                      </Button>
+                      <Button
+                        variant="outlined"
+                        color="mainDarkBrown"
+                        sx={{ ...sx, marginRight: "10px", right: "-190px" }}
+                        onClick={handleSubReplyCancelMode}
+                      >
+                        취소
+                      </Button>
+                    </>
+                  )}
+                </>
+              )}
+            </SubContentButtonWrapper>
           </SubReplyItemWrapper>
         </SubReplyFlexBox>
       )}
-
       {subReplyAdd && (
         <SubReplyFlexBox>
           <SubdirectoryArrowRightIcon fontSize="large" color="disabled" />
@@ -213,45 +215,45 @@ const SubReply = ({ sx, replyId, sellerName, sellerId, subReply, isSubReplyAdd, 
                     <ReplyItemContent dangerouslySetInnerHTML={{ __html: SubContent }} />
                   )}
                   {isSubReplyUpdate && (
-                    <>
-                      <Textarea
-                        isLoggedIn={isLoggedIn}
-                        onChange={handleSubReviewChange}
-                        value={SubContent || ""}
-                        placeholder="상품 문의 작성 시 10자 이상 작성해주세요."
-                        checkAuth={() => {
-                          if (isLoggedIn) {
-                            return true;
-                          }
-                          if (window.confirm("로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?")) {
-                            history.replace("/signIn");
-                          }
-                          return false;
-                        }}
-                      />
-                      <div>
-                        <Button
-                          variant="contained"
-                          color="mainDarkBrown"
-                          sx={{ ...sx, marginRight: "10px", right: "-190px" }}
-                          onClick={addSubReplyClick}
-                        >
-                          답글 작성
-                        </Button>
-                        <Button
-                          variant="outlined"
-                          color="mainDarkBrown"
-                          sx={{ ...sx, marginRight: "10px", right: "-190px" }}
-                          onClick={handleSubReplyAddCancel}
-                        >
-                          취소
-                        </Button>
-                      </div>
-                    </>
+                    <Textarea
+                      isLoggedIn={isLoggedIn}
+                      onChange={handleSubReviewChange}
+                      value={SubContent || ""}
+                      placeholder="상품 문의 작성 시 10자 이상 작성해주세요."
+                      checkAuth={() => {
+                        if (isLoggedIn) {
+                          return true;
+                        }
+                        if (window.confirm("로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?")) {
+                          history.replace("/signIn");
+                        }
+                        return false;
+                      }}
+                    />
                   )}
                 </SubContentWrapper>
               </FlexBox>
             </FlexBoxWrapper>
+            {isSubReplyUpdate && (
+              <SubContentButtonWrapper>
+                <Button
+                  variant="contained"
+                  color="mainDarkBrown"
+                  sx={{ ...sx, marginRight: "10px", right: "-190px" }}
+                  onClick={addSubReplyClick}
+                >
+                  답글 작성
+                </Button>
+                <Button
+                  variant="outlined"
+                  color="mainDarkBrown"
+                  sx={{ ...sx, marginRight: "10px", right: "-190px" }}
+                  onClick={handleSubReplyAddCancel}
+                >
+                  취소
+                </Button>
+              </SubContentButtonWrapper>
+            )}
           </SubReplyItemWrapper>
         </SubReplyFlexBox>
       )}

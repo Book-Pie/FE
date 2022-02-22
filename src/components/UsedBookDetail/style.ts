@@ -91,9 +91,18 @@ export const RelatedReviewWrapper = styled.div`
   }
 `;
 
+export const SubContentButtonWrapper = styled.div`
+  text-align: right;
+
+  .MuiButtonBase-root {
+    position: inherit;
+  }
+`;
+
 export const FlexBox = styled.div`
   display: flex;
   align-items: center;
+  width: 100%;
 `;
 
 export const SubReplyFlexBox = styled(FlexBox)`
@@ -125,7 +134,7 @@ export const ContentWrapper = styled.div`
 `;
 
 export const SubContentWrapper = styled.div`
-  width: 330px;
+  width: 100%;
 `;
 
 export const ProfileArea = styled.div`
@@ -174,7 +183,7 @@ export const ReplyItemWrapper = styled.div`
 
 export const SubReplyItemWrapper = styled(ReplyItemWrapper)`
   background-color: #edeae9;
-  width: 450px;
+  width: 100%;
   margin-left: 20px;
 `;
 
@@ -785,7 +794,8 @@ export const SecretItem = styled.div`
 `;
 
 export const SellerNameTitle = styled.div`
-  margin-top: 20px;
+  margin-left: 1.2rem;
+  font-weight: 700;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;

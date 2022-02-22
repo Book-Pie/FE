@@ -82,7 +82,6 @@ export const DeleteButton = styled.button`
 
 export const ClickArea = styled.div`
   text-align: right;
-  padding-top: 0.5rem;
 
   @media screen and (max-width: 750px) {
     padding-top: 0.5rem;

@@ -87,6 +87,48 @@ export const UsedBookReplyItem = ({ review, sellerId, sellerName, page }: UsedBo
   return (
     <>
       <ReplyItemWrapper>
+        <ClickArea>
+          {user && user.id === sellerId && (
+            <Button
+              variant="contained"
+              color="mainDarkBrown"
+              sx={{ ...sx, marginRight: "10px" }}
+              onClick={handleSubReplyClick}
+            >
+              답글
+            </Button>
+          )}
+          {user && user.id === userId && !isUpdate && (
+            <>
+              <Button
+                variant="contained"
+                color="mainDarkBrown"
+                sx={{ ...sx, marginRight: "10px" }}
+                onClick={handleUpdateClick}
+              >
+                수정
+              </Button>
+              <Button variant="contained" color="mainLightBrown" sx={sx} onClick={deleteClick}>
+                삭제
+              </Button>
+            </>
+          )}
+          {user && user.id === userId && isUpdate && (
+            <>
+              <Button
+                variant="contained"
+                color="mainDarkBrown"
+                sx={{ ...sx, marginRight: "10px" }}
+                onClick={editReview}
+              >
+                수정
+              </Button>
+              <Button variant="contained" color="mainLightBrown" sx={sx} onClick={handleUpdateCancel}>
+                취소
+              </Button>
+            </>
+          )}
+        </ClickArea>
         <FlexBoxWrapper>
           <FlexBox>
             <Link to={`/shop/${shopId}`}>
@@ -101,48 +143,6 @@ export const UsedBookReplyItem = ({ review, sellerId, sellerName, page }: UsedBo
               )}
             </Link>
             <ContentWrapper>
-              <ClickArea>
-                {user && user.id === sellerId && (
-                  <Button
-                    variant="contained"
-                    color="mainDarkBrown"
-                    sx={{ ...sx, marginRight: "10px" }}
-                    onClick={handleSubReplyClick}
-                  >
-                    답글
-                  </Button>
-                )}
-                {user && user.id === userId && !isUpdate && (
-                  <>
-                    <Button
-                      variant="contained"
-                      color="mainDarkBrown"
-                      sx={{ ...sx, marginRight: "10px" }}
-                      onClick={handleUpdateClick}
-                    >
-                      수정
-                    </Button>
-                    <Button variant="contained" color="mainLightBrown" sx={sx} onClick={deleteClick}>
-                      삭제
-                    </Button>
-                  </>
-                )}
-                {user && user.id === userId && isUpdate && (
-                  <>
-                    <Button
-                      variant="contained"
-                      color="mainDarkBrown"
-                      sx={{ ...sx, marginRight: "10px" }}
-                      onClick={editReview}
-                    >
-                      수정
-                    </Button>
-                    <Button variant="contained" color="mainLightBrown" sx={sx} onClick={handleUpdateCancel}>
-                      취소
-                    </Button>
-                  </>
-                )}
-              </ClickArea>
               {date !== 0 && (
                 <DateContent>
                   {date} {dayAgo}
