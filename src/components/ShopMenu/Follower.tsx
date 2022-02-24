@@ -13,7 +13,7 @@ import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { CountWrapper } from "../UsedBookDetail/style";
 import { Title, TitleSpan, UsedBookLikeListWrapper } from "../UsedBookLikeList/styles";
-import { CardWrapper, Column, NoFollowListWrapper, ShopContentWrapper, UsedBookCardImgBox } from "./styles";
+import { CardWrapper, Column, EmptyListWrapper, ShopContentWrapper, UsedBookCardImgBox } from "./styles";
 import UserFollowButton from "../ShopTop/UserFollowButton";
 
 const Follower = () => {
@@ -89,12 +89,12 @@ const Follower = () => {
         </UsedBookLikeListWrapper>
       )}
       {FollowerList.length === 0 && (
-        <NoFollowListWrapper>
+        <EmptyListWrapper>
           <Column>
             <GroupsIcon sx={{ fontSize: "100px", color: "#c9c9ca" }} />
             <div>아직 팔로워가 없습니다.</div>
           </Column>
-        </NoFollowListWrapper>
+        </EmptyListWrapper>
       )}
     </ShopContentWrapper>
   );

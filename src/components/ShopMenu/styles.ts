@@ -80,6 +80,13 @@ export const ShopSaleTableHeader = styled.div`
       color: ${({ theme }) => theme.colors.darkGrey};
     }
   }
+
+  ${({ theme }) => theme.media.mobile} {
+    & > div {
+      & > span {
+        font-size: 0.7rem;
+      }
+   }
 `;
 export const ShopSaleCell = styled.div`
   flex: 1;
@@ -97,7 +104,7 @@ export const StoreReviewListCount = styled.span`
   color: #dd002c;
 `;
 
-export const NoFollowListWrapper = styled.div`
+export const EmptyListWrapper = styled.div`
   display: flex;
   margin-top: 1rem;
   width: 100%;

@@ -11,10 +11,11 @@ import {
 import { Stack } from "@mui/material";
 import Pagination from "@mui/material/Pagination";
 import Loading from "elements/Loading";
-import noComments from "assets/image/noComments.png";
+import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
 import MyReviewTable from "../MyReview/MyReviewTable";
-import { MyReviewEmpty, MyReviewWrapper } from "../MyReview/style";
+import { MyReviewWrapper } from "../MyReview/style";
 import { Title, TitleSpan } from "../UsedBookLikeList/styles";
+import { Column, EmptyListWrapper } from "./styles";
 
 const ShopBookReview = () => {
   const { empty, contents, page, pageCount, size, status } = useTypedSelector(userReviewsSelector);
@@ -60,10 +61,12 @@ const ShopBookReview = () => {
           <TitleSpan>최근 작성한 도서 리뷰</TitleSpan>
         </Title>
         {empty ? (
-          <MyReviewEmpty>
-            <img src={noComments} alt="noComments" />
-            <p>작성한 리뷰가 없습니다.</p>
-          </MyReviewEmpty>
+          <EmptyListWrapper>
+            <Column>
+              <LocalLibraryIcon sx={{ fontSize: "3rem", color: "#c9c9ca", marginBottom: "0.5rem" }} />
+              <div>최근 작성한 도서 리뷰가 없습니다.</div>
+            </Column>
+          </EmptyListWrapper>
         ) : (
           <MyReviewTable contents={contents[page]} />
         )}
@@ -87,7 +90,6 @@ const ShopBookReview = () => {
       </MyReviewWrapper>
     );
   }
-
   return null;
 };
 

@@ -3,17 +3,16 @@ import { userReduceSelector } from "src/modules/Slices/user/userSlice";
 import { useTypedSelector } from "src/modules/store";
 import queryString from "query-string";
 import client from "src/api/client";
-import noComments from "assets/image/noComments.png";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { getShopPage, removeShopPage, setShopPage } from "src/utils/localStorageUtil";
 import { Link } from "react-router-dom";
 import { compareDateFormat, make1000UnitsCommaFormet } from "src/utils/formatUtil";
 import { Box, Skeleton } from "@mui/material";
 import { SaleListResponse, SaleListState, StateEnumType } from "../SaleList/types";
-import { EmptyWrapper, Title, TitleSpan, UsedBookLikeImg, UsedBookLikeListWrapper } from "../UsedBookLikeList/styles";
+import { Title, TitleSpan, UsedBookLikeListWrapper } from "../UsedBookLikeList/styles";
 import { CountWrapper } from "../UsedBookDetail/style";
-import { ReviewListEmptyParagraph } from "../Reviews/style";
 import { UsedBookCardWrapper } from "../UsedBookList/style";
-import { DateWrapper, ShopContentWrapper, ShopReviewListEmptyWrapper } from "./styles";
+import { Column, DateWrapper, EmptyListWrapper, ShopContentWrapper } from "./styles";
 import { FlexBox } from "../BuyList/styles";
 
 const ShopSaleList = () => {
@@ -109,12 +108,12 @@ const ShopSaleList = () => {
           })}
         </UsedBookLikeListWrapper>
       ) : list.isEmpty ? (
-        <ShopReviewListEmptyWrapper>
-          <EmptyWrapper>
-            <UsedBookLikeImg src={noComments} alt="noComments" />
-            <ReviewListEmptyParagraph>판매상품이 존재하지 않습니다.</ReviewListEmptyParagraph>
-          </EmptyWrapper>
-        </ShopReviewListEmptyWrapper>
+        <EmptyListWrapper>
+          <Column>
+            <ShoppingCartIcon sx={{ fontSize: "3rem", color: "#c9c9ca", marginBottom: "0.5rem" }} />
+            <div>판매상품이 없습니다.</div>
+          </Column>
+        </EmptyListWrapper>
       ) : (
         Array.from({ length: 3 }).map((_, idx) => (
           <FlexBox key={idx}>

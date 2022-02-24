@@ -117,18 +117,19 @@ const ShopTop = ({ chart, shopId }: ShopTopParam) => {
               </ShopTopUserInfo>
             </ShopTopUserInfoWrapper>
           </ShopTopUserInfoCenterWrapper>
-          <MyChartWrapper>
-            {!matches && <TitleSpan>선호 장르</TitleSpan>}
-            {chart.length !== 0 ? (
-              <MyChart data={chart} />
-            ) : (
-              <EmptyChart>
-                <div>
-                  <p>선호장르 데이터가 없습니다.</p>
-                </div>
-              </EmptyChart>
-            )}
-          </MyChartWrapper>
+          {!matches && (
+            <MyChartWrapper>
+              <TitleSpan>선호 장르</TitleSpan>
+              {chart.length !== 0 && <MyChart data={chart} />}
+              {chart.length === 0 && (
+                <EmptyChart>
+                  <div>
+                    <p>선호장르 데이터가 없습니다.</p>
+                  </div>
+                </EmptyChart>
+              )}
+            </MyChartWrapper>
+          )}
         </>
       )}
     </ShopTopWrapper>

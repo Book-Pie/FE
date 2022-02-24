@@ -28,7 +28,7 @@ import {
   FollowingMainUsedBookListGrid,
   FollowingMainUsedBookListWrapper,
   FollowingUsedBookListWrapper,
-  NoFollowListWrapper,
+  EmptyListWrapper,
   ShopContentWrapper,
   UsedBookCardImgBox,
   UsedBookListEmptyWrapper,
@@ -145,7 +145,6 @@ const Following = () => {
                     </CardWrapper>
                   </div>
                 )}
-
                 {!max630 && (
                   <FlexBox key={idx}>
                     <>
@@ -187,7 +186,6 @@ const Following = () => {
                           </div>
                         </div>
                       </CardWrapper>
-
                       {usedBookList.length !== 0 && (
                         <FollowingMainUsedBookListGrid>
                           {usedBookList
@@ -238,7 +236,6 @@ const Following = () => {
                             })}
                         </FollowingMainUsedBookListGrid>
                       )}
-
                       {usedBookList.length === 0 && (
                         <UsedBookListEmptyWrapper>
                           <Column>
@@ -256,12 +253,12 @@ const Following = () => {
         </FollowingListWrapper>
       )}
       {FollowingList.length === 0 && (
-        <NoFollowListWrapper>
+        <EmptyListWrapper>
           <Column>
             <GroupsIcon sx={{ fontSize: "100px", color: "#c9c9ca" }} />
             <div>아직 팔로잉한 인원이 없습니다.</div>
           </Column>
-        </NoFollowListWrapper>
+        </EmptyListWrapper>
       )}
     </ShopContentWrapper>
   );
