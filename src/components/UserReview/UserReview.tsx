@@ -11,6 +11,7 @@ import {
   getUserReviewList,
   userReviewSelector,
 } from "modules/Slices/userReview/userReviewSlice";
+import { useMediaQuery } from "@mui/material";
 import { CancelButton, FlexBox, UserReviewButtonArea } from "../BuyList/styles";
 import { ReviewListEmptyParagraph, ReviewListEmptyWrapper } from "../Reviews/style";
 import { Empty } from "../SaleList/style";
@@ -24,21 +25,38 @@ const UserReview = () => {
   const { user } = signIn;
   const [receivedReview, writtedReview] = useState(true);
   const receivedReviewHeader = ["별점", "구매자명", "상품명", "내용", "작성일"];
+  const receivedReviewHeader630 = ["상품내용", "내용", "작성일"];
   const writtedReviewHeader = ["별점", "판매자명", "상품명", "내용", "작성일", "기능"];
+  const writtedReviewHeader900 = ["상품내용", "내용", "작성일", "기능"];
+
   const [headers, setHeader] = useState<string[]>(receivedReviewHeader);
   const [page, setPage] = useState(getShopPage(1));
   const [limit] = useState(5);
   const { list } = useTypedSelector(userReviewSelector);
   const { pages, pageCount } = list;
+  const max630 = useMediaQuery("(max-width:630px)");
+  const min630 = useMediaQuery("(min-width:630px)");
+  const max900 = useMediaQuery("(max-width:900px)");
+  const min900 = useMediaQuery("(min-width:900px)");
 
   const receivedReviewClick = () => {
     writtedReview(true);
-    setHeader(receivedReviewHeader);
+    if (!max630) {
+      setHeader(receivedReviewHeader);
+    }
+    if (max630) {
+      setHeader(receivedReviewHeader630);
+    }
   };
 
   const writtedReviewClick = () => {
     writtedReview(false);
-    setHeader(writtedReviewHeader);
+    if (!max900) {
+      setHeader(writtedReviewHeader);
+    }
+    if (max900) {
+      setHeader(writtedReviewHeader900);
+    }
   };
 
   const handleHasMoreList = useCallback(
@@ -81,6 +99,28 @@ const UserReview = () => {
       removeShopPage();
     };
   });
+
+  useEffect(() => {
+    if (receivedReview) {
+      if (max630) {
+        setHeader(receivedReviewHeader630);
+      }
+      if (min630) {
+        setHeader(receivedReviewHeader);
+      }
+    }
+  }, [max630, min630]);
+
+  useEffect(() => {
+    if (!receivedReview) {
+      if (max900) {
+        setHeader(writtedReviewHeader900);
+      }
+      if (min900) {
+        setHeader(writtedReviewHeader);
+      }
+    }
+  }, [max900, min900]);
 
   const headerList = (
     <UserReviewHeader>

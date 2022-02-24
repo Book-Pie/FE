@@ -16,6 +16,14 @@ export const UserReviewHeader = styled.div`
       color: ${({ theme }) => theme.colors.darkGrey};
     }
   }
+
+  ${({ theme }) => theme.media.mobile} {
+    & > div {
+      & > span {
+        font-size: 0.7rem;
+      }
+    }
+  }
 `;
 export const UserReviewCell = styled.div`
   flex: 1;
@@ -33,4 +41,12 @@ export const UserReviewWrapper = styled.div`
   margin: 1rem 0;
   padding: 0 1rem;
   flex: 1;
+`;
+
+export const WrittedReviewListFlexBox = styled.div`
+  display: flex;
+
+  ${({ theme }) => theme.media.mobile} {
+    display: block;
+  }
 `;
