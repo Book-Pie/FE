@@ -16,10 +16,18 @@ export const ContentWrapper = styled.div`
   margin: 1rem 0;
   padding: 0 1rem;
   flex: 1;
+
+  ${({ theme }) => theme.media.mobile} {
+    font-size: 0.7rem;
+  }
 `;
 
 export const TitleSpan = styled.span`
   margin: 0 10px 0 20px;
+
+  @media screen and (max-width: 700px) {
+    margin-left: 1rem;
+  }
 `;
 
 export const UsedBookLikeTitleSpan = styled.span`
@@ -60,13 +68,30 @@ export const UsedBookLikeListWrapper = styled.div`
   margin-bottom: 150px;
   padding: 1rem 0.5rem;
   border-radius: 5px;
-  background-color: ${props => props.theme.colors.mainLightBrown};
-  box-shadow: rgb(0 0 0 / 50%) 0px 0px 4px;
-  width: 1200px;
+  background-color: #f8f8f8;
+  box-shadow: rgb(0 0 0 / 30%) 0px 0px 3px;
+  width: 100%;
   margin: 1rem 0;
   padding: 0 1rem;
   padding-bottom: 20px;
   padding-top: 20px;
+
+  @media screen and (max-width: 1000px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  @media screen and (max-width: 950px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media screen and (max-width: 650px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  ${({ theme }) => theme.media.mobile} {
+    grid-template-columns: repeat(2, 1fr);
+    width: 100%;
+  }
 `;
 
 export const LikeCardWrapper = styled.div<{ width?: number }>`
@@ -161,13 +186,11 @@ export const LikeCardWrapper = styled.div<{ width?: number }>`
   }
 
   @media screen and (max-width: 1000px) {
-    width: 25%;
     padding: 0 0.3rem;
     margin-top: 0.8rem;
   }
 
   @media screen and (max-width: 800px) {
-    width: 33.3%;
     padding: 0 0.3rem;
     margin-top: 0.8rem;
     .usedBookCard__imgBox {
@@ -183,9 +206,10 @@ export const LikeCardWrapper = styled.div<{ width?: number }>`
   }
 
   ${({ theme }) => theme.media.mobile} {
-    width: 50%;
     padding: 0 0.2rem;
     margin-top: 0.5rem;
+    width: 100%;
+    height: 100%;
     .usedBookCard__content {
       padding-top: 0.3rem;
     }
