@@ -91,17 +91,19 @@ const UsedBookLikeList = () => {
         <UsedBookLikeTitleSpan>찜목록</UsedBookLikeTitleSpan>
         <CountWrapper>{likeList.length}</CountWrapper>
       </UsedBookLikeTitle>
-      <Header>
-        <form onSubmit={deleteLikeClick}>
-          <FormControlLabel
-            control={<Checkbox color="info" onChange={e => checkAllHandler(e.target.checked)} />}
-            label="전체선택"
-          />
-          <Button variant="outlined" color="info" type="submit">
-            선택삭제
-          </Button>
-        </form>
-      </Header>
+      {likeList.length !== 0 && (
+        <Header>
+          <form onSubmit={deleteLikeClick}>
+            <FormControlLabel
+              control={<Checkbox color="info" onChange={e => checkAllHandler(e.target.checked)} />}
+              label="전체선택"
+            />
+            <Button variant="outlined" color="info" type="submit">
+              선택삭제
+            </Button>
+          </form>
+        </Header>
+      )}
       {likeList.length !== 0 && (
         <UsedBookLikeListWrapper>
           {likeList.map((card, idx) => {
