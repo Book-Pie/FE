@@ -54,6 +54,53 @@ export interface UserReviewData {
   price: number;
 }
 
+export interface GetFollowerUserListData {
+  followId: number;
+  userId: number;
+  nickName: string;
+  profile: string;
+  followCheck: boolean;
+}
+export type FollowType = "follow" | "follower" | "shopTop";
+
+export interface FollowNewData {
+  newData: {
+    userId: number;
+    type: FollowType;
+  };
+}
+
+export interface AddMyPageStoreFollowParam {
+  data: {
+    userId: number;
+  };
+  token: string;
+  type: FollowType;
+}
+
+export interface DeleteMyPageStoreFollowParam {
+  id: number;
+  token: string;
+  type: FollowType;
+}
+
+export interface AddStoreFollowParam {
+  data: {
+    userId: number;
+  };
+  token: string;
+}
+
+export interface DeleteStoreFollowParam {
+  id: number;
+  token: string;
+}
+
+export interface FollowCheckParam {
+  id: number;
+  token: string;
+}
+
 export interface AddUserReviewParam {
   data: AddUserReviewSubmitParam;
   token: string;
@@ -67,6 +114,27 @@ export interface EditUserReviewParam {
 export interface DeleteUsedBookLikeParam {
   checkItems: number[];
   token: string;
+}
+
+export interface usedBookListParam {
+  id: number;
+  title: string;
+  price: number;
+  image: string;
+  uploadDate: string;
+  modifiedDate: string;
+  state: string;
+  likeCount: number;
+  replyCount: number;
+}
+
+export interface GetMyFollowingUserListData {
+  followId: number;
+  userId: number;
+  profile: string;
+  nickName: string;
+  usedBookList: usedBookListParam[];
+  followCheck: boolean;
 }
 
 export interface ThunkApi {
@@ -108,6 +176,15 @@ export interface AddUserReviewAsyncSuccess {
 export interface DeleteUsedBookLikeAsyncSuccess {
   success: boolean;
   data: boolean;
+  error: string;
+}
+
+export interface CountCheckStoreFollowAsyncSuccess {
+  success: boolean;
+  data: {
+    follower: number;
+    following: number;
+  };
   error: string;
 }
 
@@ -177,6 +254,18 @@ export interface GetChartResponse {
 export interface GetChartAsyncSuccess {
   success: boolean;
   data: GetChartResponse[];
+  error: string;
+}
+
+export interface GetFollowerUserListAsyncSuccess {
+  success: boolean;
+  data: GetFollowerUserListData[];
+  error: string;
+}
+
+export interface GetMyFollowingUserListAsyncSuccess {
+  success: boolean;
+  data: GetMyFollowingUserListData[];
   error: string;
 }
 

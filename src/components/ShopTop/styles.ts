@@ -32,7 +32,13 @@ export const ShopTopUserInfo = styled.div`
   flex: 6;
   padding: 1rem;
   padding-top: 6rem;
-  display: flex;
+  width: 50%;
+  padding: 1rem;
+  background-color: #f8f8f8;
+  border-radius: 5px;
+  box-shadow: rgb(0 0 0 / 30%) 0px 0px 5px;
+  margin-top: 10px;
+
   flex-direction: column;
   gap: 0.5rem;
   color: ${({ theme }) => theme.colors.mainDarkBrown};
@@ -85,6 +91,11 @@ export const ShopTopUserInfo = styled.div`
 
   @media screen and (max-width: 900px) {
     padding: 1rem;
+    display: flex;
+    justify-content: center;
+    background-color: #f8f8f8;
+    border-radius: 5px;
+    box-shadow: rgb(0 0 0 / 30%) 0px 0px 5px;
   }
 
   ${({ theme }) => theme.media.mobile} {
@@ -112,4 +123,44 @@ export const ShopTopUserInfo = styled.div`
       }
     }
   } ;
+`;
+
+export const FollowButtonWrapper = styled.div`
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+`;
+
+export const ImgWrapper = styled.div`
+  flex-direction: column;
+`;
+
+export const ShopFollowButtonArea = styled.div<{ margin?: number }>`
+  margin-left: ${props => (props.margin === 20 ? 0 : 0.5)}rem;
+`;
+
+export const ShopTopUserInfoWrapper = styled.div`
+  width: 20rem;
+  display: flex;
+  justify-content: center;
+  padding-top: 6rem;
+
+  @media screen and (max-width: 900px) {
+    display: flex;
+    justify-content: center;
+    width: 70%;
+    padding-top: 0;
+  }
+`;
+
+export const ShopTopUserInfoCenterWrapper = styled.div`
+  @media screen and (max-width: 900px) {
+    display: flex;
+    justify-content: center;
+  }
+`;
+
+export const ShopTopProfileWrapper = styled.div`
+  display: flex;
+  justify-content: center;
 `;

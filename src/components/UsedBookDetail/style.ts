@@ -227,6 +227,19 @@ export const CardSmallTitle = styled.span`
   }
 `;
 
+export const FollowTitle = styled.span`
+  margin: 0 15px 0 0;
+  font-size: 16px;
+  line-height: 1.88;
+  letter-spacing: -0.4px;
+  color: #525252;
+
+  ${({ theme }) => theme.media.mobile} {
+    margin: 0 0.7rem 6px 0;
+    font-size: 0.7rem;
+  }
+`;
+
 export const WideCardSmallTitle = styled.span`
   margin: 0 3.5rem 6px 0;
   font-size: 16px;
@@ -434,7 +447,7 @@ export const ProductDetailContent = styled.div`
 
 export const RelatedUsedBookItemContentWrapper = styled.div`
   width: 12rem;
-  height: 18rem;
+  // height: 18rem;
   text-align: center;
 `;
 
@@ -921,11 +934,7 @@ export const StoreReviewNoneProfileImg = styled(StoreReviewProfileImg)`
 `;
 
 export const FollowButton = styled.div`
-  margin-left: 10px;
-
-  .MuiButtonBase-root {
-    margin-left: 10px;
-  }
+  width: 100%;
 
   .MuiTooltip-tooltip {
     width: 160px;
@@ -959,8 +968,11 @@ export const ProductDetailNoneProfileImg = styled(ProductDetailProfileImg)`
   }
 `;
 
-export const BottomArea = styled.div`
-  margin-top: 20px;
+export const BottomArea = styled.div<{ margin?: number }>`
+  margin-top: ${props => (props.margin === 20 ? 0 : 20)}px;
+
+  display: flex;
+  justify-content: center;
 `;
 
 export const UsedStoreFlexBox = styled.div`
@@ -983,6 +995,24 @@ export const UsedBookDetailInformationTop = styled.div`
 
     .SwiperWrapper {
       margin-left: 150px;
+    }
+  }
+`;
+
+export const UsedBookFollowButton = styled.div`
+  margin-left: 0.5rem;
+
+  .MuiButtonBase-root {
+    margin-left: 1rem;
+  }
+
+  .MuiTooltip-tooltip {
+    width: 160px;
+  }
+
+  ${({ theme }) => theme.media.mobile} {
+    .MuiButtonBase-root {
+      font-size: 0.6rem;
     }
   }
 `;

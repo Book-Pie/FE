@@ -125,6 +125,16 @@ export const ContentItem = styled.div`
   padding: 20px;
   flex: 1;
   height: 170px;
+
+  ${({ theme }) => theme.media.mobile} {
+    padding: 10px;
+    height: 5rem;
+    font-size: 0.6rem;
+
+    button {
+      font-size: 0.5rem;
+    }
+  }
 `;
 
 export const TitleContentItem = styled(ContentItem)`

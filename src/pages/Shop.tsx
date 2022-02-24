@@ -1,9 +1,8 @@
 import { Tab, Tabs } from "@mui/material";
 import { lazy, Suspense, useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
-import { NavLink, Route, Switch, useParams } from "react-router-dom";
+import { NavLink, Route, Switch, useLocation, useParams } from "react-router-dom";
 import ShopTop from "src/components/ShopTop/ShopTop";
-import { fetchShopUserInfoAsync, userReduceSelector } from "src/modules/Slices/user/userSlice";
 import { getMyPageChart, userReviewSelector } from "src/modules/Slices/userReview/userReviewSlice";
 import { useTypedSelector } from "src/modules/store";
 import FallBack from "./FallBack";
@@ -13,17 +12,19 @@ import { ShopParam } from "./types";
 const ShopSaleList = lazy(() => import("components/ShopMenu/ShopSaleList"));
 const ShopBookReview = lazy(() => import("components/ShopMenu/ShopBookReview"));
 const ShopUserReview = lazy(() => import("components/ShopMenu/ShopUserReview"));
+const Following = lazy(() => import("components/ShopMenu/Following"));
+const Follower = lazy(() => import("components/ShopMenu/Follower"));
 
 const Shop = () => {
   const dispatch = useDispatch();
   const { shopId } = useParams<ShopParam>();
   const [value, setValue] = useState(2);
-  const { shop } = useTypedSelector(userReduceSelector);
+  const { pathname } = useLocation();
   const { myPageChart } = useTypedSelector(userReviewSelector);
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, []);
+  }, [pathname]);
 
   const myMenus = useMemo(
     () =>
@@ -46,12 +47,12 @@ const Shop = () => {
         {
           id: 4,
           text: "팔로잉 ",
-          fullPath: `/shop/${shopId}/userReview`,
+          fullPath: `/shop/${shopId}/following`,
         },
         {
           id: 5,
           text: "팔로워 ",
-          fullPath: `/shop/${shopId}/userReview`,
+          fullPath: `/shop/${shopId}/follower`,
         },
       ].map(({ id, text, fullPath }) => (
         <Tab
@@ -69,13 +70,12 @@ const Shop = () => {
   const handleChange = (_: any, newValue: number) => setValue(newValue);
 
   useEffect(() => {
-    dispatch(fetchShopUserInfoAsync(shopId));
     dispatch(getMyPageChart(shopId));
   }, [dispatch, shopId]);
 
   return (
     <MyContainer>
-      {shop && <ShopTop shop={shop} chart={myPageChart} />}
+      <ShopTop chart={myPageChart} shopId={shopId} />
       <ShopMenuTabWrapper>
         <Tabs value={value} onChange={handleChange} variant="scrollable" allowScrollButtonsMobile scrollButtons>
           {myMenus}
@@ -87,6 +87,8 @@ const Shop = () => {
             <Route path={`/shop/${shopId}/saleList`} exact component={ShopSaleList} />
             <Route path={`/shop/${shopId}/bookReview`} exact component={ShopBookReview} />
             <Route path={`/shop/${shopId}/userReview`} exact component={ShopUserReview} />
+            <Route path={`/shop/${shopId}/following`} exact component={Following} />
+            <Route path={`/shop/${shopId}/follower`} exact component={Follower} />
             <Route component={ShopBookReview} />
           </Switch>
         </Suspense>
