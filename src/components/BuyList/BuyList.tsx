@@ -17,22 +17,28 @@ import { Empty } from "components/SaleList/style";
 import { getUsedBookBuyList, usedBookDetailSelector } from "modules/Slices/usedBookDetail/usedBookDetailSlice";
 import { useTypedSelector } from "modules/store";
 import { UsedBookBuyListResponse } from "src/modules/Slices/usedBookDetail/types";
+import { useMediaQuery } from "@mui/material";
 import ContentList from "./ContentList";
 import MyPageSkeleton from "./MyPageSkeleton";
 import { ReviewListEmptyParagraph, ReviewListEmptyWrapper } from "../Reviews/style";
-import { BuyListWrapper, FlexBox } from "./styles";
+import { BuyListStackWrapper, BuyListWrapper, FlexBox } from "./styles";
 import { UserReviewCell, UserReviewHeader } from "../UserReview/styles";
 
 const BuyList = () => {
   const { signIn, dispatch } = useSignIn();
   const { user } = signIn;
-  const [headers] = useState<string[]>(["사진", "상품명", "가격", "거래상태", "구매일", "기능"]);
+  const buyListHeader = ["사진", "상품명", "가격", "거래상태", "구매일", "기능"];
+  const buyListHeader800 = ["상품내용", "거래상태", "구매일", "기능"];
+
+  const [headers, setHeader] = useState<string[]>(buyListHeader);
   const [select, setSelect] = useState<string>("NONE");
   const [limit, setLimit] = useState(5);
   const [titleFilter, setTitleFilter] = useState<string | null>(null);
   const [page, setPage] = useState(getShopPage(1));
   const { list } = useTypedSelector(usedBookDetailSelector);
   const [open, setOpen] = useState(false);
+  const max800 = useMediaQuery("(max-width:800px)");
+  const min800 = useMediaQuery("(min-width:800px)");
 
   const { pages, pageCount } = list;
   const delay = useDelay(500);
@@ -107,6 +113,15 @@ const BuyList = () => {
     };
   });
 
+  useEffect(() => {
+    if (max800) {
+      setHeader(buyListHeader800);
+    }
+    if (min800) {
+      setHeader(buyListHeader);
+    }
+  }, [max800, min800]);
+
   const headerList = (
     <UserReviewHeader>
       {headers.map((text, idx) => (
@@ -136,38 +151,40 @@ const BuyList = () => {
     );
   return (
     <BuyListWrapper>
-      <Stack direction="row" justifyContent="center" mb={2} spacing={2}>
-        <Autocomplete
-          sx={{ width: 250 }}
-          freeSolo
-          onChange={handleTitleFilterOnChange}
-          options={pages}
-          getOptionLabel={option => (option.title ? option.title : "")}
-          renderOption={(props, option) => (
-            <Box component="li" {...props} key={option.orderId}>
-              {option.title}
-            </Box>
-          )}
-          renderInput={params => <TextField {...params} label="제목 검색" />}
-        />
-        <FormControl sx={{ width: 120 }}>
-          <InputLabel id="거래상태">거래상태</InputLabel>
-          <Select
-            label="거래상태"
-            color="primary"
-            value={select}
-            onChange={handleSelectOnChange}
-            sx={{
-              color: theme => theme.colors.mainDarkBrown,
-              fontWeight: 900,
-            }}
-          >
-            <MenuItem value="NONE">전체</MenuItem>
-            <MenuItem value="TRADING">거래 중</MenuItem>
-            <MenuItem value="SOLD_OUT">거래완료</MenuItem>
-          </Select>
-        </FormControl>
-      </Stack>
+      <BuyListStackWrapper>
+        <Stack direction="row" justifyContent="center" mb={2} spacing={2}>
+          <Autocomplete
+            sx={{ width: 250 }}
+            freeSolo
+            onChange={handleTitleFilterOnChange}
+            options={pages}
+            getOptionLabel={option => (option.title ? option.title : "")}
+            renderOption={(props, option) => (
+              <Box component="li" {...props} key={option.orderId}>
+                {option.title}
+              </Box>
+            )}
+            renderInput={params => <TextField {...params} label="제목 검색" />}
+          />
+          <FormControl sx={{ width: 120 }}>
+            <InputLabel id="거래상태">거래상태</InputLabel>
+            <Select
+              label="거래상태"
+              color="primary"
+              value={select}
+              onChange={handleSelectOnChange}
+              sx={{
+                color: theme => theme.colors.mainDarkBrown,
+                fontWeight: 900,
+              }}
+            >
+              <MenuItem value="NONE">전체</MenuItem>
+              <MenuItem value="TRADING">거래 중</MenuItem>
+              <MenuItem value="SOLD_OUT">거래완료</MenuItem>
+            </Select>
+          </FormControl>
+        </Stack>
+      </BuyListStackWrapper>
       <Stack direction="row" justifyContent="space-between" mb={2} spacing={2}>
         <FormControl sx={{ width: 120 }}>
           <Select

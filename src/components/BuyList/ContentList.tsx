@@ -7,6 +7,7 @@ import { usedBookBuyCancel, usedBookBuyConfirm } from "modules/Slices/usedBookDe
 import useSignIn from "hooks/useSignIn";
 import { useTypedSelector } from "modules/store";
 import { userReviewSelector } from "modules/Slices/userReview/userReviewSlice";
+import { useMediaQuery } from "@mui/material";
 import Modal from "./Modal";
 import {
   BuyContent,
@@ -16,6 +17,8 @@ import {
   ImgContent,
   ButtonArea,
   ContentTitle,
+  ImgContent800,
+  ContentListTitle800,
 } from "./styles";
 import { Empty } from "../SaleList/style";
 import { IContent } from "./types";
@@ -24,6 +27,7 @@ const ContentList = ({ pages, select, titleFilter, open, setOpen }: IContent) =>
   const { signIn, dispatch } = useSignIn();
   const review = useTypedSelector(userReviewSelector);
   const [selectedItem, setSelectedItem] = useState<UsedBookBuyListResponse | null>(null);
+  const max800 = useMediaQuery("(max-width:800px)");
 
   const contents = pages.filter(({ title, state }) => {
     if (titleFilter !== null && title.match(titleFilter) === null) return false;
@@ -77,26 +81,39 @@ const ContentList = ({ pages, select, titleFilter, open, setOpen }: IContent) =>
       {contents.length ? (
         contents.map((item, idx) => {
           const { image, orderDate, orderId, price, reviewId, state, title, bookId } = item;
-
           return (
             <ContentWrapper key={idx}>
               {state !== "SALE" && (
                 <>
-                  <BuyContent>
-                    <Link to={`/usedBook/${bookId}`}>
-                      {image.length !== 0 && (
-                        <ImgContent src={`${process.env.BASE_URL}/image/${image}`} alt="usedBookImg" />
-                      )}
-                    </Link>
-                  </BuyContent>
-                  <BuyTitleContent>
-                    <Link to={`/usedBook/${bookId}`}>
-                      <ContentTitle>{title}</ContentTitle>
-                    </Link>
-                  </BuyTitleContent>
-                  <BuyContent>
-                    <ContentText>{price}</ContentText>
-                  </BuyContent>
+                  {max800 ? (
+                    <BuyContent>
+                      <Link to={`/usedBook/${bookId}`}>
+                        {image.length !== 0 && (
+                          <ImgContent800 src={`${process.env.BASE_URL}/image/${image}`} alt="usedBookImg" />
+                        )}
+                      </Link>
+                      <ContentListTitle800> {title}</ContentListTitle800>
+                      <div>{price}</div>
+                    </BuyContent>
+                  ) : (
+                    <>
+                      <BuyContent>
+                        <Link to={`/usedBook/${bookId}`}>
+                          {image.length !== 0 && (
+                            <ImgContent src={`${process.env.BASE_URL}/image/${image}`} alt="usedBookImg" />
+                          )}
+                        </Link>
+                      </BuyContent>
+                      <BuyTitleContent>
+                        <Link to={`/usedBook/${bookId}`}>
+                          <ContentTitle>{title}</ContentTitle>
+                        </Link>
+                      </BuyTitleContent>
+                      <BuyContent>
+                        <ContentText>{price}</ContentText>
+                      </BuyContent>
+                    </>
+                  )}
                   <BuyContent>
                     <ContentText>
                       {state === "TRADING" && "거래중"}

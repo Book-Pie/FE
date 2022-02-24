@@ -24,11 +24,17 @@ export const ContentWrapper = styled.div`
 `;
 
 export const BuyContent = styled.div`
-  font-size: 18px;
+  font-size: 1rem;
   text-align: center;
   padding: 20px;
-  width: 200px;
-  height: 220px;
+  width: 100%;
+  height: 13rem;
+
+  ${({ theme }) => theme.media.mobile} {
+    font-size: 0.7rem;
+    height: 8rem;
+    width: 5rem;
+  }
 `;
 
 export const BuyTitleContent = styled(BuyContent)`
@@ -36,9 +42,15 @@ export const BuyTitleContent = styled(BuyContent)`
 `;
 
 export const ImgContent = styled.img`
-  width: 140px;
-  height: 180px;
+  width: 100%;
+  height: 10rem;
 `;
+
+export const ImgContent800 = styled.img`
+  width: 70%;
+  height: 70%;
+`;
+
 export const FlexBox = styled.div`
   display: flex;
 `;
@@ -55,6 +67,18 @@ export const ContentTitle = styled(ContentText)`
 export const ButtonArea = styled.div`
   align-content: center;
   margin: 50px auto;
+
+  @media screen and (max-width: 837px) {
+    .MuiButton-root {
+      font-size: 0.7rem;
+    }
+  }
+
+  ${({ theme }) => theme.media.mobile} {
+    .MuiButton-root {
+      font-size: 0.4rem;
+    }
+  }
 `;
 
 export const ModalButtonArea = styled(ButtonArea)`
@@ -68,6 +92,11 @@ export const ModalContent = styled.div`
   height: 40px;
   width: 250px;
   color: ${props => props.color};
+
+  ${({ theme }) => theme.media.mobile} {
+    font-size: 0.7rem;
+    width: 7rem;
+  }
 `;
 
 export const FlexWrapper = styled.div`
@@ -158,4 +187,22 @@ export const BuyListWrapper = styled.div`
   margin: 3rem 0;
   padding: 0 1rem;
   flex: 1;
+`;
+
+export const ContentListTitle800 = styled.div`
+  padding: 0.5rem 0 0.5rem 0;
+  color: #52a4c3;
+
+  ${({ theme }) => theme.media.mobile} {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    font-size: 0.6rem;
+  }
+`;
+
+export const BuyListStackWrapper = styled.div`
+  ${({ theme }) => theme.media.mobile} {
+    font-size: 0.7rem;
+  }
 `;

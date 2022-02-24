@@ -264,6 +264,10 @@ export const CardBoldTitle = styled.span`
 export const CategoryArea = styled.div`
   margin: 20px 40px 0px 0px;
   text-align: right;
+
+  ${({ theme }) => theme.media.mobile} {
+    font-size: 0.7rem;
+  }
 `;
 
 export const ProductDetailCardFlexWrapper = styled.div`
