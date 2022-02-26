@@ -176,7 +176,8 @@ export const CardWrapper = styled.div<{ width?: number }>`
   }
 
   .usedBookCard__title {
-    height: 2rem;
+    font-size: 0.7rem;
+    height: 1rem;
     font-size: 1rem;
     margin: 0 10px;
     overflow: hidden;
@@ -208,6 +209,7 @@ export const CardWrapper = styled.div<{ width?: number }>`
   }
 
   @media screen and (max-width: 1000px) {
+    width: 200px;
     width: ${props => (props.width === 100 ? 100 : 25)}%;
     padding: 0 0.3rem;
     margin-top: 0.8rem;
@@ -258,6 +260,11 @@ export const CardWrapper = styled.div<{ width?: number }>`
     .usedBookCard__content {
       padding: 0;
     }
+
+    .usedBookCard__title {
+      font-size: 0.7rem;
+      height: 0.7rem;
+    }
   }
 `;
 
@@ -283,16 +290,15 @@ export const UsedBookCardImgBox = styled.div`
   }
 
   @media screen and (max-width: 630px) {
-    height: 7rem;
-    padding-left: 0.5rem;
+    height: 6rem;
 
     img {
       position: absolute;
       display: block;
       top: 0;
       padding: 1rem;
-      width: 7rem;
-      height: 7rem;
+      height: 6rem;
+      width: 6rem;
       border-radius: 50%;
     }
   }
@@ -301,18 +307,26 @@ export const UsedBookCardImgBox = styled.div`
 export const FollowingUsedBookListWrapper = styled.div`
   position: relative;
   height: 10rem;
-  width: 10rem;
 
   img {
-    position: absolute;
-    display: block;
-    top: 0;
-    width: 100%;
-    height: 100%;
+    width: 10rem;
+    height: 10rem;
   }
 
   @media screen and (max-width: 1000px) {
     grid-template-columns: repeat(4, 1fr);
+  }
+
+  @media screen and (max-width: 630px) {
+    img {
+      position: absolute;
+      display: block;
+      top: 0;
+      padding: 1rem;
+      height: 6rem;
+      width: 6rem;
+      border-radius: 50%;
+    }
   }
 `;
 
@@ -343,8 +357,7 @@ export const FollowingListWrapper = styled.div`
 
 export const FollowingMainUsedBookListWrapper = styled.div`
   height: 21rem;
-  // width: 14rem;
-  width: 100%;
+  width: 14.2rem;
   margin-right: 5rem;
   gap: 20px;
   margin-top: 2rem;
@@ -357,17 +370,42 @@ export const FollowingMainUsedBookListWrapper = styled.div`
   padding: 0 1rem;
   padding-bottom: 20px;
   padding-top: 20px;
+
+  @media screen and (max-width: 950px) {
+    width: 12rem;
+  }
+
+  @media screen and (max-width: 730px) {
+    width: 12rem;
+  }
+
+  @media screen and (max-width: 630px) {
+    height: 6rem;
+    padding-left: 0.5rem;
+
+    img {
+      position: absolute;
+      display: block;
+      top: 0;
+      padding: 1rem;
+      height: 6rem;
+      width: 6rem;
+      border-radius: 50%;
+    }
+  }
 `;
 
 export const FollowingMainUsedBookListGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
 
-  @media screen and (max-width: 1000px) {
+  @media screen and (max-width: 1150px) {
     grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-auto-flow: column;
   }
 
-  @media screen and (max-width: 850px) {
+  @media screen and (max-width: 950px) {
     grid-template-columns: repeat(2, 1fr);
   }
 `;
@@ -385,5 +423,141 @@ export const UsedBookListEmptyWrapper = styled.div`
 
   div {
     margin-top: 1rem;
+  }
+`;
+
+export const FlexCenterWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+
+export const FollowingCardWrapper = styled.div<{ width?: number }>`
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 0 0.5rem;
+  margin-top: 15px;
+
+  width: 200px;
+
+  transition: transform 0.4s, box-shadow 0.4s ease-in;
+
+  &:hover {
+    transform: scale(1.02);
+  }
+
+  .red {
+    color: ${({ theme }) => theme.colors.error};
+  }
+
+  .usedBookCard__imgBox {
+    position: relative;
+    padding-top: 300px;
+
+    img {
+      position: absolute;
+      display: block;
+      top: 0;
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  .usedBookCard__content {
+    display: flex;
+    flex-direction: column;
+
+    & > div + div {
+      margin: 0.5rem 0;
+    }
+  }
+
+  .usedBookCard__title {
+    height: 2rem;
+    font-size: 1rem;
+    margin: 0 10px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    text-align: center;
+    color: ${({ theme }) => theme.colors.darkGrey};
+  }
+
+  .usedBookCard__price {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    font-size: 1.1rem;
+    margin-top: 0.3rem;
+    color: ${({ theme }) => theme.colors.info};
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    strong {
+      font-weight: 900;
+    }
+  }
+  .usedBookCard__state {
+    font-size: 1rem;
+    text-align: center;
+    padding: 0.6rem;
+  }
+
+  @media screen and (max-width: 1150px) {
+    width: 200px;
+    padding: 0 0.3rem;
+    margin-top: 0.8rem;
+  }
+
+  @media screen and (max-width: 950px) {
+    width: 200px;
+    padding: 0 0.3rem;
+    margin-top: 0.8rem;
+    .usedBookCard__imgBox {
+      padding-top: 250px;
+    }
+    .usedBookCard__price {
+      font-size: 1rem;
+      strong {
+        font-weight: 900;
+        font-size: 1.1rem;
+      }
+    }
+  }
+
+  ${({ theme }) => theme.media.mobile} {
+    .usedBookCard__title {
+      font-size: 0.7rem;
+      height: 1rem;
+    }
+  }
+`;
+
+export const EmptyFollowingListWrapper = styled.div`
+  background-color: #f9f9f9;
+  box-shadow: rgb(0 0 0 / 30%) 0px 0px 3px;
+  border-radius: 10px;
+  display: flex;
+  margin-top: 1rem;
+  width: 80%;
+  height: 18rem;
+  justify-content: center;
+  align-items: center;
+
+  div {
+    margin-top: 1rem;
+  }
+
+  @media screen and (max-width: 1150px) {
+    width: 42.5rem;
+  }
+
+  @media screen and (max-width: 950px) {
+    width: 36rem;
+  }
+
+  @media screen and (max-width: 850px) {
+    width: 24rem;
   }
 `;

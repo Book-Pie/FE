@@ -20,7 +20,6 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { CountWrapper } from "../UsedBookDetail/style";
 import { Title, TitleSpan } from "../UsedBookLikeList/styles";
 import {
-  CardWrapper,
   Column,
   DateWrapper,
   FlexBox,
@@ -28,10 +27,12 @@ import {
   FollowingMainUsedBookListGrid,
   FollowingMainUsedBookListWrapper,
   FollowingUsedBookListWrapper,
-  EmptyListWrapper,
+  FollowingCardWrapper,
   ShopContentWrapper,
   UsedBookCardImgBox,
   UsedBookListEmptyWrapper,
+  FlexCenterWrapper,
+  EmptyFollowingListWrapper,
 } from "./styles";
 import { UsedBookCardWrapper } from "../UsedBookList/style";
 import { StateEnumType } from "./types";
@@ -43,7 +44,7 @@ const Following = () => {
   const { user, token, isLoggedIn } = useTypedSelector(userReduceSelector);
   const { shop } = useTypedSelector(userReduceSelector);
   const { FollowingList } = useTypedSelector(usedBookDetailSelector);
-  const max1000 = useMediaQuery("(max-width:1000px)");
+  const max1150 = useMediaQuery("(max-width:1150px)");
   const max850 = useMediaQuery("(max-width:850px)");
   const max630 = useMediaQuery("(max-width:630px)");
 
@@ -118,7 +119,7 @@ const Following = () => {
               <>
                 {max630 && (
                   <div key={idx}>
-                    <CardWrapper width={100}>
+                    <FollowingCardWrapper width={100}>
                       <Link to={`/shop/${userId}`}>
                         <UsedBookCardImgBox>
                           {profile === null && <img src={noProfileImg} alt="myProfileImg" />}
@@ -142,13 +143,13 @@ const Following = () => {
                         type="follow"
                         margin={20}
                       />
-                    </CardWrapper>
+                    </FollowingCardWrapper>
                   </div>
                 )}
                 {!max630 && (
                   <FlexBox key={idx}>
                     <>
-                      <CardWrapper>
+                      <FollowingCardWrapper>
                         <Link to={`/shop/${userId}`}>
                           <UsedBookCardImgBox>
                             {profile === null && <img src={noProfileImg} alt="myProfileImg" />}
@@ -185,11 +186,11 @@ const Following = () => {
                               ))}
                           </div>
                         </div>
-                      </CardWrapper>
+                      </FollowingCardWrapper>
                       {usedBookList.length !== 0 && (
                         <FollowingMainUsedBookListGrid>
                           {usedBookList
-                            .filter((item, idx) => (max850 ? idx < 2 : max1000 ? idx < 3 : idx < 4))
+                            .filter((item, idx) => (max850 ? idx < 2 : max1150 ? idx < 3 : idx < 4))
                             .map((item, idx) => {
                               const { id, image, price, state, title, uploadDate } = item;
                               const date = compareDateFormat(String(uploadDate));
@@ -201,12 +202,14 @@ const Following = () => {
                                 <div key={idx}>
                                   <FollowingMainUsedBookListWrapper>
                                     <Link to={`/usedBook/${id}`}>
-                                      <FollowingUsedBookListWrapper>
-                                        {image === null && <img src={noProfileImg} alt="myProfileImg" />}
-                                        {image !== null && (
-                                          <img src={`${process.env.BASE_URL}/image/${image}`} alt="usedBookImg" />
-                                        )}
-                                      </FollowingUsedBookListWrapper>
+                                      <FlexCenterWrapper>
+                                        <FollowingUsedBookListWrapper>
+                                          {image === null && <img src={noProfileImg} alt="myProfileImg" />}
+                                          {image !== null && (
+                                            <img src={`${process.env.BASE_URL}/image/${image}`} alt="usedBookImg" />
+                                          )}
+                                        </FollowingUsedBookListWrapper>
+                                      </FlexCenterWrapper>
                                       <UsedBookCardWrapper width={100}>
                                         <div className="usedBookCard__content">
                                           <p className="usedBookCard__title">{title}</p>
@@ -237,12 +240,12 @@ const Following = () => {
                         </FollowingMainUsedBookListGrid>
                       )}
                       {usedBookList.length === 0 && (
-                        <UsedBookListEmptyWrapper>
+                        <EmptyFollowingListWrapper>
                           <Column>
                             <LocalLibraryIcon sx={{ fontSize: "50px", color: "#c9c9ca" }} />
                             <div>등록된 상품이 없습니다.</div>
                           </Column>
-                        </UsedBookListEmptyWrapper>
+                        </EmptyFollowingListWrapper>
                       )}
                     </>
                   </FlexBox>
@@ -253,12 +256,12 @@ const Following = () => {
         </FollowingListWrapper>
       )}
       {FollowingList.length === 0 && (
-        <EmptyListWrapper>
+        <UsedBookListEmptyWrapper>
           <Column>
             <GroupsIcon sx={{ fontSize: "100px", color: "#c9c9ca" }} />
             <div>아직 팔로잉한 인원이 없습니다.</div>
           </Column>
-        </EmptyListWrapper>
+        </UsedBookListEmptyWrapper>
       )}
     </ShopContentWrapper>
   );
