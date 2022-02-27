@@ -5,13 +5,16 @@ import { Link } from "react-router-dom";
 import { GetUserReceivedReviewListData } from "modules/Slices/userReview/types";
 import { deleteUserReview } from "modules/Slices/userReview/userReviewSlice";
 import { RatingContent, RatingScore } from "components/BookDetail/style";
+import { useMediaQuery } from "@mui/material";
 import Modal from "../BuyList/Modal";
 import { ColorContent, ContentItem, ContentWrapper, FlexBox, TitleContentItem } from "../BuyList/styles";
 import { WrittedReviewListProps } from "./types";
+import { WrittedReviewListFlexBox } from "./styles";
 
 const WrittedReviewList = ({ contents, dispatch, signIn }: WrittedReviewListProps) => {
   const [open, setOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<GetUserReceivedReviewListData | null>(null);
+  const max900 = useMediaQuery("(max-width:900px)");
 
   const expandModal = (item: GetUserReceivedReviewListData) => {
     setSelectedItem(item);
@@ -39,34 +42,63 @@ const WrittedReviewList = ({ contents, dispatch, signIn }: WrittedReviewListProp
       {contents.map((item, idx) => {
         return (
           <ContentWrapper key={idx}>
-            <ContentItem>
-              <RatingContent>
-                <Rating name="read-only" precision={0.5} value={item.rating} size="small" readOnly />
-                <br />
-                <RatingScore>{item.rating}점</RatingScore>
-              </RatingContent>
-            </ContentItem>
-            <ContentItem>{item.sellerName}</ContentItem>
-            <TitleContentItem>
-              <Link to={`/usedBook/${item.usedBookId}`}>
-                <ColorContent>{item.usedBookTitle}</ColorContent>
-              </Link>
-            </TitleContentItem>
-            <ContentItem>{item.content}</ContentItem>
-            <ContentItem>{item.reviewDate.split("T", 1)}</ContentItem>
-            <ContentItem>
-              <FlexBox>
-                <Button variant="contained" onClick={() => expandModal(item)} type="button">
-                  수정
-                </Button>
-                <form onSubmit={deleteUserReviewSubmit}>
-                  <Button variant="outlined" type="submit">
-                    삭제
-                    <input type="hidden" value={item.userReviewId} />
-                  </Button>
-                </form>
-              </FlexBox>
-            </ContentItem>
+            {max900 ? (
+              <>
+                <ContentItem>
+                  {item.sellerName}
+                  <Link to={`/usedBook/${item.usedBookId}`}>
+                    <ColorContent>{item.usedBookTitle}</ColorContent>
+                  </Link>
+                  <RatingScore>{item.rating}점</RatingScore>
+                </ContentItem>
+                <ContentItem>{item.content}</ContentItem>
+                <ContentItem>{item.reviewDate.split("T", 1)}</ContentItem>
+                <ContentItem>
+                  <WrittedReviewListFlexBox>
+                    <Button variant="contained" onClick={() => expandModal(item)} type="button">
+                      수정
+                    </Button>
+                    <form onSubmit={deleteUserReviewSubmit}>
+                      <Button variant="outlined" type="submit">
+                        삭제
+                        <input type="hidden" value={item.userReviewId} />
+                      </Button>
+                    </form>
+                  </WrittedReviewListFlexBox>
+                </ContentItem>
+              </>
+            ) : (
+              <>
+                <ContentItem>
+                  <RatingContent>
+                    <Rating name="read-only" precision={0.5} value={item.rating} size="small" readOnly />
+                    <br />
+                    <RatingScore>{item.rating}점</RatingScore>
+                  </RatingContent>
+                </ContentItem>
+                <ContentItem>{item.sellerName}</ContentItem>
+                <TitleContentItem>
+                  <Link to={`/usedBook/${item.usedBookId}`}>
+                    <ColorContent>{item.usedBookTitle}</ColorContent>
+                  </Link>
+                </TitleContentItem>
+                <ContentItem>{item.content}</ContentItem>
+                <ContentItem>{item.reviewDate.split("T", 1)}</ContentItem>
+                <ContentItem>
+                  <FlexBox>
+                    <Button variant="contained" onClick={() => expandModal(item)} type="button">
+                      수정
+                    </Button>
+                    <form onSubmit={deleteUserReviewSubmit}>
+                      <Button variant="outlined" type="submit">
+                        삭제
+                        <input type="hidden" value={item.userReviewId} />
+                      </Button>
+                    </form>
+                  </FlexBox>
+                </ContentItem>
+              </>
+            )}
             {selectedItem && open ? <Modal open={open} handleClose={handleClose} item={selectedItem} /> : null}
           </ContentWrapper>
         );

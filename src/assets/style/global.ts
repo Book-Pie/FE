@@ -42,9 +42,6 @@ body {
     font-size:25px;
   }
 }
-body::-webkit-scrollbar {
-   display:none;
-}
 
 ol, ul {
 	list-style: none;

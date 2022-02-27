@@ -1,6 +1,6 @@
 import { AppDispatch, RootState } from "modules/store";
 import { StateEnumType, UsedBook } from "src/components/UsedBookList/types";
-import { UserReviewData } from "../userReview/types";
+import { GetFollowerUserListData, GetMyFollowingUserListData, UserReviewData } from "../userReview/types";
 
 export interface UsedBookThunkApi {
   dispatch: AppDispatch;
@@ -62,7 +62,7 @@ export interface UsedBookBuyListResponse {
   title: string;
   image: string;
   price: number;
-  state: string;
+  state: keyof StateEnumType;
   orderDate: string;
   sellerNickName: string;
   buyerNickName: string;
@@ -211,6 +211,7 @@ export interface UsedBookDetailReduce {
   buyList: UsedBookBuyListResponse[];
   relatedUsedBookList: PagesResponse[];
   liked: boolean;
+  followCheck: boolean;
   list: BuyBookList;
   storeReviewList: UserReviewData[];
   pageCount: number;
@@ -219,6 +220,12 @@ export interface UsedBookDetailReduce {
   totalPages: number;
   pageNumber: number;
   status: "loading" | "success" | "failed";
+  follow: {
+    followerCount: number;
+    followingCount: number;
+  };
+  FollowingList: GetMyFollowingUserListData[];
+  FollowerList: GetFollowerUserListData[];
 }
 
 // =========================== 썽크함수 성공 시 리턴 타입 ===========================

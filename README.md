@@ -36,9 +36,11 @@
 | :---: | :---: | :---: | :---: |
 |![](https://github.com/dnr14.png?size=200)|![](https://github.com/choyd93.png?size=200)|<img src=https://github.com/kky0426.png width=200 height=200 />|<img src=https://github.com/start-27.png width=200 height=200 />|
 |[dnr14](https://github.com/dnr14)|[choyd93](https://github.com/choyd93)|[kky0426](https://github.com/kky0426)|[start-27](https://github.com/start-27)|
+|Front-End|Front-End|Back-End|Back-End|
 
 - 프론트엔드 개발자 2명, 백엔드 개발자 2명
 
+<br>
 <hr/>
 
 ### 🔥 서비스 소개
@@ -77,14 +79,13 @@
   - 좋아요 : 원하는 중고도서를 찜하고 리스트를 확인할 수 있습니다.
   - 팔로우 : 다른 회원을 팔로우하고 팔로워를 리스트로 관리할 수 있습니다. (추가 예정)
 
-
-
 [기능 자세히 보기](https://github.com/Book-Pie/FE/wiki)
+<br><br>
 
 <hr/>
 
 ### 💻 기술 스택
-- `TypeScript` : 정적 타입을 도입해서 코드 안전성 및 유지보수 쉽기 위해 사용했습니다.
+- `TypeScript` : 정적 타입을 도입하여 코드 안전성 및 유지보수를 쉽게 하기위해 사용
 - `React`: 웹UI 라이브러리
 - `Redux/tookit` : 클라이언트 전역상태 관리 라이브러리
 - `Axios` : 서버와 RESTful 통신을 위해 사용했습니다.
@@ -179,13 +180,13 @@
 <br>
 
 > #### 📜 개발 과정 설명
-1. 개발자들은 각자 `feature/{{기능이름}} branch`에서 개발 진행한다.
-2. 완성된 기능을 `develop branch`에 PR 후 리뷰를 통과하면 merge를한다.
-3. `deploy branch`에서 develop pull를 해서 코드를 갱신 후 push를 한다.
-4. github Webhook🪝을 이용하여 `https://www.jenkins.p-e.kr`로 push 메세지를 트리거한다.   
-5. `jenkins`는 push 메시지를 받고 배포 스크립트를 진행한다.
-6. `http://www.react-dev.p-e.kr` 접속해서 신규 기능이 잘 작동하는지 확인을 한다.
-7. 1 ~ 6번을 반복을 한다.
+1. 개발자들은 각자 `feature/{{기능이름}} branch`에서 개발을 진행합니다.
+2. 완성된 기능을 `develop branch`에 PR 후 리뷰를 통과하면 merge를 합니다.
+3. `deploy branch`에서 develop pull를 해서 코드를 갱신 후 push를 합니다.
+4. github Webhook🪝을 이용하여 `https://www.jenkins.p-e.kr`로 push 메세지를 트리거합니다.
+5. `jenkins`는 push 메시지 받고 배포 스크립트를 진행합니다.
+6. `http://www.react-dev.p-e.kr` 접속을 해서 신규 기능이 잘 작동하는지 체크를 합니다.
+7. 1 ~ 6번 반복을 합니다.
 
 
 ---
@@ -198,9 +199,9 @@
 <br>
 
 > #### 📜 배포 과정 설명
-1. `main branch`에서 push를 진행를 한다.
-2. main branch push를 감지한 github은 `git action` 배포 스크립트를 실행한다.
-3. 빌드가 완료되고 AWS S3에 파일을 배포를하고 유저는 `CloudFront`를 통해 배포된 사이트([BookPie 사이트](http://dzjv6uzpvhcwz.cloudfront.net/))를 접속한다.
+1. `main branch`에서 push를 진행를 합니다.
+2. main branch push를 감지한 github은 `git action` 배포 스크립트를 실행합니다.
+3. 빌드가 완료되고 AWS S3에 파일을 배포를하고 유저는 `CloudFront`를 통해 배포된 사이트([BookPie 사이트](http://dzjv6uzpvhcwz.cloudfront.net/))를 접속합니다.
 
 ---
 

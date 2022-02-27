@@ -5,10 +5,11 @@ export const RelatedUsedBookSwiper = styled.div`
 
   .swiper-wrapper {
     display: flex;
+    margin-left: 1rem;
   }
 
   .swiper-slide {
-    width: 200px;
+    width: 10rem;
     color: ${props => props.theme.colors.darkGrey};
   }
 
@@ -26,13 +27,33 @@ export const RelatedUsedBookSwiper = styled.div`
   }
 
   .swiper-button-next {
-    border-color: ${props => props.theme.colors.mainDarkBrown} !important;
-    color: ${props => props.theme.colors.mainDarkBrown} !important;
+    align-items: center;
+    background-color: rgb(255, 255, 255);
+    box-sizing: border-box;
+    border: 1px solid rgb(249, 249, 249);
+    border-radius: 50%;
+    box-shadow: rgb(0 0 0 / 20%) 0px 0px 4px 0px;
+    background-size: 12px;
+    width: 25px;
+    height: 25px;
+    background-size: 50% auto;
+    background-position: center;
   }
+
   .swiper-button-prev {
-    border-color: ${props => props.theme.colors.mainDarkBrown} !important;
-    color: ${props => props.theme.colors.mainDarkBrown} !important;
+    align-items: center;
+    background-color: rgb(255, 255, 255);
+    box-sizing: border-box;
+    border: 1px solid rgb(249, 249, 249);
+    border-radius: 50%;
+    box-shadow: rgb(0 0 0 / 20%) 0px 0px 4px 0px;
+    background-size: 12px;
+    width: 25px;
+    height: 25px;
+    background-size: 50% auto;
+    background-position: center;
   }
+  --swiper-navigation-size: 12px;
 `;
 
 export const RelatedReviewWrapper = styled.div`
@@ -40,11 +61,48 @@ export const RelatedReviewWrapper = styled.div`
   width: 100%;
   height: 600px;
   margin: 10px auto 0 auto;
+
+  .swiper-button-next {
+    position: relative;
+    top: -9px;
+    left: 40px;
+  }
+
+  .swiper-button-prev {
+    position: relative;
+    top: 10px;
+    left: 10px;
+  }
+
+  ${({ theme }) => theme.media.mobile} {
+    height: 18rem;
+
+    .swiper-button-next {
+      position: relative;
+      top: -9px;
+      left: 52px;
+    }
+
+    .swiper-button-prev {
+      position: relative;
+      top: 10px;
+      left: 22px;
+    }
+  }
+`;
+
+export const SubContentButtonWrapper = styled.div`
+  text-align: right;
+
+  .MuiButtonBase-root {
+    position: inherit;
+  }
 `;
 
 export const FlexBox = styled.div`
   display: flex;
   align-items: center;
+  width: 100%;
 `;
 
 export const SubReplyFlexBox = styled(FlexBox)`
@@ -71,12 +129,12 @@ export const BigPieImg = styled.img`
 `;
 
 export const ContentWrapper = styled.div`
-  width: 400px;
   padding-left: 20px;
+  width: 90%;
 `;
 
 export const SubContentWrapper = styled.div`
-  width: 330px;
+  width: 100%;
 `;
 
 export const ProfileArea = styled.div`
@@ -105,6 +163,12 @@ export const ProductDetailTitle = styled.div`
   text-align: left;
   color: #4f3629;
   justify-content: space-between;
+
+  ${({ theme }) => theme.media.mobile} {
+    .MuiButtonBase-root {
+      font-size: 0.5rem;
+    }
+  }
 `;
 
 export const ReplyItemWrapper = styled.div`
@@ -119,7 +183,7 @@ export const ReplyItemWrapper = styled.div`
 
 export const SubReplyItemWrapper = styled(ReplyItemWrapper)`
   background-color: #edeae9;
-  width: 450px;
+  width: 100%;
   margin-left: 20px;
 `;
 
@@ -151,19 +215,42 @@ export const ReviewListEmptyWrapper = styled.div`
 `;
 
 export const CardSmallTitle = styled.span`
-  margin: 0 70px 6px 0;
+  margin: 0 40px 6px 0;
   font-size: 16px;
   line-height: 1.88;
   letter-spacing: -0.4px;
   color: #525252;
+
+  ${({ theme }) => theme.media.mobile} {
+    margin: 0 0.7rem 6px 0;
+    font-size: 0.7rem;
+  }
+`;
+
+export const FollowTitle = styled.span`
+  margin: 0 15px 0 0;
+  font-size: 16px;
+  line-height: 1.88;
+  letter-spacing: -0.4px;
+  color: #525252;
+
+  ${({ theme }) => theme.media.mobile} {
+    margin: 0 0.7rem 6px 0;
+    font-size: 0.7rem;
+  }
 `;
 
 export const WideCardSmallTitle = styled.span`
-  margin: 0 100px 6px 0;
+  margin: 0 3.5rem 6px 0;
   font-size: 16px;
   line-height: 1.88;
   letter-spacing: -0.4px;
   color: #525252;
+
+  ${({ theme }) => theme.media.mobile} {
+    margin: 0 2rem 6px 0;
+    font-size: 0.7rem;
+  }
 `;
 
 export const CardBoldTitle = styled.span`
@@ -175,8 +262,12 @@ export const CardBoldTitle = styled.span`
 `;
 
 export const CategoryArea = styled.div`
-  margin: 20px 30px 0px 0px;
+  margin: 20px 40px 0px 0px;
   text-align: right;
+
+  ${({ theme }) => theme.media.mobile} {
+    font-size: 0.7rem;
+  }
 `;
 
 export const ProductDetailCardFlexWrapper = styled.div`
@@ -186,6 +277,11 @@ export const ProductDetailCardFlexWrapper = styled.div`
 export const FlexWrapper = styled.div`
   display: flex;
   margin-bottom: 100px;
+
+  @media screen and (max-width: 930px) {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
 `;
 
 export const UsedBookStoreInformationLeftWrapper = styled.div`
@@ -206,28 +302,44 @@ export const UsedStoreUserThumbnail = styled.div`
 `;
 
 export const ProductDetailCardWrapper = styled.div`
-  width: 543px;
-  height: 200px;
+  width: 100%;
+  height: 13rem;
   margin: 16px 27px 80px 0px;
   padding: 16px;
   border-radius: 4px;
   border: solid 1px #4f3629;
   background-color: #fff;
+
+  ${({ theme }) => theme.media.mobile} {
+    height: 9rem;
+  }
 `;
 
-export const UsedBookStoreInformationWrapper = styled.div.attrs<{ height?: string }>(props => ({
+export const UsedBookStoreInformationWrapper = styled.div.attrs<{ height?: string; width?: string }>(props => ({
   type: "text",
   height: props.height,
-}))<{ height?: string }>`
-  width: 544px;
+}))<{ height?: string; width?: string }>`
+  width: 88%;
   height: ${props => props.height};
   border-top: 1px solid #4f3629;
   margin-right: 45px;
+
+  @media screen and (max-width: 1030px) {
+    margin-right: 0px;
+  }
+
+  @media screen and (max-width: 930px) {
+    width: ${props => props.width}%;
+  }
+
+  ${({ theme }) => theme.media.mobile} {
+    width: 18rem;
+    font-size: 0.7rem;
+  }
 `;
 
 export const UsedBookDetailButton = styled.button<{ small?: boolean }>`
   font-size: ${props => (props.small ? "14px" : "18px")};
-  width: ${props => (props.small ? "100px" : "160px")};
   height: ${props => (props.small ? "35px" : "53px")};
   margin: 0 10px 0 7px;
   border-radius: 5px;
@@ -235,6 +347,7 @@ export const UsedBookDetailButton = styled.button<{ small?: boolean }>`
   background-color: #fff;
   color: #4f3629;
   font-weight: 600;
+  flex: 1;
 
   &:hover {
     background-color: #edeae9;
@@ -245,7 +358,6 @@ export const UsedBookDetailButton = styled.button<{ small?: boolean }>`
 export const LikeButton = styled.button<{ small?: boolean }>`
   &.UsedBookArea--nomal {
     font-size: ${props => (props.small ? "14px" : "18px")};
-    width: ${props => (props.small ? "100px" : "160px")};
     height: ${props => (props.small ? "35px" : "53px")};
     margin: 0 10px 0 7px;
     border-radius: 5px;
@@ -253,6 +365,7 @@ export const LikeButton = styled.button<{ small?: boolean }>`
     background: rgb(204, 204, 204);
     color: rgb(255, 255, 255);
     font-weight: 600;
+    flex: 0.5;
   }
   div {
     display: flex;
@@ -281,12 +394,12 @@ export const LikeButton = styled.button<{ small?: boolean }>`
 
   &.UsedBookArea--active {
     font-size: ${props => (props.small ? "14px" : "18px")};
-    width: ${props => (props.small ? "100px" : "160px")};
     height: ${props => (props.small ? "35px" : "53px")};
     margin: 0 10px 0 7px;
     border-radius: 5px;
     border: solid 1px #4f3629;
     font-weight: 600;
+    flex: 1;
 
     .MuiSvgIcon-root {
       color: #dd002c;
@@ -299,7 +412,7 @@ export const LikeButton = styled.button<{ small?: boolean }>`
 `;
 
 export const BuyButton = styled.button`
-  width: 200px;
+  flex: 1;
   height: 53px;
   margin: 0 0 0 10px;
   border-radius: 5px;
@@ -320,8 +433,7 @@ export const BuyButton = styled.button`
 `;
 
 export const ProductDetailContent = styled.div`
-  width: 533px;
-  height: 327px;
+  height: 15rem;
   margin: 16px 50px 50px 0px;
   font-size: 16px;
   font-weight: normal;
@@ -331,11 +443,15 @@ export const ProductDetailContent = styled.div`
   letter-spacing: -0.4px;
   text-align: left;
   color: #707070;
+
+  @media screen and (max-width: 930px) {
+    height: 5rem;
+  }
 `;
 
 export const RelatedUsedBookItemContentWrapper = styled.div`
-  width: 187px;
-  height: 140px;
+  width: 12rem;
+  // height: 18rem;
   text-align: center;
 `;
 
@@ -349,15 +465,33 @@ export const RelatedUsedBookBoldTitle = styled.div<{ brown?: boolean }>`
   color: ${props => (props.brown ? "#4f3629" : "#222")};
   font-size: 20px;
   font-weight: bold;
-  margin: 20px 0px 10px 0px;
-  width: 187px;
+  width: 12rem;
+  text-align: center;
+
+  @media screen and (max-width: 730px) {
+    width: 10rem;
+  }
+
+  ${({ theme }) => theme.media.mobile} {
+    width: 5rem;
+  }
 `;
 
 export const UsedBookThumbnail = styled.img`
-  width: 187px;
-  height: 281px;
+  width: 12rem;
+  height: 18rem;
   margin: 0 21px 20px 0;
   border: 0.5px solid black;
+
+  @media screen and (max-width: 730px) {
+    width: 10rem;
+    height: 15rem;
+  }
+
+  ${({ theme }) => theme.media.mobile} {
+    width: 6rem;
+    height: 8rem;
+  }
 `;
 
 export const RelatedUsedBookWrapper = styled.div`
@@ -368,13 +502,12 @@ export const RelatedUsedBookWrapper = styled.div`
 `;
 
 export const NormalTitle = styled.div`
-  margin: 30px 0 30px 0;
+  margin: 30px 0 10px 0;
   color: #4f3629;
   font-size: 25px;
   font-weight: bold;
+  margin-left: 1rem;
 `;
-
-export const ProductDetail = styled.div``;
 
 export const DeliverySpan = styled.div`
   font-size: 16px;
@@ -400,8 +533,6 @@ export const BookStatus = styled.span`
   padding-right: 5px;
 `;
 
-export const DeliveryArea = styled.div``;
-
 export const BookPrice = styled.div`
   font-size: 40px;
   font-weight: 600;
@@ -414,31 +545,102 @@ export const BookPrice = styled.div`
 `;
 
 export const UsedBookImg = styled.img`
-  width: 544px;
-  height: 700px;
-  margin: 21px 28px 50px 0px;
+  width: 30rem;
+  height: 45rem;
   object-fit: contain;
+
+  ${({ theme }) => theme.media.mobile} {
+    width: 20rem;
+    height: 25rem;
+  }
 `;
 
 export const UsedBookWrapper = styled.div`
-  width: 600px;
-  height: 700px;
-  margin: 21px 28px 50px 15px;
-  object-fit: contain;
+  width: 47%;
+  margin: 21px 28px 0px 15px;
+
+  @media screen and (max-width: 1030px) {
+    margin: 21px 0px 0px 15px;
+  }
+
+  @media screen and (max-width: 930px) {
+    width: 85%;
+    margin: 21px 0px 0px 15px;
+  }
 `;
 
 export const InteractionArea = styled.div`
-  width: 240px;
   height: 21px;
 `;
 
 export const TopInformationArea = styled.div`
   display: flex;
   justify-content: space-between;
+
+  & > div:first-child {
+    flex-basis: 45%;
+  }
+
+  & > div:last-child {
+    min-width: 150px;
+    flex-basis: 55%;
+    text-align: right;
+  }
+
+  @media screen and (max-width: 1100px) {
+    flex-wrap: wrap-reverse;
+    margin-bottom: 1rem;
+
+    & > div:first-child {
+      flex-basis: 60%;
+    }
+
+    & > div:last-child {
+      min-width: 150px;
+      flex-basis: 70%;
+      text-align: left;
+      padding-bottom: 2rem;
+
+      span:first-child {
+        margin-left: 0px;
+      }
+    }
+  }
+
+  @media screen and (max-width: 930px) {
+    & > div:first-child {
+      flex-basis: 40%;
+    }
+
+    & > div:last-child {
+      min-width: 150px;
+      flex-basis: 60%;
+      text-align: right;
+    }
+  }
+
+  ${({ theme }) => theme.media.mobile} {
+    font-size: 0.7rem;
+    flex-wrap: wrap-reverse;
+
+    & > div:first-child {
+      flex-basis: 50%;
+    }
+
+    & > div:last-child {
+      min-width: 150px;
+      flex-basis: 70%;
+      text-align: left;
+      padding-bottom: 1.5rem;
+
+      span:first-child {
+        margin-left: 0px;
+      }
+    }
+  }
 `;
 
 export const InteractionSpan = styled.span`
-  // color: rgb(204, 204, 204);
   margin-left: 14px;
 `;
 
@@ -450,7 +652,7 @@ export const UsedStoreUserContentWrapper = styled.div`
 `;
 
 export const Line = styled.div`
-  width: 600px;
+  width: 100%;
   height: 1px;
   margin: 16px 96px 16px 0px;
   border-radius: 5px;
@@ -464,8 +666,12 @@ export const UsedBookArea = styled.div`
   object-fit: contain;
 `;
 
-export const UsedBookDetailWrapper = styled.div`
+export const UsedBookDetailTopInformation = styled.div`
   display: flex;
+
+  @media screen and (max-width: 930px) {
+    justify-content: center;
+  }
 `;
 
 export const InteractionArea1 = styled.div`
@@ -502,6 +708,58 @@ export const SwiperWrapper = styled.div`
     border-color: ${props => props.theme.colors.mainDarkBrown} !important;
     color: ${props => props.theme.colors.mainDarkBrown} !important;
   }
+
+  @media screen and (max-width: 1030px) {
+    width: 33rem;
+  }
+
+  @media screen and (max-width: 930px) {
+    margin-left: 5rem;
+  }
+
+  ${({ theme }) => theme.media.mobile} {
+    justify-content: center;
+    margin-left: 14rem;
+  }
+`;
+
+export const RelatedProductSwiperWrapper = styled.div`
+  cursor: pointer;
+
+  .swiper-pagination {
+    bottom: 2.5rem;
+  }
+
+  .swiper-pagination-bullet {
+    background: ${props => props.theme.colors.mainDarkBrown} !important;
+    width: 15px;
+    height: 15px;
+    box-sizing: content-box;
+  }
+  .swiper-pagination-bullet-active {
+    background: ${props => props.theme.colors.mainDarkBrown} !important;
+  }
+
+  .swiper-button-next {
+    border-color: ${props => props.theme.colors.mainDarkBrown} !important;
+    color: ${props => props.theme.colors.mainDarkBrown} !important;
+  }
+  .swiper-button-prev {
+    border-color: ${props => props.theme.colors.mainDarkBrown} !important;
+    color: ${props => props.theme.colors.mainDarkBrown} !important;
+  }
+
+  @media screen and (max-width: 1030px) {
+    width: 33rem;
+  }
+
+  @media screen and (max-width: 930px) {
+    margin-left: 0rem;
+  }
+
+  ${({ theme }) => theme.media.mobile} {
+    margin-left: 0rem;
+  }
 `;
 
 export const TagContent = styled.span`
@@ -527,12 +785,16 @@ export const ButtonArea = styled.div`
 `;
 
 export const DisabledButton = styled.div`
-  width: 24rem;
+  flex: 2;
   padding: 15px;
   border: 1px solid #d1d5d9;
   border-radius: 5px;
   color: #d1d5d9;
   text-align: center;
+
+  @media screen and (max-width: 1100px) {
+    font-size: 14px;
+  }
 `;
 
 export const HeartArea = styled.span`
@@ -549,7 +811,8 @@ export const SecretItem = styled.div`
 `;
 
 export const SellerNameTitle = styled.div`
-  margin-top: 20px;
+  margin-left: 1.2rem;
+  font-weight: 700;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
@@ -592,7 +855,6 @@ export const StoreReviewItemFlexBox = styled(FlexBox)`
 `;
 
 export const StoreReviewItemWrapper = styled.div`
-  width: 543px;
   height: 130px;
   margin: 0 0 20px;
   padding: 16px;
@@ -601,7 +863,7 @@ export const StoreReviewItemWrapper = styled.div`
 `;
 
 export const StoreReviewItemContent = styled.div`
-  width: 354px;
+  width: 20rem;
   height: 39px;
   margin: 8px 40px 12px 0px;
   font-family: Pretendard;
@@ -613,6 +875,10 @@ export const StoreReviewItemContent = styled.div`
   letter-spacing: -0.4px;
   text-align: left;
   color: #d6d0cd;
+
+  ${({ theme }) => theme.media.mobile} {
+    width: 12rem;
+  }
 `;
 
 export const StoreReviewItemNickName = styled.div`
@@ -672,7 +938,17 @@ export const StoreReviewNoneProfileImg = styled(StoreReviewProfileImg)`
 `;
 
 export const FollowButton = styled.div`
-  margin-left: 10px;
+  width: 100%;
+
+  .MuiTooltip-tooltip {
+    width: 160px;
+  }
+
+  ${({ theme }) => theme.media.mobile} {
+    .MuiButtonBase-root {
+      font-size: 0.6rem;
+    }
+  }
 `;
 
 export const ProductDetailProfileImg = styled.div`
@@ -696,16 +972,51 @@ export const ProductDetailNoneProfileImg = styled(ProductDetailProfileImg)`
   }
 `;
 
-export const BottomArea = styled.div`
-  margin-top: 20px;
+export const BottomArea = styled.div<{ margin?: number }>`
+  margin-top: ${props => (props.margin === 20 ? 0 : 20)}px;
+
+  display: flex;
+  justify-content: center;
 `;
 
 export const UsedStoreFlexBox = styled.div`
   display: flex;
-  width: 320px;
   height: 80px;
 
   div {
     margin-right: 30px;
+  }
+`;
+
+export const UsedBookDetailInformationTop = styled.div`
+  display: flex;
+
+  @media screen and (max-width: 930px) {
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+    justify-content: center;
+    margin-bottom: 40px;
+
+    .SwiperWrapper {
+      margin-left: 150px;
+    }
+  }
+`;
+
+export const UsedBookFollowButton = styled.div`
+  margin-left: 0.5rem;
+
+  .MuiButtonBase-root {
+    margin-left: 1rem;
+  }
+
+  .MuiTooltip-tooltip {
+    width: 160px;
+  }
+
+  ${({ theme }) => theme.media.mobile} {
+    .MuiButtonBase-root {
+      font-size: 0.6rem;
+    }
   }
 `;

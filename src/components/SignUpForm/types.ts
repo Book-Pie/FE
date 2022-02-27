@@ -1,7 +1,6 @@
 import { RegisterOptions, FieldErrors, UseFormRegister } from "react-hook-form";
 import { FormInputProps } from "elements/FormInput";
 import { SuccessResponse } from "api/types";
-import { Dispatch, SetStateAction } from "react";
 
 export interface SignUpForm {
   name: string;

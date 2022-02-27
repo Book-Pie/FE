@@ -8,6 +8,7 @@ import { useDispatch } from "react-redux";
 import { Link, useHistory } from "react-router-dom";
 import useSignIn from "hooks/useSignIn";
 import { addUserReview, editUserReview } from "modules/Slices/userReview/userReviewSlice";
+import { useMediaQuery } from "@mui/material";
 import {
   RegisterButton,
   TextReviewArea,
@@ -18,6 +19,7 @@ import {
   ImgContent,
   Text,
   ModalButtonArea,
+  ImgContent800,
 } from "./styles";
 import { HoverRating } from "../Rating/Rating";
 import { AddUserReviewSubmitParam, UserReviewModalProps } from "./types";
@@ -28,6 +30,7 @@ const Modal = ({ open, handleClose, item }: UserReviewModalProps) => {
   const { signIn } = useSignIn();
   const { isLoggedIn } = signIn;
   const { handleSubmit, register, setValue } = useForm<AddUserReviewSubmitParam>();
+  const max800 = useMediaQuery("(max-width:800px)");
 
   if (!item) throw new Error("거래상품이 존재하지 않습니다.");
   const {
@@ -102,7 +105,11 @@ const Modal = ({ open, handleClose, item }: UserReviewModalProps) => {
           <FlexWrapper>
             <BuyContent>
               <Link to={`/usedBook/${bookId}`}>
-                <ImgContent src={`${process.env.BASE_URL}/image/${image}`} alt="usedBookImg" />
+                {max800 ? (
+                  <ImgContent800 src={`${process.env.BASE_URL}/image/${image}`} alt="usedBookImg" />
+                ) : (
+                  <ImgContent src={`${process.env.BASE_URL}/image/${image}`} alt="usedBookImg" />
+                )}
               </Link>
             </BuyContent>
             <BuyContent>

@@ -195,13 +195,13 @@ export const UsedBookCardWrapper = styled.div<{ width?: number }>`
   }
 
   @media screen and (max-width: 1000px) {
-    width: 25%;
+    width: ${props => (props.width === 100 ? 100 : 25)}%;
     padding: 0 0.3rem;
     margin-top: 0.8rem;
   }
 
   @media screen and (max-width: 800px) {
-    width: 33.3%;
+    width: ${props => (props.width === 100 ? 100 : 33.3)}%;
     padding: 0 0.3rem;
     margin-top: 0.8rem;
     .usedBookCard__imgBox {
@@ -217,7 +217,7 @@ export const UsedBookCardWrapper = styled.div<{ width?: number }>`
   }
 
   ${({ theme }) => theme.media.mobile} {
-    width: 50%;
+    width: ${props => (props.width === 100 ? 100 : 50)}%;
     padding: 0 0.2rem;
     margin-top: 0.5rem;
     .usedBookCard__content {

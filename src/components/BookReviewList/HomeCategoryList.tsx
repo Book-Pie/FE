@@ -48,19 +48,32 @@ const HomeCategoryList = ({ list }: HomeCategoryListParam) => {
               }}
             >
               {list.map((item, index) => {
-                const { bestRank, cover, customerReviewRank, isbn13, title } = item;
+                const { bestRank, cover, customerReviewRank, isbn13, title, isbn } = item;
                 return (
                   <SwiperSlide key={index}>
-                    <Link to={`/book/category/${isbn13}`}>
-                      <BestsellerItemWrapper>
-                        {bestRank && <div>{`0${bestRank}`}</div>}
-                        <ThumbnailWrapper>
-                          <BestsellerThumbnail src={cover} alt={title} />
-                        </ThumbnailWrapper>
-                        <ListTitle>{title}</ListTitle>
-                        <StarRating ReviewRank={customerReviewRank / 2} title="알라딘" />
-                      </BestsellerItemWrapper>
-                    </Link>
+                    {isbn13 ? (
+                      <Link to={`/book/category/${isbn13}`}>
+                        <BestsellerItemWrapper>
+                          {bestRank && <div>{`0${bestRank}`}</div>}
+                          <ThumbnailWrapper>
+                            <BestsellerThumbnail src={cover} alt={title} />
+                          </ThumbnailWrapper>
+                          <ListTitle>{title}</ListTitle>
+                          <StarRating ReviewRank={customerReviewRank / 2} title="알라딘" />
+                        </BestsellerItemWrapper>
+                      </Link>
+                    ) : (
+                      <Link to={`/book/category/${isbn}`}>
+                        <BestsellerItemWrapper>
+                          {bestRank && <div>{`0${bestRank}`}</div>}
+                          <ThumbnailWrapper>
+                            <BestsellerThumbnail src={cover} alt={title} />
+                          </ThumbnailWrapper>
+                          <ListTitle>{title}</ListTitle>
+                          <StarRating ReviewRank={customerReviewRank / 2} title="알라딘" />
+                        </BestsellerItemWrapper>
+                      </Link>
+                    )}
                   </SwiperSlide>
                 );
               })}

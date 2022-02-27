@@ -1,4 +1,4 @@
-import { ModalItemParam, UsedBookBuyListResponse } from "src/modules/Slices/usedBookDetail/types";
+import { UsedBookBuyListResponse } from "src/modules/Slices/usedBookDetail/types";
 
 export interface BuyList {
   pages: UsedBookBuyListResponse[];

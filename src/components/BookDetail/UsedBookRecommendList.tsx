@@ -25,18 +25,6 @@ const UsedBookRecommendList = ({ isbn }: UsedBookRecommendListParam) => {
     [],
   );
 
-  const list =
-    usedBookRecommendList.length !== 0 &&
-    usedBookRecommendList.map((item, idx) => {
-      return (
-        <SwiperSlide key={idx}>
-          <React.Fragment key={idx}>
-            <UsedBookCard card={item} width={100} />
-          </React.Fragment>
-        </SwiperSlide>
-      );
-    });
-
   return (
     <div>
       {usedBookRecommendList.length !== 0 && (
@@ -51,7 +39,14 @@ const UsedBookRecommendList = ({ isbn }: UsedBookRecommendListParam) => {
               navigation
               pagination={{ clickable: true }}
             >
-              {list}
+              {usedBookRecommendList.length !== 0 &&
+                usedBookRecommendList.map((item, idx) => (
+                  <SwiperSlide key={idx}>
+                    <React.Fragment key={idx}>
+                      <UsedBookCard card={item} width={100} />
+                    </React.Fragment>
+                  </SwiperSlide>
+                ))}
             </Swiper>
           </RelatedUsedBookSwiper>
         </RelatedReviewWrapper>

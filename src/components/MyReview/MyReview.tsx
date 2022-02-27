@@ -12,7 +12,6 @@ import { Stack, Typography } from "@mui/material";
 import Pagination from "@mui/material/Pagination";
 import Loading from "elements/Loading";
 import noComments from "assets/image/noComments.png";
-import { UserInfo } from "src/modules/Slices/user/types";
 import * as Styled from "./style";
 import MyReviewTable from "./MyReviewTable";
 

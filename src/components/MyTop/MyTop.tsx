@@ -5,18 +5,20 @@ import { fetchUserInfoAsync, fetchNickNameUpdateAsync, userReduceSelector } from
 import { useForm, Controller, RegisterOptions } from "react-hook-form";
 import { hookFormSpecialChractersCheck, makeOption, FormErrorMessages } from "utils/hookFormUtil";
 import ErrorMessage from "elements/ErrorMessage";
-import { Input } from "@mui/material";
+import { Input, useMediaQuery } from "@mui/material";
 import Popup from "elements/Popup";
 import { dateArrayFormat, make1000UnitsCommaFormet } from "utils/formatUtil";
 import { useAppDispatch, useTypedSelector } from "modules/store";
 import { Link } from "react-router-dom";
 import usePopup from "hooks/usePopup";
 import { getMyPageChart, userReviewSelector } from "src/modules/Slices/userReview/userReviewSlice";
+import { countCheckStoreFollow, usedBookDetailSelector } from "src/modules/Slices/usedBookDetail/usedBookDetailSlice";
 import * as Styled from "./style";
 import * as Types from "./types";
 import PointInfo from "./PointInfo";
 import Skeletons from "./Skeletons";
 import MyChart from "./MyChart";
+import { BottomArea, FollowTitle } from "../UsedBookDetail/style";
 
 const MyTop = () => {
   const [isNickNameUpdateOpne, setIsNickNameUpdateOpen] = useState<boolean>(false);
@@ -31,6 +33,9 @@ const MyTop = () => {
   const { errors } = formState;
   const { user, token } = useTypedSelector(userReduceSelector);
   const { myPageChart } = useTypedSelector(userReviewSelector);
+  const { follow } = useTypedSelector(usedBookDetailSelector);
+  const { followerCount, followingCount } = follow;
+  const matches = useMediaQuery("(max-width:900px)");
 
   const nickNameOptions = useMemo<RegisterOptions>(
     () => ({
@@ -81,6 +86,12 @@ const MyTop = () => {
     }
   }, [user, dispatch]);
 
+  useEffect(() => {
+    if (user) {
+      dispatch(countCheckStoreFollow(user.id));
+    }
+  }, [dispatch, user]);
+
   return (
     <>
       {isOpen && (
@@ -97,6 +108,10 @@ const MyTop = () => {
                 className={user.image ? "" : "noProfile"}
                 alt="myProfileImg"
               />
+              <BottomArea>
+                <FollowTitle>팔로잉 {followingCount}</FollowTitle>
+                <FollowTitle>팔로워 {followerCount}</FollowTitle>
+              </BottomArea>
             </Styled.ProfileImg>
             <Styled.MyTopUserInfo>
               <PointInfo />
@@ -153,7 +168,7 @@ const MyTop = () => {
           <Skeletons />
         )}
         <Styled.MyChartWrapper>
-          <Styled.TitleSpan>선호 장르</Styled.TitleSpan>
+          {!matches && <Styled.TitleSpan>선호 장르</Styled.TitleSpan>}
           {myPageChart.length !== 0 ? (
             <MyChart data={myPageChart} />
           ) : (

@@ -1,11 +1,22 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { makeAuthTokenHeader, http, errorHandler } from "src/api/client";
+import { makeAuthTokenHeader, http, errorHandler, makeDeleteTokenHeader } from "src/api/client";
 import { RootState } from "modules/store";
 import {
+  AddMyPageStoreFollowParam,
+  AddStoreFollowParam,
   AddUsedBookDetailSubReplyParam,
   AddUserReviewAsyncSuccess,
   AddUserReviewParam,
+  CountCheckStoreFollowAsyncSuccess,
+  DeleteMyPageStoreFollowParam,
+  DeleteStoreFollowParam,
+  DeleteUsedBookLikeAsyncSuccess,
+  DeleteUsedBookLikeParam,
   EditUsedBookDetailSubReply,
+  FollowCheckParam,
+  FollowNewData,
+  GetFollowerUserListAsyncSuccess,
+  GetMyFollowingUserListAsyncSuccess,
   GetRelatedUsedBookListAsyncSuccess,
   GetRelatedUsedBookListParam,
   GetStoreUserReviewAsyncSuccess,
@@ -39,6 +50,11 @@ const initialState: UsedBookDetailReduce = {
   buyList: [],
   relatedUsedBookList: [],
   liked: false,
+  followCheck: false,
+  follow: {
+    followerCount: 0,
+    followingCount: 0,
+  },
   // 마이페이지
   list: {
     page: 1,
@@ -55,6 +71,8 @@ const initialState: UsedBookDetailReduce = {
   totalPages: 0,
   pageNumber: 0,
   status: "loading",
+  FollowingList: [],
+  FollowerList: [],
 };
 
 const name = "usedBookDetail";
@@ -266,6 +284,20 @@ export const getUsedBookLikeList = createAsyncThunk<GetUsedBookLikeListAsyncSucc
   },
 );
 
+// 마이페이지 - 찜 다중 삭제
+export const deleteUsedBookLike = createAsyncThunk<number[], DeleteUsedBookLikeParam>(
+  `${myPage}/${name}/like/delete`,
+  async ({ checkItems, token }, { rejectWithValue }) => {
+    try {
+      await http.delete(`/usedbook/like`, makeDeleteTokenHeader(checkItems, token));
+      return checkItems;
+    } catch (error) {
+      const message = errorHandler(error);
+      return rejectWithValue(message);
+    }
+  },
+);
+
 // 마이페이지 - 중고장터 구매 목록
 export const getUsedBookBuyList = createAsyncThunk<GetUsedBookBuyListAsyncSuccess, GetUserReviewListParam>(
   `${myPage}/${name}/buy/list`,
@@ -294,12 +326,168 @@ export const usedBookBuyConfirm = createAsyncThunk<string, GetUsedBookBuyConfirm
   },
 );
 
+// 마이페이지 - 중고장터 구매취소
+export const usedBookBuyCancel = createAsyncThunk<string, GetUsedBookBuyConfirmParam>(
+  `${myPage}/${name}/buy/cancel`,
+  async ({ orderId, token }, { rejectWithValue }) => {
+    try {
+      await http.delete(`/order/${orderId}`, makeAuthTokenHeader(token));
+      return orderId;
+    } catch (error) {
+      const message = errorHandler(error);
+      return rejectWithValue(message);
+    }
+  },
+);
+
 // 마이페이지 - 회원리뷰 작성
 export const addUserReview = createAsyncThunk<AddUserReviewAsyncSuccess, AddUserReviewParam>(
   `${name}/add`,
   async ({ data, token }, { rejectWithValue }) => {
     try {
       const response = await http.post(`/userreview`, data, makeAuthTokenHeader(token));
+      return response.data;
+    } catch (error) {
+      const message = errorHandler(error);
+      return rejectWithValue(message);
+    }
+  },
+);
+
+// 마이페이지 - 팔로우 추가
+export const addStoreFollow = createAsyncThunk<
+  DeleteUsedBookLikeAsyncSuccess,
+  AddStoreFollowParam,
+  UsedBookDetailThunk
+>(`${name}/storeFollow/add`, async ({ data, token }, { rejectWithValue, dispatch }) => {
+  try {
+    const response = await http.post(`/follow`, data, makeAuthTokenHeader(token));
+    if (response.status === 200) {
+      dispatch(
+        checkStoreFollow({
+          id: data.userId,
+          token,
+        }),
+      );
+    }
+    return response.data;
+  } catch (error) {
+    const message = errorHandler(error);
+    return rejectWithValue(message);
+  }
+});
+
+// 마이페이지 - 팔로우 삭제
+export const deleteStoreFollow = createAsyncThunk<
+  DeleteUsedBookLikeAsyncSuccess,
+  DeleteStoreFollowParam,
+  UsedBookDetailThunk
+>(`${name}/storeFollow/delete`, async ({ id, token }, { rejectWithValue, dispatch }) => {
+  try {
+    const response = await http.delete(`/follow/${id}`, makeAuthTokenHeader(token));
+    if (response.status === 200) {
+      dispatch(
+        checkStoreFollow({
+          id,
+          token,
+        }),
+      );
+    }
+    return response.data;
+  } catch (error) {
+    const message = errorHandler(error);
+    return rejectWithValue(message);
+  }
+});
+
+// 마이페이지 - 팔로우 체크
+export const checkStoreFollow = createAsyncThunk<DeleteUsedBookLikeAsyncSuccess, FollowCheckParam>(
+  `${name}/storeFollow/check`,
+  async ({ id, token }, { rejectWithValue }) => {
+    try {
+      const response = await http.get(`/follow/followCheck/${id}`, makeAuthTokenHeader(token));
+      return response.data;
+    } catch (error) {
+      const message = errorHandler(error);
+      return rejectWithValue(message);
+    }
+  },
+);
+
+// 마이페이지 - 팔로잉 리스트 팔로우 추가
+export const addMyPageFollowList = createAsyncThunk<FollowNewData, AddMyPageStoreFollowParam>(
+  `${name}/storeFollow/add/FollowingList`,
+  async ({ data, token, type }, { rejectWithValue }) => {
+    try {
+      await http.post(`/follow`, data, makeAuthTokenHeader(token));
+      const followNewData: FollowNewData = {
+        newData: {
+          userId: data.userId,
+          type,
+        },
+      };
+      return followNewData;
+    } catch (error) {
+      const message = errorHandler(error);
+      return rejectWithValue(message);
+    }
+  },
+);
+
+// 마이페이지 - 팔로잉 리스트 팔로우 삭제
+export const deleteMyPageFollowList = createAsyncThunk<FollowNewData, DeleteMyPageStoreFollowParam>(
+  `${name}/storeFollow/delete/FollowingList`,
+  async ({ id, token, type }, { rejectWithValue }) => {
+    try {
+      await http.delete(`/follow/${id}`, makeAuthTokenHeader(token));
+      const followNewData: FollowNewData = {
+        newData: {
+          userId: id,
+          type,
+        },
+      };
+      return followNewData;
+    } catch (error) {
+      const message = errorHandler(error);
+      return rejectWithValue(message);
+    }
+  },
+);
+
+// 마이페이지 - 팔로우수 조회
+export const countCheckStoreFollow = createAsyncThunk<CountCheckStoreFollowAsyncSuccess, number>(
+  `${name}/storeFollow/countCheck`,
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await http.get(`/follow/followNumber/${id}`);
+      return response.data;
+    } catch (error) {
+      const message = errorHandler(error);
+      return rejectWithValue(message);
+    }
+  },
+);
+
+// 마이페이지 - 내가 팔로잉한 유저 리스트
+export const getMyFollowingUserList = createAsyncThunk<GetMyFollowingUserListAsyncSuccess, number>(
+  `${name}/storeFollow/following/userList`,
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await http.get(`/follow/following/${id}`);
+      return response.data;
+    } catch (error) {
+      const message = errorHandler(error);
+      return rejectWithValue(message);
+    }
+  },
+);
+
+// 마이페이지 - 나를 팔로우한 유저 리스트
+export const getFollowerUserList = createAsyncThunk<GetFollowerUserListAsyncSuccess, number>(
+  `${name}/storeFollow/follower/userList`,
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await http.get(`/follow/follower/${id}`);
       return response.data;
     } catch (error) {
       const message = errorHandler(error);
@@ -443,6 +631,18 @@ const usedBookDetailSlice = createSlice({
       .addCase(getUsedBookLikeList.rejected, state => {
         state.status = "failed";
       })
+      // 마이페이지 - 중고장터 찜 다중 삭제
+      .addCase(deleteUsedBookLike.pending, state => {
+        state.status = "loading";
+      })
+      .addCase(deleteUsedBookLike.fulfilled, (state, { payload }) => {
+        state.status = "success";
+        state.likeList = state.likeList.filter((item, idx) => item.id !== payload[idx]);
+      })
+      .addCase(deleteUsedBookLike.rejected, state => {
+        state.status = "failed";
+        alert("찜 삭제가 실패했습니다.");
+      })
       // 마이페이지 - 중고장터 구매 목록
       .addCase(getUsedBookBuyList.pending, state => {
         state.status = "loading";
@@ -472,6 +672,18 @@ const usedBookDetailSlice = createSlice({
       .addCase(usedBookBuyConfirm.rejected, state => {
         state.status = "failed";
       })
+      // 마이페이지 - 중고장터 구매취소
+      .addCase(usedBookBuyCancel.pending, state => {
+        state.status = "loading";
+      })
+      .addCase(usedBookBuyCancel.fulfilled, (state, { payload }) => {
+        state.status = "success";
+        state.list.pages.map(v => (v.orderId !== payload ? v : { ...v, state: "SALE" }));
+        alert("구매취소가 완료되었습니다.");
+      })
+      .addCase(usedBookBuyCancel.rejected, state => {
+        state.status = "failed";
+      })
       // 회원 리뷰 작성
       .addCase(addUserReview.pending, state => {
         state.status = "loading";
@@ -488,6 +700,86 @@ const usedBookDetailSlice = createSlice({
       .addCase(addUserReview.rejected, state => {
         state.status = "failed";
         alert("리뷰 작성에 실패했습니다. 다시 한번 등록해주세요.");
+      })
+      // 마이페이지 팔로잉, 팔로워 리스트 팔로우 추가
+      .addCase(addMyPageFollowList.pending, state => {
+        state.status = "loading";
+      })
+      .addCase(addMyPageFollowList.fulfilled, (state, { payload }) => {
+        state.status = "success";
+        const { type, userId } = payload.newData;
+        if (type === "follow") {
+          state.FollowingList = state.FollowingList.map(v => (v.userId !== userId ? v : { ...v, followCheck: true }));
+        }
+        if (type === "follower") {
+          state.FollowerList = state.FollowerList.map(v => (v.userId !== userId ? v : { ...v, followCheck: true }));
+        }
+      })
+      .addCase(addMyPageFollowList.rejected, state => {
+        state.status = "failed";
+      })
+      // 마이페이지 팔로잉, 팔로워 리스트 팔로우 삭제
+      .addCase(deleteMyPageFollowList.pending, state => {
+        state.status = "loading";
+      })
+      .addCase(deleteMyPageFollowList.fulfilled, (state, { payload }) => {
+        state.status = "success";
+        const { type, userId } = payload.newData;
+        if (type === "follow") {
+          state.FollowingList = state.FollowingList.map(v => (v.userId !== userId ? v : { ...v, followCheck: false }));
+        }
+        if (type === "follower") {
+          state.FollowerList = state.FollowerList.map(v => (v.userId !== userId ? v : { ...v, followCheck: false }));
+        }
+      })
+      .addCase(deleteMyPageFollowList.rejected, state => {
+        state.status = "failed";
+      })
+      // 팔로우수 조회
+      .addCase(countCheckStoreFollow.pending, state => {
+        state.status = "loading";
+      })
+      .addCase(countCheckStoreFollow.fulfilled, (state, { payload }) => {
+        state.status = "success";
+        state.follow.followerCount = payload.data.follower;
+        state.follow.followingCount = payload.data.following;
+      })
+      .addCase(countCheckStoreFollow.rejected, state => {
+        state.status = "failed";
+      })
+      // 팔로우 체크
+      .addCase(checkStoreFollow.pending, state => {
+        state.status = "loading";
+      })
+      .addCase(checkStoreFollow.fulfilled, (state, { payload }) => {
+        state.status = "success";
+        state.followCheck = payload.data;
+      })
+      .addCase(checkStoreFollow.rejected, state => {
+        state.status = "failed";
+      })
+
+      // 내가 팔로잉한 리스트
+      .addCase(getMyFollowingUserList.pending, state => {
+        state.status = "loading";
+      })
+      .addCase(getMyFollowingUserList.fulfilled, (state, { payload }) => {
+        state.status = "success";
+        state.FollowingList = payload.data;
+      })
+      .addCase(getMyFollowingUserList.rejected, state => {
+        state.status = "failed";
+      })
+      // 나를 팔로우한 리스트
+      .addCase(getFollowerUserList.pending, state => {
+        state.status = "loading";
+      })
+      .addCase(getFollowerUserList.fulfilled, (state, { payload }) => {
+        state.FollowerList = payload.data;
+        state.status = "success";
+      })
+      .addCase(getFollowerUserList.rejected, state => {
+        state.status = "failed";
       });
   },
 });

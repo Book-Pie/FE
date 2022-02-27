@@ -22,7 +22,7 @@ const BookCategory = () => {
   const location = useLocation();
   const dispatch = useDispatch();
   const { list } = useTypedSelector(bookReduceSelector);
-  const { pages } = list;
+  const { pages, searchCategoryName } = list;
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [categorys, setCategorys] = useState<ParentsCategoryData[]>([]);
@@ -36,7 +36,6 @@ const BookCategory = () => {
   const handleObserver = (node: HTMLDivElement) => {
     if (node === null) return;
     if (observerRef.current) observerRef.current.disconnect();
-
     const observerCallback = ([entry]: IntersectionObserverEntry[], observer: IntersectionObserver) => {
       const { target, isIntersecting } = entry;
       if (isIntersecting) {
@@ -109,7 +108,7 @@ const BookCategory = () => {
       </BookReviewMainTap>
       <ReviewCategorys categorys={categorys} defaultLocation="book" />
       <div>
-        <Title>도서리뷰</Title>
+        <Title>{searchCategoryName}</Title>
       </div>
       <BookReviewContainer>
         {pages.length !== 0 ? (

@@ -29,11 +29,12 @@ export const MyTopWrapper = styled.section`
 `;
 
 export const ProfileImg = styled.div`
-  flex: 6;
+  width: 20rem;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 1rem;
+  flex-direction: column;
 
   img {
     border-radius: 50%;
@@ -46,7 +47,37 @@ export const ProfileImg = styled.div`
   }
 `;
 
-export const NoneProfileImg = styled(ProfileImg)`
+export const ShopProfileImg = styled.div`
+  width: 20rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  flex-direction: column;
+
+  img {
+    border-radius: 50%;
+    height: 200px;
+    width: 200px;
+    ${({ theme }) => theme.shadow[0]};
+  }
+  .noProfile {
+    padding: 30px;
+  }
+
+  @media screen and (max-width: 900px) {
+    background-color: #f8f8f8;
+    border-radius: 5px;
+    box-shadow: rgb(0 0 0 / 30%) 0px 0px 5px;
+    margin-top: 10px;
+  }
+  ${({ theme }) => theme.media.mobile} {
+    width: 13rem;
+    margin-top: 1rem;
+  }
+`;
+
+export const NoneProfileImg = styled(ShopProfileImg)`
   img {
     padding: 30px;
   }

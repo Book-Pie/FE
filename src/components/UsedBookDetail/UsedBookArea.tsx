@@ -19,13 +19,11 @@ import {
   BookPrice,
   BookStatus,
   BuyButton,
-  DeliveryArea,
   DeliverySpan,
   InteractionArea,
   InteractionSpan,
   LikeButton,
   Line,
-  ProductDetail,
   ProductDetailContent,
   ProductDetailTitle,
   TopInformationArea,
@@ -168,7 +166,7 @@ const UsedBookArea = ({
       </TopInformationArea>
       <BookPrice>{bookPrice}</BookPrice>
       <Line />
-      <DeliveryArea>
+      <>
         <DeliverySpan>배송비 2500원</DeliverySpan>
         <DeliverySpan>배송방법 택배거래</DeliverySpan>
         <BookStatus>상품상태</BookStatus>
@@ -177,37 +175,31 @@ const UsedBookArea = ({
           {bookState === "ALMOST_NEW" && "거의 새거"}
           {bookState === "USED" && "사용감 있음"}
         </BookStatus>
-      </DeliveryArea>
-      <ProductDetail>
         <ProductDetailTitle>상품정보</ProductDetailTitle>
         <Line />
         <ProductDetailContent dangerouslySetInnerHTML={{ __html: content }} />
-      </ProductDetail>
+      </>
       <TagArea>{tags && tags.map((tag, index) => <TagContent key={index}>#{tag}</TagContent>)}</TagArea>
       <ButtonArea>
         {user?.id !== sellerId && (
           <>
             <ClickAwayListener onClickAway={handleTooltipClose}>
-              <div>
-                <LikeTooltip
-                  PopperProps={{
-                    disablePortal: true,
-                  }}
-                  onClose={handleTooltipClose}
-                  open={open}
-                  arrow
-                  disableFocusListener
-                  disableHoverListener
-                  disableTouchListener
-                  title={liked ? "마이페이지 > 찜목록에 추가되었습니다 ✅" : "찜목록에서 제거되었습니다 ☑️"}
-                >
-                  <LikeButton onClick={likeClick} className={liked ? "UsedBookArea--active" : "UsedBookArea--nomal"}>
-                    <div>
-                      <FavoriteIcon sx={{ paddingTop: 1, fontSize: 30 }} /> 찜
-                    </div>
-                  </LikeButton>
-                </LikeTooltip>
-              </div>
+              <LikeTooltip
+                PopperProps={{
+                  disablePortal: true,
+                }}
+                onClose={handleTooltipClose}
+                open={open}
+                arrow
+                disableFocusListener
+                disableHoverListener
+                disableTouchListener
+                title={liked ? "마이페이지 > 찜목록에 추가되었습니다 ✅" : "찜목록에서 제거되었습니다 ☑️"}
+              >
+                <LikeButton onClick={likeClick} className={liked ? "UsedBookArea--active" : "UsedBookArea--nomal"}>
+                  <FavoriteIcon sx={{ paddingTop: 1, fontSize: 30 }} /> 찜
+                </LikeButton>
+              </LikeTooltip>
             </ClickAwayListener>
             {saleState === "TRADING" && <DisabledButton>현재 거래중인 상품입니다.</DisabledButton>}
             {saleState === "SOLD_OUT" && <DisabledButton>판매완료된 상품입니다.</DisabledButton>}
