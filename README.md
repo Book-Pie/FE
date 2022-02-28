@@ -8,12 +8,12 @@
 <div align=center>
     <img src="https://img.shields.io/badge/4.5.4-Typescript-3178C6?style=flat&logo=Typescript&logoColor=3178C6"/>
     <img src="https://img.shields.io/badge/17.0.37-React-61DAFB?style=flat&logo=react&logoColor=61DAFB"/>
-    <img src="https://img.shields.io/badge/4.5.4-Webpack-8DD6F9?style=flat&logo=webpack&logoColor=8DD6F9"/>
+    <img src="https://img.shields.io/badge/5.65.0-Webpack-8DD6F9?style=flat&logo=webpack&logoColor=8DD6F9"/>
     <img src="https://img.shields.io/badge/5.1.17-React router-CA4245?style=flat&logo=react router&logoColor=CA4245"/>
     <img src="https://img.shields.io/badge/5.3.2-React router dom-CA4245?style=flat&logo=react router&logoColor=CA4245"/>
     <img src="https://img.shields.io/badge/5.2.7-Material UI-757575?style=flat&logo=Material Design&logoColor=FFF"/>
     <img src="https://img.shields.io/badge/1.7.1-Redux/toolkit-764ABC?style=flat&logo=redux&logoColor=764ABC"/>
-    <img src="https://img.shields.io/badge/5.1.18-Styled components-DB7093?style=flat&logo=styled-components&logoColor=DB7093"/>
+    <img src="https://img.shields.io/badge/5.3.3-Styled components-DB7093?style=flat&logo=styled-components&logoColor=DB7093"/>
     <img src="https://img.shields.io/badge/0.24-Axios-FF9E0F?style=flat&logo=axios&logoColor=FF9E0F"/>
     <img src="https://img.shields.io/badge/3.34.6-React Query-FF4154?style=flat&logo=React Query&logoColor=FF4154"/>
     <img src="https://img.shields.io/badge/8.4.1-Eslint-4B32C3?style=flat&logo=eslint&logoColor=4B32C3"/>
