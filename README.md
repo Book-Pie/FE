@@ -175,7 +175,7 @@
 #### 테스트 서버 배포 환경 그림
  
 <div align=center>
-    <img src=https://user-images.githubusercontent.com/26589722/154127777-bfb20c91-6ba8-4b3b-8f6a-e2b075678868.png width=80%  />
+    <img src=https://user-images.githubusercontent.com/26589722/156223280-7b935a7f-5734-4872-b120-c1af9143502d.png width=80%  />
 </div>
 <br>
 
@@ -194,9 +194,10 @@
 #### 배포 환경 그림
  
 <div align=center>
-    <img src=https://user-images.githubusercontent.com/26589722/154129935-d231f47f-2ed9-40ed-95d9-61fdac944aa8.png width=80%  />
+    <img src=https://user-images.githubusercontent.com/26589722/156223723-d1e86653-dea3-4430-8914-f41c42bbf6b0.png width=80%  />
 </div>
 <br>
+
 
 > #### 📜 배포 과정 설명
 1. `main branch`에서 push를 진행를 합니다.
